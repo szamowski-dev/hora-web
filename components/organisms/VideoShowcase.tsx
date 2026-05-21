@@ -61,11 +61,14 @@ export function VideoShowcase() {
       />
 
       <div className="relative mx-auto max-w-[1180px] px-6">
-        <h2 className="text-4xl font-semibold tracking-tight text-text md:text-5xl">
+        <h2 data-anim="video-title" className="text-4xl font-semibold tracking-tight text-text md:text-5xl">
           See hora <span className="text-accent">in action.</span>
         </h2>
 
-        <div className="mt-10 overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_40px_120px_-70px_rgba(255,56,60,0.8)]">
+        <div
+          data-anim="video-player"
+          className="mt-10 overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_40px_120px_-70px_rgba(255,56,60,0.8)]"
+        >
           <VideoShowcaseNativeVideo
             ariaLabel={demo.ariaLabel}
             poster={demo.demoPosterSrc}
@@ -76,7 +79,7 @@ export function VideoShowcase() {
 
         <div className="mt-12 grid gap-5 md:grid-cols-4">
           {actionCards.map((card, index) => (
-            <article key={card.title} className="group">
+            <article key={card.title} data-anim="video-card" className="group">
               <div className="relative flex h-[13.5rem] items-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] transition-colors group-hover:border-accent/35 group-hover:bg-white/[0.055]">
                 {index === 0 ? (
                   <div
@@ -108,6 +111,7 @@ export function VideoShowcase() {
           {v.highlights.map((h) => (
             <span
               key={h}
+              data-anim="video-chip"
               className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-xs text-muted"
             >
               {h}

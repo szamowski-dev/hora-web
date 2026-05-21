@@ -29,7 +29,7 @@ export function FeaturedOn() {
           </span>
           <ul className="flex flex-wrap items-center gap-4 md:gap-6">
             {f.badges.map((badge) => (
-              <li key={badge.href} className="flex items-center">
+              <li key={badge.href} data-anim="featured-badge" className="flex items-center">
                 <a
                   href={badge.href}
                   target="_blank"

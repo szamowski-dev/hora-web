@@ -64,17 +64,23 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             Coming soon to Mac
           </div>
 
-          <h1 className="mt-6 max-w-[12ch] text-5xl font-semibold leading-[1.02] tracking-tight text-text md:text-[68px] lg:text-[78px]">
+          <h1
+            data-anim="hero-title"
+            className="mt-6 max-w-[12ch] text-5xl font-semibold leading-[1.02] tracking-tight text-text md:text-[68px] lg:text-[78px]"
+          >
             The Mac Calendar{" "}
             <span className="text-accent">Google never built.</span>
           </h1>
 
-          <p className="mt-5 max-w-md text-pretty text-lg leading-8 text-muted md:text-[19px]">
+          <p
+            data-anim="hero-copy"
+            className="mt-5 max-w-md text-pretty text-lg leading-8 text-muted md:text-[19px]"
+          >
             Fast, Native, Beautiful. Built for keyboard-driven workflows.
             Finally, Google Calendar feels at home on your Mac.
           </p>
 
-          <div className="mt-7 flex flex-wrap items-center gap-3">
+          <div data-anim="hero-cta" className="mt-7 flex flex-wrap items-center gap-3">
             <a
               href="#newsletter"
               data-scroll-align="center"
@@ -93,7 +99,10 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             </a>
           </div>
 
-          <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+          <div
+            data-anim="hero-proof"
+            className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
+          >
             <div className="flex -space-x-2">
               {socialProof.avatars.slice(0, 5).map((avatar) => (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -124,7 +133,10 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             aria-hidden
             className="absolute -inset-4 rounded-[2rem] bg-[radial-gradient(ellipse_at_50%_45%,rgba(255,56,60,0.24),transparent_62%)] blur-2xl"
           />
-          <div className="relative overflow-hidden rounded-[18px] shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9)]">
+          <div
+            data-anim="hero-shot"
+            className="relative overflow-hidden rounded-[18px] shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9)]"
+          >
             <Image
               src="/assets/redesign/hora_hero_screenshot.webp"
               alt="hora Calendar macOS app interface"
@@ -141,6 +153,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             {heroPills.map((item) => (
                 <div
                   key={item.key}
+                  data-anim="hero-pill"
                   className="flex h-10 items-center justify-center gap-2 rounded-md border border-white/10 bg-[#111216]/88 px-2.5 text-[10px] font-medium leading-none shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] backdrop-blur-xl lg:text-[11px]"
                 >
                   <Icon name={item.icon} size={14} className="text-accent" />

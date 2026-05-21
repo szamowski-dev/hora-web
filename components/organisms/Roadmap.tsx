@@ -72,7 +72,7 @@ export function Roadmap() {
             const styles = statusStyles[item.status];
             const isLast = i === items.length - 1;
             return (
-              <li key={item.title} className="relative flex gap-4 md:gap-5">
+              <li key={item.title} data-anim="roadmap-item" className="relative flex gap-4 md:gap-5">
                 <div className="relative flex shrink-0 flex-col items-center">
                   <span
                     className={cn(
@@ -83,6 +83,7 @@ export function Roadmap() {
                   {!isLast ? (
                     <span
                       aria-hidden
+                      data-anim="roadmap-connector"
                       className={cn(
                         "mt-2 w-px flex-1 bg-linear-to-b to-transparent",
                         styles.connector,

@@ -34,11 +34,17 @@ export function PricingSection() {
       <div className="relative mx-auto max-w-[1180px] px-6">
         <div className="grid gap-6 rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] md:grid-cols-[0.88fr_1.12fr] md:p-8">
           <div className="flex h-full flex-col">
-            <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
+            <h2
+              data-anim="pricing-title"
+              className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl"
+            >
               {pricing.heading.prefix}{" "}
               <span className="text-accent">{pricing.heading.suffixGradient}</span>
             </h2>
-            <p className="mt-4 max-w-xl text-base leading-7 text-muted md:text-lg md:leading-8">
+            <p
+              data-anim="pricing-copy"
+              className="mt-4 max-w-xl text-base leading-7 text-muted md:text-lg md:leading-8"
+            >
               {pricing.body}
             </p>
             <p className="mt-3 text-sm font-medium text-muted">
@@ -59,7 +65,7 @@ export function PricingSection() {
 
           <div className="grid gap-3">
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-md border border-white/10 bg-white/[0.03] p-4">
+              <div data-anim="pricing-card" className="rounded-md border border-white/10 bg-white/[0.03] p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
                   One-time
                 </p>
@@ -67,7 +73,7 @@ export function PricingSection() {
                   {pricing.oneTime}
                 </p>
               </div>
-              <div className="rounded-md border border-white/10 bg-white/[0.03] p-4">
+              <div data-anim="pricing-card" className="rounded-md border border-white/10 bg-white/[0.03] p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
                   Subscription
                 </p>
@@ -86,6 +92,7 @@ export function PricingSection() {
                 return (
                 <div
                   key={item.name}
+                  data-anim={isHora ? "pricing-hora" : "pricing-row"}
                   className={`grid grid-cols-1 gap-x-3 gap-y-1 border-b py-3 last:border-b-0 last:pb-0 sm:grid-cols-[1.2fr_auto] sm:py-2 ${
                     isHora
                       ? "rounded-sm border-accent/30 bg-accent/[0.08] px-3 sm:px-2"

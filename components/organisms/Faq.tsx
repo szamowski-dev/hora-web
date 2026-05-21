@@ -41,12 +41,16 @@ export function Faq() {
         <div className="mt-12 grid gap-3 md:mt-14 md:grid-cols-2 md:gap-4">
           <div className="space-y-3 md:space-y-4">
             {leftColumnItems.map((item) => (
-              <FaqItem key={item.q} question={item.q} answer={item.a} />
+              <div key={item.q} data-anim="faq-item">
+                <FaqItem question={item.q} answer={item.a} />
+              </div>
             ))}
           </div>
           <div className="space-y-3 md:space-y-4">
             {rightColumnItems.map((item) => (
-              <FaqItem key={item.q} question={item.q} answer={item.a} />
+              <div key={item.q} data-anim="faq-item">
+                <FaqItem question={item.q} answer={item.a} />
+              </div>
             ))}
           </div>
         </div>

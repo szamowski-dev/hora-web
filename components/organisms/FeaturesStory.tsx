@@ -54,7 +54,10 @@ export function FeaturesStory() {
 
       <div className="relative mx-auto max-w-[1180px] px-6">
         <div className="max-w-5xl">
-          <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
+          <h2
+            data-anim="features-title"
+            className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl"
+          >
             {f.heading.prefix}
             <span className="text-accent"> {f.heading.suffixGradient}</span>
           </h2>
@@ -66,6 +69,7 @@ export function FeaturesStory() {
             return (
               <article
                 key={item.title}
+                data-anim="feature-card"
                 className="group relative min-h-[14.5rem] overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] transition-colors duration-300 hover:border-accent/25 hover:bg-white/[0.055] md:p-7"
               >
                 <div
@@ -77,7 +81,10 @@ export function FeaturesStory() {
                   }}
                 />
 
-                <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-md border border-accent/30 bg-accent/10 text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
+                <span
+                  data-anim="feature-icon"
+                  className="relative inline-flex h-11 w-11 items-center justify-center rounded-md border border-accent/30 bg-accent/10 text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+                >
                   <Icon name={icon} size={20} />
                 </span>
 
