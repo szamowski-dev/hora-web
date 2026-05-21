@@ -81,8 +81,8 @@ export const home = {
       },
       {
         href: "https://microlaunch.net/p/horacalendar?utm_source=badge-winner-microlaunch&utm_medium=badge",
-        src: "https://wild-dust-0517.microlaunch.workers.dev/microlaunch-challenger-badges/ml_challenger_v5.svg",
-        alt: "Microlaunch - Launch, get feedback, exposure and first customers over a month",
+        src: "https://wild-dust-0517.microlaunch.workers.dev/badges/potd/ml_potd_badge_v4.svg",
+        alt: "MicroLaunch Product of the Day badge",
         width: 306,
         height: 96,
       },

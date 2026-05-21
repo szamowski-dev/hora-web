@@ -1,0 +1,144 @@
+---
+title: "Google Calendar API vs CalDAV: Which Integration Wins?"
+date: 2026-05-21
+description: "Google Calendar API vs CalDAV: a practical breakdown of sync, features, auth, and performance so you can pick the right calendar integration."
+tags: google-calendar-api-vs-caldav, google-calendar-api, caldav, calendar-integration, macos
+cover: /assets/blog/google-calendar-api-vs-caldav-cover.webp
+ogImage: /assets/blog/google-calendar-api-vs-caldav-hero.webp
+---
+
+![Google Calendar API vs CalDAV comparison](/assets/blog/google-calendar-api-vs-caldav-hero.webp)
+
+If you are choosing between **Google Calendar API vs CalDAV**, the short answer is simple: use Google Calendar API if your product is Google-first and you need modern app behavior. Use CalDAV when you need protocol-level portability across providers.
+
+I build [hora Calendar](https://horacal.app), so I care about this choice in production, not in theory. We tested both paths and ended up integrating directly with Google Calendar’s REST API for reliability, richer event support, and cleaner sync control on macOS.
+
+## Google Calendar API vs CalDAV at a Glance
+
+| Dimension | Google Calendar API | CalDAV (Google endpoint) |
+|---|---|---|
+| Protocol | REST + JSON | WebDAV/CalDAV + XML + iCalendar |
+| Change detection | Push channels (`events.watch`) + incremental sync | Collection sync (`sync-collection`) + ETag/CTag style checks |
+| Google-specific fields | Full resource model (event types, extended properties, etc.) | Limited by Google’s CalDAV support matrix |
+| Ecosystem fit | Best for Google-only products | Better for multi-provider interoperability |
+| Client complexity | Strong client libs + modern HTTP patterns | More protocol surface and DAV semantics |
+
+For Google-only products, this usually tilts toward the API.
+
+## End-User Feature Matrix: CalDAV vs Google Calendar API
+
+This is the practical view your users care about: what they can actually do in the app.
+
+![End-user feature matrix: CalDAV vs Google Calendar API](/assets/blog/google-calendar-api-vs-caldav-matrix.webp)
+
+| End-user capability | Via CalDAV | Via Google Calendar API |
+|---|---|---|
+| View and edit basic events | Yes | Yes |
+| Reliable near-real-time updates | Limited (depends on sync strategy/client behavior) | Yes (push channels + incremental sync) |
+| Rich Google event metadata support | Partial | Strong |
+| Advanced Google event types | Limited/partial mapping | Strong |
+| App-specific hidden event metadata | Limited | Yes (extended properties) |
+| Predictable handling of Google-specific edge cases | More fragile | Better |
+| Best fit for multi-provider portability | Yes | No (Google-specific) |
+| Best fit for Google-first UX | Usually no | Yes |
+
+If your users are mainly Google Calendar users on Mac, the API path tends to deliver fewer sync surprises and a more polished day-to-day experience.
+
+## Why I Prefer Google Calendar API for Product Integrations
+
+### 1) Push-first sync is built in
+
+The Google Calendar API supports push notifications via `watch` endpoints and webhook channels, which is critical when you want fast updates without aggressive polling.
+
+- Push notifications guide: [Google Calendar API push notifications](https://developers.google.com/workspace/calendar/api/guides/push)
+- `events.watch` reference: [Events: watch](https://developers.google.com/calendar/api/v3/reference/events/watch)
+
+CalDAV is great for standards-based sync, but in Google’s own CalDAV guide the emphasis is on DAV sync mechanics and supported RFC subsets, not webhook-style push channels.
+
+### 2) Incremental sync is explicit and production-friendly
+
+Google’s API documents a clear `syncToken` flow for full sync, then incremental sync. That pattern maps well to robust desktop/mobile clients.
+
+- Sync guide: [Synchronize resources efficiently](https://developers.google.com/workspace/calendar/api/guides/sync)
+
+You can combine this with push to avoid both stale data and expensive full refresh loops.
+
+### 3) You get Google-native event capabilities
+
+If you need event behavior beyond basic CRUD, the API exposes fields and workflows that matter in real products:
+
+- Extended metadata: [Extended properties](https://developers.google.com/workspace/calendar/api/guides/extended-properties)
+- Event categories/behavior: [Event types](https://developers.google.com/workspace/calendar/api/guides/event-types)
+
+That is difficult to replicate cleanly through a protocol abstraction when your source of truth is Google Calendar.
+
+### 4) Better fit for modern app architecture
+
+REST + JSON + typed clients are generally easier to instrument, test, and evolve than full WebDAV semantics. That means less time debugging protocol edges and more time improving UX.
+
+If you are building a native Mac experience, this matters. I covered a related tradeoff in [Native App vs Electron and PWA](/blog/2026-04-14-native-app-vs-electron-pwa), where integration depth directly impacts product feel.
+
+## Where CalDAV Still Wins
+
+CalDAV is still the right choice in some scenarios:
+
+- You must support multiple non-Google providers behind one protocol.
+- You need to reduce vendor lock-in at the integration layer.
+- Your product is infrastructure-first, not Google-feature-first.
+
+CalDAV is an open standard (RFC 4791), and that interoperability is valuable:
+
+- CalDAV standard: [RFC 4791](https://datatracker.ietf.org/doc/html/rfc4791)
+
+But if your users live in Google Calendar all day, portability can become a tax rather than an advantage.
+
+## Known Constraints in Google’s CalDAV Interface
+
+Google’s CalDAV developer guide explicitly documents partial support across related specs. Examples include unsupported WebDAV methods, unsupported `VTODO`/`VJOURNAL`, and a deprecated older endpoint.
+
+- CalDAV guide: [Google CalDAV API Developer's Guide](https://developers.google.com/workspace/calendar/caldav/v2/guide)
+
+If you rely on CalDAV, read that support matrix line by line. Assumptions here can become costly production bugs.
+
+## Practical Decision Framework
+
+If you are deciding this week, use this:
+
+Choose **Google Calendar API** when:
+
+- Your roadmap is Google-first.
+- You need fast sync and app-driven workflows.
+- You need richer Google event semantics.
+- You want clean observability around rate limits and retries.
+
+Choose **CalDAV** when:
+
+- You need one protocol for Google + non-Google servers.
+- Your product requirement is standards interoperability first.
+- You can accept Google CalDAV feature boundaries.
+
+If you are building a Mac-first Google Calendar app, I also recommend reading [Real-time Google Calendar sync on macOS](/blog/2026-04-16-from-polling-to-push) and [Best Fantastical Alternative for Google Calendar Users (2026)](/blog/2026-05-06-fantastical-alternative-google-calendar) for implementation and product-level context.
+
+## FAQ
+
+### Is Google Calendar API better than CalDAV?
+
+For Google-only integrations, usually yes. You get push channels, explicit incremental sync, and richer Google-specific event handling. For multi-provider interoperability, CalDAV may still be the better base layer.
+
+### Does Google Calendar support CalDAV?
+
+Yes, Google provides a CalDAV interface, but its support is documented as partial across related DAV/iCalendar specs. Check the official support matrix before committing architecture.
+
+### Can CalDAV do real-time sync like webhooks?
+
+CalDAV focuses on sync protocols (for example, collection sync patterns), while Google Calendar API provides explicit webhook/push channel primitives through `watch` endpoints.
+
+### Should I build a new app on CalDAV or Google Calendar API?
+
+If your product is primarily for Google Calendar users, start with Google Calendar API. If your product must be provider-agnostic from day one, start with CalDAV and accept feature tradeoffs.
+
+---
+
+If this saved you a week of integration churn, it did its job.
+
+Follow the build at [@moto_szama](https://x.com/moto_szama), check out [hora Calendar](https://horacal.app), or reach out at [hello@horacal.app](mailto:hello@horacal.app).
