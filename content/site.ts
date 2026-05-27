@@ -17,6 +17,7 @@ export const site = {
     { label: "Pricing", href: "/#pricing" },
     { label: "Roadmap", href: "/#roadmap" },
     { label: "FAQ", href: "/#faq" },
+    { label: "Support", href: "/support/" },
     { label: "Blog", href: "/blog/" },
     { label: "About", href: "/about/" },
   ],
@@ -34,6 +35,7 @@ export const site = {
     developedBy: { label: "szamowski.dev", href: "https://szamowski.dev" },
     links: [
       { label: "About", href: "/about/" },
+      { label: "Support", href: "/support/" },
       { label: "Privacy", href: "/privacy/" },
       { label: "Terms", href: "/terms/" },
     ],
