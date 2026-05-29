@@ -178,19 +178,6 @@ Apple Intelligence — smart scheduling, focus time planning, meeting prep brief
 | Bluesky | [@szamski.bsky.social](https://bsky.app/profile/szamski.bsky.social) |
 | Developer | [szamowski.dev](https://szamowski.dev) |
 
-### Support form configuration
-
-The `/support/` page posts to `/api/support`, which creates a GitHub Issue from
-server-side code. Configure these environment variables in production:
-
-| Variable | Description |
-|---|---|
-| `GITHUB_SUPPORT_REPO` | Optional target repository in `owner/repo` format. Defaults to `szamowski-dev/hora-calendar`. |
-| `GITHUB_SUPPORT_TOKEN` | Fine-grained GitHub token with Issues write access to the target repo. |
-| `GITHUB_SUPPORT_LABELS` | Optional comma-separated labels to attach alongside the default `support-form` label. Labels must already exist in the target repo. |
-
----
-
 <p align="center">
   <sub>Built with SwiftUI + AppKit. No Electron. No web views. Pure native macOS.</sub>
 </p>
