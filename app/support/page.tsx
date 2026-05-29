@@ -58,7 +58,7 @@ const faqItems = [
   },
   {
     q: "Is TestFlight the current way to install hora?",
-    a: "Yes, while hora is in beta. Join the waitlist or use your existing TestFlight invite to install the latest build.",
+    a: "Yes, while hora is in beta. Join TestFlight to install the latest build, or subscribe to the newsletter for launch and iOS/iPadOS beta updates.",
   },
 ];
 

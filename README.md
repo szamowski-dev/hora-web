@@ -40,7 +40,7 @@
 ---
 
 <p align="center">
-  <img src="public/assets/hora_demo_new.gif" alt="hora Calendar demo" width="800">
+  <img src="public/assets/hora-demo.gif" alt="hora Calendar demo" width="800">
 </p>
 
 ---

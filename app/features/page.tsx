@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { FeatureCard } from "@/components/molecules/FeatureCard";
-import { GradientText } from "@/components/atoms/GradientText";
 import { features } from "@/content/features";
 import { defaultOg } from "@/lib/og";
 
@@ -19,13 +18,14 @@ export const metadata: Metadata = {
 export default function FeaturesPage() {
   return (
     <>
-      <div className="mx-auto max-w-[960px] px-6 pb-12 pt-16 text-center md:pt-20">
-        <h1 className="font-brand text-4xl font-normal leading-tight tracking-tight md:text-5xl">
+      <div className="mx-auto max-w-[1180px] px-6 pb-14 pt-16 md:pb-16 md:pt-24">
+        <h1 className="max-w-4xl text-4xl font-semibold leading-tight text-text md:text-6xl">
           {features.hero.title.prefix}{" "}
-          <GradientText>{features.hero.title.suffixGradient}</GradientText>
-          {features.hero.title.after ? ` ${features.hero.title.after}` : null}
+          <span className="text-accent">
+            {features.hero.title.suffixGradient}
+          </span>
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-muted">
+        <p className="mt-5 max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
           {features.hero.subtitle}
         </p>
       </div>
@@ -33,14 +33,19 @@ export default function FeaturesPage() {
       {features.sections.map((section) => (
         <section
           key={section.label}
-          className="mx-auto max-w-[960px] px-6 pb-16"
+          className="mx-auto max-w-[1180px] px-6 pb-16 md:pb-20"
         >
-          <div className="mb-5 flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-accent">
-            <span>{section.label}</span>
-            <span className="h-px flex-1 bg-border" aria-hidden />
+          <div className="mb-6 flex flex-col gap-3 border-t border-white/10 pt-7 sm:flex-row sm:items-end sm:justify-between">
+            <h2 className="text-2xl font-semibold leading-tight text-text md:text-3xl">
+              {section.label}
+            </h2>
+            <span
+              className="h-px flex-1 bg-linear-to-r from-accent/55 to-transparent sm:mb-4"
+              aria-hidden
+            />
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
             {"wideShortcutsCard" in section && section.wideShortcutsCard ? (
               <div className="rounded-xl border border-border bg-white/[0.02] p-6 md:col-span-2">
                 <div className="flex flex-col gap-6 md:flex-row md:items-center">
@@ -86,22 +91,22 @@ export default function FeaturesPage() {
           </div>
 
           {"screenshot" in section && section.screenshot ? (
-            <div className="relative mt-8">
+            <div className="relative mt-8 mb-2 pb-12 md:pb-14">
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 mx-auto my-auto h-[60%] w-[70%] rounded-full"
+                className="pointer-events-none absolute inset-x-[4%] bottom-2 h-28 rounded-full blur-[48px] md:bottom-3 md:h-36"
                 style={{
                   background:
-                    "radial-gradient(ellipse, rgba(255,56,60,0.08) 0%, transparent 70%)",
+                    "radial-gradient(ellipse, rgba(255,56,60,0.42) 0%, rgba(255,56,60,0.22) 34%, rgba(255,56,60,0.08) 58%, transparent 76%)",
                 }}
               />
-              <div className="relative overflow-hidden rounded-xl border border-border shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_8px_32px_rgba(0,0,0,0.5)]">
+              <div className="relative z-10">
                 <Image
                   src={section.screenshot.src}
                   alt={section.screenshot.alt}
-                  width={1600}
-                  height={1000}
-                  className="h-auto w-full"
+                  width={section.screenshot.width ?? 1600}
+                  height={section.screenshot.height ?? 1000}
+                  className="block h-auto w-full shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9)]"
                 />
               </div>
             </div>

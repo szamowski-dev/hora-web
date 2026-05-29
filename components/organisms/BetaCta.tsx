@@ -1,7 +1,7 @@
 import { WaitlistCard } from "@/components/molecules/WaitlistCard";
 import { Icon } from "@/components/atoms/Icon";
 import { home } from "@/content/home";
-import { getWaitlistCount } from "@/lib/waitlist";
+import { getTestFlightTesterCount } from "@/lib/testflight";
 
 const benefits = [
   {
@@ -24,7 +24,7 @@ const benefits = [
 export async function BetaCta() {
   const cta = home.betaCta;
   const socialProof = home.hero.newsletter.socialProof;
-  const liveCount = await getWaitlistCount(socialProof.count);
+  const liveCount = await getTestFlightTesterCount(socialProof.count);
 
   return (
     <section className="relative overflow-hidden py-20 md:py-24">

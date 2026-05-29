@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { WaitlistCard } from "@/components/molecules/WaitlistCard";
 import { home } from "@/content/home";
-import { getWaitlistCount } from "@/lib/waitlist";
+import { getTestFlightTesterCount } from "@/lib/testflight";
 
 export const dynamic = "force-dynamic";
 
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 export default async function TestFlightPage() {
   const newsletter = home.hero.newsletter;
   const socialProof = newsletter.socialProof;
-  const liveCount = await getWaitlistCount(socialProof.count);
+  const liveCount = await getTestFlightTesterCount(socialProof.count);
 
   return (
     <section className="relative flex min-h-[calc(100svh-80px)] w-full flex-col overflow-hidden">
@@ -105,10 +105,10 @@ export default async function TestFlightPage() {
       <WaitlistCard
         id="newsletter"
         placement="testflight"
-        eyebrow={newsletter.eyebrow}
-        headline={newsletter.headline}
-        subheadline={newsletter.subheadline}
-        subheadlineMobile={newsletter.subheadlineMobile}
+        eyebrow="Newsletter"
+        headline="Get launch and iOS/iPadOS beta updates."
+        subheadline="TestFlight is open now. Subscribe here for launch notes and a heads-up when the iOS/iPadOS beta is ready."
+        subheadlineMobile="Get launch notes and the iOS/iPadOS beta heads-up."
         liveCount={liveCount}
         socialLabel={socialProof.label}
         avatars={socialProof.avatars}

@@ -9,17 +9,19 @@ export const features = {
   },
 
   hero: {
-    title: { prefix: "Every", suffixGradient: "Feature", after: "in hora" },
+    title: { prefix: "Every feature in", suffixGradient: "hora Calendar" },
     subtitle:
-      "A native macOS Google Calendar client built with Swift and SwiftUI. Here's everything it does today.",
+      "The full feature set in the current Mac beta: calendar views, event editing, Google sync, meeting links, keyboard workflows, and native macOS details.",
   },
 
   sections: [
     {
       label: "Calendar Views",
       screenshot: {
-        src: "/assets/features/views.webp",
+        src: "/assets/hero_features/updated/hora_week_view.webp",
         alt: "hora Calendar — Week, Month, and Day views",
+        width: 3192,
+        height: 1902,
       },
       items: [
         {
@@ -51,8 +53,10 @@ export const features = {
     {
       label: "Event Management",
       screenshot: {
-        src: "/assets/features/events.webp",
+        src: "/assets/hero_features/updated/new_event.webp",
         alt: "hora Calendar — Event creation and drag & drop",
+        width: 3186,
+        height: 1899,
         size: "sm",
       },
       items: [
@@ -92,8 +96,10 @@ export const features = {
     {
       label: "Google Integration",
       screenshot: {
-        src: "/assets/features/sync.webp",
+        src: "/assets/hero_features/updated/hora_accounts.webp",
         alt: "hora Calendar — Multi-account Google Calendar sync",
+        width: 3156,
+        height: 1887,
       },
       items: [
         {
@@ -121,8 +127,10 @@ export const features = {
     {
       label: "Productivity",
       screenshot: {
-        src: "/assets/features/productivity.webp",
+        src: "/assets/hero_features/updated/hora_widget_menubar.webp",
         alt: "hora Calendar — Menu bar widget with upcoming events",
+        width: 2820,
+        height: 1802,
         size: "sm",
       },
       wideShortcutsCard: {
@@ -163,8 +171,10 @@ export const features = {
     {
       label: "Appearance & Localization",
       screenshot: {
-        src: "/assets/features/settings.webp",
+        src: "/assets/hero_features/updated/hora_themes.webp",
         alt: "hora Calendar — Appearance and language settings",
+        width: 3188,
+        height: 1900,
         size: "sm",
       },
       items: [

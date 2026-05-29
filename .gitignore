@@ -53,3 +53,5 @@ posthog-setup-report.md
 .claude/
 .agents/
 AGENTS.md
+
+*.p8

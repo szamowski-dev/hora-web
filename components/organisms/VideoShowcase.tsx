@@ -1,4 +1,3 @@
-import { Icon } from "@/components/atoms/Icon";
 import { LazyLoopingVideo } from "@/components/organisms/LazyLoopingVideo";
 import { VideoShowcaseNativeVideo } from "@/components/organisms/VideoShowcaseNativeVideo";
 import { home } from "@/content/home";
@@ -12,8 +11,8 @@ const actionCards = [
     mediaKind: "media" as const,
     panel: (
       <LazyLoopingVideo
-        src="/assets/redesign/focus_time.webm"
-        fallbackSrc="/assets/redesign_raw/focus_time.mp4"
+        src="/assets/redesign/updated/focus_time.mp4"
+        fallbackSrc="/assets/redesign/updated/focus_time.mp4"
         label="hora Calendar focus time scheduling demo"
       />
     ),
@@ -24,8 +23,8 @@ const actionCards = [
     mediaKind: "media" as const,
     panel: (
       <LazyLoopingVideo
-        src="/assets/redesign/hora_quick_add.webm"
-        fallbackSrc="/assets/redesign_raw/hora_quick_add.mp4"
+        src="/assets/redesign/updated/hora_quickadd.mp4"
+        fallbackSrc="/assets/redesign/updated/hora_quickadd.mp4"
         label="hora Calendar natural language quick add demo"
       />
     ),
@@ -35,17 +34,24 @@ const actionCards = [
     body: "Stay on top of your day without losing focus.",
     mediaKind: "media" as const,
     panel: (
-      <MediaImage
-        src="/assets/redesign/hora_menu_bar.webp"
-        alt="hora Calendar menu bar popover"
+      <LazyLoopingVideo
+        src="/assets/redesign/updated/hora_menubar.mp4"
+        fallbackSrc="/assets/redesign/updated/hora_menubar.mp4"
+        label="hora Calendar menu bar popover demo"
       />
     ),
   },
   {
-    title: "Powerful shortcuts",
-    body: "Jump views, add events, and find dates without leaving the keyboard.",
-    mediaKind: "custom" as const,
-    panel: <ShortcutPanel />,
+    title: "Themes",
+    body: "Match hora to your workspace, mood, and system appearance.",
+    mediaKind: "media" as const,
+    panel: (
+      <LazyLoopingVideo
+        src="/assets/redesign/updated/hora_themes.mp4"
+        fallbackSrc="/assets/redesign/updated/hora_themes.mp4"
+        label="hora Calendar themes demo"
+      />
+    ),
   },
 ];
 
@@ -120,53 +126,5 @@ export function VideoShowcase() {
         </div>
       </div>
     </section>
-  );
-}
-
-function MediaImage({ src, alt }: { src: string; alt: string }) {
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={src}
-      alt={alt}
-      loading="lazy"
-      decoding="async"
-      className="h-full w-full bg-black object-cover"
-    />
-  );
-}
-
-function ShortcutPanel() {
-  const shortcuts = [
-    ["Today", "T"],
-    ["Search", "/"],
-  ];
-
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-4 rounded-md bg-[radial-gradient(220px_160px_at_50%_18%,rgba(255,56,60,0.18),transparent_70%),rgba(0,0,0,0.22)] p-5">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-accent/25 bg-accent/10 text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_18px_45px_-26px_rgba(255,56,60,0.9)]">
-        <Icon name="keyboard" size={34} />
-      </div>
-      <div className="grid w-full max-w-[14rem] gap-2">
-        {shortcuts.map(([label, ...keys]) => (
-          <div
-            key={label}
-            className="flex items-center justify-between gap-3 rounded-md bg-white/[0.045] px-3 py-2 text-xs"
-          >
-            <span className="truncate text-muted">{label}</span>
-            <span className="flex shrink-0 gap-1">
-              {keys.map((key) => (
-                <kbd
-                  key={key}
-                  className="min-w-6 rounded bg-white/[0.075] px-1.5 py-1 text-center font-sans text-[11px] font-semibold leading-none text-text/80"
-                >
-                  {key}
-                </kbd>
-              ))}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }

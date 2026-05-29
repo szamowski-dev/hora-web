@@ -1,12 +1,12 @@
 import { WaitlistCard } from "@/components/molecules/WaitlistCard";
 import { blog } from "@/content/blog";
 import { home } from "@/content/home";
-import { getWaitlistCount } from "@/lib/waitlist";
+import { getTestFlightTesterCount } from "@/lib/testflight";
 
 export async function StayInLoopCta() {
   const cta = blog.footerCta;
   const socialProof = home.hero.newsletter.socialProof;
-  const liveCount = await getWaitlistCount(socialProof.count);
+  const liveCount = await getTestFlightTesterCount(socialProof.count);
 
   return (
     <section className="relative overflow-hidden border-y border-white/8 bg-[#0b0c0f] py-20 md:py-24">

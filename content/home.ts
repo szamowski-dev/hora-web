@@ -14,15 +14,15 @@ export const home = {
     tagline: "The Mac calendar Google never built.",
     newsletter: {
       placeholder: "you@email.com",
-      button: "Sign up for TestFlight",
-      eyebrow: "Beta access",
-      headline: "Join the Mac beta.",
+      button: "Subscribe to newsletter",
+      eyebrow: "Newsletter",
+      headline: "Get the iOS/iPadOS beta note.",
       subheadline:
-        "Get TestFlight access, try early builds, and help shape the beta before launch.",
-      subheadlineMobile: "Try early builds. Shape the beta.",
+        "Subscribe for short launch updates and a heads-up when the iOS/iPadOS beta is ready.",
+      subheadlineMobile: "Get launch updates and the iOS/iPadOS beta note.",
       watchDemoCtaLabel: "Watch the demo",
       socialProof: {
-        count: 240,
+        count: 434,
         label: "Mac users are already testing hora on TestFlight",
         avatars: [
           {
@@ -53,7 +53,7 @@ export const home = {
         { src: "/assets/redesign/hora_demo.webm", type: "video/webm" },
         { src: "/assets/redesign/hora_demo.mp4", type: "video/mp4" },
       ],
-      posterSrc: "/assets/redesign/hora_hero_screenshot.webp",
+      posterSrc: "/assets/redesign/updated/hora_hero.webp",
       demoPosterSrc: "/assets/redesign/hora_demo_poster.webp",
       videoPosterSrc: "/assets/hero_image_poster.webp",
       captionsSrc: "/assets/hora-demo.vtt",
@@ -65,6 +65,13 @@ export const home = {
   featuredOn: {
     label: "Featured on",
     badges: [
+      {
+        href: "https://www.producthunt.com/products/hora-calendar?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-hora-calendar",
+        src: "https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1123558&theme=dark&t=1780039566967",
+        alt: "hora Calendar - The Mac calendar Google never built | Product Hunt",
+        width: 250,
+        height: 54,
+      },
       {
         href: "https://tinylaunch.com",
         src: "https://tinylaunch.com/tinylaunch_badge_3.svg",
@@ -104,6 +111,7 @@ export const home = {
       "Day, week, and month views",
       "Drag & drop",
       "Create, Edit, Reschedule",
+      "Google Calendar Shortcuts",
       "Focus on what's next",
     ],
     unmuteLabel: "Unmute sound",
@@ -118,8 +126,8 @@ export const home = {
     description:
       "Mac users are already trying hora in their daily Google Calendar workflows.",
     stat: {
-      count: 200,
-      value: "200+",
+      count: 434,
+      value: "434+",
       label: "Mac users are already testing hora on TestFlight",
     },
     quote: {
@@ -206,13 +214,13 @@ export const home = {
   },
 
   betaCta: {
-    eyebrow: "Beta access",
-    heading: "Want to try it early?",
-    subtitle: "Join the beta and help shape the product.",
-    note: "Early access via TestFlight.",
-    cardHeadline: "Join the Mac beta.",
+    eyebrow: "Newsletter",
+    heading: "Want launch updates?",
+    subtitle: "Subscribe for beta notes and iOS/iPadOS availability.",
+    note: "Short updates. No spam.",
+    cardHeadline: "Get the iOS/iPadOS beta note.",
     cardSubheadline:
-      "Get TestFlight access, try early builds, and help shape the beta before launch.",
+      "Subscribe for short launch updates and a heads-up when the iOS/iPadOS beta is ready.",
     footnote:
       "If you've ever felt like your calendar is either too simple or too complex, you'll probably understand why hora exists.",
   },
@@ -220,6 +228,9 @@ export const home = {
   pricing: {
     heading: { prefix: "Simple pricing", suffixGradient: "rules forever." },
     appStoreLabel: "Download on the App Store (Soon)",
+    testFlightLabel: "Join TestFlight",
+    testFlightHref: "https://testflight.apple.com/join/J63xy2Am",
+    testFlightIconSrc: "/assets/testflight-2023-05-19.webp",
     oneTime: "$49.90 one-time",
     yearly: "$29.99 / year",
     body:
@@ -258,16 +269,16 @@ export const home = {
       {
         n: 1,
         status: "Open Beta Tests" as const,
-        title: "TestFlight Launch",
+        title: "Apple Intelligence",
         description:
-          "Final QA sprint, performance tuning, stability checks.",
+          "Quick-add with Natural Language, Focus Time Planning, and quality-of-life improvements powered by on-device ML.",
       },
       {
         n: 2,
         status: "Up next" as const,
-        title: "Apple Intelligence",
+        title: "Mac App Store Launch",
         description:
-          "Quick-add with Natural Language, Focus Time Planning, quality of life improvements powered by on-device ML.",
+          "Final App Store polish, subscription flow, performance tuning, and the last round of launch QA.",
       },
       {
         n: 3,
@@ -310,7 +321,7 @@ export const home = {
       },
       {
         q: "When does hora launch?",
-        a: "hora is currently in pre-launch development. A public beta is planned — sign up for the newsletter above to get notified when it's available.",
+        a: "hora is in public beta on TestFlight now. Subscribe to the newsletter above for launch updates and a heads-up when the iOS/iPadOS beta is ready.",
       },
       {
         q: "Does hora work with Outlook or iCloud calendars?",

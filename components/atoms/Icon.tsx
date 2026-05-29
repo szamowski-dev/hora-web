@@ -11,6 +11,7 @@ import BrandZoomIcon from "@/components/ui/brand-zoom-icon";
 import FilledBellIcon from "@/components/ui/filled-bell-icon";
 import GaugeIcon from "@/components/ui/gauge-icon";
 import HandHeartIcon from "@/components/ui/hand-heart-icon";
+import HashtagIcon from "@/components/ui/hashtag-icon";
 import LayoutDashboardIcon from "@/components/ui/layout-dashboard-icon";
 import LikeIcon from "@/components/ui/like-icon";
 import MailFilledIcon from "@/components/ui/mail-filled-icon";
@@ -24,7 +25,6 @@ import ShieldCheck from "@/components/ui/shield-check";
 import TwitterXIcon from "@/components/ui/twitter-x-icon";
 import UnorderedListIcon from "@/components/ui/unordered-list-icon";
 import UsersIcon from "@/components/ui/users-icon";
-import WorldIcon from "@/components/ui/world-icon";
 import XIcon from "@/components/ui/x-icon";
 import type { AnimatedIconProps } from "@/components/ui/types";
 import { cn } from "@/lib/cn";
@@ -69,7 +69,7 @@ const iconMap: Record<IconName, AnimatedIconComponent> = {
   mail: MailFilledIcon,
   github: GithubIcon,
   x: TwitterXIcon,
-  bluesky: WorldIcon,
+  bluesky: HashtagIcon,
   discord: DiscordIcon,
   apple: AppleBrandLogo,
   testflight: SendIcon,

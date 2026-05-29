@@ -13,12 +13,13 @@ export const blog = {
     "Updates, dev logs, and announcements from shipping a native macOS calendar.",
   rss: { label: "RSS feed", href: "/blog/feed.xml" },
   footerCta: {
-    eyebrow: "Stay in the loop",
-    heading: "Get launch updates.",
-    subtitle: "Be first to know when hora launches. No spam.",
-    cardHeadline: "Skip the refresh cycle.",
+    eyebrow: "Newsletter",
+    heading: "Get launch and beta updates.",
+    subtitle:
+      "Short notes about the Mac launch, beta changes, and iOS/iPadOS availability. No spam.",
+    cardHeadline: "Get the iOS/iPadOS beta note.",
     cardSubheadline:
-      "Drop your email, get the invite the moment hora ships.",
+      "Subscribe for short launch updates and a heads-up when the iOS/iPadOS beta is ready.",
   },
 } as const;
 

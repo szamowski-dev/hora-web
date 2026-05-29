@@ -21,7 +21,7 @@ hora is a native macOS calendar app that connects directly to Google Calendar vi
 
 ## Status
 
-hora Calendar 0.6 is in public beta on TestFlight. Join via [hora Calendar TestFlight](https://horacal.app/testflight/) or subscribe to the [waitlist](https://horacal.app/#newsletter).
+hora Calendar is in public beta on TestFlight. Join via [hora Calendar TestFlight](https://testflight.apple.com/join/J63xy2Am) or subscribe to the [newsletter](https://horacal.app/#newsletter) for launch and iOS/iPadOS beta updates.
 
 ## Links
 

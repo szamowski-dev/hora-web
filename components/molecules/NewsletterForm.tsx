@@ -136,7 +136,7 @@ export function NewsletterForm({ className }: { className?: string }) {
               "Sending…"
             ) : (
               <>
-                <Icon name="testflight" size={16} />
+                <Icon name="mail" size={16} />
                 {hero.button}
               </>
             )}

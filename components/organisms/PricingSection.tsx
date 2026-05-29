@@ -117,20 +117,35 @@ export function PricingSection() {
                 );
               })}
             </div>
-            <button
-              type="button"
-              className="inline-flex h-11 w-fit items-center gap-2 rounded-md border border-accent/40 bg-accent/12 px-4 text-sm font-semibold text-accent"
-              aria-label={pricing.appStoreLabel}
-            >
-              <Image
-                src="/assets/redesign_raw/app-store.svg"
-                alt="Mac App Store icon"
-                width={18}
-                height={18}
-                className="h-[18px] w-[18px]"
-              />
-              {pricing.appStoreLabel}
-            </button>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                className="inline-flex h-11 w-fit items-center gap-2 rounded-md border border-accent/40 bg-accent/12 px-4 text-sm font-semibold text-accent"
+                aria-label={pricing.appStoreLabel}
+              >
+                <Image
+                  src="/assets/redesign_raw/app-store.svg"
+                  alt="Mac App Store icon"
+                  width={18}
+                  height={18}
+                  className="h-[18px] w-[18px]"
+                />
+                {pricing.appStoreLabel}
+              </button>
+              <a
+                href={pricing.testFlightHref}
+                className="inline-flex h-11 w-fit items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                <Image
+                  src={pricing.testFlightIconSrc}
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="h-5 w-5 rounded-[5px]"
+                />
+                {pricing.testFlightLabel}
+              </a>
+            </div>
           </div>
         </div>
       </div>

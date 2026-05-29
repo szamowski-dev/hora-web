@@ -1,11 +1,11 @@
 import { Icon } from "@/components/atoms/Icon";
 import { home } from "@/content/home";
-import { getWaitlistCount } from "@/lib/waitlist";
+import { getTestFlightTesterCount } from "@/lib/testflight";
 
 export async function UserProof() {
   const proof = home.userProof;
-  const waitlistProof = home.hero.newsletter.socialProof;
-  const liveCount = await getWaitlistCount(waitlistProof.count);
+  const testFlightProof = home.hero.newsletter.socialProof;
+  const liveCount = await getTestFlightTesterCount(testFlightProof.count);
 
   return (
     <section className="relative overflow-hidden border-y border-white/8 bg-[#0b0c0f] py-20 md:py-24">
@@ -44,7 +44,7 @@ export async function UserProof() {
                 {liveCount.toLocaleString()}+
               </p>
               <p className="mt-4 max-w-sm text-balance text-base font-semibold leading-snug text-text md:text-lg">
-                {waitlistProof.label}
+                {testFlightProof.label}
               </p>
             </div>
           </div>

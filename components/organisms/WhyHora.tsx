@@ -15,7 +15,7 @@ const integrations = [
   },
   {
     name: "Microsoft Teams",
-    detail: "Create & join Microsoft Teams meetings with one click. Coming soon.",
+    detail: "Create & join Microsoft Teams meetings with one click.",
     iconSrc: "/assets/redesign_raw/microsoft-teams-2018.svg",
   },
   {

@@ -82,11 +82,10 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
 
           <div data-anim="hero-cta" className="mt-7 flex flex-wrap items-center gap-3">
             <a
-              href="#newsletter"
-              data-scroll-align="center"
+              href="https://testflight.apple.com/join/J63xy2Am"
               className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-accent px-5 text-sm font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
-              Join Waitlist
+              Join TestFlight
               <span aria-hidden>→</span>
             </a>
             <a
@@ -101,9 +100,9 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
 
           <div
             data-anim="hero-proof"
-            className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
+            className="mt-6 flex flex-col items-start gap-3 xl:flex-row xl:items-center xl:gap-6"
           >
-            <div className="flex -space-x-2">
+            <div className="flex shrink-0 -space-x-2">
               {socialProof.avatars.slice(0, 5).map((avatar) => (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -118,12 +117,12 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
                 />
               ))}
             </div>
-            <p className="max-w-[19rem] text-sm leading-snug text-muted sm:max-w-[17rem]">
+            <p className="max-w-[25rem] text-sm leading-snug text-muted sm:max-w-[27rem]">
               <span className="font-semibold text-text">
                 {liveCount.toLocaleString()}+ Mac users
               </span>{" "}
-              are already signed up.{" "}
-              <span className="md:block">Be first. Shape the product.</span>
+              are already testing hora on TestFlight.{" "}
+              <span>Join the beta today.</span>
             </p>
           </div>
         </div>
@@ -134,14 +133,18 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             className="absolute -inset-4 rounded-[2rem] bg-[radial-gradient(ellipse_at_50%_45%,rgba(255,56,60,0.24),transparent_62%)] blur-2xl"
           />
           <div
+            aria-hidden
+            className="absolute inset-x-10 -bottom-9 h-20 rounded-full bg-[radial-gradient(ellipse,rgba(255,56,60,0.34)_0%,rgba(255,56,60,0.16)_42%,transparent_74%)] blur-2xl"
+          />
+          <div
             data-anim="hero-shot"
             className="relative overflow-hidden rounded-[18px] shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9)]"
           >
             <Image
-              src="/assets/redesign/hora_hero_screenshot.webp"
+              src={hero.demo.posterSrc}
               alt="hora Calendar macOS app interface"
-              width={1800}
-              height={1140}
+              width={3188}
+              height={1903}
               priority
               quality={90}
               sizes="(min-width: 1280px) 820px, (min-width: 1024px) 68vw, 100vw"
@@ -149,7 +152,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             />
           </div>
 
-          <div className="relative mx-auto mt-3 grid max-w-3xl grid-cols-2 gap-2 text-xs text-muted sm:grid-cols-4 md:absolute md:-bottom-7 md:left-6 md:right-6 md:mt-0 lg:left-8 lg:right-8">
+          <div className="relative z-10 mx-auto mt-4 grid max-w-3xl grid-cols-2 gap-2 text-xs text-muted sm:grid-cols-4 md:mt-5">
             {heroPills.map((item) => (
                 <div
                   key={item.key}
