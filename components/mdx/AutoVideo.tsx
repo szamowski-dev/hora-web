@@ -2,10 +2,12 @@ import { cn } from "@/lib/cn";
 
 export function AutoVideo({
   src,
+  mp4Src,
   poster,
   className,
 }: {
   src: string;
+  mp4Src?: string;
   poster?: string;
   className?: string;
 }) {
@@ -22,6 +24,7 @@ export function AutoVideo({
       )}
     >
       <source src={src} type="video/webm" />
+      {mp4Src ? <source src={mp4Src} type="video/mp4" /> : null}
     </video>
   );
 }
