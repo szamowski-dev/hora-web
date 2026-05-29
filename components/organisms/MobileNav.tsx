@@ -90,8 +90,14 @@ export function MobileNav({ activePath }: { activePath?: string }) {
         ))}
         <Link
           href={site.cta.primary.href}
+          target="_blank"
+          rel="noopener noreferrer"
           data-scroll-align="center"
           onClick={() => setOpen(false)}
+          {...analyticsAttrs("testflight_cta_click", {
+            placement: "nav_mobile",
+            destination: "testflight",
+          })}
           className="mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-md bg-accent px-6 text-sm font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
         >
           {site.cta.primary.label}

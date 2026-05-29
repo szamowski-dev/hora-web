@@ -118,7 +118,10 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify({
               client_id: email,
               events: [
-                { name: "waitlist_success", params: { method: "server_side" } },
+                {
+                  name: "newsletter_signup_completed",
+                  params: { method: "server_side" },
+                },
               ],
             }),
           },
@@ -131,7 +134,7 @@ export async function POST(req: NextRequest) {
     const posthog = getPostHogClient();
     posthog.capture({
       distinctId: email,
-      event: "waitlist_signup_completed",
+      event: "newsletter_signup_completed",
       properties: { method: "server_side", source: "subscribe_api" },
     });
   });

@@ -1,3 +1,5 @@
+import { analyticsAttrs } from "@/lib/analyticsAttrs";
+
 export function OneMoreThing({
   tweetUrl = "https://twitter.com/intent/tweet?text=I%E2%80%99ve%20joined%20the%20TestFlight%20for%20a%20new%20calendar%20app%20on%20macOS%2C%20and%20I%20think%20it%20is%E2%80%A6&url=https%3A%2F%2Fhoracal.app%2Ftestflight%2F%3Futm_source%3Dblog%26utm_medium%3Ddevlog%26utm_campaign%3Dv0_6_0_beta%26utm_content%3Done_more_thing_tweet",
   linkedInUrl = "https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fhoracal.app%2Ftestflight%2F%3Futm_source%3Dblog%26utm_medium%3Ddevlog%26utm_campaign%3Dv0_6_0_beta%26utm_content%3Done_more_thing_li",
@@ -54,6 +56,10 @@ export function OneMoreThing({
               href={testflightUrl}
               target="_blank"
               rel="noopener noreferrer"
+              {...analyticsAttrs("testflight_cta_click", {
+                placement: "blog_one_more_thing_inline",
+                destination: "testflight_landing",
+              })}
               style={{
                 color: "#ff736e",
                 textDecoration: "none",

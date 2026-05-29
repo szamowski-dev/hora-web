@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Icon, type IconName } from "@/components/atoms/Icon";
 import { home } from "@/content/home";
+import { analyticsAttrs } from "@/lib/analyticsAttrs";
 
 const heroPills: { key: string; label: React.ReactNode; icon: IconName }[] = [
   { key: "macos-native", label: "macOS Native", icon: "apple" },
@@ -83,6 +84,12 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
           <div data-anim="hero-cta" className="mt-7 flex flex-wrap items-center gap-3">
             <a
               href="https://testflight.apple.com/join/J63xy2Am"
+              target="_blank"
+              rel="noopener noreferrer"
+              {...analyticsAttrs("testflight_cta_click", {
+                placement: "hero",
+                destination: "testflight",
+              })}
               className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-accent px-5 text-sm font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               Join TestFlight

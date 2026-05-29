@@ -10,7 +10,7 @@ export function WaitlistImpression({ placement }: { placement: string }) {
     const host = sentinelRef.current?.parentElement;
     if (!host || typeof window === "undefined") return;
     if (!("IntersectionObserver" in window)) {
-      track("waitlist_card_view", { placement });
+      track("newsletter_card_view", { placement });
       return;
     }
 
@@ -20,7 +20,7 @@ export function WaitlistImpression({ placement }: { placement: string }) {
         for (const entry of entries) {
           if (entry.isIntersecting && !fired) {
             fired = true;
-            track("waitlist_card_view", { placement });
+            track("newsletter_card_view", { placement });
             io.disconnect();
             break;
           }

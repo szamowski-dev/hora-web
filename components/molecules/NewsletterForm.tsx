@@ -35,7 +35,7 @@ export function NewsletterForm({ className }: { className?: string }) {
     setStatus("submitting");
     setMessage("");
     const attribution = getAttribution();
-    track("waitlist_submit", { method: "email", ...attribution });
+    track("newsletter_submit", { method: "email", ...attribution });
 
     try {
       const res = await fetch(site.newsletter.endpoint, {
@@ -48,10 +48,10 @@ export function NewsletterForm({ className }: { className?: string }) {
       setMessage(site.newsletter.afterSignup.title);
       identify(normalizedEmail, {
         email: normalizedEmail,
-        waitlist_joined_at: new Date().toISOString(),
+        newsletter_joined_at: new Date().toISOString(),
         ...attribution,
       });
-      track("waitlist_success", { method: "email", ...attribution });
+      track("newsletter_form_success", { method: "email", ...attribution });
       trackConversion(CONVERSION_TAGS.waitlistSignup);
       redditIdentify(normalizedEmail).then(() => {
         redditTrack("SignUp");
@@ -61,7 +61,7 @@ export function NewsletterForm({ className }: { className?: string }) {
       setMessage(
         `Something went wrong. Try again or email ${site.contactEmail}.`,
       );
-      track("waitlist_error", { method: "email", ...attribution });
+      track("newsletter_signup_error", { method: "email", ...attribution });
     }
   }
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { home } from "@/content/home";
+import { analyticsAttrs } from "@/lib/analyticsAttrs";
 
 export function PricingSection() {
   const pricing = home.pricing;
@@ -134,6 +135,12 @@ export function PricingSection() {
               </button>
               <a
                 href={pricing.testFlightHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                {...analyticsAttrs("testflight_cta_click", {
+                  placement: "pricing",
+                  destination: "testflight",
+                })}
                 className="inline-flex h-11 w-fit items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 <Image
