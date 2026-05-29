@@ -78,7 +78,7 @@ type TestFlightCountResponse = {
   };
 };
 
-async function fetchTestFlightTesterCount() {
+export async function fetchTestFlightTesterCount() {
   const appId = getRequiredEnv("ASC_APP_ID");
   const token = createAppStoreConnectJwt();
   const url = new URL(`${API_BASE_URL}/betaTesters`);
