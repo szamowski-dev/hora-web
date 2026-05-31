@@ -2,12 +2,14 @@
 
 import type { ComponentType } from "react";
 import AppleBrandLogo from "@/components/ui/apple-brand-logo";
+import BrandChromeIcon from "@/components/ui/brand-chrome-icon";
 import CheckedIcon from "@/components/ui/checked-icon";
 import ClockIcon from "@/components/ui/clock-icon";
 import DialpadIcon from "@/components/ui/dialpad-icon";
 import DiscordIcon from "@/components/ui/discord-icon";
 import GithubIcon from "@/components/ui/github-icon";
 import BrandZoomIcon from "@/components/ui/brand-zoom-icon";
+import JavascriptIcon from "@/components/ui/javascript-icon";
 import FilledBellIcon from "@/components/ui/filled-bell-icon";
 import GaugeIcon from "@/components/ui/gauge-icon";
 import HandHeartIcon from "@/components/ui/hand-heart-icon";
@@ -55,7 +57,9 @@ export type IconName =
   | "gauge"
   | "rocket"
   | "like"
-  | "party-popper";
+  | "party-popper"
+  | "chrome"
+  | "javascript";
 
 type AnimatedIconComponent = ComponentType<AnimatedIconProps>;
 
@@ -86,6 +90,8 @@ const iconMap: Record<IconName, AnimatedIconComponent> = {
   rocket: RocketIcon,
   like: LikeIcon,
   "party-popper": PartyPopperIcon,
+  chrome: BrandChromeIcon,
+  javascript: JavascriptIcon,
 };
 
 type Props = AnimatedIconProps & {

@@ -4,11 +4,9 @@ import { useEffect, useRef, useState } from "react";
 
 export function LazyLoopingVideo({
   src,
-  fallbackSrc,
   label,
 }: {
   src: string;
-  fallbackSrc: string;
   label: string;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -42,11 +40,10 @@ export function LazyLoopingVideo({
           loop
           muted
           playsInline
-          preload="metadata"
+          preload="none"
           aria-label={label}
         >
           <source src={src} type="video/webm" />
-          <source src={fallbackSrc} type="video/mp4" />
         </video>
       ) : null}
     </div>

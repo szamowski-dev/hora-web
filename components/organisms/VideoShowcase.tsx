@@ -11,8 +11,7 @@ const actionCards = [
     mediaKind: "media" as const,
     panel: (
       <LazyLoopingVideo
-        src="/assets/redesign/updated/focus_time.mp4"
-        fallbackSrc="/assets/redesign/updated/focus_time.mp4"
+        src="/assets/redesign/updated/focus_time-card.webm"
         label="hora Calendar focus time scheduling demo"
       />
     ),
@@ -23,8 +22,7 @@ const actionCards = [
     mediaKind: "media" as const,
     panel: (
       <LazyLoopingVideo
-        src="/assets/redesign/updated/hora_quickadd.mp4"
-        fallbackSrc="/assets/redesign/updated/hora_quickadd.mp4"
+        src="/assets/redesign/updated/hora_quickadd-card.webm"
         label="hora Calendar natural language quick add demo"
       />
     ),
@@ -35,8 +33,7 @@ const actionCards = [
     mediaKind: "media" as const,
     panel: (
       <LazyLoopingVideo
-        src="/assets/redesign/updated/hora_menubar.mp4"
-        fallbackSrc="/assets/redesign/updated/hora_menubar.mp4"
+        src="/assets/redesign/updated/hora_menubar-card.webm"
         label="hora Calendar menu bar popover demo"
       />
     ),
@@ -47,8 +44,7 @@ const actionCards = [
     mediaKind: "media" as const,
     panel: (
       <LazyLoopingVideo
-        src="/assets/redesign/updated/hora_themes.mp4"
-        fallbackSrc="/assets/redesign/updated/hora_themes.mp4"
+        src="/assets/redesign/updated/hora_themes-card.webm"
         label="hora Calendar themes demo"
       />
     ),

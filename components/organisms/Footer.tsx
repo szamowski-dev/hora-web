@@ -6,34 +6,41 @@ import { site } from "@/content/site";
 export function Footer() {
   return (
     <footer className="border-t border-border px-6 py-8">
-      <div className="mx-auto flex max-w-[1180px] flex-col items-center justify-between gap-4 text-center md:flex-row md:text-left">
-        <p className="text-sm text-muted">
-          {site.footer.copyright}. Developed by{" "}
-          <a
-            href={site.footer.developedBy.href}
-            className="inline-flex min-h-12 items-center text-muted underline transition-colors hover:text-text"
-          >
-            {site.footer.developedBy.label}
-          </a>
-        </p>
-        <div className="flex items-center gap-5">
-          {site.footer.links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="inline-flex min-h-12 items-center text-sm text-muted transition-colors hover:text-text"
+      <div className="mx-auto flex max-w-[1180px] flex-col items-center justify-between gap-6 text-center lg:flex-row lg:text-left">
+        <p className="max-w-[22rem] text-sm leading-6 text-muted md:max-w-none">
+          {site.footer.copyright}.{" "}
+          <span className="whitespace-nowrap">
+            Developed by{" "}
+            <a
+              href={site.footer.developedBy.href}
+              className="inline-flex min-h-11 items-center text-muted underline transition-colors hover:text-text focus-visible:outline-none focus-visible:text-accent"
             >
-              {link.label}
-            </Link>
-          ))}
-          {site.footer.socials.map((social) => (
-            <FooterSocialLink
-              key={social.href}
-              href={social.href}
-              label={social.label}
-              icon={social.icon as IconName}
-            />
-          ))}
+              {site.footer.developedBy.label}
+            </a>
+          </span>
+        </p>
+        <div className="flex w-full max-w-[28rem] flex-col items-center gap-3 lg:w-auto lg:max-w-none lg:flex-row lg:items-center lg:gap-5">
+          <div className="flex max-w-full flex-wrap items-center justify-center gap-x-5 gap-y-1">
+            {site.footer.links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="inline-flex min-h-11 items-center text-sm text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:text-accent"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <div className="flex max-w-full flex-wrap items-center justify-center gap-1 lg:flex-nowrap">
+            {site.footer.socials.map((social) => (
+              <FooterSocialLink
+                key={social.href}
+                href={social.href}
+                label={social.label}
+                icon={social.icon as IconName}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </footer>
