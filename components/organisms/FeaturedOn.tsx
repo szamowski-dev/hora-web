@@ -1,4 +1,5 @@
 import { home } from "@/content/home";
+import { cn } from "@/lib/cn";
 
 export function FeaturedOn() {
   const f = home.featuredOn;
@@ -44,7 +45,10 @@ export function FeaturedOn() {
                     height={badge.height}
                     loading="lazy"
                     decoding="async"
-                    className="block max-h-10 max-w-full object-contain md:max-h-11"
+                    className={cn(
+                      "block max-h-10 max-w-full object-contain md:max-h-11",
+                      "className" in badge ? badge.className : undefined,
+                    )}
                   />
                 </a>
               </li>

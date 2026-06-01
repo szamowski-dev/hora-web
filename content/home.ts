@@ -71,6 +71,8 @@ export const home = {
         alt: "hora Calendar - The Mac calendar Google never built | Product Hunt",
         width: 250,
         height: 54,
+        className:
+          "h-11 w-[8.75rem] max-w-none object-fill md:h-16 md:w-[12.5rem]",
       },
       {
         href: "https://tinylaunch.com",
