@@ -100,7 +100,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
               data-scroll-align="center"
               className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-white/12 bg-white/[0.055] px-5 text-sm font-semibold text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl transition-colors hover:border-white/24 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
-              Watch 1:35 Demo
+              Watch 1:43 Demo
               <span aria-hidden>▸</span>
             </a>
           </div>
