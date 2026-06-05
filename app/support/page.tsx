@@ -5,7 +5,7 @@ import { SupportForm } from "@/components/organisms/SupportForm";
 import { defaultOg } from "@/lib/og";
 
 export const metadata: Metadata = {
-  title: "Support",
+  title: "hora Calendar Support",
   description:
     "Get help with hora Calendar, report bugs, and read answers to common questions about sync, privacy, accounts, and TestFlight.",
   alternates: { canonical: "/support/" },

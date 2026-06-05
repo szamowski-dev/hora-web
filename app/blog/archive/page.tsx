@@ -9,12 +9,14 @@ import { defaultOg } from "@/lib/og";
 export const revalidate = 600;
 
 export const metadata: Metadata = {
-  title: "Blog Archive",
-  description: "Browse hora Calendar blog posts by month.",
+  title: "Mac Calendar Blog Archive",
+  description:
+    "Browse hora Calendar blog posts by month, including Mac calendar product updates, SwiftUI engineering notes, Google Calendar sync work, and launch reports.",
   alternates: { canonical: "/blog/archive/" },
   openGraph: defaultOg({
     title: "hora Calendar Blog Archive",
-    description: "Browse hora Calendar blog posts by month.",
+    description:
+      "Browse hora Calendar blog posts by month, including Mac calendar product updates, SwiftUI engineering notes, Google Calendar sync work, and launch reports.",
     url: "https://horacal.app/blog/archive/",
   }),
 };
@@ -40,7 +42,9 @@ export default async function BlogArchiveIndexPage() {
             Monthly <span className="text-accent">Archive</span>
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
-            Browse every hora Calendar update by month.
+            Browse every hora Calendar update by month, from early SwiftUI prototypes
+            and Google Calendar sync notes to public beta fixes, launch planning, and
+            product comparisons for Mac users who live in Google Calendar.
           </p>
         </div>
       </section>

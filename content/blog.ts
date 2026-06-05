@@ -1,6 +1,6 @@
 export const blog = {
   seo: {
-    title: "Blog",
+    title: "Mac Calendar Blog",
     description:
       "Updates, dev logs, and announcements from building hora Calendar — a native macOS Google Calendar client.",
     ogTitle: "hora Calendar Blog — Building a native macOS calendar in public",
@@ -10,7 +10,7 @@ export const blog = {
   eyebrow: "Building in public",
   heading: { prefix: "hora", suffixGradient: "Blog" },
   subtitle:
-    "Updates, dev logs, and announcements from shipping a native macOS calendar.",
+    "Updates, dev logs, launch notes, and technical write-ups from building hora Calendar: a native Mac app for Google Calendar, real-time sync, keyboard workflows, SwiftUI performance, and the product decisions behind each release.",
   rss: { label: "RSS feed", href: "/blog/feed.xml" },
   footerCta: {
     eyebrow: "Newsletter",

@@ -25,6 +25,36 @@ const nextConfig: NextConfig = {
         destination: "/blog/2026-04-13-v0-6-qa-grind/",
         permanent: true,
       },
+      {
+        source: "/blog/fantastical-alternative-google-calendar/",
+        destination: "/blog/2026-05-06-fantastical-alternative-google-calendar/",
+        permanent: true,
+      },
+      {
+        source: "/blog/fantastical-alternative-google-calendar",
+        destination: "/blog/2026-05-06-fantastical-alternative-google-calendar/",
+        permanent: true,
+      },
+      {
+        source: "/blog/from-polling-to-push/",
+        destination: "/blog/2026-04-16-from-polling-to-push/",
+        permanent: true,
+      },
+      {
+        source: "/blog/from-polling-to-push",
+        destination: "/blog/2026-04-16-from-polling-to-push/",
+        permanent: true,
+      },
+      {
+        source: "/blog/native-app-vs-electron-pwa/",
+        destination: "/blog/2026-04-14-native-app-vs-electron-pwa/",
+        permanent: true,
+      },
+      {
+        source: "/blog/native-app-vs-electron-pwa",
+        destination: "/blog/2026-04-14-native-app-vs-electron-pwa/",
+        permanent: true,
+      },
     ];
   },
   async headers() {

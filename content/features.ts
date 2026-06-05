@@ -1,6 +1,6 @@
 export const features = {
   seo: {
-    title: "Features",
+    title: "Mac Calendar Features",
     description:
       "Every feature in hora Calendar — a native macOS Google Calendar client. Week, month, day views, keyboard shortcuts, Pomodoro, availability sharing, and more.",
     ogTitle: "Features — hora Calendar",

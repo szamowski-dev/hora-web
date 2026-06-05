@@ -38,11 +38,11 @@ export async function generateMetadata({
   const canonical = `/blog/archive/${year}/${month}/`;
   return {
     title: `${archive.label} Blog Archive`,
-    description: `hora Calendar blog posts from ${archive.label}.`,
+    description: `hora Calendar blog posts from ${archive.label}, covering Mac calendar product work, SwiftUI development, Google Calendar sync, beta fixes, and launch notes.`,
     alternates: { canonical },
     openGraph: defaultOg({
       title: `${archive.label} - hora Calendar Blog Archive`,
-      description: `hora Calendar blog posts from ${archive.label}.`,
+      description: `hora Calendar blog posts from ${archive.label}, covering Mac calendar product work, SwiftUI development, Google Calendar sync, beta fixes, and launch notes.`,
       url: `https://horacal.app${canonical}`,
     }),
   };
@@ -79,7 +79,7 @@ export default async function BlogMonthlyArchivePage({
       <BlogListingPage
         eyebrow="Monthly archive"
         title={archive.label}
-        subtitle={`hora Calendar blog posts from ${archive.label}.`}
+        subtitle={`hora Calendar blog posts from ${archive.label}: Mac calendar product updates, SwiftUI engineering notes, Google Calendar sync work, beta fixes, launch planning, and practical comparisons for people choosing a faster native calendar workflow.`}
         posts={archivePosts.map(postToCard)}
         tags={getBlogTags(posts)}
         archives={archives}
