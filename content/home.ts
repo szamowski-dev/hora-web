@@ -132,13 +132,22 @@ export const home = {
       value: "434+",
       label: "Mac users are already testing hora on TestFlight",
     },
-    quote: {
-      text: "Finally an app that does not ship a whole browser alongside it.",
-      author: "Ivor",
-      handle: "@ivorisnoob",
-      href: "https://x.com/ivorisnoob",
-      avatarSrc: "https://unavatar.io/x/ivorisnoob",
-    },
+    quotes: [
+      {
+        text: "Finally an app that does not ship a whole browser alongside it.",
+        author: "Ivor",
+        handle: "@ivorisnoob",
+        href: "https://x.com/ivorisnoob",
+        avatarSrc: "https://unavatar.io/x/ivorisnoob",
+      },
+      {
+        text: "Discovered this calendar by accident, on the #mimestream reddit. Great piece of software for those who use Google Calendar either through workspace or ordinary GMail account! Thanks!",
+        author: "sparekontoX",
+        handle: "@sparekontoX",
+        href: "https://x.com/sparekontoX/status/2063127382555308147",
+        avatarSrc: "https://unavatar.io/x/sparekontoX",
+      },
+    ],
   },
 
   features: {
