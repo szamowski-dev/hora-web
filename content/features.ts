@@ -11,7 +11,7 @@ export const features = {
   hero: {
     title: { prefix: "Every feature in", suffixGradient: "hora Calendar" },
     subtitle:
-      "The full feature set in the current Mac beta: calendar views, event editing, Google sync, meeting links, keyboard workflows, and native macOS details.",
+      "The full feature set of the Mac app: calendar views, event editing, Google sync, meeting links, keyboard workflows, and native macOS details.",
   },
 
   sections: [

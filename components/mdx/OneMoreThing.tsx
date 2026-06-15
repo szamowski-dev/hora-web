@@ -1,15 +1,16 @@
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { site } from "@/content/site";
 
 export function OneMoreThing({
-  tweetUrl = "https://twitter.com/intent/tweet?text=I%E2%80%99ve%20joined%20the%20TestFlight%20for%20a%20new%20calendar%20app%20on%20macOS%2C%20and%20I%20think%20it%20is%E2%80%A6&url=https%3A%2F%2Fhoracal.app%2Ftestflight%2F%3Futm_source%3Dblog%26utm_medium%3Ddevlog%26utm_campaign%3Dv0_6_0_beta%26utm_content%3Done_more_thing_tweet",
-  linkedInUrl = "https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fhoracal.app%2Ftestflight%2F%3Futm_source%3Dblog%26utm_medium%3Ddevlog%26utm_campaign%3Dv0_6_0_beta%26utm_content%3Done_more_thing_li",
+  tweetUrl = "https://twitter.com/intent/tweet?text=I%E2%80%99ve%20been%20using%20a%20new%20native%20Google%20Calendar%20app%20for%20macOS%2C%20and%20I%20think%20it%20is%E2%80%A6&url=https%3A%2F%2Fhoracal.app%2F%3Futm_source%3Dblog%26utm_medium%3Ddevlog%26utm_campaign%3Dmac_launch%26utm_content%3Done_more_thing_tweet",
+  linkedInUrl = "https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fhoracal.app%2F%3Futm_source%3Dblog%26utm_medium%3Ddevlog%26utm_campaign%3Dmac_launch%26utm_content%3Done_more_thing_li",
   productHuntUrl = "https://www.producthunt.com/@szamski",
-  testflightUrl = "https://horacal.app/testflight?utm_source=blog&utm_medium=devlog&utm_campaign=v0_6_0_beta&utm_content=one_more_thing",
+  appUrl = site.cta.primary.href,
 }: {
   tweetUrl?: string;
   linkedInUrl?: string;
   productHuntUrl?: string;
-  testflightUrl?: string;
+  appUrl?: string;
 }) {
   return (
     <div className="not-prose my-12">
@@ -51,14 +52,14 @@ export function OneMoreThing({
           </li>
           <li className="mb-1">
             <strong className="text-white">Tell one friend</strong> who
-            complains about Google Calendar on their Mac and send them{" "}
+            complains about Google Calendar on their Mac and send them to{" "}
             <a
-              href={testflightUrl}
+              href={appUrl}
               target="_blank"
               rel="noopener noreferrer"
-              {...analyticsAttrs("testflight_cta_click", {
+              {...analyticsAttrs("app_store_cta_click", {
                 placement: "blog_one_more_thing_inline",
-                destination: "testflight_landing",
+                destination: "mac_app_store",
               })}
               style={{
                 color: "#ff736e",
@@ -67,7 +68,7 @@ export function OneMoreThing({
                 borderBottom: "1px solid rgba(255,115,110,0.4)",
               }}
             >
-              horacal.app/testflight
+              the Mac App Store
             </a>{" "}
             &mdash; worth more than a hundred impressions.
           </li>

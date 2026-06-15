@@ -72,7 +72,7 @@ export async function BetaCta() {
             headline={cta.cardHeadline}
             subheadline={cta.cardSubheadline}
             liveCount={liveCount}
-            socialLabel="Mac users are already testing hora on TestFlight"
+            socialLabel={socialProof.label}
             avatars={socialProof.avatars}
             variant="hero"
             className="h-fit self-center"

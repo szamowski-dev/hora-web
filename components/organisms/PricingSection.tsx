@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Icon } from "@/components/atoms/Icon";
 import { home } from "@/content/home";
+import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 
 export function PricingSection() {
@@ -119,39 +121,36 @@ export function PricingSection() {
               })}
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                className="inline-flex h-11 w-fit items-center gap-2 rounded-md border border-accent/40 bg-accent/12 px-4 text-sm font-semibold text-accent"
-                aria-label={pricing.appStoreLabel}
-              >
-                <Image
-                  src="/assets/redesign_raw/app-store.svg"
-                  alt="Mac App Store icon"
-                  width={18}
-                  height={18}
-                  className="h-[18px] w-[18px]"
-                />
-                {pricing.appStoreLabel}
-              </button>
               <a
-                href={pricing.testFlightHref}
+                href={pricing.appStoreHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                {...analyticsAttrs("testflight_cta_click", {
+                aria-label={pricing.appStoreLabel}
+                {...analyticsAttrs("app_store_cta_click", {
                   placement: "pricing",
-                  destination: "testflight",
+                  destination: "mac_app_store",
                 })}
-                className="inline-flex h-11 w-fit items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                className="inline-flex h-11 items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
                 <Image
-                  src={pricing.testFlightIconSrc}
-                  alt=""
-                  width={20}
-                  height={20}
-                  className="h-5 w-5 rounded-[5px]"
+                  src={site.macAppStoreBadgeSrc}
+                  alt={pricing.appStoreLabel}
+                  width={162}
+                  height={50}
+                  className="h-11 w-auto"
                 />
-                {pricing.testFlightLabel}
               </a>
+              <Link
+                href={pricing.betaNoteHref}
+                {...analyticsAttrs("ios_beta_note_click", {
+                  placement: "pricing",
+                  destination: "newsletter",
+                })}
+                className="inline-flex h-11 w-fit items-center gap-2 rounded-md border border-white/12 bg-white/[0.04] px-4 text-sm font-semibold text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] transition-colors hover:border-white/24 hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                <Icon name="bell" size={16} className="text-accent" />
+                {pricing.betaNoteLabel}
+              </Link>
             </div>
           </div>
         </div>

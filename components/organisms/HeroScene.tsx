@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Icon, type IconName } from "@/components/atoms/Icon";
 import { home } from "@/content/home";
+import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 
 const heroPills: { key: string; label: React.ReactNode; icon: IconName }[] = [
@@ -62,7 +63,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
       <div className="relative z-10 mx-auto grid w-full max-w-[1280px] flex-1 items-center gap-8 px-6 pb-14 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-8 md:pb-12 md:pt-12 lg:gap-10">
         <div className="max-w-[35rem] text-left">
           <div className="inline-flex items-center rounded-md border border-accent/35 bg-accent/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-            Coming soon to Mac
+            Now on the Mac App Store
           </div>
 
           <h1
@@ -83,17 +84,23 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
 
           <div data-anim="hero-cta" className="mt-7 flex flex-wrap items-center gap-3">
             <a
-              href="https://testflight.apple.com/join/J63xy2Am"
+              href={site.cta.primary.href}
               target="_blank"
               rel="noopener noreferrer"
-              {...analyticsAttrs("testflight_cta_click", {
+              aria-label={site.cta.primary.label}
+              {...analyticsAttrs("app_store_cta_click", {
                 placement: "hero",
-                destination: "testflight",
+                destination: "mac_app_store",
               })}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-accent px-5 text-sm font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="inline-flex h-12 items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
-              Join TestFlight
-              <span aria-hidden>→</span>
+              <Image
+                src={site.macAppStoreBadgeSrc}
+                alt={site.cta.primary.label}
+                width={162}
+                height={50}
+                className="h-12 w-auto"
+              />
             </a>
             <a
               href="#watch-demo"
@@ -128,8 +135,8 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
               <span className="font-semibold text-text">
                 {liveCount.toLocaleString()}+ Mac users
               </span>{" "}
-              are already testing hora on TestFlight.{" "}
-              <span>Join the beta today.</span>
+              already use hora.{" "}
+              <span>Now on the Mac App Store.</span>
             </p>
           </div>
         </div>

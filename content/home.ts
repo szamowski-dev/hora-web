@@ -23,7 +23,7 @@ export const home = {
       watchDemoCtaLabel: "Watch the demo",
       socialProof: {
         count: 434,
-        label: "Mac users are already testing hora on TestFlight",
+        label: "Mac users already use hora",
         avatars: [
           {
             src: "https://randomuser.me/api/portraits/thumb/men/32.jpg",
@@ -123,14 +123,14 @@ export const home = {
   },
 
   userProof: {
-    eyebrow: "Already testing",
+    eyebrow: "Already on hora",
     heading: { prefix: "Already in", suffixGradient: "real Mac calendars" },
     description:
-      "Mac users are already trying hora in their daily Google Calendar workflows.",
+      "Mac users are already running hora in their daily Google Calendar workflows.",
     stat: {
       count: 434,
       value: "434+",
-      label: "Mac users are already testing hora on TestFlight",
+      label: "Mac users already use hora",
     },
     quotes: [
       {
@@ -238,14 +238,14 @@ export const home = {
 
   pricing: {
     heading: { prefix: "Simple pricing", suffixGradient: "rules forever." },
-    appStoreLabel: "Download on the App Store (Soon)",
-    testFlightLabel: "Join TestFlight",
-    testFlightHref: "https://testflight.apple.com/join/J63xy2Am",
-    testFlightIconSrc: "/assets/testflight-2023-05-19.webp",
+    appStoreLabel: "Download on the Mac App Store",
+    appStoreHref: "https://apps.apple.com/app/apple-store/id6761409895",
+    betaNoteLabel: "Get the iOS/iPad beta note",
+    betaNoteHref: "/#newsletter",
     oneTime: "$49.90 one-time",
     yearly: "$29.99 / year",
     body:
-      "Pick a one-time purchase or a lower annual plan. Both include Family Sharing. TestFlight access stays free during beta.",
+      "Pick a one-time purchase or a lower annual plan. Both include Family Sharing.",
     crossPlatform:
       "Shared across macOS and iOS/iPad apps (coming soon).",
     comparison: [
@@ -279,31 +279,24 @@ export const home = {
     items: [
       {
         n: 1,
-        status: "Open Beta Tests" as const,
-        title: "Apple Intelligence",
+        status: "Shipped" as const,
+        title: "Mac App Store Launch",
         description:
-          "Quick-add with Natural Language, Focus Time Planning, and quality-of-life improvements powered by on-device ML.",
+          "hora is live on the Mac App Store. One-time purchase or subscription, both with Family Sharing.",
       },
       {
         n: 2,
         status: "Up next" as const,
-        title: "Mac App Store Launch",
+        title: "iOS & iPadOS TestFlight",
         description:
-          "Final App Store polish, subscription flow, performance tuning, and the last round of launch QA.",
+          "A native companion app for iPhone and iPad. Same SwiftUI foundation, designed for touch — public beta on TestFlight coming soon.",
       },
       {
         n: 3,
-        status: "Planned" as const,
-        title: "iOS & iPadOS App",
-        description:
-          "A native companion app for iPhone and iPad. Same SwiftUI foundation, designed for touch.",
-      },
-      {
-        n: 4,
         status: "On the horizon" as const,
-        title: "Google Workspace",
+        title: "macOS, iOS & iPadOS 27 App Store Launch",
         description:
-          "Gmail context for meetings, contact enrichment, and deeper Google ecosystem integration.",
+          "One hora across every Apple platform — a unified release for macOS 27, iOS 27, and iPadOS 27.",
       },
     ],
   },
@@ -312,7 +305,7 @@ export const home = {
     eyebrow: "Good to know",
     heading: { prefix: "Frequently", suffixGradient: "Asked Questions" },
     subtitle:
-      "Short answers to the things people ask before joining the beta.",
+      "Short answers to the things people ask before downloading hora.",
     items: [
       {
         q: "What is hora Calendar?",
@@ -328,11 +321,11 @@ export const home = {
       },
       {
         q: "Is hora free?",
-        a: "hora will be a paid app. At launch there's a limited-time one-time purchase for $49.90, or a $29.99/year subscription — both include Family Sharing. The TestFlight beta is free to join.",
+        a: "hora is a paid app. There's a limited-time one-time purchase for $49.90, or a $29.99/year subscription — both include Family Sharing.",
       },
       {
         q: "When does hora launch?",
-        a: "hora is in public beta on TestFlight now. Subscribe to the newsletter above for launch updates and a heads-up when the iOS/iPadOS beta is ready.",
+        a: "hora is on the Mac App Store now. The iOS/iPad app is coming next — subscribe to the newsletter above for a heads-up when the iOS/iPadOS beta is ready.",
       },
       {
         q: "Does hora work with Outlook or iCloud calendars?",

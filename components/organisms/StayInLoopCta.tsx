@@ -50,7 +50,7 @@ export async function StayInLoopCta() {
             headline={cta.cardHeadline}
             subheadline={cta.cardSubheadline}
             liveCount={liveCount}
-            socialLabel="Mac users are already testing hora on TestFlight"
+            socialLabel={socialProof.label}
             avatars={socialProof.avatars}
             variant="hero"
           />

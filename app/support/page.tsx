@@ -7,7 +7,7 @@ import { defaultOg } from "@/lib/og";
 export const metadata: Metadata = {
   title: "hora Calendar Support",
   description:
-    "Get help with hora Calendar, report bugs, and read answers to common questions about sync, privacy, accounts, and TestFlight.",
+    "Get help with hora Calendar, report bugs, and read answers to common questions about sync, privacy, accounts, and the Mac App Store.",
   alternates: { canonical: "/support/" },
   openGraph: defaultOg({
     title: "Support — hora Calendar",
@@ -50,15 +50,15 @@ const faqItems = [
   },
   {
     q: "How fast do you respond?",
-    a: "During the beta, support is handled directly by the developer. Critical sync or data-loss issues get priority; other requests are usually handled around build cycles.",
+    a: "Support is handled directly by the developer. Critical sync or data-loss issues get priority; other requests are usually handled around build cycles.",
   },
   {
     q: "Can I request a feature?",
     a: "Yes. Feature requests are welcome, especially when they explain the real calendar workflow behind the request.",
   },
   {
-    q: "Is TestFlight the current way to install hora?",
-    a: "Yes, while hora is in beta. Join TestFlight to install the latest build, or subscribe to the newsletter for launch and iOS/iPadOS beta updates.",
+    q: "How do I install hora?",
+    a: "hora is on the Mac App Store — download it there. A native iOS and iPadOS app is coming next; subscribe to the newsletter for a heads-up when the iOS/iPadOS TestFlight beta opens.",
   },
 ];
 

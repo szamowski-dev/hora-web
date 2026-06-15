@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="https://horacal.app/testflight"><img src="https://img.shields.io/badge/Join_TestFlight-000?style=for-the-badge&logo=apple&logoColor=white" alt="Join TestFlight"></a>
+  <a href="https://apps.apple.com/app/apple-store/id6761409895"><img src="https://img.shields.io/badge/Download_on_the_Mac_App_Store-000?style=for-the-badge&logo=apple&logoColor=white" alt="Download on the Mac App Store"></a>
   <a href="https://horacal.app"><img src="https://img.shields.io/badge/horacal.app-111?style=for-the-badge&logo=safari&logoColor=white" alt="Website"></a>
 </p>
 
@@ -163,9 +163,9 @@ Apple Intelligence — smart scheduling, focus time planning, meeting prep brief
 
 | # | Milestone |
 |---|---|
-| 1 | Mac App Store launch — final QA sprint, macOS 27 compatibility, performance |
-| 2 | iOS & iPadOS companion — same SwiftUI foundation, designed for touch |
-| 3 | Google Workspace — Gmail context, contact enrichment, deeper integration |
+| 1 | ✅ Mac App Store launch — live now |
+| 2 | iOS & iPadOS TestFlight — same SwiftUI foundation, designed for touch (public beta coming soon) |
+| 3 | macOS, iOS & iPadOS 27 App Store launch — one hora across every Apple platform |
 
 ### Links
 
