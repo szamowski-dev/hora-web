@@ -32,7 +32,7 @@ export function BlogPreview({ posts }: { posts: readonly PostCardData[] }) {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="flex max-w-5xl flex-col gap-4 md:flex-row md:items-end md:justify-between md:gap-10">
           <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
             {b.heading.prefix}
@@ -53,7 +53,7 @@ export function BlogPreview({ posts }: { posts: readonly PostCardData[] }) {
         <div className="mt-12 text-center md:mt-14">
           <Link
             href={b.allPostsLink.href}
-            className="inline-flex h-10 items-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.07] hover:text-text"
+            className="inline-flex h-10 items-center gap-2 rounded-md border border-white/10 bg-white/4 px-4 text-sm text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.07] hover:text-text"
           >
             {b.allPostsLink.label}
           </Link>

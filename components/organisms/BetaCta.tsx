@@ -33,7 +33,7 @@ export async function BetaCta() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(760px_420px_at_22%_16%,rgba(255,56,60,0.16),transparent_68%),radial-gradient(720px_420px_at_80%_70%,rgba(131,199,255,0.08),transparent_72%)]"
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="grid gap-8 rounded-lg border border-white/10 bg-white/[0.035] p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_34px_90px_-60px_rgba(255,56,60,0.8)] md:grid-cols-[0.95fr_1.05fr] md:p-10 lg:p-11">
           <div className="flex flex-col justify-between">
             <div>
@@ -50,7 +50,7 @@ export async function BetaCta() {
               {benefits.map((item) => (
                 <div
                   key={item.title}
-                  className="rounded-md border border-white/10 bg-white/[0.02] p-3"
+                  className="rounded-md border border-white/10 bg-white/2 p-3"
                 >
                   <div className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-md border border-accent/25 bg-accent/10 text-accent">
                     <Icon name={item.icon} size={16} />

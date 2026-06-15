@@ -117,7 +117,7 @@ export function MobileNav({ activePath }: { activePath?: string }) {
             aria-label={site.community.discord.label}
             onClick={() => setOpen(false)}
             {...analyticsAttrs("discord_click", { location: "mobile_menu" })}
-            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-white/12 bg-white/[0.02] text-text transition-colors hover:border-[#5865F2]/50 hover:bg-[#5865F2]/15 hover:text-[#5865F2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5865F2] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-white/12 bg-white/2 text-text transition-colors hover:border-[#5865F2]/50 hover:bg-[#5865F2]/15 hover:text-[#5865F2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5865F2] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
           >
             <Icon name="discord" size={20} />
           </a>

@@ -52,7 +52,7 @@ export function FeaturesStory() {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="max-w-5xl">
           <h2
             data-anim="features-title"
@@ -70,7 +70,7 @@ export function FeaturesStory() {
               <article
                 key={item.title}
                 data-anim="feature-card"
-                className="group relative min-h-[14.5rem] overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] transition-colors duration-300 hover:border-accent/25 hover:bg-white/[0.055] md:p-7"
+                className="group relative min-h-[14.5rem] overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] transition-colors duration-300 hover:border-accent/25 hover:bg-white/5.5 md:p-7"
               >
                 <div
                   aria-hidden
@@ -102,7 +102,7 @@ export function FeaturesStory() {
         <div className="mt-16 text-center md:mt-20">
           <Link
             href={f.allFeaturesLink.href}
-            className="inline-flex h-10 items-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.07] hover:text-text"
+            className="inline-flex h-10 items-center gap-2 rounded-md border border-white/10 bg-white/4 px-4 text-sm text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.07] hover:text-text"
           >
             {f.allFeaturesLink.label}
           </Link>

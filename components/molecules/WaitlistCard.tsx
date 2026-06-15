@@ -52,7 +52,7 @@ export function WaitlistCard({
       className={cn(
         "relative w-full overflow-hidden rounded-lg border p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_24px_60px_-20px_rgba(0,0,0,0.72)] md:p-6 md:backdrop-blur-2xl",
         isHero
-          ? "border-white/12 bg-[#101114]/88 shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_24px_70px_-28px_rgba(0,0,0,0.9)]"
+          ? "border-white/12 bg-surface/88 shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_24px_70px_-28px_rgba(0,0,0,0.9)]"
           : "border-white/10 bg-white/4",
         id && "scroll-mt-24",
         className,
@@ -88,7 +88,7 @@ export function WaitlistCard({
         {headline}
       </h2>
       {subheadline ? (
-        <p className="relative mt-2 max-w-[40rem] text-base leading-relaxed text-muted md:text-lg">
+        <p className="relative mt-2 max-w-160 text-base leading-relaxed text-muted md:text-lg">
           {subheadlineMobile ? (
             <>
               <span className="sm:hidden">{subheadlineMobile}</span>
@@ -103,7 +103,7 @@ export function WaitlistCard({
         <p className="relative mt-1 text-xs text-muted/80">{note}</p>
       ) : null}
 
-      <div className="relative mt-5 flex items-center gap-3 rounded-md border border-white/12 bg-white/[0.045] px-4 py-3 text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+      <div className="relative mt-5 flex items-center gap-3 rounded-md border border-white/12 bg-white/4.5 px-4 py-3 text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
         <AvatarTicker avatars={avatars} />
         <p className="min-w-0 text-sm leading-snug text-muted">
           <span className="mr-1.5 text-base font-semibold tabular-nums text-text">
@@ -149,7 +149,7 @@ function AvatarTicker({ avatars }: { avatars?: readonly Avatar[] }) {
           key={avatar.src}
           src={avatar.src}
           alt={avatar.alt}
-          className="absolute inset-0 h-full w-full object-cover opacity-0 [animation:waitlist-avatar-cycle_15s_ease-in-out_infinite_both] motion-reduce:hidden"
+          className="absolute inset-0 h-full w-full object-cover opacity-0 animate-[waitlist-avatar-cycle_15s_ease-in-out_infinite_both] motion-reduce:hidden"
           style={{ animationDelay: `${index * 3}s` }}
           loading="lazy"
           decoding="async"

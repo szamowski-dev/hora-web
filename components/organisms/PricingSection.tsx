@@ -34,7 +34,7 @@ export function PricingSection() {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="grid gap-6 rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] md:grid-cols-[0.88fr_1.12fr] md:p-8">
           <div className="flex h-full flex-col">
             <h2
@@ -53,14 +53,14 @@ export function PricingSection() {
             <p className="mt-3 text-sm font-medium text-muted">
               {pricing.crossPlatform}
             </p>
-            <p className="mt-6 rounded-md border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-muted">
+            <p className="mt-6 rounded-md border border-white/10 bg-white/3 px-4 py-3 text-sm text-muted">
               At launch: <span className="font-semibold text-text">$49.90 one-time</span>{" "}
               or <span className="font-semibold text-text">$29.99/year</span>. Family
               Sharing included.
             </p>
             <Link
               href={pricing.comparisonCta.href}
-              className="mt-4 inline-flex h-10 w-fit items-center rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.07] hover:text-text"
+              className="mt-4 inline-flex h-10 w-fit items-center rounded-md border border-white/10 bg-white/4 px-4 text-sm text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.07] hover:text-text"
             >
               {pricing.comparisonCta.label}
             </Link>
@@ -68,7 +68,7 @@ export function PricingSection() {
 
           <div className="grid gap-3">
             <div className="grid gap-3 sm:grid-cols-2">
-              <div data-anim="pricing-card" className="rounded-md border border-white/10 bg-white/[0.03] p-4">
+              <div data-anim="pricing-card" className="rounded-md border border-white/10 bg-white/3 p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
                   One-time
                 </p>
@@ -76,7 +76,7 @@ export function PricingSection() {
                   {pricing.oneTime}
                 </p>
               </div>
-              <div data-anim="pricing-card" className="rounded-md border border-white/10 bg-white/[0.03] p-4">
+              <div data-anim="pricing-card" className="rounded-md border border-white/10 bg-white/3 p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
                   Subscription
                 </p>
@@ -85,7 +85,7 @@ export function PricingSection() {
                 </p>
               </div>
             </div>
-            <div className="rounded-md border border-white/10 bg-white/[0.02] p-4">
+            <div className="rounded-md border border-white/10 bg-white/2 p-4">
               <div className="mb-3 grid grid-cols-[1fr_auto] border-b border-white/8 pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
                 <p>Alternative</p>
                 <p>Price</p>
@@ -98,7 +98,7 @@ export function PricingSection() {
                   data-anim={isHora ? "pricing-hora" : "pricing-row"}
                   className={`grid grid-cols-1 gap-x-3 gap-y-1 border-b py-3 last:border-b-0 last:pb-0 sm:grid-cols-[1.2fr_auto] sm:py-2 ${
                     isHora
-                      ? "rounded-sm border-accent/30 bg-accent/[0.08] px-3 sm:px-2"
+                      ? "rounded-sm border-accent/30 bg-accent/8 px-3 sm:px-2"
                       : "border-white/8"
                   }`}
                 >
@@ -146,7 +146,7 @@ export function PricingSection() {
                   placement: "pricing",
                   destination: "newsletter",
                 })}
-                className="inline-flex h-11 w-fit items-center gap-2 rounded-md border border-white/12 bg-white/[0.04] px-4 text-sm font-semibold text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] transition-colors hover:border-white/24 hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                className="inline-flex h-11 w-fit items-center gap-2 rounded-md border border-white/12 bg-white/4 px-4 text-sm font-semibold text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] transition-colors hover:border-white/24 hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 <Icon name="bell" size={16} className="text-accent" />
                 {pricing.betaNoteLabel}

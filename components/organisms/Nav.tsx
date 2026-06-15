@@ -9,7 +9,7 @@ import { MobileNav } from "./MobileNav";
 export function Nav({ activePath }: { activePath?: string }) {
   return (
     <nav className="sticky top-0 z-40 border-b border-white/10 bg-[#090a0c]/82 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-[1180px] items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-295 items-center justify-between px-6">
         <Logo className="min-h-12" />
         <div className="hidden items-center gap-6 md:flex">
           {site.nav.map((item) => (

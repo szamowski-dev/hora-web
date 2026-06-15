@@ -29,7 +29,7 @@ export function PostCard({
     <Link
       href={`/blog/${post.slug}/`}
       className={cn(
-        "group relative flex h-full flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_24px_48px_-28px_rgba(0,0,0,0.55)] transition-all duration-300 hover:border-accent/35 hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_32px_60px_-24px_rgba(255,56,60,0.28)]",
+        "group relative flex h-full flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_24px_48px_-28px_rgba(0,0,0,0.55)] transition-all duration-300 hover:border-accent/35 hover:bg-white/6 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_32px_60px_-24px_rgba(255,56,60,0.28)]",
         className,
       )}
     >

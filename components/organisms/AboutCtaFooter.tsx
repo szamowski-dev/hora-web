@@ -4,7 +4,7 @@ import { analyticsAttrs } from "@/lib/analyticsAttrs";
 
 export function AboutCtaFooter() {
   return (
-    <section className="mx-auto max-w-[1180px] px-6 pb-20 md:pb-28">
+    <section className="mx-auto max-w-295 px-6 pb-20 md:pb-28">
       <div className="grid gap-3 sm:grid-cols-2">
         <a
           href={site.cta.primary.href}

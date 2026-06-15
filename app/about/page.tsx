@@ -81,7 +81,7 @@ export default async function AboutPage() {
         />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-bg" />
 
-        <div className="relative mx-auto max-w-[1180px] px-6 pt-16 pb-10 md:pt-24 md:pb-16">
+        <div className="relative mx-auto max-w-295 px-6 pt-16 pb-10 md:pt-24 md:pb-16">
           <div className="mt-8 flex flex-col gap-8 md:flex-row md:items-center md:gap-10">
             <div className="relative shrink-0">
               <div
@@ -130,12 +130,12 @@ export default async function AboutPage() {
       </section>
 
       {/* STATS */}
-      <section className="mx-auto max-w-[1180px] px-6 pb-12 md:pb-16">
+      <section className="mx-auto max-w-295 px-6 pb-12 md:pb-16">
         <dl className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
           {stats.map(({ value, label, sub }) => (
             <div
               key={label}
-              className="group relative rounded-lg border border-white/10 bg-white/[0.035] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_20px_40px_-28px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-accent/30 hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.14),0_28px_52px_-22px_rgba(255,56,60,0.28)]"
+              className="group relative rounded-lg border border-white/10 bg-white/[0.035] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_20px_40px_-28px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-accent/30 hover:bg-white/6 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.14),0_28px_52px_-22px_rgba(255,56,60,0.28)]"
             >
               <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
                 {label}
@@ -150,7 +150,7 @@ export default async function AboutPage() {
       </section>
 
       {/* PULL QUOTE */}
-      <section className="mx-auto max-w-[1180px] px-6 pb-12 md:pb-16">
+      <section className="mx-auto max-w-295 px-6 pb-12 md:pb-16">
         <figure className="relative overflow-hidden rounded-lg border border-accent/20 p-8 md:p-12">
           <div
             aria-hidden
@@ -174,7 +174,7 @@ export default async function AboutPage() {
       </section>
 
       {/* BODY */}
-      <article className="mx-auto max-w-[1180px] px-6 pb-12 md:pb-16">
+      <article className="mx-auto max-w-295 px-6 pb-12 md:pb-16">
         <Prose>{content}</Prose>
       </article>
 

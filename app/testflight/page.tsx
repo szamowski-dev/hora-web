@@ -152,8 +152,8 @@ export default async function TestFlightPage() {
       <HeroBackground />
 
       <section className="relative border-b border-white/8">
-        <div className="mx-auto grid min-h-[calc(100svh-64px)] w-full max-w-[1280px] items-center gap-10 px-6 py-12 md:grid-cols-[0.88fr_1.12fr] md:py-16 lg:gap-12">
-          <div className="max-w-[39rem]">
+        <div className="mx-auto grid min-h-[calc(100svh-64px)] w-full max-w-7xl items-center gap-10 px-6 py-12 md:grid-cols-[0.88fr_1.12fr] md:py-16 lg:gap-12">
+          <div className="max-w-156">
             <p className="inline-flex items-center gap-2 rounded-md border border-accent/35 bg-accent/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
               <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_rgba(255,56,60,0.95)]" />
               Now on the Mac App Store
@@ -214,13 +214,13 @@ export default async function TestFlightPage() {
                     alt={avatar.alt}
                     width={34}
                     height={34}
-                    className="h-[34px] w-[34px] rounded-full border-2 border-bg object-cover"
+                    className="h-8.5 w-8.5 rounded-full border-2 border-bg object-cover"
                     loading="lazy"
                     decoding="async"
                   />
                 ))}
               </div>
-              <p className="max-w-[28rem] text-sm leading-snug text-muted">
+              <p className="max-w-md text-sm leading-snug text-muted">
                 <span className="font-semibold text-text">
                   {liveCount.toLocaleString()}+ Mac users
                 </span>{" "}
@@ -248,7 +248,7 @@ export default async function TestFlightPage() {
           <div className="relative">
             <div
               aria-hidden
-              className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(ellipse_at_50%_45%,rgba(255,56,60,0.24),transparent_62%)] blur-2xl"
+              className="absolute -inset-6 rounded-4xl bg-[radial-gradient(ellipse_at_50%_45%,rgba(255,56,60,0.24),transparent_62%)] blur-2xl"
             />
             <div className="relative overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.035] shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.12)]">
               <Image
@@ -283,7 +283,7 @@ export default async function TestFlightPage() {
       </section>
 
       <section className="relative py-16 md:py-20">
-        <div className="mx-auto max-w-[1180px] px-6">
+        <div className="mx-auto max-w-295 px-6">
           <div className="grid gap-4 md:grid-cols-3">
             {coreReasons.map((item) => (
               <FeaturePanel key={item.title} {...item} emphasized />
@@ -293,7 +293,7 @@ export default async function TestFlightPage() {
       </section>
 
       <section className="relative py-4 md:py-8">
-        <div className="mx-auto max-w-[1180px] px-6">
+        <div className="mx-auto max-w-295 px-6">
           <div className="mb-8 max-w-2xl">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
               Built for calendar-heavy work
@@ -323,7 +323,7 @@ export default async function TestFlightPage() {
       </section>
 
       <section className="relative py-16 md:py-20">
-        <div className="mx-auto grid max-w-[1180px] gap-6 px-6 md:grid-cols-[0.95fr_1.05fr]">
+        <div className="mx-auto grid max-w-295 gap-6 px-6 md:grid-cols-[0.95fr_1.05fr]">
           <div className="rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] md:p-8">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
               Get it now
@@ -359,7 +359,7 @@ export default async function TestFlightPage() {
               </a>
               <Link
                 href="/"
-                className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-md border border-white/12 bg-white/[0.045] px-5 text-sm font-semibold text-text transition-colors hover:border-white/24 hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-md border border-white/12 bg-white/4.5 px-5 text-sm font-semibold text-text transition-colors hover:border-white/24 hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
                 See full site
                 <Icon name="arrow-right" size={14} />
@@ -439,7 +439,7 @@ function FeaturePanel({
       className={cn(
         "rounded-lg border p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]",
         emphasized
-          ? "border-white/12 bg-white/[0.055]"
+          ? "border-white/12 bg-white/5.5"
           : "border-white/10 bg-white/[0.032]",
       )}
     >
@@ -455,7 +455,7 @@ function FeaturePanel({
                 alt=""
                 width={22}
                 height={22}
-                className="h-[22px] w-[22px] object-contain"
+                className="h-5.5 w-5.5 object-contain"
               />
             </span>
           ))
@@ -474,7 +474,7 @@ function FeaturePanel({
                 height={36}
                 className={cn(
                   "object-contain",
-                  iconClassName ?? "h-[22px] w-[22px]",
+                  iconClassName ?? "h-5.5 w-5.5",
                 )}
               />
             ) : (

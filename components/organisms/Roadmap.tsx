@@ -69,7 +69,7 @@ export function Roadmap() {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="max-w-5xl">
           <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
             {r.heading.prefix}

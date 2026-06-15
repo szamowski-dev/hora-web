@@ -62,7 +62,7 @@ export function VideoShowcase() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(760px_420px_at_20%_0%,rgba(255,56,60,0.13),transparent_68%),radial-gradient(760px_460px_at_84%_70%,rgba(131,199,255,0.08),transparent_70%)]"
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <h2 data-anim="video-title" className="text-4xl font-semibold tracking-tight text-text md:text-5xl">
           See hora <span className="text-accent">in action.</span>
         </h2>
@@ -82,7 +82,7 @@ export function VideoShowcase() {
         <div className="mt-12 grid gap-5 md:grid-cols-4">
           {actionCards.map((card, index) => (
             <article key={card.title} data-anim="video-card" className="group">
-              <div className="relative flex h-[13.5rem] items-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] transition-colors group-hover:border-accent/35 group-hover:bg-white/[0.055]">
+              <div className="relative flex h-[13.5rem] items-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] transition-colors group-hover:border-accent/35 group-hover:bg-white/5.5">
                 {index === 0 ? (
                   <div
                     aria-hidden

@@ -31,7 +31,7 @@ export async function StayInLoopCta() {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="text-center">
           <span className="inline-flex items-center rounded-md border border-accent/35 bg-accent/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
             {cta.eyebrow}
@@ -44,7 +44,7 @@ export async function StayInLoopCta() {
           </p>
         </div>
 
-        <div className="mx-auto mt-10 max-w-[780px] md:mt-12">
+        <div className="mx-auto mt-10 max-w-195 md:mt-12">
           <WaitlistCard
             placement="stay_in_loop"
             headline={cta.cardHeadline}

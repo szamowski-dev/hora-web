@@ -23,7 +23,7 @@ export function FeaturedOn() {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="grid gap-5 md:grid-cols-[7.5rem_minmax(0,1fr)] md:items-center">
           <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted/80 md:whitespace-nowrap">
             {f.label}

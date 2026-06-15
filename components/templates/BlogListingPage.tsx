@@ -42,7 +42,7 @@ export function BlogListingPage({
 
   return (
     <>
-      <section className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-24">
+      <section className="mx-auto max-w-295 px-6 pt-16 md:pt-24">
         <div>
           <h1 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
             {title ?? (
@@ -58,7 +58,7 @@ export function BlogListingPage({
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1180px] gap-8 px-6 py-12 md:py-16 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <section className="mx-auto grid max-w-295 gap-8 px-6 py-12 md:py-16 lg:grid-cols-[minmax(0,1fr)_18rem]">
         <div>
           {posts.length === 0 ? (
             <p className="text-center text-muted">{emptyMessage}</p>

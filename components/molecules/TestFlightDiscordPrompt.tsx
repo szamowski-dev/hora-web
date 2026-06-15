@@ -139,10 +139,10 @@ export function TestFlightDiscordPrompt() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="testflight-discord-title"
-      className="fixed inset-0 z-[70] flex items-center justify-center overflow-hidden bg-[radial-gradient(900px_520px_at_50%_35%,rgba(255,56,60,0.20),transparent_66%),linear-gradient(180deg,rgba(0,0,0,0.62),rgba(0,0,0,0.82))] px-4 py-6 backdrop-blur-lg"
+      className="fixed inset-0 z-70 flex items-center justify-center overflow-hidden bg-[radial-gradient(900px_520px_at_50%_35%,rgba(255,56,60,0.20),transparent_66%),linear-gradient(180deg,rgba(0,0,0,0.62),rgba(0,0,0,0.82))] px-4 py-6 backdrop-blur-lg"
     >
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/18 blur-3xl" />
-      <div className="relative w-full max-w-[500px] overflow-hidden rounded-2xl border border-white/18 bg-white/[0.075] p-5 text-left shadow-[0_40px_110px_-44px_rgba(255,56,60,0.85),0_24px_80px_-48px_rgba(255,255,255,0.48),inset_0_1px_0_rgba(255,255,255,0.32),inset_0_-1px_0_rgba(255,255,255,0.08)] backdrop-blur-2xl sm:p-7">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-90 w-90 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/18 blur-3xl" />
+      <div className="relative w-full max-w-125 overflow-hidden rounded-2xl border border-white/18 bg-white/7.5 p-5 text-left shadow-[0_40px_110px_-44px_rgba(255,56,60,0.85),0_24px_80px_-48px_rgba(255,255,255,0.48),inset_0_1px_0_rgba(255,255,255,0.32),inset_0_-1px_0_rgba(255,255,255,0.08)] backdrop-blur-2xl sm:p-7">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.24),rgba(255,255,255,0.05)_34%,rgba(255,255,255,0.02)_64%,rgba(255,255,255,0.12))]"
@@ -164,7 +164,7 @@ export function TestFlightDiscordPrompt() {
           type="button"
           aria-label="Close"
           onClick={() => setOpen(false)}
-          className="absolute right-3 top-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/[0.06] text-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] transition-colors hover:bg-white/12 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="absolute right-3 top-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/6 text-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] transition-colors hover:bg-white/12 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <Icon name="close" size={20} />
         </button>
@@ -183,18 +183,18 @@ export function TestFlightDiscordPrompt() {
 
         <div className="relative z-10">
           <div className="mb-6 flex items-center pr-12">
-            <div className="rounded-full border border-white/12 bg-white/[0.055] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
+            <div className="rounded-full border border-white/12 bg-white/5.5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
               Beta feedback
             </div>
           </div>
 
           <h2
             id="testflight-discord-title"
-            className="max-w-[23rem] text-2xl font-semibold leading-[1.16] tracking-tight text-text sm:text-[27px]"
+            className="max-w-92 text-2xl font-semibold leading-[1.16] tracking-tight text-text sm:text-[27px]"
           >
             TestFlight opens in a moment. Join the hora Discord too.
           </h2>
-          <p className="mt-3 max-w-[25rem] text-sm leading-6 text-white/68 sm:text-[15px]">
+          <p className="mt-3 max-w-100 text-sm leading-6 text-white/68 sm:text-[15px]">
             That is where beta feedback turns into fixes fastest, with build
             notes, known issues, and quick answers between releases.
           </p>
@@ -214,7 +214,7 @@ export function TestFlightDiscordPrompt() {
               type="button"
               data-testflight-prompt-skip="true"
               onClick={() => openPendingTestFlight("manual")}
-              className="inline-flex h-12 items-center justify-center rounded-lg border border-white/16 bg-white/[0.07] px-5 text-sm font-semibold text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] transition-colors hover:border-white/28 hover:bg-white/[0.11] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="inline-flex h-12 items-center justify-center rounded-lg border border-white/16 bg-white/[0.07] px-5 text-sm font-semibold text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] transition-colors hover:border-white/28 hover:bg-white/11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               Open TestFlight now
             </button>
