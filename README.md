@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://horacal.app/assets/hora-icon.png" alt="hora Calendar" width="128">
+  <img src="Assets/Hora-iOS-Default-1024@1x.png" alt="hora Calendar" width="128">
 </p>
 
 <h1 align="center">hora Calendar</h1>
@@ -40,7 +40,7 @@
 ---
 
 <p align="center">
-  <img src="public/assets/hora-demo.gif" alt="hora Calendar demo" width="800">
+  <img src="Assets/hora_brand_new.gif" alt="hora Calendar demo" width="800">
 </p>
 
 ---
