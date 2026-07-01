@@ -1,12 +1,22 @@
 import { home } from "@/content/home";
 import { cn } from "@/lib/cn";
 
-type Status = "Open Beta Tests" | "Up next" | "Planned" | "On the horizon";
+type Status =
+  | "Shipped"
+  | "Open Beta Tests"
+  | "Up next"
+  | "Planned"
+  | "On the horizon";
 
 const statusStyles: Record<
   Status,
   { pill: string; dot: string; connector: string }
 > = {
+  Shipped: {
+    pill: "border-[#30d158]/50 bg-[#30d158]/10 text-[#30d158] shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_0_24px_rgba(48,209,88,0.28)]",
+    dot: "bg-[#30d158] shadow-[0_0_12px_rgba(48,209,88,0.85)] ring-4 ring-[#30d158]/15",
+    connector: "from-[#30d158]/60",
+  },
   "Open Beta Tests": {
     pill: "border-accent/50 bg-accent/10 text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_0_28px_rgba(255,56,60,0.35)]",
     dot: "bg-accent shadow-[0_0_14px_rgba(255,56,60,1)] ring-4 ring-accent/20",
@@ -59,7 +69,7 @@ export function Roadmap() {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="max-w-5xl">
           <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
             {r.heading.prefix}
@@ -93,7 +103,7 @@ export function Roadmap() {
                 </div>
 
                 <div className="relative flex-1 overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] md:p-6">
-                  {item.status === "Open Beta Tests" ? (
+                  {item.status === "Up next" ? (
                     <div
                       aria-hidden
                       className="pointer-events-none absolute -top-20 -right-20 h-48 w-48 opacity-90 blur-3xl"
@@ -114,10 +124,15 @@ export function Roadmap() {
                       styles.pill,
                     )}
                   >
-                    {item.status === "Open Beta Tests" ? (
+                    {item.status === "Up next" ? (
                       <span className="relative flex h-1.5 w-1.5">
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
                         <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+                      </span>
+                    ) : null}
+                    {item.status === "Shipped" ? (
+                      <span aria-hidden className="text-[11px] leading-none">
+                        ✓
                       </span>
                     ) : null}
                     {item.status}

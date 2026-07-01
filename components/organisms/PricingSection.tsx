@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Icon } from "@/components/atoms/Icon";
 import { home } from "@/content/home";
+import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 
 export function PricingSection() {
@@ -32,7 +34,7 @@ export function PricingSection() {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="grid gap-6 rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] md:grid-cols-[0.88fr_1.12fr] md:p-8">
           <div className="flex h-full flex-col">
             <h2
@@ -51,14 +53,14 @@ export function PricingSection() {
             <p className="mt-3 text-sm font-medium text-muted">
               {pricing.crossPlatform}
             </p>
-            <p className="mt-6 rounded-md border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-muted">
+            <p className="mt-6 rounded-md border border-white/10 bg-white/3 px-4 py-3 text-sm text-muted">
               At launch: <span className="font-semibold text-text">$49.90 one-time</span>{" "}
               or <span className="font-semibold text-text">$29.99/year</span>. Family
               Sharing included.
             </p>
             <Link
               href={pricing.comparisonCta.href}
-              className="mt-4 inline-flex h-10 w-fit items-center rounded-md border border-white/10 bg-white/[0.04] px-4 text-sm text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.07] hover:text-text"
+              className="mt-4 inline-flex h-10 w-fit items-center rounded-md border border-white/10 bg-white/4 px-4 text-sm text-muted transition-colors hover:border-accent/40 hover:bg-white/[0.07] hover:text-text"
             >
               {pricing.comparisonCta.label}
             </Link>
@@ -66,7 +68,7 @@ export function PricingSection() {
 
           <div className="grid gap-3">
             <div className="grid gap-3 sm:grid-cols-2">
-              <div data-anim="pricing-card" className="rounded-md border border-white/10 bg-white/[0.03] p-4">
+              <div data-anim="pricing-card" className="rounded-md border border-white/10 bg-white/3 p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
                   One-time
                 </p>
@@ -74,7 +76,7 @@ export function PricingSection() {
                   {pricing.oneTime}
                 </p>
               </div>
-              <div data-anim="pricing-card" className="rounded-md border border-white/10 bg-white/[0.03] p-4">
+              <div data-anim="pricing-card" className="rounded-md border border-white/10 bg-white/3 p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
                   Subscription
                 </p>
@@ -83,7 +85,7 @@ export function PricingSection() {
                 </p>
               </div>
             </div>
-            <div className="rounded-md border border-white/10 bg-white/[0.02] p-4">
+            <div className="rounded-md border border-white/10 bg-white/2 p-4">
               <div className="mb-3 grid grid-cols-[1fr_auto] border-b border-white/8 pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
                 <p>Alternative</p>
                 <p>Price</p>
@@ -96,7 +98,7 @@ export function PricingSection() {
                   data-anim={isHora ? "pricing-hora" : "pricing-row"}
                   className={`grid grid-cols-1 gap-x-3 gap-y-1 border-b py-3 last:border-b-0 last:pb-0 sm:grid-cols-[1.2fr_auto] sm:py-2 ${
                     isHora
-                      ? "rounded-sm border-accent/30 bg-accent/[0.08] px-3 sm:px-2"
+                      ? "rounded-sm border-accent/30 bg-accent/8 px-3 sm:px-2"
                       : "border-white/8"
                   }`}
                 >
@@ -119,39 +121,36 @@ export function PricingSection() {
               })}
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                className="inline-flex h-11 w-fit items-center gap-2 rounded-md border border-accent/40 bg-accent/12 px-4 text-sm font-semibold text-accent"
-                aria-label={pricing.appStoreLabel}
-              >
-                <Image
-                  src="/assets/redesign_raw/app-store.svg"
-                  alt="Mac App Store icon"
-                  width={18}
-                  height={18}
-                  className="h-[18px] w-[18px]"
-                />
-                {pricing.appStoreLabel}
-              </button>
               <a
-                href={pricing.testFlightHref}
+                href={pricing.appStoreHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                {...analyticsAttrs("testflight_cta_click", {
+                aria-label={pricing.appStoreLabel}
+                {...analyticsAttrs("app_store_cta_click", {
                   placement: "pricing",
-                  destination: "testflight",
+                  destination: "mac_app_store",
                 })}
-                className="inline-flex h-11 w-fit items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                className="inline-flex h-11 items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
                 <Image
-                  src={pricing.testFlightIconSrc}
-                  alt=""
-                  width={20}
-                  height={20}
-                  className="h-5 w-5 rounded-[5px]"
+                  src={site.macAppStoreBadgeSrc}
+                  alt={pricing.appStoreLabel}
+                  width={162}
+                  height={50}
+                  className="h-11 w-auto"
                 />
-                {pricing.testFlightLabel}
               </a>
+              <Link
+                href={pricing.betaNoteHref}
+                {...analyticsAttrs("ios_beta_note_click", {
+                  placement: "pricing",
+                  destination: "newsletter",
+                })}
+                className="inline-flex h-11 w-fit items-center gap-2 rounded-md border border-white/12 bg-white/4 px-4 text-sm font-semibold text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] transition-colors hover:border-white/24 hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                <Icon name="bell" size={16} className="text-accent" />
+                {pricing.betaNoteLabel}
+              </Link>
             </div>
           </div>
         </div>

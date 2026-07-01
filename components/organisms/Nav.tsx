@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Icon } from "@/components/atoms/Icon";
 import { Logo } from "@/components/atoms/Logo";
 import { site } from "@/content/site";
@@ -8,7 +9,7 @@ import { MobileNav } from "./MobileNav";
 export function Nav({ activePath }: { activePath?: string }) {
   return (
     <nav className="sticky top-0 z-40 border-b border-white/10 bg-[#090a0c]/82 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-[1180px] items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-295 items-center justify-between px-6">
         <Logo className="min-h-12" />
         <div className="hidden items-center gap-6 md:flex">
           {site.nav.map((item) => (
@@ -38,20 +39,25 @@ export function Nav({ activePath }: { activePath?: string }) {
           >
             <Icon name="discord" size={20} />
           </a>
-          <Link
+          <a
             href={site.cta.primary.href}
             target="_blank"
             rel="noopener noreferrer"
-            data-scroll-align="center"
-            {...analyticsAttrs("testflight_cta_click", {
+            aria-label={site.cta.primary.label}
+            {...analyticsAttrs("app_store_cta_click", {
               placement: "nav_desktop",
-              destination: "testflight",
+              destination: "mac_app_store",
             })}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            className="inline-flex h-10 items-center rounded-lg transition-transform hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
           >
-            {site.cta.primary.label}
-            <span aria-hidden>→</span>
-          </Link>
+            <Image
+              src={site.macAppStoreBadgeSrc}
+              alt={site.cta.primary.label}
+              width={162}
+              height={50}
+              className="h-10 w-auto"
+            />
+          </a>
         </div>
         <div className="flex items-center gap-1 md:hidden">
           <a

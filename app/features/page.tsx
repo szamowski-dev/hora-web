@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function FeaturesPage() {
   return (
     <>
-      <div className="mx-auto max-w-[1180px] px-6 pb-14 pt-16 md:pb-16 md:pt-24">
+      <div className="mx-auto max-w-295 px-6 pb-14 pt-16 md:pb-16 md:pt-24">
         <h1 className="max-w-4xl text-4xl font-semibold leading-tight text-text md:text-6xl">
           {features.hero.title.prefix}{" "}
           <span className="text-accent">
@@ -33,7 +33,7 @@ export default function FeaturesPage() {
       {features.sections.map((section) => (
         <section
           key={section.label}
-          className="mx-auto max-w-[1180px] px-6 pb-16 md:pb-20"
+          className="mx-auto max-w-295 px-6 pb-16 md:pb-20"
         >
           <div className="mb-6 flex flex-col gap-3 border-t border-white/10 pt-7 sm:flex-row sm:items-end sm:justify-between">
             <h2 className="text-2xl font-semibold leading-tight text-text md:text-3xl">
@@ -47,7 +47,7 @@ export default function FeaturesPage() {
 
           <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
             {"wideShortcutsCard" in section && section.wideShortcutsCard ? (
-              <div className="rounded-xl border border-border bg-white/[0.02] p-6 md:col-span-2">
+              <div className="rounded-xl border border-border bg-white/2 p-6 md:col-span-2">
                 <div className="flex flex-col gap-6 md:flex-row md:items-center">
                   <div className="flex-1">
                     <h3 className="mb-1.5 text-base font-semibold text-text">
@@ -67,7 +67,7 @@ export default function FeaturesPage() {
                           {s.keys.map((k) => (
                             <kbd
                               key={k}
-                              className="inline-flex min-w-[26px] items-center justify-center rounded-md border border-white/10 bg-white/[0.08] px-2 py-0.5 text-xs text-text"
+                              className="inline-flex min-w-[26px] items-center justify-center rounded-md border border-white/10 bg-white/8 px-2 py-0.5 text-xs text-text"
                             >
                               {k}
                             </kbd>

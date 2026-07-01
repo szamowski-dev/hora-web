@@ -34,6 +34,14 @@ export const metadata: Metadata = {
   authors: [{ name: "Maciej Szamowski", url: "https://szamowski.dev" }],
   creator: "Maciej Szamowski",
   manifest: "/manifest.webmanifest",
+  // Native Apple Smart App Banner. Renders in Safari on iOS/iPadOS only (never
+  // macOS / other browsers). app-id is the App Store ID from the listing URL
+  // apps.apple.com/app/apple-store/id6761409895 — shared across the macOS app
+  // and the coming iOS app via universal purchase.
+  itunes: {
+    appId: "6761409895",
+    appArgument: "https://horacal.app",
+  },
   robots: {
     index: true,
     follow: true,

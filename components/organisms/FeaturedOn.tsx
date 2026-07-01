@@ -23,19 +23,19 @@ export function FeaturedOn() {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="grid gap-5 md:grid-cols-[7.5rem_minmax(0,1fr)] md:items-center">
           <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted/80 md:whitespace-nowrap">
             {f.label}
           </span>
-          <ul className="grid w-full grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 sm:gap-x-6 md:justify-start lg:gap-x-7">
             {f.badges.map((badge) => (
-              <li key={badge.href} data-anim="featured-badge" className="min-w-0">
+              <li key={badge.href} data-anim="featured-badge" className="flex min-w-0 items-center justify-center">
                 <a
                   href={badge.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-12 w-full items-center justify-center rounded-md opacity-75 grayscale transition-[opacity,filter] hover:opacity-100 hover:grayscale-0 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black md:h-14"
+                  className="flex h-12 items-center justify-center rounded-md opacity-75 grayscale transition-[opacity,filter] hover:opacity-100 hover:grayscale-0 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black md:h-14"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -46,8 +46,10 @@ export function FeaturedOn() {
                     loading="lazy"
                     decoding="async"
                     className={cn(
-                      "block max-h-10 max-w-full object-contain md:max-h-11",
-                      "className" in badge ? badge.className : undefined,
+                      "block",
+                      "className" in badge && badge.className
+                        ? badge.className
+                        : "h-10 w-auto object-contain md:h-11",
                     )}
                   />
                 </a>

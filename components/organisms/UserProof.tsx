@@ -29,7 +29,7 @@ export async function UserProof() {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="max-w-5xl">
           <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
             Already in <span className="text-accent">real Mac calendars.</span>

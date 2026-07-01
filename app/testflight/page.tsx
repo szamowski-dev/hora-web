@@ -11,12 +11,12 @@ import { getTestFlightTesterCount } from "@/lib/testflight";
 
 export const dynamic = "force-dynamic";
 
-const title = "Join hora Calendar TestFlight";
+const title = "Download hora Calendar for Mac";
 const description =
-  "Try hora Calendar: the native macOS Google Calendar client with real-time sync, menu bar access, Quick Add, Focus Time, availability sharing, and zero middleware.";
+  "hora Calendar is on the Mac App Store: the native macOS Google Calendar client with real-time sync, menu bar access, Quick Add, Focus Time, availability sharing, and zero middleware. iOS/iPad coming next.";
 
 export const metadata: Metadata = {
-  title: "Join the TestFlight",
+  title: "Download hora Calendar",
   description,
   alternates: { canonical: "/testflight/" },
   openGraph: {
@@ -152,11 +152,11 @@ export default async function TestFlightPage() {
       <HeroBackground />
 
       <section className="relative border-b border-white/8">
-        <div className="mx-auto grid min-h-[calc(100svh-64px)] w-full max-w-[1280px] items-center gap-10 px-6 py-12 md:grid-cols-[0.88fr_1.12fr] md:py-16 lg:gap-12">
-          <div className="max-w-[39rem]">
+        <div className="mx-auto grid min-h-[calc(100svh-64px)] w-full max-w-7xl items-center gap-10 px-6 py-12 md:grid-cols-[0.88fr_1.12fr] md:py-16 lg:gap-12">
+          <div className="max-w-156">
             <p className="inline-flex items-center gap-2 rounded-md border border-accent/35 bg-accent/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
               <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_rgba(255,56,60,0.95)]" />
-              TestFlight is open
+              Now on the Mac App Store
             </p>
 
             <h1 className="mt-6 max-w-[13ch] text-5xl font-semibold leading-[1.02] tracking-tight text-text md:text-[68px] lg:text-[78px]">
@@ -165,9 +165,9 @@ export default async function TestFlightPage() {
             </h1>
 
             <p className="mt-5 max-w-xl text-pretty text-lg leading-8 text-muted md:text-[19px]">
-              Join the hora Calendar beta: native SwiftUI, real-time Google
-              Calendar sync, menu bar workflows, and privacy that stays on your
-              Mac.
+              Download hora Calendar from the Mac App Store: native SwiftUI,
+              real-time Google Calendar sync, menu bar workflows, and privacy
+              that stays on your Mac.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -175,14 +175,20 @@ export default async function TestFlightPage() {
                 href={site.cta.primary.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                {...analyticsAttrs("testflight_cta_click", {
+                aria-label={site.cta.primary.label}
+                {...analyticsAttrs("app_store_cta_click", {
                   placement: "testflight_hero",
-                  destination: "testflight",
+                  destination: "mac_app_store",
                 })}
-                className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-md bg-accent px-6 text-base font-semibold text-white shadow-[0_18px_44px_-20px_rgba(255,56,60,0.95),inset_0_1px_0_rgba(255,255,255,0.24)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                className="inline-flex h-14 cursor-pointer items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
-                <Icon name="testflight" size={18} />
-                Open TestFlight
+                <Image
+                  src={site.macAppStoreBadgeSrc}
+                  alt={site.cta.primary.label}
+                  width={162}
+                  height={50}
+                  className="h-14 w-auto"
+                />
               </a>
               <a
                 href={site.community.discord.href}
@@ -208,17 +214,17 @@ export default async function TestFlightPage() {
                     alt={avatar.alt}
                     width={34}
                     height={34}
-                    className="h-[34px] w-[34px] rounded-full border-2 border-bg object-cover"
+                    className="h-8.5 w-8.5 rounded-full border-2 border-bg object-cover"
                     loading="lazy"
                     decoding="async"
                   />
                 ))}
               </div>
-              <p className="max-w-[28rem] text-sm leading-snug text-muted">
+              <p className="max-w-md text-sm leading-snug text-muted">
                 <span className="font-semibold text-text">
                   {liveCount.toLocaleString()}+ Mac users
                 </span>{" "}
-                are already testing hora. TestFlight is the fastest path in.
+                already use hora. Now a one-tap install from the Mac App Store.
               </p>
             </div>
 
@@ -242,7 +248,7 @@ export default async function TestFlightPage() {
           <div className="relative">
             <div
               aria-hidden
-              className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(ellipse_at_50%_45%,rgba(255,56,60,0.24),transparent_62%)] blur-2xl"
+              className="absolute -inset-6 rounded-4xl bg-[radial-gradient(ellipse_at_50%_45%,rgba(255,56,60,0.24),transparent_62%)] blur-2xl"
             />
             <div className="relative overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.035] shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.12)]">
               <Image
@@ -277,7 +283,7 @@ export default async function TestFlightPage() {
       </section>
 
       <section className="relative py-16 md:py-20">
-        <div className="mx-auto max-w-[1180px] px-6">
+        <div className="mx-auto max-w-295 px-6">
           <div className="grid gap-4 md:grid-cols-3">
             {coreReasons.map((item) => (
               <FeaturePanel key={item.title} {...item} emphasized />
@@ -287,7 +293,7 @@ export default async function TestFlightPage() {
       </section>
 
       <section className="relative py-4 md:py-8">
-        <div className="mx-auto max-w-[1180px] px-6">
+        <div className="mx-auto max-w-295 px-6">
           <div className="mb-8 max-w-2xl">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
               Built for calendar-heavy work
@@ -317,36 +323,43 @@ export default async function TestFlightPage() {
       </section>
 
       <section className="relative py-16 md:py-20">
-        <div className="mx-auto grid max-w-[1180px] gap-6 px-6 md:grid-cols-[0.95fr_1.05fr]">
+        <div className="mx-auto grid max-w-295 gap-6 px-6 md:grid-cols-[0.95fr_1.05fr]">
           <div className="rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] md:p-8">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
-              Get in now
+              Get it now
             </p>
             <h2 className="mt-4 max-w-[13ch] text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
-              Join TestFlight, then stay close.
+              Download for Mac, then stay close.
             </h2>
             <p className="mt-4 max-w-lg text-base leading-7 text-muted">
-              TestFlight gets you the app. Discord gets you the feedback loop.
-              Newsletter gets you launch notes and the iOS/iPadOS beta heads-up.
+              The Mac App Store gets you the app. Discord gets you the feedback
+              loop. Newsletter gets you launch notes and the iOS/iPadOS beta
+              heads-up.
             </p>
 
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
                 href={site.cta.primary.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                {...analyticsAttrs("testflight_cta_click", {
+                aria-label={site.cta.primary.label}
+                {...analyticsAttrs("app_store_cta_click", {
                   placement: "testflight_final",
-                  destination: "testflight",
+                  destination: "mac_app_store",
                 })}
-                className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-md bg-accent px-5 text-sm font-semibold text-white transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                className="inline-flex h-12 cursor-pointer items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
-                <Icon name="testflight" size={16} />
-                Open TestFlight
+                <Image
+                  src={site.macAppStoreBadgeSrc}
+                  alt={site.cta.primary.label}
+                  width={162}
+                  height={50}
+                  className="h-12 w-auto"
+                />
               </a>
               <Link
                 href="/"
-                className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-md border border-white/12 bg-white/[0.045] px-5 text-sm font-semibold text-text transition-colors hover:border-white/24 hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-md border border-white/12 bg-white/4.5 px-5 text-sm font-semibold text-text transition-colors hover:border-white/24 hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
                 See full site
                 <Icon name="arrow-right" size={14} />
@@ -359,7 +372,7 @@ export default async function TestFlightPage() {
             placement="testflight"
             eyebrow="Newsletter"
             headline="Get launch notes and iOS/iPadOS beta updates."
-            subheadline="TestFlight is open now. Subscribe here for short release notes and a heads-up when the iOS/iPadOS beta is ready."
+            subheadline="hora is on the Mac App Store now. Subscribe here for short release notes and a heads-up when the iOS/iPadOS beta is ready."
             subheadlineMobile="Get launch notes and the iOS/iPadOS beta heads-up."
             liveCount={liveCount}
             socialLabel={socialProof.label}
@@ -426,7 +439,7 @@ function FeaturePanel({
       className={cn(
         "rounded-lg border p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]",
         emphasized
-          ? "border-white/12 bg-white/[0.055]"
+          ? "border-white/12 bg-white/5.5"
           : "border-white/10 bg-white/[0.032]",
       )}
     >
@@ -442,7 +455,7 @@ function FeaturePanel({
                 alt=""
                 width={22}
                 height={22}
-                className="h-[22px] w-[22px] object-contain"
+                className="h-5.5 w-5.5 object-contain"
               />
             </span>
           ))
@@ -461,7 +474,7 @@ function FeaturePanel({
                 height={36}
                 className={cn(
                   "object-contain",
-                  iconClassName ?? "h-[22px] w-[22px]",
+                  iconClassName ?? "h-5.5 w-5.5",
                 )}
               />
             ) : (

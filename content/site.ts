@@ -23,10 +23,15 @@ export const site = {
   ],
   cta: {
     primary: {
-      label: "Join TestFlight",
-      href: "https://testflight.apple.com/join/J63xy2Am",
+      label: "Download on the Mac App Store",
+      href: "https://apps.apple.com/app/apple-store/id6761409895",
+    },
+    iosBeta: {
+      label: "Get the iOS/iPad beta note",
+      href: "/#newsletter",
     },
   },
+  macAppStoreBadgeSrc: "/assets/badges/mac-app-store-black.svg",
   community: {
     discord: {
       label: "Join Discord",
@@ -61,9 +66,9 @@ export const site = {
       discordLabel: "Join Discord",
       shareLabel: "Share with one Mac friend",
       shareUrl:
-        "https://horacal.app/testflight/?utm_source=post_signup&utm_medium=share&utm_campaign=beta_loop",
+        "https://horacal.app/?utm_source=post_signup&utm_medium=share&utm_campaign=launch_loop",
       shareText:
-        "I subscribed to hora Calendar launch updates. If you use Google Calendar on Mac, this might be worth trying:",
+        "I subscribed to hora Calendar updates. It's now on the Mac App Store — if you use Google Calendar on Mac, this might be worth trying:",
       copiedLabel: "Link copied",
     },
   },

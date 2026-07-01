@@ -6,7 +6,7 @@ import { site } from "@/content/site";
 export function Footer() {
   return (
     <footer className="border-t border-border px-6 py-8">
-      <div className="mx-auto flex max-w-[1180px] flex-col items-center justify-between gap-6 text-center lg:flex-row lg:text-left">
+      <div className="mx-auto flex max-w-295 flex-col items-center justify-between gap-6 text-center lg:flex-row lg:text-left">
         <p className="max-w-[22rem] text-sm leading-6 text-muted md:max-w-none">
           {site.footer.copyright}.{" "}
           <span className="whitespace-nowrap">
@@ -19,7 +19,7 @@ export function Footer() {
             </a>
           </span>
         </p>
-        <div className="flex w-full max-w-[28rem] flex-col items-center gap-3 lg:w-auto lg:max-w-none lg:flex-row lg:items-center lg:gap-5">
+        <div className="flex w-full max-w-md flex-col items-center gap-3 lg:w-auto lg:max-w-none lg:flex-row lg:items-center lg:gap-5">
           <div className="flex max-w-full flex-wrap items-center justify-center gap-x-5 gap-y-1">
             {site.footer.links.map((link) => (
               <Link

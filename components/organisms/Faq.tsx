@@ -25,7 +25,7 @@ export function Faq() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(720px_420px_at_15%_0%,rgba(255,56,60,0.09),transparent_68%)]"
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="max-w-5xl">
           <div>
             <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">

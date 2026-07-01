@@ -7,7 +7,7 @@ import { defaultOg } from "@/lib/og";
 export const metadata: Metadata = {
   title: "hora Calendar Support",
   description:
-    "Get help with hora Calendar, report bugs, and read answers to common questions about sync, privacy, accounts, and TestFlight.",
+    "Get help with hora Calendar, report bugs, and read answers to common questions about sync, privacy, accounts, and the Mac App Store.",
   alternates: { canonical: "/support/" },
   openGraph: defaultOg({
     title: "Support — hora Calendar",
@@ -50,15 +50,15 @@ const faqItems = [
   },
   {
     q: "How fast do you respond?",
-    a: "During the beta, support is handled directly by the developer. Critical sync or data-loss issues get priority; other requests are usually handled around build cycles.",
+    a: "Support is handled directly by the developer. Critical sync or data-loss issues get priority; other requests are usually handled around build cycles.",
   },
   {
     q: "Can I request a feature?",
     a: "Yes. Feature requests are welcome, especially when they explain the real calendar workflow behind the request.",
   },
   {
-    q: "Is TestFlight the current way to install hora?",
-    a: "Yes, while hora is in beta. Join TestFlight to install the latest build, or subscribe to the newsletter for launch and iOS/iPadOS beta updates.",
+    q: "How do I install hora?",
+    a: "hora is on the Mac App Store — download it there. A native iOS and iPadOS app is coming next; subscribe to the newsletter for a heads-up when the iOS/iPadOS TestFlight beta opens.",
   },
 ];
 
@@ -82,7 +82,7 @@ export default function SupportPage() {
         />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-bg" />
 
-        <div className="relative mx-auto max-w-[1180px] px-6 pt-16 pb-12 md:pt-24 md:pb-16">
+        <div className="relative mx-auto max-w-295 px-6 pt-16 pb-12 md:pt-24 md:pb-16">
           <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
             <div>
               <div className="inline-flex h-12 w-12 items-center justify-center rounded-md border border-accent/25 bg-accent/10 text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]">
@@ -127,7 +127,7 @@ export default function SupportPage() {
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(720px_420px_at_15%_0%,rgba(255,56,60,0.08),transparent_68%)]"
         />
-        <div className="relative mx-auto max-w-[1180px] px-6">
+        <div className="relative mx-auto max-w-295 px-6">
           <div className="max-w-2xl">
             <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
               Common questions

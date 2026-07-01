@@ -3,6 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import Image from "next/image";
 import { Icon } from "@/components/atoms/Icon";
 import { Logo } from "@/components/atoms/Logo";
 import { site } from "@/content/site";
@@ -88,32 +89,39 @@ export function MobileNav({ activePath }: { activePath?: string }) {
             {item.label}
           </Link>
         ))}
-        <Link
-          href={site.cta.primary.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-scroll-align="center"
-          onClick={() => setOpen(false)}
-          {...analyticsAttrs("testflight_cta_click", {
-            placement: "nav_mobile",
-            destination: "testflight",
-          })}
-          className="mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-md bg-accent px-6 text-sm font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-        >
-          {site.cta.primary.label}
-          <span aria-hidden>→</span>
-        </Link>
-        <a
-          href={site.community.discord.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => setOpen(false)}
-          {...analyticsAttrs("discord_click", { location: "mobile_menu" })}
-          className="mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-md border border-white/12 bg-white/[0.02] px-6 text-sm font-semibold text-text transition-colors hover:border-accent/40 hover:bg-white/[0.05] hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-        >
-          <Icon name="discord" size={18} />
-          {site.community.discord.label}
-        </a>
+        <div className="mt-2 flex items-center gap-3">
+          <a
+            href={site.cta.primary.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={site.cta.primary.label}
+            onClick={() => setOpen(false)}
+            {...analyticsAttrs("app_store_cta_click", {
+              placement: "nav_mobile",
+              destination: "mac_app_store",
+            })}
+            className="inline-flex h-12 shrink-0 items-center rounded-lg transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+          >
+            <Image
+              src={site.macAppStoreBadgeSrc}
+              alt={site.cta.primary.label}
+              width={162}
+              height={50}
+              className="h-12 w-auto"
+            />
+          </a>
+          <a
+            href={site.community.discord.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={site.community.discord.label}
+            onClick={() => setOpen(false)}
+            {...analyticsAttrs("discord_click", { location: "mobile_menu" })}
+            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-white/12 bg-white/2 text-text transition-colors hover:border-[#5865F2]/50 hover:bg-[#5865F2]/15 hover:text-[#5865F2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5865F2] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+          >
+            <Icon name="discord" size={20} />
+          </a>
+        </div>
       </div>
     </div>
   );

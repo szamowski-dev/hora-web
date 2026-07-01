@@ -36,7 +36,7 @@ export default async function BlogArchiveIndexPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
-      <section className="mx-auto max-w-[1180px] px-6 pt-16 md:pt-24">
+      <section className="mx-auto max-w-295 px-6 pt-16 md:pt-24">
         <div>
           <h1 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
             Monthly <span className="text-accent">Archive</span>
@@ -49,7 +49,7 @@ export default async function BlogArchiveIndexPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1180px] px-6 py-12 md:py-16">
+      <section className="mx-auto max-w-295 px-6 py-12 md:py-16">
         <div className="flex flex-col gap-3">
           {archives.map((archive) => (
             <Link

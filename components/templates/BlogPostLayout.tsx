@@ -33,7 +33,7 @@ export function BlogPostLayout({
 
   return (
     <>
-      <article className="mx-auto max-w-[1180px] px-6 py-12 md:py-16">
+      <article className="mx-auto max-w-295 px-6 py-12 md:py-16">
         <Link
           href="/blog/"
           className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-text"
@@ -83,7 +83,7 @@ export function BlogPostLayout({
         <aside className="mt-16 border-t border-border pt-8">
           <Link
             href="/about/"
-            className="group flex flex-col gap-5 rounded-lg border border-white/10 bg-white/[0.035] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-all duration-300 hover:border-accent/30 hover:bg-white/[0.06] sm:flex-row sm:items-center sm:gap-6"
+            className="group flex flex-col gap-5 rounded-lg border border-white/10 bg-white/[0.035] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-all duration-300 hover:border-accent/30 hover:bg-white/6 sm:flex-row sm:items-center sm:gap-6"
           >
             <Image
               src="/assets/maciej_szamowski.jpg"

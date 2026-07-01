@@ -37,7 +37,7 @@ export function WhyHora() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(720px_420px_at_18%_8%,rgba(255,56,60,0.10),transparent_68%),radial-gradient(760px_460px_at_90%_84%,rgba(131,199,255,0.08),transparent_70%)]"
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6">
+      <div className="relative mx-auto max-w-295 px-6">
         <div className="grid gap-10 border-y border-white/10 py-12 md:grid-cols-[0.38fr_1.62fr] md:items-start">
           <h2 className="max-w-[10ch] text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
             Works with <span className="text-accent">your world.</span>
@@ -47,9 +47,9 @@ export function WhyHora() {
             {integrations.map((item) => (
               <div
                 key={item.name}
-                className="flex min-h-[6.25rem] items-start gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-3.5"
+                className="flex min-h-[6.25rem] items-start gap-3 rounded-lg border border-white/10 bg-white/3 p-3.5"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/12 bg-white/[0.045] shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/12 bg-white/4.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
                   <Image
                     src={item.iconSrc}
                     alt={`${item.name} logo`}
@@ -96,7 +96,7 @@ export function WhyHora() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={author.twitterLabel}
-                className="inline-flex h-12 w-12 items-center justify-center rounded-md border border-white/12 bg-white/[0.045] text-muted transition-colors hover:text-text"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-md border border-white/12 bg-white/4.5 text-muted transition-colors hover:text-text"
               >
                 <Icon name="x" size={14} />
               </a>
@@ -105,7 +105,7 @@ export function WhyHora() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={author.blueskyLabel}
-                className="inline-flex h-12 w-12 items-center justify-center rounded-md border border-white/12 bg-white/[0.045] text-muted transition-colors hover:text-text"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-md border border-white/12 bg-white/4.5 text-muted transition-colors hover:text-text"
               >
                 <Icon name="bluesky" size={14} />
               </a>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Icon, type IconName } from "@/components/atoms/Icon";
 import { home } from "@/content/home";
+import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 
 const heroPills: { key: string; label: React.ReactNode; icon: IconName }[] = [
@@ -30,7 +31,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
   const socialProof = newsletter.socialProof;
 
   return (
-    <section className="relative flex min-h-[720px] w-full flex-col overflow-hidden border-b border-white/8 lg:min-h-[780px]">
+    <section className="relative flex min-h-180 w-full flex-col overflow-hidden border-b border-white/8 lg:min-h-195">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -59,10 +60,10 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
         />
       </div>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-[1280px] flex-1 items-center gap-8 px-6 pb-14 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-8 md:pb-12 md:pt-12 lg:gap-10">
-        <div className="max-w-[35rem] text-left">
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl flex-1 items-center gap-8 px-6 pb-14 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-8 md:pb-12 md:pt-12 lg:gap-10">
+        <div className="max-w-140 text-left">
           <div className="inline-flex items-center rounded-md border border-accent/35 bg-accent/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-            Coming soon to Mac
+            Now on the Mac App Store
           </div>
 
           <h1
@@ -83,22 +84,28 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
 
           <div data-anim="hero-cta" className="mt-7 flex flex-wrap items-center gap-3">
             <a
-              href="https://testflight.apple.com/join/J63xy2Am"
+              href={site.cta.primary.href}
               target="_blank"
               rel="noopener noreferrer"
-              {...analyticsAttrs("testflight_cta_click", {
+              aria-label={site.cta.primary.label}
+              {...analyticsAttrs("app_store_cta_click", {
                 placement: "hero",
-                destination: "testflight",
+                destination: "mac_app_store",
               })}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-accent px-5 text-sm font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="inline-flex h-12 items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
-              Join TestFlight
-              <span aria-hidden>→</span>
+              <Image
+                src={site.macAppStoreBadgeSrc}
+                alt={site.cta.primary.label}
+                width={162}
+                height={50}
+                className="h-12 w-auto"
+              />
             </a>
             <a
               href="#watch-demo"
               data-scroll-align="center"
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-white/12 bg-white/[0.055] px-5 text-sm font-semibold text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl transition-colors hover:border-white/24 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-white/12 bg-white/5.5 px-5 text-sm font-semibold text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl transition-colors hover:border-white/24 hover:bg-white/8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               Watch 1:43 Demo
               <span aria-hidden>▸</span>
@@ -118,18 +125,18 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
                   alt={avatar.alt}
                   width={34}
                   height={34}
-                  className="h-[34px] w-[34px] rounded-full border-2 border-bg object-cover"
+                  className="h-8.5 w-8.5 rounded-full border-2 border-bg object-cover"
                   loading="lazy"
                   decoding="async"
                 />
               ))}
             </div>
-            <p className="max-w-[25rem] text-sm leading-snug text-muted sm:max-w-[27rem]">
+            <p className="max-w-100 text-sm leading-snug text-muted sm:max-w-108">
               <span className="font-semibold text-text">
                 {liveCount.toLocaleString()}+ Mac users
               </span>{" "}
-              are already testing hora on TestFlight.{" "}
-              <span>Join the beta today.</span>
+              already use hora.{" "}
+              <span>Now on the Mac App Store.</span>
             </p>
           </div>
         </div>
@@ -137,7 +144,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
         <div className="relative md:-mt-14 lg:-mt-18">
           <div
             aria-hidden
-            className="absolute -inset-4 rounded-[2rem] bg-[radial-gradient(ellipse_at_50%_45%,rgba(255,56,60,0.24),transparent_62%)] blur-2xl"
+            className="absolute -inset-4 rounded-4xl bg-[radial-gradient(ellipse_at_50%_45%,rgba(255,56,60,0.24),transparent_62%)] blur-2xl"
           />
           <div
             aria-hidden

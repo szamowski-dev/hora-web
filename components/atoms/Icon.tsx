@@ -11,9 +11,9 @@ import GithubIcon from "@/components/ui/github-icon";
 import BrandZoomIcon from "@/components/ui/brand-zoom-icon";
 import JavascriptIcon from "@/components/ui/javascript-icon";
 import FilledBellIcon from "@/components/ui/filled-bell-icon";
+import BlueskyIcon from "@/components/ui/bluesky-icon";
 import GaugeIcon from "@/components/ui/gauge-icon";
 import HandHeartIcon from "@/components/ui/hand-heart-icon";
-import HashtagIcon from "@/components/ui/hashtag-icon";
 import LayoutDashboardIcon from "@/components/ui/layout-dashboard-icon";
 import LikeIcon from "@/components/ui/like-icon";
 import MailFilledIcon from "@/components/ui/mail-filled-icon";
@@ -73,7 +73,7 @@ const iconMap: Record<IconName, AnimatedIconComponent> = {
   mail: MailFilledIcon,
   github: GithubIcon,
   x: TwitterXIcon,
-  bluesky: HashtagIcon,
+  bluesky: BlueskyIcon,
   discord: DiscordIcon,
   apple: AppleBrandLogo,
   testflight: SendIcon,
