@@ -95,6 +95,7 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable} ${bumbbled.variable}`}>
       <head>
         <link rel="preconnect" href="https://i.ytimg.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://plausible.io" />
         <link rel="dns-prefetch" href="https://consent.cookiebot.com" />
         <link rel="dns-prefetch" href="https://consentcdn.cookiebot.com" />
       </head>
@@ -155,6 +156,18 @@ export default function RootLayout({
             window.gtag('config', '${GA_MEASUREMENT_ID}');
             window.gtag('config', '${GOOGLE_ADS_ID}');
           `}
+        </Script>
+
+        {/* Privacy-friendly analytics by Plausible. The init shim queues any
+            track() calls that fire before the async script finishes loading, so
+            early click events are never dropped. */}
+        <Script
+          id="plausible"
+          src="https://plausible.io/js/pa-wsB6_ypdQmpn7Lf06SUrR.js"
+          strategy="afterInteractive"
+        />
+        <Script id="plausible-init" strategy="afterInteractive">
+          {`window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()`}
         </Script>
 
         <Script id="reddit-pixel" strategy="lazyOnload">

@@ -9,7 +9,6 @@ import { home } from "@/content/home";
 import {
   CONVERSION_TAGS,
   getAttribution,
-  identify,
   redditIdentify,
   redditTrack,
   track,
@@ -46,11 +45,6 @@ export function NewsletterForm({ className }: { className?: string }) {
       if (!res.ok) throw new Error("Request failed");
       setStatus("success");
       setMessage(site.newsletter.afterSignup.title);
-      identify(normalizedEmail, {
-        email: normalizedEmail,
-        newsletter_joined_at: new Date().toISOString(),
-        ...attribution,
-      });
       track("newsletter_form_success", { method: "email", ...attribution });
       trackConversion(CONVERSION_TAGS.waitlistSignup);
       redditIdentify(normalizedEmail).then(() => {

@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
-import { withPostHogConfig } from "@posthog/nextjs-config";
 
 const withMDX = createMDX({
   extension: /\.mdx?$/,
@@ -90,23 +89,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-const config = withMDX(nextConfig);
-
-// Upload source maps to PostHog on production builds so error-tracking stack
-// traces resolve to the original TypeScript instead of minified bundle frames.
-// Requires two env vars in the Vercel project settings:
-//   POSTHOG_API_KEY    — personal API key with "error tracking" write scope
-//   POSTHOG_PROJECT_ID — project ID (Settings → Project), here 395439
-// When the key is absent (local dev, or a preview without secrets) we skip the
-// wrapper so builds never fail on a missing token.
-export default process.env.POSTHOG_API_KEY
-  ? withPostHogConfig(config, {
-      personalApiKey: process.env.POSTHOG_API_KEY,
-      projectId: process.env.POSTHOG_PROJECT_ID!,
-      host: "https://us.posthog.com",
-      sourcemaps: {
-        // enabled is left unset → defaults to on for `next build`, off for dev
-        deleteAfterUpload: true,
-      },
-    })
-  : config;
+export default withMDX(nextConfig);

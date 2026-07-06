@@ -15,15 +15,6 @@ export const REDDIT_PIXEL_ID = "a2_j1933bxzyyfr";
 
 export type EventProps = Record<string, string | number | boolean>;
 
-let posthogPromise: Promise<typeof import("posthog-js").default> | null = null;
-
-function loadPostHog() {
-  if (!posthogPromise) {
-    posthogPromise = import("posthog-js").then((mod) => mod.default);
-  }
-  return posthogPromise;
-}
-
 export function track(event: string, props?: EventProps) {
   if (typeof window === "undefined") return;
   // Guard with typeof, not optional chain: privacy extensions (Brave shields,
@@ -35,9 +26,6 @@ export function track(event: string, props?: EventProps) {
   if (typeof window.gtag === "function") {
     window.gtag("event", event, props);
   }
-  loadPostHog().then((posthog) => {
-    posthog.capture(event, props);
-  });
 }
 
 export const CONVERSION_TAGS = {
@@ -87,20 +75,10 @@ export function redditTrack(event: string, props?: EventProps) {
   }
 }
 
-export function identify(distinctId: string, props?: EventProps) {
-  if (typeof window === "undefined" || !distinctId) return;
-  const normalizedDistinctId = normalizeEmail(distinctId);
-  if (!normalizedDistinctId || isTestEmail(normalizedDistinctId)) return;
-  loadPostHog().then((posthog) => {
-    posthog.identify(normalizedDistinctId, props);
-  });
-}
-
 // First-touch attribution — persisted across sessions in localStorage so that a
 // signup three days / two visits later still knows where the user originally
-// came from. PostHog's built-in `$initial_*` person props are similar but scoped
-// per-PostHog-session; this backup attaches the data directly to conversion
-// events so funnels/alerts don't need a person-property lookup.
+// came from. Plausible is cookieless and keeps no cross-session person profile,
+// so we attach this data directly to conversion events for funnels/breakdowns.
 
 const FIRST_TOUCH_KEY = "hora_first_touch_v1";
 
@@ -160,88 +138,4 @@ export function getAttribution(): EventProps {
   if (ft.landing_page) props.first_touch_landing_page = ft.landing_page;
   props.first_touch_at = ft.at;
   return props;
-}
-
-export async function initPostHog() {
-  const posthog = await loadPostHog();
-  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN!, {
-    api_host: "https://i.horacal.app",
-    ui_host: "https://us.posthog.com",
-    defaults: "2026-01-30",
-    capture_exceptions: true,
-    debug: process.env.NODE_ENV === "development",
-    // Defer recorder.js (~95KB, ~200ms CPU) out of the critical path. We start
-    // the session manually below once the browser is idle.
-    disable_session_recording: true,
-    // We don't use surveys — drops surveys.js (~32KB transfer, 25KB unused).
-    disable_surveys: true,
-    // Dead-click autocapture adds ~33KB and noisy events. Off until we need it.
-    capture_dead_clicks: false,
-    logs: {
-      captureConsoleLogs: true,
-      serviceName: "hora-web",
-      environment: process.env.NODE_ENV,
-    },
-  });
-  return posthog;
-}
-
-const REDACTED = "[redacted]";
-const LOG_THROTTLE_WINDOW_MS = 10_000;
-const LOG_THROTTLE_LIMIT = 20;
-let logWindowStart = 0;
-let logWindowCount = 0;
-
-function scrubSecrets(input: string): string {
-  return input
-    .replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g, REDACTED)
-    .replace(/\b(Bearer\s+)?[A-Za-z0-9_-]{20,}\b/g, REDACTED);
-}
-
-function allowLogCapture(): boolean {
-  const now = Date.now();
-  if (now - logWindowStart > LOG_THROTTLE_WINDOW_MS) {
-    logWindowStart = now;
-    logWindowCount = 0;
-  }
-  if (logWindowCount >= LOG_THROTTLE_LIMIT) return false;
-  logWindowCount += 1;
-  return true;
-}
-
-function serializeLogArgs(args: unknown[]): string {
-  const text = args
-    .map((arg) => {
-      if (typeof arg === "string") return arg;
-      try {
-        return JSON.stringify(arg);
-      } catch {
-        return String(arg);
-      }
-    })
-    .join(" ");
-  return scrubSecrets(text).slice(0, 2000);
-}
-
-export function installPostHogLogBridge() {
-  if (typeof window === "undefined") return;
-  loadPostHog().then((posthog) => {
-    const patch = (level: "error" | "warn" | "info") => {
-      const original = console[level];
-      console[level] = (...args: unknown[]) => {
-        original.apply(console, args);
-        if (!allowLogCapture()) return;
-        posthog.captureLog({
-          level,
-          body: serializeLogArgs(args),
-          attributes: {
-            source: "hora-web",
-          },
-        });
-      };
-    };
-    patch("error");
-    patch("warn");
-    patch("info");
-  });
 }

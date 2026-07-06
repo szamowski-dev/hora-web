@@ -3,7 +3,6 @@ import { after } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { getPostHogClient } from "@/lib/posthog-server";
 import { normalizeEmail } from "@/lib/identity";
 
 export const runtime = "nodejs";
@@ -130,13 +129,6 @@ export async function POST(req: NextRequest) {
         // non-blocking
       }
     }
-
-    const posthog = getPostHogClient();
-    posthog.capture({
-      distinctId: email,
-      event: "newsletter_signup_completed",
-      properties: { method: "server_side", source: "subscribe_api" },
-    });
   });
 
   return NextResponse.json({ success: true }, { headers });

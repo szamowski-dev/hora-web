@@ -4,8 +4,7 @@ import { fetchTestFlightTesterCount } from "@/lib/testflight";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const POSTHOG_EVENT = "testflight_waitlist_snapshot";
-const POSTHOG_DISTINCT_ID = "app_store_connect";
+const PLAUSIBLE_EVENT = "testflight_waitlist_snapshot";
 
 function isAuthorized(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
@@ -14,32 +13,39 @@ function isAuthorized(req: NextRequest) {
   );
 }
 
-async function capturePostHogSnapshot(testerCount: number) {
-  const apiKey = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
-  const host = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com";
+// Record the daily TestFlight tester count as a Plausible custom event so the
+// waitlist growth stays visible on the same analytics stack as everything else.
+// Plausible's server-side Events API is keyed by site domain (no token), and
+// silently drops requests without a User-Agent, so we set one explicitly.
+async function captureSnapshot(testerCount: number) {
+  const host = (process.env.PLAUSIBLE_HOST ?? "https://plausible.io").replace(
+    /\/$/,
+    "",
+  );
+  const domain = process.env.PLAUSIBLE_DOMAIN ?? "horacal.app";
 
-  if (!apiKey) throw new Error("Missing NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN");
-
-  const response = await fetch(`${host.replace(/\/$/, "")}/i/v0/e/`, {
+  const response = await fetch(`${host}/api/event`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": "hora-web-cron/testflight-snapshot",
+    },
     body: JSON.stringify({
-      api_key: apiKey,
-      event: POSTHOG_EVENT,
-      distinct_id: POSTHOG_DISTINCT_ID,
-      properties: {
+      name: PLAUSIBLE_EVENT,
+      domain,
+      url: `https://${domain}/`,
+      props: {
         app_id: process.env.ASC_APP_ID,
         kind: "testflight_beta_testers",
         source: "app_store_connect",
         tester_count: testerCount,
       },
-      timestamp: new Date().toISOString(),
     }),
   });
 
   if (!response.ok) {
     throw new Error(
-      `PostHog capture failed: ${response.status} ${response.statusText}`,
+      `Plausible event failed: ${response.status} ${response.statusText}`,
     );
   }
 }
@@ -57,11 +63,11 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  await capturePostHogSnapshot(testerCount);
+  await captureSnapshot(testerCount);
 
   return NextResponse.json({
     ok: true,
-    event: POSTHOG_EVENT,
+    event: PLAUSIBLE_EVENT,
     testerCount,
   });
 }

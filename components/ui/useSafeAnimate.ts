@@ -11,8 +11,8 @@ import { useAnimate } from "motion/react";
  * out cancels the in-flight hover-in animation. Our animated icons
  * `await animate(...)` inside async hover handlers wired straight to
  * `onHoverStart` / `onHoverEnd`, so that rejection had nothing catching it. On
- * Safari it surfaced as an unhandled `DOMException: InvalidStateError` that
- * PostHog error tracking captured (issue: web, Mobile Safari, no stack trace).
+ * Safari it surfaced as an unhandled `DOMException: InvalidStateError`
+ * (observed on web, Mobile Safari, no stack trace).
  *
  * Swallowing the interruption rejection here fixes every animated icon in one
  * place. The icons only ever `await` the result, so collapsing it to a
