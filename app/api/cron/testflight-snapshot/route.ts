@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { fetchTestFlightTesterCount } from "@/lib/testflight";
+import { fetchHoraUserCount } from "@/lib/testflight";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,11 +13,11 @@ function isAuthorized(req: NextRequest) {
   );
 }
 
-// Record the daily TestFlight tester count as a Plausible custom event so the
-// waitlist growth stays visible on the same analytics stack as everything else.
+// Record the daily public proof count as a Plausible custom event so growth
+// stays visible on the same analytics stack as everything else.
 // Plausible's server-side Events API is keyed by site domain (no token), and
 // silently drops requests without a User-Agent, so we set one explicitly.
-async function captureSnapshot(testerCount: number) {
+async function captureSnapshot(userCount: number) {
   const host = (process.env.PLAUSIBLE_HOST ?? "https://plausible.io").replace(
     /\/$/,
     "",
@@ -36,9 +36,9 @@ async function captureSnapshot(testerCount: number) {
       url: `https://${domain}/`,
       props: {
         app_id: process.env.ASC_APP_ID,
-        kind: "testflight_beta_testers",
+        kind: "testflight_beta_testers_and_first_time_downloads",
         source: "app_store_connect",
-        tester_count: testerCount,
+        user_count: userCount,
       },
     }),
   });
@@ -55,19 +55,19 @@ export async function GET(req: NextRequest) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const testerCount = await fetchTestFlightTesterCount();
-  if (testerCount === null) {
+  const userCount = await fetchHoraUserCount();
+  if (userCount === null) {
     return NextResponse.json(
-      { ok: false, error: "Unable to fetch TestFlight tester count" },
+      { ok: false, error: "Unable to fetch App Store Connect user count" },
       { status: 502 },
     );
   }
 
-  await captureSnapshot(testerCount);
+  await captureSnapshot(userCount);
 
   return NextResponse.json({
     ok: true,
     event: PLAUSIBLE_EVENT,
-    testerCount,
+    userCount,
   });
 }
