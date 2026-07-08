@@ -1,4 +1,5 @@
 import { Icon } from "@/components/atoms/Icon";
+import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { home } from "@/content/home";
 import { getTestFlightTesterCount } from "@/lib/testflight";
 
@@ -45,7 +46,7 @@ export async function UserProof() {
             </div>
             <div className="mt-auto">
               <p className="text-6xl font-semibold leading-none tracking-tight text-accent md:text-7xl">
-                {liveCount.toLocaleString()}+
+                <AnimatedCount value={liveCount} />+
               </p>
               <p className="mt-4 max-w-sm text-balance text-base font-semibold leading-snug text-text md:text-lg">
                 {testFlightProof.label}

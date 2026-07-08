@@ -1,6 +1,7 @@
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
 import { WaitlistImpression } from "@/components/molecules/WaitlistImpression";
 import { Icon } from "@/components/atoms/Icon";
+import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { cn } from "@/lib/cn";
 
 type Avatar = {
@@ -107,7 +108,7 @@ export function WaitlistCard({
         <AvatarTicker avatars={avatars} />
         <p className="min-w-0 text-sm leading-snug text-muted">
           <span className="mr-1.5 text-base font-semibold tabular-nums text-text">
-            {liveCount.toLocaleString()}+
+            <AnimatedCount value={liveCount} />+
           </span>
           {socialLabel}
         </p>

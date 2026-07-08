@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Icon, type IconName } from "@/components/atoms/Icon";
+import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { home } from "@/content/home";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
@@ -133,7 +134,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             </div>
             <p className="max-w-100 text-sm leading-snug text-muted sm:max-w-108">
               <span className="font-semibold text-text">
-                {liveCount.toLocaleString()}+ Mac users
+                <AnimatedCount value={liveCount} />+ Mac users
               </span>{" "}
               already use hora.{" "}
               <span>Now on the Mac App Store.</span>

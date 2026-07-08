@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon, type IconName } from "@/components/atoms/Icon";
+import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { WaitlistCard } from "@/components/molecules/WaitlistCard";
 import { home } from "@/content/home";
 import { site } from "@/content/site";
@@ -222,7 +223,7 @@ export default async function TestFlightPage() {
               </div>
               <p className="max-w-md text-sm leading-snug text-muted">
                 <span className="font-semibold text-text">
-                  {liveCount.toLocaleString()}+ Mac users
+                  <AnimatedCount value={liveCount} />+ Mac users
                 </span>{" "}
                 already use hora. Now a one-tap install from the Mac App Store.
               </p>

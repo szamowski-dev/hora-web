@@ -1,5 +1,6 @@
 import { WaitlistCard } from "@/components/molecules/WaitlistCard";
 import { Icon } from "@/components/atoms/Icon";
+import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { home } from "@/content/home";
 import { getTestFlightTesterCount } from "@/lib/testflight";
 
@@ -41,7 +42,7 @@ export async function BetaCta() {
                 {cta.eyebrow}
               </p>
               <h2 className="mt-5 max-w-[16ch] text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
-                Join {liveCount.toLocaleString()}+ Mac users building the future
+                Join <AnimatedCount value={liveCount} />+ Mac users building the future
                 of <span className="text-accent">Google Calendar on Mac.</span>
               </h2>
             </div>

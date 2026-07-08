@@ -4,17 +4,17 @@ import { useEffect, useRef, useState } from "react";
 
 export function AnimatedCount({
   value,
-  duration = 800,
+  duration = 1100,
+  offset,
 }: {
   value: number;
   duration?: number;
+  offset?: number;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  // SSR + initial paint with the final value so the LCP element doesn't grow
-  // from "0+" → "245+". The IntersectionObserver below briefly counts up the
-  // last ~30 to keep the visual flourish without changing rect width
-  // (tabular-nums keeps digit width identical).
-  const [display, setDisplay] = useState(value);
+  const span = Math.min(offset ?? Math.max(28, Math.round(value * 0.16)), value);
+  const startValue = Math.max(0, value - span);
+  const [display, setDisplay] = useState(startValue);
   const started = useRef(false);
 
   useEffect(() => {
@@ -22,30 +22,31 @@ export function AnimatedCount({
     if (!el) return;
 
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mq.matches) return;
+    if (mq.matches) {
+      const frame = requestAnimationFrame(() => setDisplay(value));
+      return () => cancelAnimationFrame(frame);
+    }
 
     const io = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting || started.current) return;
         started.current = true;
         io.disconnect();
-        const span = Math.min(30, value);
-        const startVal = Math.max(0, value - span);
-        setDisplay(startVal);
+        setDisplay(startValue);
         const start = performance.now();
         const ease = (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
         const tick = (now: number) => {
           const t = Math.min(1, (now - start) / duration);
-          setDisplay(Math.round(startVal + ease(t) * span));
+          setDisplay(Math.round(startValue + ease(t) * span));
           if (t < 1) requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
       },
-      { threshold: 0.4 },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.35 },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [value, duration]);
+  }, [value, duration, span, startValue]);
 
   return (
     <span ref={ref} className="tabular-nums">
