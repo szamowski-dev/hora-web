@@ -24,7 +24,7 @@ export const site = {
   cta: {
     primary: {
       label: "Download on the Mac App Store",
-      href: "https://apps.apple.com/app/apple-store/id6761409895",
+      href: "https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_website&mt=8",
     },
     iosBeta: {
       label: "Get the iOS/iPad beta note",

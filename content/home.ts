@@ -239,7 +239,7 @@ export const home = {
   pricing: {
     heading: { prefix: "Simple pricing", suffixGradient: "rules forever." },
     appStoreLabel: "Download on the Mac App Store",
-    appStoreHref: "https://apps.apple.com/app/apple-store/id6761409895",
+    appStoreHref: "https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_website&mt=8",
     betaNoteLabel: "Get the iOS/iPad beta note",
     betaNoteHref: "/#newsletter",
     oneTime: "$49.90 one-time",
