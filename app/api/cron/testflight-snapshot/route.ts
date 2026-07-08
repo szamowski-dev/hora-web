@@ -35,9 +35,8 @@ async function captureSnapshot(userCount: number) {
       domain,
       url: `https://${domain}/`,
       props: {
-        app_id: process.env.ASC_APP_ID,
-        kind: "testflight_beta_testers_and_first_time_downloads",
-        source: "app_store_connect",
+        kind: "synthetic_daily_user_count",
+        source: "deterministic_daily_growth",
         user_count: userCount,
       },
     }),
@@ -56,13 +55,6 @@ export async function GET(req: NextRequest) {
   }
 
   const userCount = await fetchHoraUserCount();
-  if (userCount === null) {
-    return NextResponse.json(
-      { ok: false, error: "Unable to fetch App Store Connect user count" },
-      { status: 502 },
-    );
-  }
-
   await captureSnapshot(userCount);
 
   return NextResponse.json({
