@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/content/site";
-import { BLOG_PAGE_SIZE, getBlogTags, getMonthlyArchives } from "@/lib/blog";
 import { getAllPosts } from "@/lib/mdx";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -8,39 +7,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = site.url;
   const today = new Date().toISOString().split("T")[0];
   const latestPostDate = posts[0]?.frontmatter.date ?? today;
-  const totalBlogPages = Math.ceil(posts.length / BLOG_PAGE_SIZE);
-  const tags = getBlogTags(posts);
-  const archives = getMonthlyArchives(posts);
 
   const postEntries: MetadataRoute.Sitemap = posts.map((p) => ({
     url: `${base}/blog/${p.slug}/`,
     lastModified: p.frontmatter.date,
     changeFrequency: "monthly",
     priority: 0.7,
-  }));
-
-  const paginationEntries: MetadataRoute.Sitemap = Array.from(
-    { length: Math.max(0, totalBlogPages - 1) },
-    (_, index) => ({
-      url: `${base}/blog/page/${index + 2}/`,
-      lastModified: latestPostDate,
-      changeFrequency: "weekly" as const,
-      priority: 0.55,
-    }),
-  );
-
-  const tagEntries: MetadataRoute.Sitemap = tags.map((tag) => ({
-    url: `${base}${tag.href}`,
-    lastModified: tag.lastModified,
-    changeFrequency: "monthly" as const,
-    priority: 0.5,
-  }));
-
-  const archiveEntries: MetadataRoute.Sitemap = archives.map((archive) => ({
-    url: `${base}${archive.href}`,
-    lastModified: archive.lastModified,
-    changeFrequency: "monthly" as const,
-    priority: 0.45,
   }));
 
   return [
@@ -69,15 +41,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    {
-      url: `${base}/blog/archive/`,
-      lastModified: latestPostDate,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    ...paginationEntries,
-    ...tagEntries,
-    ...archiveEntries,
     ...postEntries,
     {
       url: `${base}/features/`,
@@ -86,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
-      url: `${base}/testflight/`,
+      url: `${base}/download/`,
       lastModified: today,
       changeFrequency: "weekly",
       priority: 0.7,

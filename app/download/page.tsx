@@ -19,10 +19,10 @@ const description =
 export const metadata: Metadata = {
   title: "Download hora Calendar",
   description,
-  alternates: { canonical: "/testflight/" },
+  alternates: { canonical: "/download/" },
   openGraph: {
     type: "website",
-    url: "https://horacal.app/testflight/",
+    url: "https://horacal.app/download/",
     siteName: "hora Calendar",
     title,
     description,
@@ -143,7 +143,7 @@ const detailChips = [
   "Apple Intelligence TL;DR for long event notes",
 ];
 
-export default async function TestFlightPage() {
+export default async function DownloadPage() {
   const newsletter = home.hero.newsletter;
   const socialProof = newsletter.socialProof;
   const liveCount = await getTestFlightTesterCount(socialProof.count);

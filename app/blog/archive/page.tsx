@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   description:
     "Browse hora Calendar blog posts by month, including Mac calendar product updates, SwiftUI engineering notes, Google Calendar sync work, and launch reports.",
   alternates: { canonical: "/blog/archive/" },
+  robots: { index: false, follow: true },
   openGraph: defaultOg({
     title: "hora Calendar Blog Archive",
     description:

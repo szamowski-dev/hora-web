@@ -35,13 +35,33 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/blog/2026-03-27-two-days-of-shipping/",
+        destination: "/blog/native-macos-google-calendar-app-48-hours/",
+        permanent: true,
+      },
+      {
+        source: "/blog/2026-03-27-two-days-of-shipping",
+        destination: "/blog/native-macos-google-calendar-app-48-hours/",
+        permanent: true,
+      },
+      {
+        source: "/blog/2026-04-16-from-polling-to-push/",
+        destination: "/blog/real-time-google-calendar-sync-macos/",
+        permanent: true,
+      },
+      {
+        source: "/blog/2026-04-16-from-polling-to-push",
+        destination: "/blog/real-time-google-calendar-sync-macos/",
+        permanent: true,
+      },
+      {
         source: "/blog/from-polling-to-push/",
-        destination: "/blog/2026-04-16-from-polling-to-push/",
+        destination: "/blog/real-time-google-calendar-sync-macos/",
         permanent: true,
       },
       {
         source: "/blog/from-polling-to-push",
-        destination: "/blog/2026-04-16-from-polling-to-push/",
+        destination: "/blog/real-time-google-calendar-sync-macos/",
         permanent: true,
       },
       {
@@ -52,6 +72,16 @@ const nextConfig: NextConfig = {
       {
         source: "/blog/native-app-vs-electron-pwa",
         destination: "/blog/2026-04-14-native-app-vs-electron-pwa/",
+        permanent: true,
+      },
+      {
+        source: "/testflight/",
+        destination: "/download/",
+        permanent: true,
+      },
+      {
+        source: "/testflight",
+        destination: "/download/",
         permanent: true,
       },
     ];

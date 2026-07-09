@@ -17,6 +17,7 @@ type Props = {
   heading?: typeof blog.heading;
   title?: string;
   subtitle?: string;
+  intro?: readonly string[];
   posts: readonly PostCardData[];
   tags: readonly BlogTag[];
   archives: readonly BlogArchive[];
@@ -30,6 +31,7 @@ export function BlogListingPage({
   heading = blog.heading,
   title,
   subtitle = blog.subtitle,
+  intro,
   posts,
   tags,
   archives,
@@ -57,6 +59,16 @@ export function BlogListingPage({
           </p>
         </div>
       </section>
+
+      {intro?.length ? (
+        <section className="mx-auto max-w-295 px-6 pt-8">
+          <div className="max-w-3xl space-y-4 text-base leading-7 text-muted">
+            {intro.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="mx-auto grid max-w-295 gap-8 px-6 py-12 md:py-16 lg:grid-cols-[minmax(0,1fr)_18rem]">
         <div>

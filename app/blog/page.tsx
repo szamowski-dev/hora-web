@@ -47,6 +47,7 @@ export default async function BlogIndexPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
       <BlogListingPage
+        intro={blog.intro}
         posts={page.posts.map(postToCard)}
         tags={getBlogTags(posts)}
         archives={getMonthlyArchives(posts)}

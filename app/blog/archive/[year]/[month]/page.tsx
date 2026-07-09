@@ -40,6 +40,7 @@ export async function generateMetadata({
     title: `${archive.label} Blog Archive`,
     description: `hora Calendar blog posts from ${archive.label}, covering Mac calendar product work, SwiftUI development, Google Calendar sync, beta fixes, and launch notes.`,
     alternates: { canonical },
+    robots: { index: false, follow: true },
     openGraph: defaultOg({
       title: `${archive.label} - hora Calendar Blog Archive`,
       description: `hora Calendar blog posts from ${archive.label}, covering Mac calendar product work, SwiftUI development, Google Calendar sync, beta fixes, and launch notes.`,

@@ -49,7 +49,7 @@ export async function generateMetadata({
     title: `Blog - Page ${pageNumber}`,
     description: `${blog.seo.description} Page ${pageNumber} of ${pagination.totalPages}.`,
     alternates: { canonical },
-    robots: { index: true, follow: true },
+    robots: { index: false, follow: true },
     openGraph: defaultOg({
       title: `${blog.seo.ogTitle} - Page ${pageNumber}`,
       description: blog.seo.ogDescription,

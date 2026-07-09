@@ -37,6 +37,7 @@ export async function generateMetadata({
     title: `${label} Articles`,
     description: `Articles about ${label} from the hora Calendar dev blog.`,
     alternates: { canonical },
+    robots: { index: false, follow: true },
     openGraph: defaultOg({
       title: `${label} Articles - hora Calendar Blog`,
       description: `Articles about ${label} from the hora Calendar dev blog.`,
