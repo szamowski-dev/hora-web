@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: defaultOg({
     title: "Support — hora Calendar",
     description:
-      "Report a problem or ask for help with hora Calendar. Support tickets go straight into our GitHub issue tracker.",
+      "Report a problem, ask for help, or join the hora Discord for real-time feedback and bug reports.",
     url: "https://horacal.app/support/",
   }),
 };
@@ -93,8 +93,8 @@ export default function SupportPage() {
               </h1>
               <p className="mt-5 max-w-xl text-base leading-7 text-muted md:text-lg md:leading-8">
                 Report a bug, ask for help, or send a feature request. The form
-                creates a support ticket in our GitHub issue tracker so it lands
-                directly in the development workflow.
+                sends your message directly to the developer, and Discord is
+                the fastest place for real-time feedback and follow-ups.
               </p>
 
               <div className="mt-8 grid gap-3">
@@ -134,7 +134,7 @@ export default function SupportPage() {
             </h2>
             <p className="mt-4 text-base leading-7 text-muted md:text-lg md:leading-8">
               Short answers about how hora works, what to include in support
-              tickets, and how beta support is handled.
+              requests, and how beta support is handled.
             </p>
           </div>
 

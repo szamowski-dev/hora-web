@@ -19,8 +19,10 @@ const fieldClassName =
 
 type Status =
   | { type: "idle" }
-  | { type: "success"; issueUrl: string | null }
+  | { type: "success" }
   | { type: "error"; message: string };
+
+const discordUrl = "https://discord.gg/8JFz4FfBGQ";
 
 function Field({
   label,
@@ -73,10 +75,7 @@ export function SupportForm() {
       }
 
       form.reset();
-      setStatus({
-        type: "success",
-        issueUrl: typeof json?.issueUrl === "string" ? json.issueUrl : null,
-      });
+      setStatus({ type: "success" });
     } catch {
       setStatus({
         type: "error",
@@ -212,7 +211,7 @@ export function SupportForm() {
 
       <div className="mt-5 rounded-md border border-white/10 bg-white/[0.025] p-4 text-sm leading-6 text-muted">
         Please do not include passwords, API tokens, OAuth codes, or private calendar
-        event details. Your email is included in the ticket so we can follow up.
+        event details. Your email is included so we can follow up.
       </div>
 
       {status.type !== "idle" ? (
@@ -226,21 +225,17 @@ export function SupportForm() {
         >
           {status.type === "success" ? (
             <>
-              Ticket created. We will reply by email.
-              {status.issueUrl ? (
-                <>
-                  {" "}
-                  <a
-                    href={status.issueUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-medium text-white underline decoration-white/40 underline-offset-4"
-                  >
-                    Open it on GitHub
-                  </a>
-                  .
-                </>
-              ) : null}
+              Message sent. For real-time bug reports, quick follow-ups, and
+              known issues,{" "}
+              <a
+                href={discordUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-white underline decoration-white/40 underline-offset-4"
+              >
+                join the hora Discord
+              </a>
+              .
             </>
           ) : (
             status.message
@@ -250,8 +245,8 @@ export function SupportForm() {
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
         <Button type="submit" size="lg" className="rounded-md" disabled={submitting}>
-          <Icon name="github" size={18} />
-          {submitting ? "Creating ticket..." : "Create support ticket"}
+          <Icon name="mail" size={18} />
+          {submitting ? "Sending..." : "Send support request"}
         </Button>
         <a
           href="mailto:hello@horacal.app"

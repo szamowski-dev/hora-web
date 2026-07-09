@@ -71,10 +71,7 @@ function getSupportRepo(): { owner: string; repo: string } | null {
 }
 
 function getIssueLabels(): string[] {
-  return [
-    "support-form",
-    ...(process.env.GITHUB_SUPPORT_LABELS?.split(",") ?? []),
-  ]
+  return (process.env.GITHUB_SUPPORT_LABELS?.split(",") ?? [])
     .map((label) => label.trim())
     .filter((label, index, labels) => label && labels.indexOf(label) === index);
 }
@@ -176,7 +173,7 @@ export async function POST(req: NextRequest) {
       message: payload?.message,
     });
     return NextResponse.json(
-      { error: "Could not create a support ticket. Please try again later." },
+      { error: "Could not send your support request. Please try again later." },
       { status: 502, headers },
     );
   }
