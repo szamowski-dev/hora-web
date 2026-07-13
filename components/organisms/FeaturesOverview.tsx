@@ -41,7 +41,6 @@ const iconMap: Record<string, IconName> = {
   calendar: "calendar",
   bell: "bell",
   sync: "sync",
-  command: "command",
   shield: "shield",
   check: "check",
   gauge: "gauge",

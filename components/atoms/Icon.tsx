@@ -15,14 +15,10 @@ import BlueskyIcon from "@/components/ui/bluesky-icon";
 import GaugeIcon from "@/components/ui/gauge-icon";
 import HandHeartIcon from "@/components/ui/hand-heart-icon";
 import LayoutDashboardIcon from "@/components/ui/layout-dashboard-icon";
-import LikeIcon from "@/components/ui/like-icon";
 import MailFilledIcon from "@/components/ui/mail-filled-icon";
-import PartyPopperIcon from "@/components/ui/party-popper-icon";
 import PenIcon from "@/components/ui/pen-icon";
 import RefreshIcon from "@/components/ui/refresh-icon";
 import RightChevron from "@/components/ui/right-chevron";
-import RocketIcon from "@/components/ui/rocket-icon";
-import SendIcon from "@/components/ui/send-icon";
 import ShieldCheck from "@/components/ui/shield-check";
 import TwitterXIcon from "@/components/ui/twitter-x-icon";
 import UnorderedListIcon from "@/components/ui/unordered-list-icon";
@@ -44,7 +40,6 @@ export type IconName =
   | "bluesky"
   | "discord"
   | "apple"
-  | "testflight"
   | "shield"
   | "arrow-right"
   | "check"
@@ -52,12 +47,8 @@ export type IconName =
   | "close"
   | "app-window"
   | "bell"
-  | "command"
   | "hand-heart"
   | "gauge"
-  | "rocket"
-  | "like"
-  | "party-popper"
   | "chrome"
   | "javascript";
 
@@ -76,7 +67,6 @@ const iconMap: Record<IconName, AnimatedIconComponent> = {
   bluesky: BlueskyIcon,
   discord: DiscordIcon,
   apple: AppleBrandLogo,
-  testflight: SendIcon,
   shield: ShieldCheck,
   "arrow-right": RightChevron,
   check: CheckedIcon,
@@ -84,12 +74,8 @@ const iconMap: Record<IconName, AnimatedIconComponent> = {
   close: XIcon,
   "app-window": LayoutDashboardIcon,
   bell: FilledBellIcon,
-  command: DialpadIcon,
   "hand-heart": HandHeartIcon,
   gauge: GaugeIcon,
-  rocket: RocketIcon,
-  like: LikeIcon,
-  "party-popper": PartyPopperIcon,
   chrome: BrandChromeIcon,
   javascript: JavascriptIcon,
 };

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { StayInLoopCta } from "@/components/organisms/StayInLoopCta";
+import { BetaCta } from "@/components/organisms/BetaCta";
 import { getMonthlyArchives } from "@/lib/blog";
 import { breadcrumbList } from "@/lib/jsonld";
 import { getAllPosts } from "@/lib/mdx";
@@ -65,7 +65,7 @@ export default async function BlogArchiveIndexPage() {
         </div>
       </section>
 
-      <StayInLoopCta />
+      <BetaCta placement="stay_in_loop" />
     </>
   );
 }

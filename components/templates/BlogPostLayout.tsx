@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Icon } from "@/components/atoms/Icon";
 import { Prose } from "@/components/atoms/Prose";
 import { Tag } from "@/components/atoms/Tag";
-import { StayInLoopCta } from "@/components/organisms/StayInLoopCta";
+import { BetaCta } from "@/components/organisms/BetaCta";
 import type { PostFrontmatter, PostMeta } from "@/lib/mdx";
 
 type Adjacent = Pick<PostMeta, "slug"> & { title: string };
@@ -149,7 +149,7 @@ export function BlogPostLayout({
         ) : null}
       </article>
 
-      <StayInLoopCta />
+      <BetaCta placement="stay_in_loop" />
     </>
   );
 }

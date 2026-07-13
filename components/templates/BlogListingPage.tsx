@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BlogTagSearch } from "@/components/molecules/BlogTagSearch";
 import { PostCard, type PostCardData } from "@/components/molecules/PostCard";
-import { StayInLoopCta } from "@/components/organisms/StayInLoopCta";
+import { BetaCta } from "@/components/organisms/BetaCta";
 import { blog } from "@/content/blog";
 import type { BlogArchive, BlogTag } from "@/lib/blog";
 import { cn } from "@/lib/cn";
@@ -164,7 +164,7 @@ export function BlogListingPage({
         ) : null}
       </section>
 
-      <StayInLoopCta />
+      <BetaCta placement="stay_in_loop" />
     </>
   );
 }
