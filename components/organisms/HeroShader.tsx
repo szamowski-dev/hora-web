@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
+  Ascii,
   Blob,
   DotGrid,
   FilmGrain,
@@ -11,14 +12,23 @@ import {
 
 export function HeroShader() {
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [showAscii, setShowAscii] = useState(false);
 
   useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(media.matches);
+    const motionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktopMedia = window.matchMedia("(min-width: 768px)");
+    const update = () => {
+      setReducedMotion(motionMedia.matches);
+      setShowAscii(desktopMedia.matches);
+    };
 
     update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
+    motionMedia.addEventListener("change", update);
+    desktopMedia.addEventListener("change", update);
+    return () => {
+      motionMedia.removeEventListener("change", update);
+      desktopMedia.removeEventListener("change", update);
+    };
   }, []);
 
   return (
@@ -58,6 +68,18 @@ export function HeroShader() {
           dotSize={0.055}
           opacity={0.12}
           twinkle={0}
+        />
+        <Ascii
+          alphaThreshold={0.06}
+          blendMode="screen"
+          cellSize={27}
+          characters="01<>/{}=+-. "
+          fontFamily="Geist Mono"
+          gamma={1.45}
+          opacity={0.13}
+          preserveAlpha
+          spacing={0.82}
+          visible={showAscii}
         />
         <FilmGrain strength={0.035} animated={false} />
       </Shader>

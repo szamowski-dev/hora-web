@@ -31,11 +31,11 @@ export async function BetaCta() {
     <section className="relative overflow-hidden py-20 md:py-24">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(760px_420px_at_22%_16%,rgba(255,56,60,0.16),transparent_68%),radial-gradient(720px_420px_at_80%_70%,rgba(131,199,255,0.08),transparent_72%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(760px_420px_at_22%_16%,rgba(255,56,60,0.13),transparent_68%),radial-gradient(720px_420px_at_80%_70%,rgba(34,79,136,0.17),transparent_72%)]"
       />
 
       <div className="relative mx-auto max-w-295 px-6">
-        <div className="grid gap-8 rounded-lg border border-white/10 bg-white/[0.035] p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_34px_90px_-60px_rgba(255,56,60,0.8)] md:grid-cols-[0.95fr_1.05fr] md:p-10 lg:p-11">
+        <div className="shader-panel grid gap-8 rounded-lg border border-white/10 bg-white/[0.035] p-7 md:grid-cols-[0.95fr_1.05fr] md:p-10 lg:p-11">
           <div className="flex flex-col justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">

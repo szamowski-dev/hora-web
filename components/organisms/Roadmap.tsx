@@ -53,8 +53,8 @@ export function Roadmap() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 700px 400px at 80% 0%, rgba(255,56,60,0.10), transparent 64%)," +
-            "radial-gradient(ellipse 780px 460px at 22% 88%, rgba(131,199,255,0.08), transparent 68%)",
+            "radial-gradient(ellipse 700px 400px at 80% 0%, rgba(255,56,60,0.09), transparent 64%)," +
+            "radial-gradient(ellipse 780px 460px at 22% 88%, rgba(34,79,136,0.17), transparent 68%)",
         }}
       />
       <div
@@ -62,7 +62,7 @@ export function Roadmap() {
         className="pointer-events-none absolute inset-0 opacity-[0.15]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.10) 1px, transparent 1px)",
+            "linear-gradient(rgba(131,199,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(131,199,255,0.07) 1px, transparent 1px)",
           backgroundSize: "72px 72px",
           maskImage:
             "linear-gradient(to bottom, transparent 0%, black 20%, black 82%, transparent 100%)",
@@ -102,14 +102,14 @@ export function Roadmap() {
                   ) : null}
                 </div>
 
-                <div className="relative flex-1 overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] md:p-6">
+                <div className="shader-panel-soft relative flex-1 overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-5 md:p-6">
                   {item.status === "Up next" ? (
                     <div
                       aria-hidden
                       className="pointer-events-none absolute -top-20 -right-20 h-48 w-48 opacity-90 blur-3xl"
                       style={{
                         background:
-                          "radial-gradient(circle, rgba(255,56,60,0.24) 0%, transparent 70%)",
+                          "radial-gradient(circle, rgba(255,56,60,0.20) 0%, rgba(34,79,136,0.10) 38%, transparent 70%)",
                       }}
                     />
                   ) : null}

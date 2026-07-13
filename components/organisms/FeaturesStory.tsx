@@ -36,7 +36,7 @@ export function FeaturesStory() {
         className="pointer-events-none absolute inset-0 opacity-[0.16]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.10) 1px, transparent 1px)",
+            "linear-gradient(rgba(131,199,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(131,199,255,0.07) 1px, transparent 1px)",
           backgroundSize: "72px 72px",
           maskImage:
             "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
@@ -47,8 +47,8 @@ export function FeaturesStory() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 720px 420px at 0% 0%, rgba(255,56,60,0.10), transparent 64%)," +
-            "radial-gradient(ellipse 760px 480px at 100% 36%, rgba(131,199,255,0.10), transparent 64%)",
+            "radial-gradient(ellipse 720px 420px at 0% 0%, rgba(255,56,60,0.09), transparent 64%)," +
+            "radial-gradient(ellipse 760px 480px at 100% 36%, rgba(34,79,136,0.18), transparent 64%)",
         }}
       />
 
@@ -70,14 +70,14 @@ export function FeaturesStory() {
               <article
                 key={item.title}
                 data-anim="feature-card"
-                className="group relative min-h-[14.5rem] overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] transition-colors duration-300 hover:border-accent/25 hover:bg-white/5.5 md:p-7"
+                className="shader-panel-soft group relative min-h-[14.5rem] overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 transition-colors duration-300 hover:border-accent/25 hover:bg-white/5.5 md:p-7"
               >
                 <div
                   aria-hidden
                   className="pointer-events-none absolute -top-20 -right-20 h-48 w-48 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
                   style={{
                     background:
-                      "radial-gradient(circle, rgba(255,56,60,0.22) 0%, transparent 70%)",
+                      "radial-gradient(circle, rgba(255,56,60,0.18) 0%, rgba(34,79,136,0.10) 38%, transparent 70%)",
                   }}
                 />
 

@@ -16,14 +16,14 @@ export async function UserProof() {
     <section className="relative overflow-hidden border-y border-white/8 bg-[#0b0c0f] py-20 md:py-24">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(760px_420px_at_18%_10%,rgba(255,56,60,0.10),transparent_70%),radial-gradient(760px_460px_at_86%_82%,rgba(131,199,255,0.07),transparent_72%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(760px_420px_at_18%_10%,rgba(255,56,60,0.09),transparent_70%),radial-gradient(760px_460px_at_86%_82%,rgba(34,79,136,0.16),transparent_72%)]"
       />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.12]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.10) 1px, transparent 1px)",
+            "linear-gradient(rgba(131,199,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(131,199,255,0.07) 1px, transparent 1px)",
           backgroundSize: "72px 72px",
           maskImage:
             "linear-gradient(to bottom, transparent 0%, black 20%, black 82%, transparent 100%)",
@@ -38,7 +38,7 @@ export async function UserProof() {
         </div>
 
         <div className="mt-12 grid gap-5 md:mt-14 md:grid-cols-[0.72fr_1.28fr] md:items-start">
-          <div className="relative flex min-h-[13.5rem] flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_28px_80px_-58px_rgba(255,56,60,0.7)] md:h-[14.5rem]">
+          <div className="shader-panel relative flex min-h-[13.5rem] flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 md:h-[14.5rem]">
             <div className="flex items-center">
               <div className="flex h-11 w-11 items-center justify-center rounded-md border border-accent/25 bg-accent/10 text-accent">
                 <Icon name="users" size={22} />
@@ -58,7 +58,7 @@ export async function UserProof() {
             {proof.quotes.map((quote) => (
               <figure
                 key={quote.href}
-                className="relative flex min-h-[13.5rem] flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] px-5 py-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] md:h-[14.5rem] md:px-6 md:py-6"
+                className="shader-panel-soft relative flex min-h-[13.5rem] flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] px-5 py-5 text-left md:h-[14.5rem] md:px-6 md:py-6"
               >
                 <span
                   aria-hidden

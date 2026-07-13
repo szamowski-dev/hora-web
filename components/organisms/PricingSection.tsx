@@ -18,8 +18,8 @@ export function PricingSection() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 740px 420px at 16% 0%, rgba(255,56,60,0.10), transparent 66%)," +
-            "radial-gradient(ellipse 760px 460px at 86% 94%, rgba(131,199,255,0.08), transparent 70%)",
+            "radial-gradient(ellipse 740px 420px at 16% 0%, rgba(255,56,60,0.09), transparent 66%)," +
+            "radial-gradient(ellipse 760px 460px at 86% 94%, rgba(34,79,136,0.17), transparent 70%)",
         }}
       />
       <div
@@ -27,7 +27,7 @@ export function PricingSection() {
         className="pointer-events-none absolute inset-0 opacity-[0.16]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.10) 1px, transparent 1px)",
+            "linear-gradient(rgba(131,199,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(131,199,255,0.07) 1px, transparent 1px)",
           backgroundSize: "72px 72px",
           maskImage:
             "linear-gradient(to bottom, transparent 0%, black 20%, black 82%, transparent 100%)",
@@ -35,7 +35,7 @@ export function PricingSection() {
       />
 
       <div className="relative mx-auto max-w-295 px-6">
-        <div className="grid gap-6 rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] md:grid-cols-[0.88fr_1.12fr] md:p-8">
+        <div className="shader-panel grid gap-6 rounded-lg border border-white/10 bg-white/[0.035] p-6 md:grid-cols-[0.88fr_1.12fr] md:p-8">
           <div className="flex h-full flex-col">
             <h2
               data-anim="pricing-title"

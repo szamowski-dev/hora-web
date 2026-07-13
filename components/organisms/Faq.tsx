@@ -22,7 +22,7 @@ export function Faq() {
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(720px_420px_at_15%_0%,rgba(255,56,60,0.09),transparent_68%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(720px_420px_at_15%_0%,rgba(255,56,60,0.09),transparent_68%),radial-gradient(760px_460px_at_88%_90%,rgba(34,79,136,0.14),transparent_72%)]"
       />
 
       <div className="relative mx-auto max-w-295 px-6">

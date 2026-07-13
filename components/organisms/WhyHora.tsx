@@ -34,7 +34,7 @@ export function WhyHora() {
     <section className="relative overflow-hidden border-t border-white/8 py-20 md:py-28">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(720px_420px_at_18%_8%,rgba(255,56,60,0.10),transparent_68%),radial-gradient(760px_460px_at_90%_84%,rgba(131,199,255,0.08),transparent_70%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(720px_420px_at_18%_8%,rgba(255,56,60,0.09),transparent_68%),radial-gradient(760px_460px_at_90%_84%,rgba(34,79,136,0.16),transparent_70%)]"
       />
 
       <div className="relative mx-auto max-w-295 px-6">
@@ -71,7 +71,7 @@ export function WhyHora() {
           </div>
         </div>
 
-        <figure className="mt-14 rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] sm:p-7 md:mt-16 md:p-8">
+        <figure className="shader-panel mt-14 rounded-lg border border-white/10 bg-white/[0.035] p-6 sm:p-7 md:mt-16 md:p-8">
           <blockquote className="space-y-3 text-[1.45rem] font-semibold leading-[1.28] tracking-tight text-text/95 sm:text-[1.7rem] md:space-y-2 md:text-[2.15rem] md:leading-[1.2]">
             {w.personalNote.map((line) => (
               <p key={line}>{line}</p>

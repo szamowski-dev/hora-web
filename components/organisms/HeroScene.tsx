@@ -1,31 +1,10 @@
 import Image from "next/image";
-import { Icon, type IconName } from "@/components/atoms/Icon";
 import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { home } from "@/content/home";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { FeaturedOn } from "./FeaturedOn";
 import { HeroShader } from "./HeroShader";
-
-const heroPills: { key: string; label: React.ReactNode; icon: IconName }[] = [
-  { key: "macos-native", label: "macOS Native", icon: "apple" },
-  {
-    key: "nlp-quick-add",
-    label: (
-      <>
-        <abbr
-          title="Natural Language Processing"
-          className="cursor-help border-b border-dotted border-current/70 pb-px no-underline"
-        >
-          NLP
-        </abbr>{" "}
-        Quick add
-      </>
-    ),
-    icon: "edit",
-  },
-  { key: "offline-ready", label: "Offline Ready", icon: "shield" },
-  { key: "multiple-accounts", label: "Multiple Accounts", icon: "users" },
-];
 
 export function HeroScene({ liveCount }: { liveCount: number }) {
   const hero = home.hero;
@@ -118,13 +97,17 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
         <div className="relative md:-mt-14 lg:-mt-18">
           <div
             aria-hidden
-            className="absolute -inset-4 rounded-4xl bg-[radial-gradient(ellipse_at_50%_45%,rgba(255,56,60,0.24),transparent_62%)] blur-2xl"
+            className="absolute -inset-5 rounded-4xl bg-[radial-gradient(ellipse_at_58%_42%,rgba(255,56,60,0.20),rgba(34,79,136,0.12)_38%,transparent_68%)] blur-3xl"
           />
           <div
             aria-hidden
-            className="absolute inset-x-10 -bottom-9 h-20 rounded-full bg-[radial-gradient(ellipse,rgba(255,56,60,0.34)_0%,rgba(255,56,60,0.16)_42%,transparent_74%)] blur-2xl"
+            className="absolute inset-x-[7%] -bottom-8 h-24 rounded-full bg-[radial-gradient(ellipse,rgba(255,56,60,0.28)_0%,rgba(34,79,136,0.20)_38%,transparent_74%)] blur-[34px]"
           />
-          <div className="relative overflow-hidden rounded-[18px] shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9)]">
+          <div
+            aria-hidden
+            className="absolute inset-x-[14%] -bottom-10 h-16 rounded-full bg-black/90 blur-[38px]"
+          />
+          <div className="relative overflow-hidden rounded-[18px] shadow-[0_48px_120px_-42px_rgba(0,0,0,0.98),0_34px_90px_-58px_rgba(255,56,60,0.75),0_22px_80px_-60px_rgba(34,79,136,0.9)]">
             <Image
               src={hero.demo.posterSrc}
               alt="hora Calendar macOS app interface"
@@ -137,17 +120,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             />
           </div>
 
-          <div className="relative z-10 mx-auto mt-4 grid max-w-3xl grid-cols-2 gap-2 text-xs text-muted sm:grid-cols-4 md:mt-5">
-            {heroPills.map((item) => (
-                <div
-                  key={item.key}
-                  className="flex h-10 items-center justify-center gap-2 rounded-md border border-white/10 bg-[#111216]/88 px-2.5 text-[10px] font-medium leading-none shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] backdrop-blur-xl lg:text-[11px]"
-                >
-                  <Icon name={item.icon} size={14} className="text-accent" />
-                  <span className="truncate">{item.label}</span>
-                </div>
-              ))}
-          </div>
+          <FeaturedOn compact />
         </div>
       </div>
     </section>

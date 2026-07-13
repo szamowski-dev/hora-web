@@ -16,8 +16,19 @@ export function BlogPreview({ posts }: { posts: readonly PostCardData[] }) {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 760px 420px at 88% 0%, rgba(255,56,60,0.08), transparent 66%)," +
-            "radial-gradient(ellipse 760px 420px at 8% 100%, rgba(131,199,255,0.05), transparent 72%)",
+            "radial-gradient(ellipse 760px 420px at 88% 0%, rgba(255,56,60,0.09), transparent 66%)," +
+            "radial-gradient(ellipse 760px 420px at 8% 100%, rgba(34,79,136,0.16), transparent 72%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.1]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(131,199,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(131,199,255,0.07) 1px, transparent 1px)",
+          backgroundSize: "72px 72px",
+          maskImage:
+            "linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)",
         }}
       />
 
@@ -32,17 +43,31 @@ export function BlogPreview({ posts }: { posts: readonly PostCardData[] }) {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-[1.35fr_1fr]">
+        <div className="shader-panel relative mt-10 overflow-hidden rounded-xl border border-white/[0.085] bg-[#080a0d]/72 md:mt-12 md:grid md:grid-cols-[1.35fr_1fr]">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-accent/70 to-transparent"
+          />
           {posts.map((post, index) => (
             <Link
               key={post.slug}
               href={`/blog/${post.slug}/`}
               className={
                 index === 0
-                  ? "group border-b border-white/12 py-10 md:row-span-2 md:border-r md:py-12 md:pr-14"
-                  : "group border-b border-white/12 py-9 md:py-10 md:pl-12"
+                  ? "group relative border-b border-white/[0.08] px-6 py-10 transition-colors hover:bg-white/[0.025] md:row-span-2 md:border-r md:px-10 md:py-12"
+                  : "group relative border-b border-white/[0.08] px-6 py-9 transition-colors last:border-b-0 hover:bg-white/[0.025] md:px-9 md:py-10"
               }
             >
+              <span
+                aria-hidden
+                className="absolute right-5 top-4 font-mono text-[10px] tracking-[0.18em] text-white/15"
+              >
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -right-24 -top-24 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(255,56,60,0.12),rgba(34,79,136,0.07)_38%,transparent_70%)] opacity-0 blur-2xl transition-opacity group-hover:opacity-100"
+              />
               <article className="flex h-full flex-col">
                 <div className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.17em] text-muted">
                   <time dateTime={post.date}>{post.date}</time>
@@ -85,10 +110,10 @@ export function BlogPreview({ posts }: { posts: readonly PostCardData[] }) {
           ))}
         </div>
 
-        <div className="pt-8 text-right md:pt-10">
+        <div className="pt-7 text-right md:pt-8">
           <Link
             href={b.allPostsLink.href}
-            className="inline-flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-text"
+            className="inline-flex items-center gap-2 rounded-md border border-white/[0.08] bg-white/[0.025] px-4 py-2.5 text-sm font-medium text-muted transition-colors hover:border-accent/30 hover:bg-white/[0.045] hover:text-text"
           >
             {b.allPostsLink.label}
           </Link>

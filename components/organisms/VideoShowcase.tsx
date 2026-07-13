@@ -59,7 +59,7 @@ export function VideoShowcase() {
     <section id="watch-demo" className="relative overflow-hidden py-20 md:py-28">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(760px_420px_at_20%_0%,rgba(255,56,60,0.13),transparent_68%),radial-gradient(760px_460px_at_84%_70%,rgba(131,199,255,0.08),transparent_70%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(760px_420px_at_20%_0%,rgba(255,56,60,0.11),transparent_68%),radial-gradient(760px_460px_at_84%_70%,rgba(34,79,136,0.17),transparent_70%)]"
       />
 
       <div className="relative mx-auto max-w-295 px-6">
@@ -69,7 +69,7 @@ export function VideoShowcase() {
 
         <div
           data-anim="video-player"
-          className="mt-10 overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_40px_120px_-70px_rgba(255,56,60,0.8)]"
+          className="shader-panel mt-10 overflow-hidden rounded-lg border border-white/10 bg-white/[0.035]"
         >
           <VideoShowcaseNativeVideo
             ariaLabel={demo.ariaLabel}
@@ -82,7 +82,7 @@ export function VideoShowcase() {
         <div className="mt-12 grid gap-5 md:grid-cols-4">
           {actionCards.map((card, index) => (
             <article key={card.title} data-anim="video-card" className="group">
-              <div className="relative flex h-[13.5rem] items-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] transition-colors group-hover:border-accent/35 group-hover:bg-white/5.5">
+              <div className="shader-panel-soft relative flex h-[13.5rem] items-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] transition-colors group-hover:border-accent/35 group-hover:bg-white/5.5">
                 {index === 0 ? (
                   <div
                     aria-hidden

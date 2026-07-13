@@ -9,10 +9,10 @@ import { MobileNav } from "./MobileNav";
 
 export function Nav({ activePath }: { activePath?: string }) {
   return (
-    <nav className="relative isolate border-b border-white/10 bg-[#090a0c] md:border-white/15 md:bg-[#0b0c10]/68 md:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_14px_40px_-24px_rgba(0,0,0,0.9)] md:backdrop-blur-2xl md:backdrop-saturate-150">
+    <nav className="relative isolate border-b border-white/[0.045] bg-[#090a0c] md:bg-[#0b0c10]/68 md:shadow-[inset_0_1px_0_rgba(255,255,255,0.035),0_12px_36px_-28px_rgba(0,0,0,0.75)] md:backdrop-blur-2xl md:backdrop-saturate-150">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(115deg,rgba(255,255,255,0.09)_0%,rgba(255,255,255,0.025)_38%,rgba(131,199,255,0.045)_70%,rgba(255,56,60,0.055)_100%)] md:block"
+        className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(115deg,rgba(255,255,255,0.045)_0%,rgba(255,255,255,0.012)_38%,rgba(34,79,136,0.04)_70%,rgba(255,56,60,0.035)_100%)] md:block"
       />
       <div className="relative mx-auto flex h-16 max-w-295 items-center justify-between px-6">
         <Logo className="min-h-12" />

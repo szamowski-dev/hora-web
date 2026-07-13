@@ -30,6 +30,20 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.shader-panel {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 34px 100px -68px rgba(255, 56, 60, 0.72),
+    0 -22px 90px -72px rgba(34, 79, 136, 0.9);
+}
+
+.shader-panel-soft {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 26px 76px -64px rgba(255, 56, 60, 0.58),
+    0 -18px 68px -60px rgba(34, 79, 136, 0.72);
+}
+
 .discord-cta-button {
   background: #4752c4;
   color: #ffffff;
