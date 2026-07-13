@@ -14,7 +14,7 @@ export const home = {
     tagline: "The Mac calendar Google never built.",
     newsletter: {
       placeholder: "you@email.com",
-      button: "Subscribe to newsletter",
+      button: "Keep me notified",
       eyebrow: "Newsletter",
       headline: "Get the iOS/iPadOS beta note.",
       subheadline:
@@ -23,7 +23,7 @@ export const home = {
       watchDemoCtaLabel: "Watch the demo",
       socialProof: {
         count: 434,
-        label: "Mac users already use hora",
+        label: "Mac users already use hora Calendar.",
         avatars: [
           {
             src: "https://randomuser.me/api/portraits/thumb/men/32.jpg",
@@ -130,7 +130,7 @@ export const home = {
     stat: {
       count: 434,
       value: "434+",
-      label: "Mac users already use hora",
+      label: "Mac users already use hora Calendar.",
     },
     quotes: [
       {
@@ -225,11 +225,11 @@ export const home = {
   },
 
   betaCta: {
-    eyebrow: "Newsletter",
-    heading: "Want launch updates?",
-    subtitle: "Subscribe for beta notes and iOS/iPadOS availability.",
+    eyebrow: "Mobile Beta Sign-up",
+    heading: "Want to stay updated?",
+    subtitle: "Subscribe for information about iOS/iPadOS beta availability.",
     note: "Short updates. No spam.",
-    cardHeadline: "Get the iOS/iPadOS beta note.",
+    cardHeadline: "Get the iOS/iPadOS beta updates.",
     cardSubheadline:
       "Subscribe for short launch updates and a heads-up when the iOS/iPadOS beta is ready.",
     footnote:
@@ -240,14 +240,12 @@ export const home = {
     heading: { prefix: "Simple pricing", suffixGradient: "rules forever." },
     appStoreLabel: "Download on the Mac App Store",
     appStoreHref: "https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_website&mt=8",
-    betaNoteLabel: "Get the iOS/iPad beta note",
-    betaNoteHref: "/#newsletter",
     oneTime: "$49.90 one-time",
     yearly: "$29.99 / year",
-    body:
-      "Pick a one-time purchase or a lower annual plan. Both include Family Sharing.",
+    body: "Pick a one-time purchase or a lower annual plan.",
+    familySharing: "Both include Family Sharing.",
     crossPlatform:
-      "Shared across macOS and iOS/iPad apps (coming soon).",
+      "Shared across Mac, iPhone & iPad apps.",
     comparison: [
       {
         name: "hora Calendar",

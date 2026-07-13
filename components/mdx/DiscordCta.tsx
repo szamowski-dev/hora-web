@@ -12,11 +12,10 @@ export function DiscordCta({
   return (
     <div className="not-prose my-12">
       <div
-        className="relative overflow-hidden rounded-3xl px-6 py-12 text-center sm:px-10 sm:py-14"
+        className="shader-panel ui-panel-deep relative overflow-hidden rounded-xl px-6 py-12 text-center sm:px-10 sm:py-14"
         style={{
-          border: "1px solid rgba(255,56,60,0.24)",
           background:
-            "radial-gradient(ellipse 600px 300px at 50% 0%, rgba(255,56,60,0.22), rgba(255,56,60,0.04) 70%), #140a0a",
+            "radial-gradient(ellipse 520px 280px at 25% 0%, var(--ui-glow-accent-soft), transparent 70%), radial-gradient(ellipse 560px 320px at 82% 100%, var(--ui-glow-cool-soft), transparent 72%), var(--ui-panel-deep)",
         }}
       >
         <p
@@ -47,15 +46,14 @@ export function DiscordCta({
           {...analyticsAttrs("discord_click", { location: "blog_cta" })}
           className="inline-block font-bold text-white no-underline transition hover:brightness-110"
           style={{
-            background:
-              "linear-gradient(135deg, #ff383c 0%, #ff6b3d 55%, #ff8f4d 100%)",
+            background: "var(--color-discord)",
             padding: "18px 44px",
             borderRadius: "999px",
             fontSize: "17px",
             letterSpacing: "0.3px",
             boxShadow:
-              "0 20px 42px rgba(255,56,60,0.45), 0 2px 0 rgba(255,255,255,0.28) inset",
-            border: "1px solid rgba(255,86,47,0.9)",
+              "0 18px 42px -24px oklch(0 0 0 / 0.95), 0 2px 0 oklch(1 0 0 / 0.2) inset",
+            border: "1px solid oklch(0.5774 0.2091 273.9 / 0.45)",
           }}
         >
           {label}&nbsp;&nbsp;→

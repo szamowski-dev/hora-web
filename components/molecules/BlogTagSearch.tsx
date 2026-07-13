@@ -36,7 +36,7 @@ export function BlogTagSearch({ tags, activeTag }: Props) {
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         placeholder="Search tags"
-        className="blog-tag-search-input h-10 rounded-full border border-white/10 bg-bg/70 px-3.5 text-sm text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] outline-none transition-colors placeholder:text-muted/70 focus:border-accent/45 focus:ring-2 focus:ring-accent/20"
+        className="blog-tag-search-input h-10 rounded-md border border-line bg-bg/70 px-3.5 text-sm text-text shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] outline-none transition-colors placeholder:text-muted/70 focus:border-accent/45 focus:ring-2 focus:ring-accent/20"
       />
       <div className="flex flex-wrap gap-2">
         {visibleTags.map((tag) => (
@@ -44,10 +44,10 @@ export function BlogTagSearch({ tags, activeTag }: Props) {
             key={tag.slug}
             href={tag.href}
             className={cn(
-              "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
+              "ui-interactive inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-xs font-semibold",
               activeTag === tag.slug
                 ? "border-accent/55 bg-accent/14 text-accent"
-                : "border-white/10 bg-white/5 text-muted hover:border-accent/35 hover:text-text",
+                : "border-line bg-overlay text-muted hover:text-text",
             )}
           >
             <span>{tag.label}</span>

@@ -13,11 +13,13 @@ export function VideoShowcaseNativeVideo({
   poster,
   sources,
   videoId,
+  active = true,
 }: {
   ariaLabel: string;
   poster: string;
   sources: readonly VideoSource[];
   videoId: string;
+  active?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const trackedViewedRef = useRef(false);
@@ -41,7 +43,7 @@ export function VideoShowcaseNativeVideo({
     const video = videoRef.current;
     if (!video) return;
 
-    if (reducedMotion) {
+    if (reducedMotion || !active) {
       video.pause();
       return;
     }
@@ -49,7 +51,7 @@ export function VideoShowcaseNativeVideo({
     if (shouldLoad) {
       video.play().catch(() => {});
     }
-  }, [reducedMotion, shouldLoad]);
+  }, [active, reducedMotion, shouldLoad]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -109,7 +111,7 @@ export function VideoShowcaseNativeVideo({
     <video
       ref={videoRef}
       className="aspect-video w-full bg-black object-cover"
-      autoPlay={!reducedMotion}
+      autoPlay={active && !reducedMotion}
       controls
       loop={!reducedMotion}
       muted

@@ -12,7 +12,7 @@ export function AmbientGlow() {
         className="absolute bottom-[-15%] left-1/2 h-[75%] w-[90%] rounded-full blur-[80px]"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(255,56,60,0.035) 0%, rgba(255,115,110,0.015) 30%, rgba(255,56,60,0.005) 55%, transparent 75%)",
+            "radial-gradient(ellipse, oklch(0.6532 0.2328 25.7 / 0.035) 0%, oklch(0.725 0.18 27 / 0.015) 30%, oklch(0.6532 0.2328 25.7 / 0.005) 55%, transparent 75%)",
           animation: "glow-float-a 80s ease-in-out infinite",
           willChange: "transform, opacity",
         }}
@@ -23,7 +23,7 @@ export function AmbientGlow() {
         className="absolute top-[-10%] left-[-10%] h-[55%] w-[55%] rounded-full blur-[70px]"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(34,79,136,0.055) 0%, rgba(34,79,136,0.018) 40%, transparent 70%)",
+            "radial-gradient(ellipse, oklch(0.4269 0.1069 255.7 / 0.055) 0%, oklch(0.4269 0.1069 255.7 / 0.018) 40%, transparent 70%)",
           animation: "glow-float-b 90s ease-in-out infinite",
           animationDelay: "-8s",
           willChange: "transform, opacity",
@@ -35,7 +35,7 @@ export function AmbientGlow() {
         className="absolute top-0 right-[-5%] h-[55%] w-[50%] rounded-full blur-[60px]"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(131,199,255,0.025) 0%, rgba(34,79,136,0.012) 40%, transparent 65%)",
+            "radial-gradient(ellipse, oklch(0.8056 0.1054 244.5 / 0.025) 0%, oklch(0.4269 0.1069 255.7 / 0.012) 40%, transparent 65%)",
           animation: "glow-float-c 70s ease-in-out infinite",
           animationDelay: "-14s",
           willChange: "transform, opacity",

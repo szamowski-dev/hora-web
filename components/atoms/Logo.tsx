@@ -22,10 +22,7 @@ export function Logo({
         className="rounded-[6px]"
         priority
       />
-      <span
-        className="font-brand text-[17px] leading-none text-text"
-        style={{ fontSize: size >= 40 ? 22 : 17 }}
-      >
+      <span className="font-brand text-[22px] leading-none text-text">
         {site.brand.shortName}
       </span>
     </>

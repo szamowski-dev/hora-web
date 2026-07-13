@@ -16,10 +16,9 @@ export const site = {
     { label: "Features", href: "/#features" },
     { label: "Pricing", href: "/#pricing" },
     { label: "Roadmap", href: "/#roadmap" },
+    { label: "Blog", href: "/blog/" },
     { label: "FAQ", href: "/#faq" },
     { label: "Support", href: "/support/" },
-    { label: "Blog", href: "/blog/" },
-    { label: "About", href: "/about/" },
   ],
   cta: {
     primary: {
@@ -65,7 +64,7 @@ export const site = {
       message:
         "I'll send short launch updates and a heads-up when the iOS/iPadOS beta is ready. Join Discord for beta notes and quick feedback between emails.",
       discordLabel: "Join Discord",
-      shareLabel: "Share with one Mac friend",
+      shareLabel: "Share with one friend",
       shareUrl:
         "https://horacal.app/?utm_source=post_signup&utm_medium=share&utm_campaign=launch_loop",
       shareText:

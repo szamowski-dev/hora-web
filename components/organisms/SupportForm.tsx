@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Icon } from "@/components/atoms/Icon";
@@ -15,7 +15,7 @@ const categories = [
 ] as const;
 
 const fieldClassName =
-  "rounded-md border-white/10 bg-bg/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] focus-visible:border-white/30 focus-visible:ring-white/20";
+  "rounded-md border-line bg-bg/80 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] hover:border-line-strong focus-visible:border-accent/45 focus-visible:ring-accent/20";
 
 type Status =
   | { type: "idle" }
@@ -45,6 +45,24 @@ function Field({
 export function SupportForm() {
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<Status>({ type: "idle" });
+  const [showRequestDetails, setShowRequestDetails] = useState(false);
+
+  function revealRequestDetails(event: ChangeEvent<HTMLInputElement>) {
+    if (showRequestDetails) return;
+
+    const form = event.currentTarget.form;
+    const name = form?.elements.namedItem("name");
+    const email = form?.elements.namedItem("email");
+
+    if (
+      name instanceof HTMLInputElement &&
+      email instanceof HTMLInputElement &&
+      name.value.trim().length >= 2 &&
+      email.validity.valid
+    ) {
+      setShowRequestDetails(true);
+    }
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -75,6 +93,7 @@ export function SupportForm() {
       }
 
       form.reset();
+      setShowRequestDetails(false);
       setStatus({ type: "success" });
     } catch {
       setStatus({
@@ -89,14 +108,32 @@ export function SupportForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="relative rounded-lg border border-white/10 bg-white/[0.035] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_34px_90px_-60px_rgba(255,56,60,0.7)] md:p-7"
+      className="shader-panel ui-panel-deep relative overflow-hidden rounded-xl p-5 md:p-7 lg:p-8"
     >
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"
+        className="pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-accent/60 to-accent-cool/40"
+      />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -right-32 -top-32 h-72 w-72 rounded-full bg-[radial-gradient(circle,var(--ui-glow-cool-soft),transparent_72%)] blur-3xl"
       />
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="relative mb-6 flex items-center justify-between gap-4 border-b border-line pb-5">
+        <div>
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-accent">
+            Support request
+          </p>
+          <p className="mt-1 text-sm text-muted">
+            The details below go directly to the developer.
+          </p>
+        </div>
+        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-accent/20 bg-accent/8 text-accent">
+          <Icon name="mail" size={17} />
+        </span>
+      </div>
+
+      <div className="relative grid gap-4 sm:grid-cols-2">
         <Field label="Name">
           <Input
             name="name"
@@ -104,6 +141,7 @@ export function SupportForm() {
             required
             minLength={2}
             maxLength={80}
+            onChange={revealRequestDetails}
             className={fieldClassName}
           />
         </Field>
@@ -114,102 +152,129 @@ export function SupportForm() {
             autoComplete="email"
             required
             maxLength={254}
+            onChange={revealRequestDetails}
             className={fieldClassName}
           />
         </Field>
       </div>
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-        <Field label="Category">
-          <span className="relative block">
-            <select
-              name="category"
-              required
-              defaultValue="bug"
-              className="h-12 w-full appearance-none rounded-md border border-white/10 bg-bg/85 px-5 pr-14 text-sm text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] outline-none transition-colors hover:border-white/18 focus-visible:border-white/30 focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+      {showRequestDetails ? (
+        <div aria-label="Additional request details">
+          <div className="relative mt-4 grid gap-4 sm:grid-cols-2">
+            <Field label="Category">
+              <span className="relative block">
+                <select
+                  name="category"
+                  required
+                  defaultValue="bug"
+                  className="h-12 w-full appearance-none rounded-md border border-line bg-bg/80 px-5 pr-14 text-sm text-text shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] outline-none transition-colors hover:border-line-strong focus-visible:border-accent/45 focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                >
+                  {categories.map((category) => (
+                    <option key={category.value} value={category.value}>
+                      {category.label}
+                    </option>
+                  ))}
+                </select>
+                <svg
+                  aria-hidden
+                  className="pointer-events-none absolute right-5 top-1/2 h-4 w-4 -translate-y-1/2 text-text/80"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </span>
+            </Field>
+            <Field label="Short summary">
+              <Input
+                name="summary"
+                required
+                minLength={8}
+                maxLength={120}
+                className={fieldClassName}
+              />
+            </Field>
+          </div>
+
+          <div className="relative mt-4 grid gap-4 sm:grid-cols-2">
+            <Field
+              label="App version"
+              hint="Optional, visible in hora's About window."
             >
-              {categories.map((category) => (
-                <option key={category.value} value={category.value}>
-                  {category.label}
-                </option>
-              ))}
-            </select>
-            <svg
-              aria-hidden
-              className="pointer-events-none absolute right-5 top-1/2 h-4 w-4 -translate-y-1/2 text-text/80"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </span>
-        </Field>
-        <Field label="Short summary">
-          <Input
-            name="summary"
-            required
-            minLength={8}
-            maxLength={120}
-            className={fieldClassName}
-          />
-        </Field>
-      </div>
+              <Input
+                name="appVersion"
+                maxLength={40}
+                placeholder="0.6.0"
+                className={fieldClassName}
+              />
+            </Field>
+            <Field label="OS version" hint="Optional, for example macOS 26.">
+              <Input
+                name="osVersion"
+                maxLength={80}
+                placeholder="macOS 26.0"
+                className={fieldClassName}
+              />
+            </Field>
+          </div>
+        </div>
+      ) : null}
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-        <Field label="App version" hint="Optional, visible in hora's About window.">
-          <Input
-            name="appVersion"
-            maxLength={40}
-            placeholder="0.6.0"
-            className={fieldClassName}
-          />
-        </Field>
-        <Field label="OS version" hint="Optional, for example macOS 26.">
-          <Input
-            name="osVersion"
-            maxLength={80}
-            placeholder="macOS 26.0"
-            className={fieldClassName}
-          />
-        </Field>
-      </div>
-
-      <div className="mt-4">
+      <div className="relative mt-4">
         <Field label="What happened?">
           <textarea
             name="details"
             required
             minLength={20}
             maxLength={4000}
-            rows={7}
-            className="w-full resize-y rounded-md border border-white/10 bg-bg/85 px-5 py-4 text-sm leading-6 text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] placeholder:text-muted focus-visible:border-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            rows={5}
+            className="w-full resize-y rounded-md border border-line bg-bg/80 px-5 py-4 text-sm leading-6 text-text shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] placeholder:text-muted focus-visible:border-accent/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             placeholder="Tell us what you expected, what happened instead, and whether it blocks your calendar work."
           />
         </Field>
       </div>
 
-      <div className="mt-4">
-        <Field label="Steps tried or reproduction" hint="Optional, but very helpful for bugs.">
+      <details className="group relative mt-4 overflow-hidden rounded-md border border-line bg-overlay">
+        <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-sm font-medium text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent [&::-webkit-details-marker]:hidden">
+          <span>
+            Add steps tried or reproduction
+            <span className="ml-2 font-normal text-muted">Optional</span>
+          </span>
+          <span
+            aria-hidden
+            className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line-strong bg-overlay text-lg font-light text-accent transition-transform group-open:rotate-45"
+          >
+            +
+          </span>
+        </summary>
+        <div className="border-t border-line p-4">
+          <label className="sr-only" htmlFor="support-steps">
+            Steps tried or reproduction
+          </label>
           <textarea
+            id="support-steps"
             name="steps"
             maxLength={2000}
             rows={4}
-            className="w-full resize-y rounded-md border border-white/10 bg-bg/85 px-5 py-4 text-sm leading-6 text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] placeholder:text-muted focus-visible:border-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            className="w-full resize-y rounded-md border border-line bg-bg/80 px-5 py-4 text-sm leading-6 text-text shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] placeholder:text-muted focus-visible:border-accent/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             placeholder={"1. Opened hora\n2. Changed calendar view\n3. Saw..."}
           />
-        </Field>
-      </div>
+          <p className="mt-2 text-xs leading-5 text-muted">
+            Optional, but very helpful for bugs.
+          </p>
+        </div>
+      </details>
 
       <label className="hidden">
         Company
         <input name="honey" tabIndex={-1} autoComplete="off" />
       </label>
 
-      <div className="mt-5 rounded-md border border-white/10 bg-white/[0.025] p-4 text-sm leading-6 text-muted">
+      <div className="relative mt-5 rounded-md border border-line bg-overlay p-4 text-sm leading-6 text-muted">
         Please do not include passwords, API tokens, OAuth codes, or private calendar
         event details. Your email is included so we can follow up.
       </div>
@@ -218,7 +283,7 @@ export function SupportForm() {
         <div
           className={
             status.type === "success"
-              ? "mt-4 rounded-md border border-emerald-400/25 bg-emerald-400/10 p-4 text-sm leading-6 text-emerald-100"
+              ? "relative mt-4 rounded-md border border-success/25 bg-success/10 p-4 text-sm leading-6 text-text"
               : "mt-4 rounded-md border border-accent/25 bg-accent/10 p-4 text-sm leading-6 text-text"
           }
           role="status"
@@ -231,7 +296,7 @@ export function SupportForm() {
                 href={discordUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-white underline decoration-white/40 underline-offset-4"
+                className="font-medium text-text underline decoration-line-strong underline-offset-4"
               >
                 join the hora Discord
               </a>
@@ -243,16 +308,25 @@ export function SupportForm() {
         </div>
       ) : null}
 
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <Button type="submit" size="lg" className="rounded-md" disabled={submitting}>
+      <div className="relative mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <Button
+          type="submit"
+          variant="outline"
+          size="lg"
+          className="rounded-md border-accent/50 bg-accent px-6 text-sm font-semibold text-text shadow-[0_14px_32px_-22px_oklch(0_0_0/0.94),inset_0_1px_0_oklch(0.9851_0_0/0.16)] transition-[background-color,filter] hover:bg-accent-hover hover:brightness-105 hover:saturate-110 hover:text-text"
+          disabled={submitting}
+        >
           <Icon name="mail" size={18} />
           {submitting ? "Sending..." : "Send support request"}
         </Button>
         <a
-          href="mailto:hello@horacal.app"
-          className="inline-flex min-h-12 items-center justify-center rounded-md px-4 text-sm font-medium text-muted transition-colors hover:text-text"
+          href={discordUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="discord-cta-button inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-md px-4 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-discord-hover focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
         >
-          Or email hello@horacal.app
+          <Icon name="discord" size={17} />
+          Join hora Discord
         </a>
       </div>
     </form>

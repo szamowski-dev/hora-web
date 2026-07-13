@@ -6,11 +6,9 @@ type Size = "sm" | "md" | "lg";
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "relative overflow-hidden bg-linear-to-br from-accent to-accent-glow text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_10px_24px_-8px_rgba(255,56,60,0.55)] transition-shadow hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_14px_32px_-8px_rgba(255,56,60,0.7)] focus-visible:ring-accent " +
-    "before:pointer-events-none before:absolute before:inset-y-0 before:-left-1/4 before:w-1/4 before:bg-linear-to-r before:from-transparent before:via-white/20 before:to-transparent before:opacity-0 before:content-[''] hover:before:opacity-100 hover:before:animate-[shimmer-slide_1.8s_ease-out_infinite] motion-reduce:before:hidden " +
-    "[&>*]:relative [&>*]:z-10",
+    "bg-accent text-white shadow-[inset_0_1px_0_oklch(1_0_0/0.18),0_14px_34px_-24px_oklch(0_0_0/0.92)] transition-[background-color,filter] hover:bg-accent-hover hover:brightness-105 hover:saturate-110 focus-visible:ring-accent",
   outline:
-    "border border-border text-text hover:border-accent hover:text-accent focus-visible:ring-accent",
+    "ui-interactive border border-line bg-overlay text-text focus-visible:ring-accent",
   ghost: "text-muted hover:text-text focus-visible:ring-accent",
 };
 
@@ -21,7 +19,7 @@ const sizeClasses: Record<Size, string> = {
 };
 
 const baseClasses =
-  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium transition-opacity disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
+  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
 
 type CommonProps = {
   variant?: Variant;

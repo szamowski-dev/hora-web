@@ -97,7 +97,7 @@ export default function FeaturesPage() {
                 className="pointer-events-none absolute inset-x-[4%] bottom-2 h-28 rounded-full blur-[48px] md:bottom-3 md:h-36"
                 style={{
                   background:
-                    "radial-gradient(ellipse, rgba(255,56,60,0.42) 0%, rgba(255,56,60,0.22) 34%, rgba(255,56,60,0.08) 58%, transparent 76%)",
+                    "radial-gradient(ellipse 60% 80% at 35% 50%, oklch(0.6532 0.2328 25.7 / 0.2), transparent 72%), radial-gradient(ellipse 58% 76% at 68% 48%, oklch(0.4269 0.1069 255.7 / 0.22), transparent 74%)",
                 }}
               />
               <div className="relative z-10">

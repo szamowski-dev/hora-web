@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   Ascii,
   Blob,
-  DotGrid,
+  ChromaFlow,
   FilmGrain,
   LinearGradient,
   Shader,
@@ -32,7 +32,7 @@ export function HeroShader() {
   }, []);
 
   return (
-    <div className="absolute inset-0 bg-[#090a0d]">
+    <div className="absolute inset-0 bg-panel-deep">
       <Shader
         className="h-full w-full"
         colorSpace="p3-linear"
@@ -40,48 +40,49 @@ export function HeroShader() {
         disableTelemetry
       >
         <LinearGradient
-          colorA="#07090d"
-          colorB="#241014"
+          id="hero-gradient-mask"
+          angle={62}
+          colorA="oklch(0.6532 0.2328 25.7)"
+          colorB="oklch(0.1438 0.0075 256.9)"
           colorSpace="oklch"
           edges="mirror"
-          start={{ x: 0.12, y: 0.82 }}
-          end={{ x: 0.88, y: 0.16 }}
+          end={{ x: 1, y: 0 }}
         />
         <Blob
+          id="hero-flow-mask"
           blendMode="normal-oklch"
-          center={{ x: 0.68, y: 0.34 }}
-          colorA="#ff383c"
-          colorB="#224f88"
+          center={{ x: 1, y: 0.5 }}
+          colorA="oklch(0.4269 0.1069 255.7)"
+          colorB="oklch(0.3345 0.121 25.7)"
           colorSpace="oklch"
-          deformation={0.55}
-          highlightColor="#83c7ff"
-          highlightIntensity={0.35}
-          opacity={0.72}
-          size={0.82}
-          softness={0.92}
-          speed={reducedMotion ? 0 : 0.22}
-        />
-        <DotGrid
-          blendMode="linearDodge"
-          color="#d7e9ff"
-          density={58}
-          dotSize={0.055}
-          opacity={0.12}
-          twinkle={0}
+          highlightColor="oklch(0.6532 0.2328 25.7)"
+          highlightIntensity={0.3}
+          maskSource="hero-gradient-mask"
+          opacity={0.52}
+          size={0.85}
+          speed={reducedMotion ? 0 : 0.18}
         />
         <Ascii
           alphaThreshold={0.06}
           blendMode="screen"
-          cellSize={27}
+          cellSize={18}
           characters="01<>/{}=+-. "
           fontFamily="Geist Mono"
           gamma={1.45}
-          opacity={0.13}
+          opacity={0.28}
           preserveAlpha
           spacing={0.82}
           visible={showAscii}
         />
-        <FilmGrain strength={0.035} animated={false} />
+        <FilmGrain strength={0.1} animated={false} />
+        <ChromaFlow
+          blendMode="normal"
+          intensity={reducedMotion ? 0 : 0.7}
+          maskSource="hero-flow-mask"
+          momentum={reducedMotion ? 0 : 36}
+          opacity={0.7}
+          radius={1.6}
+        />
       </Shader>
     </div>
   );

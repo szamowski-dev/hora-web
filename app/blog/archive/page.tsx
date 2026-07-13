@@ -56,7 +56,7 @@ export default async function BlogArchiveIndexPage() {
             <Link
               key={archive.slug}
               href={archive.href}
-              className="flex items-center justify-between rounded-md border border-white/10 bg-white/[0.035] px-5 py-4 text-muted shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors hover:border-accent/35 hover:text-text"
+              className="ui-interactive flex items-center justify-between rounded-md border border-line bg-overlay px-5 py-4 text-muted shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] hover:text-text"
             >
               <span className="font-medium">{archive.label}</span>
               <span className="text-sm">{archive.count} posts</span>

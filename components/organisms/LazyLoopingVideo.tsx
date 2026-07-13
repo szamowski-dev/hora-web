@@ -5,11 +5,14 @@ import { useEffect, useRef, useState } from "react";
 export function LazyLoopingVideo({
   src,
   label,
+  active = true,
 }: {
   src: string;
   label: string;
+  active?: boolean;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [shouldLoad, setShouldLoad] = useState(
     () => typeof window !== "undefined" && !("IntersectionObserver" in window),
   );
@@ -31,12 +34,24 @@ export function LazyLoopingVideo({
     return () => io.disconnect();
   }, [shouldLoad]);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (active) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, [active, shouldLoad]);
+
   return (
     <div ref={rootRef} className="h-full w-full bg-black">
       {shouldLoad ? (
         <video
+          ref={videoRef}
           className="h-full w-full bg-black object-cover"
-          autoPlay
+          autoPlay={active}
           loop
           muted
           playsInline

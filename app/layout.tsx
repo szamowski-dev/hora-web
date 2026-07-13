@@ -80,7 +80,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "oklch(0.1448 0 0)",
   width: "device-width",
   initialScale: 1,
 };
@@ -138,10 +138,12 @@ export default function RootLayout({
 
         <AmbientGlow />
         <LayoutEnhancements />
-        <header className="md:sticky md:top-0 md:z-50 md:px-6 md:pt-3">
+        <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
           <Nav />
         </header>
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pt-[70px] max-md:[&>:first-child]:-mt-[70px] max-md:[&>:first-child]:pt-[134px] max-md:[&>[data-nav-underlay=flush]]:pt-[70px] md:pt-0">
+          {children}
+        </main>
         <Footer />
 
         <Script

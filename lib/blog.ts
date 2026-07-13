@@ -41,6 +41,7 @@ export function postToCard(post: PostMeta): PostCardData {
     title: post.frontmatter.title,
     description: post.frontmatter.description,
     date: post.frontmatter.date,
+    readingMinutes: post.readingMinutes,
     tags: post.frontmatter.tags,
     cover: post.frontmatter.cover,
   };

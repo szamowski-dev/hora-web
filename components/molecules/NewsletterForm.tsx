@@ -118,19 +118,20 @@ export function NewsletterForm({ className }: { className?: string }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={status === "submitting"}
-            className="h-14 rounded-md border-white/10 bg-bg/85 text-base shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] focus-visible:border-white/30 focus-visible:ring-white/20"
+            className="h-12 rounded-md border-line bg-bg/85 text-sm shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] focus-visible:border-accent/45 focus-visible:ring-accent/25"
           />
           <Button
             type="submit"
+            variant="outline"
             size="lg"
             disabled={status === "submitting"}
-            className="h-14 w-full shrink-0 rounded-md bg-accent px-7 text-base font-semibold text-white shadow-[0_16px_40px_-18px_rgba(255,56,60,0.9),inset_0_1px_0_rgba(255,255,255,0.22)] transition-colors hover:bg-accent-hover sm:w-auto sm:min-w-[15rem]"
+            className="h-12 w-full shrink-0 rounded-md border-accent/50 bg-accent px-6 text-sm font-semibold text-text shadow-[0_14px_32px_-22px_oklch(0_0_0/0.94),inset_0_1px_0_oklch(0.9851_0_0/0.16)] transition-[background-color,filter] hover:bg-accent-hover hover:brightness-105 hover:saturate-110 hover:text-text sm:w-auto sm:min-w-[13.5rem]"
           >
             {status === "submitting" ? (
               "Sending…"
             ) : (
               <>
-                <Icon name="mail" size={16} />
+                <Icon name="bell" size={16} />
                 {hero.button}
               </>
             )}
@@ -142,10 +143,10 @@ export function NewsletterForm({ className }: { className?: string }) {
         <div
           role="status"
           aria-live="polite"
-          className="rounded-2xl border border-emerald-400/20 bg-emerald-400/8 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+          className="rounded-xl border border-success/20 bg-success/8 p-4 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)]"
         >
           <div className="flex items-start gap-3">
-            <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-emerald-300/25 bg-emerald-300/10 text-emerald-300">
+            <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-success/25 bg-success/10 text-success">
               <Icon name="check" size={16} />
             </span>
             <div className="min-w-0">
@@ -162,7 +163,7 @@ export function NewsletterForm({ className }: { className?: string }) {
               onClick={onDiscordClick}
               variant="ghost"
               size="md"
-              className="discord-cta-button h-11 rounded-md border border-[#5865F2]/45 bg-[#5865F2]/12 px-5 text-[#cfd3ff] transition-colors hover:bg-[#5865F2]/18 hover:text-white focus-visible:ring-[#5865F2]"
+              className="discord-cta-button h-11 rounded-md border border-discord-hover/45 bg-discord-hover/12 px-5 text-discord-text transition-colors hover:bg-discord-hover/18 hover:text-text focus-visible:ring-discord-hover"
             >
               <Icon name="discord" size={16} />
               {afterSignup.discordLabel}
@@ -170,7 +171,7 @@ export function NewsletterForm({ className }: { className?: string }) {
             <button
               type="button"
               onClick={onShare}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/12 px-4 text-sm font-medium text-text transition-colors hover:border-white/24 hover:bg-white/6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              className="ui-interactive inline-flex h-11 items-center justify-center gap-2 rounded-md border border-line-strong px-4 text-sm font-medium text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-line-strong focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
               <Icon name="hand-heart" size={16} />
               {shareState === "copied"

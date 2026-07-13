@@ -1,144 +1,118 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
+import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { Icon } from "@/components/atoms/Icon";
 import { Logo } from "@/components/atoms/Logo";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 
-function subscribeToClientMount() {
-  return () => {};
-}
-
-function getClientSnapshot() {
-  return true;
-}
-
-function getServerSnapshot() {
-  return false;
-}
+const toggleId = "mobile-navigation-toggle";
 
 export function MobileNav({ activePath }: { activePath?: string }) {
-  const [open, setOpen] = useState(false);
-  const mounted = useSyncExternalStore(
-    subscribeToClientMount,
-    getClientSnapshot,
-    getServerSnapshot,
-  );
+  const toggleRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    const { body } = document;
-    const prevOverflow = body.style.overflow;
-    body.style.overflow = "hidden";
-    return () => {
-      body.style.overflow = prevOverflow;
-    };
-  }, [open]);
+  function closeMenu() {
+    if (toggleRef.current) toggleRef.current.checked = false;
+  }
 
-  useEffect(() => {
-    function onEscape(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("keydown", onEscape);
-    return () => document.removeEventListener("keydown", onEscape);
-  }, []);
+  function toggleFromKeyboard(event: React.KeyboardEvent<HTMLLabelElement>) {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    if (toggleRef.current) toggleRef.current.checked = !toggleRef.current.checked;
+  }
 
-  const panel = (
-    <div
-      className={cn(
-        "fixed inset-0 z-50 flex-col overflow-y-auto bg-bg/85 backdrop-blur-xl md:hidden",
-        open ? "flex" : "hidden",
-      )}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Menu"
-    >
-      <div className="flex h-16 items-center justify-between border-b border-border px-6">
-        <Logo className="min-h-12" />
-        <button
-          type="button"
-          aria-label="Close menu"
-          onClick={() => setOpen(false)}
-          className="inline-flex h-12 w-12 items-center justify-center text-text"
-        >
-          <Icon name="close" size={24} />
-        </button>
-      </div>
-      <div className="flex flex-col gap-2 p-6">
-        {site.nav.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={() => setOpen(false)}
-            {...analyticsAttrs("nav_click", {
-              link_text: item.label,
-              link_url: item.href,
-            })}
-            className={cn(
-              "border-b border-border py-3 text-lg transition-colors focus-visible:outline-none focus-visible:text-accent",
-              activePath === item.href
-                ? "text-text"
-                : "text-muted hover:text-text",
-            )}
+  return (
+    <div className="lg:hidden">
+      <input
+        ref={toggleRef}
+        id={toggleId}
+        type="checkbox"
+        className="peer sr-only"
+        aria-hidden="true"
+        tabIndex={-1}
+      />
+
+      <label
+        htmlFor={toggleId}
+        role="button"
+        tabIndex={0}
+        aria-label="Open menu"
+        aria-controls="mobile-navigation"
+        onKeyDown={toggleFromKeyboard}
+        className="absolute right-4 top-1.5 z-20 inline-flex h-11 w-11 cursor-pointer touch-manipulation items-center justify-center rounded-md text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent md:top-2.5 md:right-6"
+      >
+        <Icon name="menu" size={24} className="pointer-events-none" />
+      </label>
+
+      <div
+        id="mobile-navigation"
+        className="fixed inset-0 z-[100] hidden min-h-dvh flex-col overflow-y-auto overscroll-contain bg-bg/96 backdrop-blur-2xl peer-checked:flex"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+      >
+        <div className="ui-panel mx-3 mt-3 flex h-14 shrink-0 items-center justify-between rounded-[20px] px-4 shadow-[0_16px_42px_-24px_oklch(0_0_0/0.9)] md:mx-6 md:h-16 md:rounded-[22px] md:px-6">
+          <Logo className="min-h-10" />
+          <label
+            htmlFor={toggleId}
+            role="button"
+            tabIndex={0}
+            aria-label="Close menu"
+            onKeyDown={toggleFromKeyboard}
+            className="inline-flex h-11 w-11 cursor-pointer touch-manipulation items-center justify-center rounded-md text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent md:-mr-px"
           >
-            {item.label}
-          </Link>
-        ))}
-        <div className="mt-2 flex items-center gap-3">
-          <a
-            href={site.cta.primary.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={site.cta.primary.label}
-            onClick={() => setOpen(false)}
-            {...analyticsAttrs("app_store_cta_click", {
-              placement: "nav_mobile",
-              destination: "mac_app_store",
-            })}
-            className="inline-flex h-12 shrink-0 items-center rounded-lg transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-          >
-            <Image
-              src={site.macAppStoreBadgeSrc}
-              alt={site.cta.primary.label}
-              width={162}
-              height={50}
-              className="h-12 w-auto"
-            />
-          </a>
-          <a
-            href={site.community.discord.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={site.community.discord.label}
-            onClick={() => setOpen(false)}
-            {...analyticsAttrs("discord_click", { location: "mobile_menu" })}
-            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-white/12 bg-white/2 text-text transition-colors hover:border-[#5865F2]/50 hover:bg-[#5865F2]/15 hover:text-[#5865F2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5865F2] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-          >
-            <Icon name="discord" size={20} />
-          </a>
+            <Icon name="close" size={24} className="pointer-events-none" />
+          </label>
+        </div>
+
+        <div className="flex flex-col gap-2 px-6 pb-8 pt-4">
+          {site.nav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={closeMenu}
+              {...analyticsAttrs("nav_click", {
+                link_text: item.label,
+                link_url: item.href,
+              })}
+              className={cn(
+                "border-b border-border py-3 text-lg transition-colors focus-visible:outline-none focus-visible:text-accent",
+                activePath === item.href
+                  ? "text-text"
+                  : "text-muted hover:text-text",
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div className="mt-2 flex items-center">
+            <AppStoreLink
+              href={site.cta.primary.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={site.cta.primary.label}
+              onClick={closeMenu}
+              {...analyticsAttrs("app_store_cta_click", {
+                placement: "nav_mobile",
+                destination: "mac_app_store",
+              })}
+              className="app-store-interactive inline-flex h-12 shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            >
+              <Image
+                src={site.macAppStoreBadgeSrc}
+                alt={site.cta.primary.label}
+                width={162}
+                height={50}
+                className="h-12 w-auto"
+              />
+            </AppStoreLink>
+          </div>
         </div>
       </div>
     </div>
-  );
-
-  return (
-    <>
-      <button
-        type="button"
-        aria-label={open ? "Close menu" : "Open menu"}
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-        className="inline-flex h-12 w-12 items-center justify-center text-text md:hidden"
-      >
-        <Icon name={open ? "close" : "menu"} size={24} />
-      </button>
-
-      {mounted ? createPortal(panel, document.body) : null}
-    </>
   );
 }

@@ -51,10 +51,10 @@ export function WaitlistCard({
       id={id}
       style={style}
       className={cn(
-        "relative w-full overflow-hidden rounded-lg border p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_24px_60px_-20px_rgba(0,0,0,0.72)] md:p-6 md:backdrop-blur-2xl",
+        "relative w-full overflow-hidden rounded-lg border p-5 text-left shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.16),0_24px_60px_-20px_oklch(0_0_0/0.72)] md:p-6 md:backdrop-blur-2xl",
         isHero
-          ? "border-white/12 bg-surface/88 shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_24px_70px_-28px_rgba(0,0,0,0.9)]"
-          : "border-white/10 bg-white/4",
+          ? "border-line-strong bg-surface/88 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.16),0_24px_70px_-28px_oklch(0_0_0/0.9)]"
+          : "border-line bg-overlay",
         id && "scroll-mt-24",
         className,
       )}
@@ -65,17 +65,17 @@ export function WaitlistCard({
         className="pointer-events-none absolute -top-28 -right-28 h-56 w-56"
         style={{
           background:
-            "radial-gradient(circle, rgba(131,199,255,0.20) 0%, transparent 68%)",
+            "radial-gradient(circle, var(--ui-glow-cool-medium) 0%, transparent 68%)",
         }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-4 top-0 h-px bg-linear-to-r from-transparent via-white/40 to-transparent"
+        className="pointer-events-none absolute inset-x-4 top-0 h-px bg-linear-to-r from-transparent via-line-strong to-transparent"
       />
 
       {eyebrow ? (
         <p className="relative inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_rgba(255,56,60,0.95)]" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.6532_0.2328_25.7/0.95)]" />
           {eyebrow}
         </p>
       ) : null}
@@ -104,7 +104,14 @@ export function WaitlistCard({
         <p className="relative mt-1 text-xs text-muted/80">{note}</p>
       ) : null}
 
-      <div className="relative mt-5 flex items-center gap-3 rounded-md border border-white/12 bg-white/4.5 px-4 py-3 text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+      <div
+        className={cn(
+          "relative mt-5 flex items-center gap-3 rounded-md border border-line-strong bg-overlay text-accent shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.1)]",
+          isHero
+            ? "w-fit max-w-full px-3 py-2.5"
+            : "w-full px-4 py-3",
+        )}
+      >
         <AvatarTicker avatars={avatars} />
         <p className="min-w-0 text-sm leading-snug text-muted">
           <span className="mr-1.5 text-base font-semibold tabular-nums text-text">
@@ -114,7 +121,7 @@ export function WaitlistCard({
         </p>
       </div>
 
-      <div className="relative mt-5">
+      <div className="relative mt-4">
         <NewsletterForm className="max-w-none" />
       </div>
     </div>
@@ -134,7 +141,7 @@ function AvatarTicker({ avatars }: { avatars?: readonly Avatar[] }) {
 
   return (
     <span
-      className="relative inline-flex h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-white/18 bg-bg/70 shadow-[0_0_18px_rgba(255,56,60,0.18)]"
+      className="relative inline-flex h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-line-strong bg-bg/70 shadow-[0_12px_28px_-18px_oklch(0_0_0/0.9)]"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -156,7 +163,7 @@ function AvatarTicker({ avatars }: { avatars?: readonly Avatar[] }) {
           decoding="async"
         />
       ))}
-      <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/25" />
+      <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-line-strong" />
     </span>
   );
 }

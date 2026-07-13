@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { home } from "@/content/home";
 import { site } from "@/content/site";
@@ -11,23 +12,23 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
   const socialProof = newsletter.socialProof;
 
   return (
-    <section className="relative flex min-h-180 w-full flex-col overflow-hidden border-b border-white/8 lg:min-h-195">
+    <section
+      data-nav-underlay="flush"
+      className="relative -mt-[70px] flex min-h-180 w-full flex-col overflow-hidden border-b border-white/8 pt-[70px] md:mt-0 md:pt-0 lg:min-h-195"
+    >
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
         <HeroShader />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,9,12,0.78)_0%,rgba(8,9,12,0.36)_43%,rgba(8,9,12,0.08)_72%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,9,12,0.12)_0%,rgba(8,9,12,0.18)_62%,#0a0a0a_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_78%_78%_at_4%_42%,oklch(0.105_0.008_261.8/0.82)_0%,oklch(0.12_0.008_261.8/0.58)_44%,transparent_76%)] md:bg-[radial-gradient(ellipse_58%_84%_at_8%_44%,oklch(0.105_0.008_261.8/0.86)_0%,oklch(0.12_0.008_261.8/0.6)_46%,transparent_78%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.1392_0.0097_261.8/0.78)_0%,oklch(0.1392_0.0097_261.8/0.36)_43%,oklch(0.1392_0.0097_261.8/0.08)_72%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.1392_0.0097_261.8/0.12)_0%,oklch(0.1392_0.0097_261.8/0.18)_62%,var(--color-bg)_100%)]" />
       </div>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl flex-1 items-center gap-8 px-6 pb-14 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-8 md:pb-12 md:pt-12 lg:gap-10">
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl flex-1 items-center gap-8 px-6 pb-14 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-8 md:pb-12 md:pt-28 lg:gap-10">
         <div className="max-w-140 text-left">
-          <div className="inline-flex items-center rounded-md border border-accent/35 bg-accent/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-            Now on the Mac App Store
-          </div>
-
-          <h1 className="mt-6 max-w-[12ch] text-5xl font-semibold leading-[1.02] tracking-tight text-text md:text-[68px] lg:text-[78px]">
+          <h1 className="max-w-[12ch] text-5xl font-semibold leading-[1.02] tracking-tight text-text md:text-[68px] lg:text-[78px]">
             The Mac Calendar{" "}
             <span className="text-accent">Google never built.</span>
           </h1>
@@ -37,8 +38,8 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             Finally, Google Calendar feels at home on your Mac.
           </p>
 
-          <div className="mt-7 flex flex-wrap items-center gap-3">
-            <a
+          <div className="mt-7 flex flex-row items-stretch gap-2 sm:items-center sm:gap-3">
+            <AppStoreLink
               href={site.cta.primary.href}
               target="_blank"
               rel="noopener noreferrer"
@@ -47,20 +48,20 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
                 placement: "hero",
                 destination: "mac_app_store",
               })}
-              className="inline-flex h-12 items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              className="app-store-interactive inline-flex h-12 min-w-0 items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
               <Image
                 src={site.macAppStoreBadgeSrc}
                 alt={site.cta.primary.label}
                 width={162}
                 height={50}
-                className="h-12 w-auto"
+                className="h-12 w-full object-contain"
               />
-            </a>
+            </AppStoreLink>
             <a
               href="#watch-demo"
               data-scroll-align="center"
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-white/12 bg-white/5.5 px-5 text-sm font-semibold text-text shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl transition-colors hover:border-white/24 hover:bg-white/8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="ui-interactive inline-flex h-12 min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-line-strong bg-overlay px-2 text-[11px] font-semibold text-text shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.12)] backdrop-blur-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent min-[360px]:px-3 min-[360px]:text-xs sm:gap-2 sm:px-5 sm:text-sm"
             >
               Watch 1:43 Demo
               <span aria-hidden>▸</span>
@@ -87,26 +88,13 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
               <span className="font-semibold text-text">
                 <AnimatedCount value={liveCount} />+ Mac users
               </span>{" "}
-              already use hora.{" "}
-              <span>Now on the Mac App Store.</span>
+              already use hora.
             </p>
           </div>
         </div>
 
-        <div className="relative md:-mt-14 lg:-mt-18">
-          <div
-            aria-hidden
-            className="absolute -inset-5 rounded-4xl bg-[radial-gradient(ellipse_at_58%_42%,rgba(255,56,60,0.20),rgba(34,79,136,0.12)_38%,transparent_68%)] blur-3xl"
-          />
-          <div
-            aria-hidden
-            className="absolute inset-x-[7%] -bottom-8 h-24 rounded-full bg-[radial-gradient(ellipse,rgba(255,56,60,0.28)_0%,rgba(34,79,136,0.20)_38%,transparent_74%)] blur-[34px]"
-          />
-          <div
-            aria-hidden
-            className="absolute inset-x-[14%] -bottom-10 h-16 rounded-full bg-black/90 blur-[38px]"
-          />
-          <div className="relative overflow-hidden rounded-[18px] shadow-[0_48px_120px_-42px_rgba(0,0,0,0.98),0_34px_90px_-58px_rgba(255,56,60,0.75),0_22px_80px_-60px_rgba(34,79,136,0.9)]">
+        <div className="relative -mr-6 w-[calc(100%+6rem)] md:-mt-14 md:mr-0 md:w-auto md:max-[1440px]:-mr-48 md:max-[1440px]:-mt-24 md:max-[1440px]:w-[calc(100%+12rem)] lg:-mt-18 xl:max-[1440px]:-mr-24 xl:max-[1440px]:w-[calc(100%+6rem)] xl:max-[1440px]:translate-x-16">
+          <div className="relative overflow-visible rounded-none shadow-[0_0_72px_16px_oklch(0_0_0/0.78)] md:overflow-hidden md:rounded-[12px]">
             <Image
               src={hero.demo.posterSrc}
               alt="hora Calendar macOS app interface"
@@ -118,7 +106,6 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
               className="w-full object-contain"
             />
           </div>
-
         </div>
       </div>
     </section>

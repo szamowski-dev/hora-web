@@ -1,9 +1,7 @@
 import { Hero } from "@/components/organisms/Hero";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
-import { VideoShowcase } from "@/components/organisms/VideoShowcase";
+import { FeaturesOverview } from "@/components/organisms/FeaturesOverview";
 import { UserProof } from "@/components/organisms/UserProof";
-import { FeaturesStory } from "@/components/organisms/FeaturesStory";
-import { WhyHora } from "@/components/organisms/WhyHora";
 import { PricingSection } from "@/components/organisms/PricingSection";
 import { BetaCta } from "@/components/organisms/BetaCta";
 import { Roadmap } from "@/components/organisms/Roadmap";
@@ -75,6 +73,7 @@ export default async function Home() {
     title: p.frontmatter.title,
     description: p.frontmatter.description,
     date: p.frontmatter.date,
+    readingMinutes: p.readingMinutes,
     tags: p.frontmatter.tags,
     cover: p.frontmatter.cover,
   }));
@@ -83,10 +82,8 @@ export default async function Home() {
     <>
       <Hero />
       <FeaturedOn />
-      <VideoShowcase />
+      <FeaturesOverview />
       <UserProof />
-      <FeaturesStory />
-      <WhyHora />
       <PricingSection />
       <BetaCta />
       <Roadmap />

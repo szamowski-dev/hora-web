@@ -1,10 +1,11 @@
 import { FaqItem } from "@/components/molecules/FaqItem";
+import { Icon } from "@/components/atoms/Icon";
+import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { home } from "@/content/home";
+import { site } from "@/content/site";
 
 export function Faq() {
   const faq = home.faq;
-  const leftColumnItems = faq.items.filter((_, index) => index % 2 === 0);
-  const rightColumnItems = faq.items.filter((_, index) => index % 2 === 1);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -18,15 +19,12 @@ export function Faq() {
   return (
     <section
       id="faq"
-      className="relative overflow-hidden border-y border-white/8 bg-[#0b0c0f] py-20 md:py-24"
+      className="home-section relative overflow-hidden border-y py-20 md:py-24"
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(720px_420px_at_15%_0%,rgba(255,56,60,0.09),transparent_68%),radial-gradient(760px_460px_at_88%_90%,rgba(34,79,136,0.14),transparent_72%)]"
-      />
+      <SectionBackdrop direction="left" />
 
       <div className="relative mx-auto max-w-295 px-6">
-        <div className="max-w-5xl">
+        <div className="flex flex-col gap-5 border-b border-line-strong pb-8 md:flex-row md:items-end md:justify-between md:pb-10">
           <div>
             <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
               {faq.heading.prefix}
@@ -36,33 +34,57 @@ export function Faq() {
               {faq.subtitle}
             </p>
           </div>
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-dim">
+            {String(faq.items.length).padStart(2, "0")} questions / quick
+            answers
+          </p>
         </div>
 
-        <div className="mt-12 grid gap-3 md:mt-14 md:grid-cols-2 md:gap-4">
-          <div className="space-y-3 md:space-y-4">
-            {leftColumnItems.map((item) => (
-              <div key={item.q} data-anim="faq-item">
-                <FaqItem question={item.q} answer={item.a} />
+        <div className="shader-panel ui-panel-deep relative mt-10 overflow-hidden rounded-xl md:mt-12">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-8 top-0 z-10 h-px bg-linear-to-r from-transparent via-accent/70 to-transparent"
+          />
+          <div>
+            {faq.items.map((item, index) => (
+              <div
+                key={item.q}
+                data-anim="faq-item"
+                className={
+                  index < faq.items.length - 1
+                    ? "border-b border-line"
+                    : undefined
+                }
+              >
+                <FaqItem
+                  question={item.q}
+                  answer={item.a}
+                  index={index}
+                  variant="integrated"
+                />
               </div>
             ))}
           </div>
-          <div className="space-y-3 md:space-y-4">
-            {rightColumnItems.map((item) => (
-              <div key={item.q} data-anim="faq-item">
-                <FaqItem question={item.q} answer={item.a} />
-              </div>
-            ))}
-          </div>
-        </div>
 
-        <div className="mt-6 text-sm text-muted">
-          Still have questions?{" "}
-          <a
-            href="mailto:hello@horacal.app"
-            className="text-accent underline decoration-accent/40 underline-offset-4 hover:text-text"
-          >
-            Contact me
-          </a>
+          <div className="flex flex-col gap-4 border-t border-line bg-overlay px-5 py-5 sm:flex-row sm:items-center sm:justify-between md:px-6">
+            <div>
+              <p className="text-sm font-medium text-text">
+                Still have questions?
+              </p>
+              <p className="mt-1 text-xs leading-5 text-muted">
+                Talk directly with the community and the developer behind hora.
+              </p>
+            </div>
+            <a
+              href={site.community.discord.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="discord-cta-button inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md px-4 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-discord-hover focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            >
+              <Icon name="discord" size={17} />
+              Join hora Discord
+            </a>
+          </div>
         </div>
       </div>
       <script

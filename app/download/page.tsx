@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import Link from "next/link";
 import { Icon, type IconName } from "@/components/atoms/Icon";
+import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { WaitlistCard } from "@/components/molecules/WaitlistCard";
+import { HeroShader } from "@/components/organisms/HeroShader";
 import { home } from "@/content/home";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
@@ -152,11 +155,11 @@ export default async function DownloadPage() {
     <main className="relative overflow-hidden">
       <HeroBackground />
 
-      <section className="relative border-b border-white/8">
-        <div className="mx-auto grid min-h-[calc(100svh-64px)] w-full max-w-7xl items-center gap-10 px-6 py-12 md:grid-cols-[0.88fr_1.12fr] md:py-16 lg:gap-12">
+      <section className="relative border-b border-line">
+        <div className="mx-auto grid min-h-[calc(100svh-64px)] w-full max-w-295 items-center gap-10 px-6 py-14 md:grid-cols-[0.88fr_1.12fr] md:py-20 lg:gap-12">
           <div className="max-w-156">
-            <p className="inline-flex items-center gap-2 rounded-md border border-accent/35 bg-accent/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_rgba(255,56,60,0.95)]" />
+            <p className="inline-flex items-center gap-2 rounded-md border border-accent/35 bg-accent/10 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-accent shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.12)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.6456_0.2492_25.7/0.9)]" />
               Now on the Mac App Store
             </p>
 
@@ -172,7 +175,7 @@ export default async function DownloadPage() {
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <a
+              <AppStoreLink
                 href={site.cta.primary.href}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -181,7 +184,7 @@ export default async function DownloadPage() {
                   placement: "testflight_hero",
                   destination: "mac_app_store",
                 })}
-                className="inline-flex h-14 cursor-pointer items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                className="app-store-interactive inline-flex h-14 cursor-pointer items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
                 <Image
                   src={site.macAppStoreBadgeSrc}
@@ -190,7 +193,7 @@ export default async function DownloadPage() {
                   height={50}
                   className="h-14 w-auto"
                 />
-              </a>
+              </AppStoreLink>
               <a
                 href={site.community.discord.href}
                 target="_blank"
@@ -198,7 +201,7 @@ export default async function DownloadPage() {
                 {...analyticsAttrs("discord_click", {
                   location: "testflight_hero",
                 })}
-                className="discord-cta-button inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-md border border-[#5865F2]/45 px-6 text-base font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5865F2] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                className="discord-cta-button inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-md border border-discord-hover/45 px-6 text-base font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-discord-hover focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
                 <Icon name="discord" size={18} />
                 Join Discord
@@ -225,7 +228,7 @@ export default async function DownloadPage() {
                 <span className="font-semibold text-text">
                   <AnimatedCount value={liveCount} />+ Mac users
                 </span>{" "}
-                already use hora. Now a one-tap install from the Mac App Store.
+                already use hora Calendar.<br />Now a one-tap install from the Mac App Store.
               </p>
             </div>
 
@@ -233,7 +236,7 @@ export default async function DownloadPage() {
               {heroStats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="rounded-md border border-white/10 bg-white/[0.035] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]"
+                  className="ui-panel-soft rounded-md p-3"
                 >
                   <p className="text-lg font-semibold tabular-nums text-text">
                     {stat.value}
@@ -249,9 +252,9 @@ export default async function DownloadPage() {
           <div className="relative">
             <div
               aria-hidden
-              className="absolute -inset-6 rounded-4xl bg-[radial-gradient(ellipse_at_50%_45%,rgba(255,56,60,0.24),transparent_62%)] blur-2xl"
+              className="absolute -inset-8 rounded-4xl bg-[radial-gradient(ellipse_at_50%_45%,oklch(0.6456_0.2492_25.7/0.25),transparent_64%)] blur-3xl"
             />
-            <div className="relative overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.035] shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.12)]">
+            <div className="shader-panel ui-panel relative overflow-hidden rounded-xl shadow-[0_40px_110px_-48px_oklch(0_0_0/0.94),-18px_20px_84px_-72px_oklch(0.6532_0.2328_25.7/0.42),20px_-16px_84px_-72px_oklch(0.4269_0.1069_255.7/0.48)]">
               <Image
                 src={home.hero.demo.posterSrc}
                 alt="hora Calendar macOS app interface"
@@ -268,7 +271,7 @@ export default async function DownloadPage() {
               {heroTechPills.map((item) => (
                 <div
                   key={item.label}
-                  className="group flex h-10 items-center justify-center gap-2 rounded-md border border-white/10 bg-[#111216]/88 px-2.5 text-[11px] font-medium leading-none shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] backdrop-blur-xl transition-colors duration-200 hover:border-accent/35 hover:bg-accent/10 hover:text-text"
+                  className="ui-interactive ui-panel-soft group flex h-10 items-center justify-center gap-2 rounded-md px-2.5 text-[11px] font-medium leading-none backdrop-blur-xl hover:text-text"
                 >
                   <Icon
                     name={item.icon}
@@ -283,8 +286,9 @@ export default async function DownloadPage() {
         </div>
       </section>
 
-      <section className="relative py-16 md:py-20">
-        <div className="mx-auto max-w-295 px-6">
+      <section className="home-section relative overflow-hidden border-b py-16 md:py-20">
+        <SectionBackdrop direction="left" grid={false} />
+        <div className="relative mx-auto max-w-295 px-6">
           <div className="grid gap-4 md:grid-cols-3">
             {coreReasons.map((item) => (
               <FeaturePanel key={item.title} {...item} emphasized />
@@ -293,8 +297,9 @@ export default async function DownloadPage() {
         </div>
       </section>
 
-      <section className="relative py-4 md:py-8">
-        <div className="mx-auto max-w-295 px-6">
+      <section className="home-section relative overflow-hidden border-b py-16 md:py-20">
+        <SectionBackdrop direction="right" />
+        <div className="relative mx-auto max-w-295 px-6">
           <div className="mb-8 max-w-2xl">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
               Built for calendar-heavy work
@@ -314,7 +319,7 @@ export default async function DownloadPage() {
             {detailChips.map((chip) => (
               <span
                 key={chip}
-                className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-xs leading-5 text-muted"
+                className="rounded-full border border-line bg-overlay px-3 py-1.5 text-xs leading-5 text-muted"
               >
                 {chip}
               </span>
@@ -323,9 +328,10 @@ export default async function DownloadPage() {
         </div>
       </section>
 
-      <section className="relative py-16 md:py-20">
-        <div className="mx-auto grid max-w-295 gap-6 px-6 md:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-lg border border-white/10 bg-white/[0.035] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] md:p-8">
+      <section className="home-section relative overflow-hidden py-16 md:py-24">
+        <SectionBackdrop direction="left" grid={false} />
+        <div className="relative mx-auto grid max-w-295 gap-6 px-6 md:grid-cols-[0.95fr_1.05fr]">
+          <div className="shader-panel ui-panel-deep rounded-xl p-6 md:p-8">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
               Get it now
             </p>
@@ -339,7 +345,7 @@ export default async function DownloadPage() {
             </p>
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <a
+              <AppStoreLink
                 href={site.cta.primary.href}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -348,7 +354,7 @@ export default async function DownloadPage() {
                   placement: "testflight_final",
                   destination: "mac_app_store",
                 })}
-                className="inline-flex h-12 cursor-pointer items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                className="app-store-interactive inline-flex h-12 cursor-pointer items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
                 <Image
                   src={site.macAppStoreBadgeSrc}
@@ -357,10 +363,10 @@ export default async function DownloadPage() {
                   height={50}
                   className="h-12 w-auto"
                 />
-              </a>
+              </AppStoreLink>
               <Link
                 href="/"
-                className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-md border border-white/12 bg-white/4.5 px-5 text-sm font-semibold text-text transition-colors hover:border-white/24 hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                className="ui-interactive inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-md border border-line-strong bg-overlay px-5 text-sm font-semibold text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
               >
                 See full site
                 <Icon name="arrow-right" size={14} />
@@ -389,31 +395,10 @@ export default async function DownloadPage() {
 
 function HeroBackground() {
   return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden"
-    >
-      <Image
-        src={home.hero.demo.posterSrc}
-        alt="hora Calendar interface background"
-        fill
-        priority
-        quality={45}
-        sizes="100vw"
-        className="object-cover opacity-[0.08]"
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.72)_0%,rgba(10,10,10,0.88)_46%,#0a0a0a_100%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(900px_520px_at_16%_18%,rgba(255,56,60,0.20),transparent_68%),radial-gradient(760px_460px_at_82%_18%,rgba(131,199,255,0.12),transparent_66%),radial-gradient(780px_520px_at_76%_86%,rgba(48,209,88,0.08),transparent_70%)]" />
-      <div
-        className="absolute inset-0 opacity-[0.14]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
-          backgroundSize: "72px 72px",
-          maskImage:
-            "linear-gradient(to bottom, transparent 0%, black 18%, black 74%, transparent 100%)",
-        }}
-      />
+    <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[920px] overflow-hidden">
+      <HeroShader />
+      <div className="absolute inset-0 bg-bg/55" />
+      <div className="absolute inset-0 bg-linear-to-b from-transparent via-bg/20 to-bg" />
     </div>
   );
 }
@@ -438,10 +423,10 @@ function FeaturePanel({
   return (
     <article
       className={cn(
-        "rounded-lg border p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]",
+        "p-5",
         emphasized
-          ? "border-white/12 bg-white/5.5"
-          : "border-white/10 bg-white/[0.032]",
+          ? "shader-panel ui-panel rounded-xl"
+          : "ui-panel-soft rounded-lg",
       )}
     >
       <div className="mb-4 flex h-11 items-center gap-2">
@@ -449,7 +434,7 @@ function FeaturePanel({
           iconSrcs.map((src) => (
             <span
               key={src}
-              className="flex h-11 w-11 items-center justify-center rounded-md border border-accent/25 bg-accent/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+              className="flex h-11 w-11 items-center justify-center rounded-md border border-accent/25 bg-accent/10 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.12)]"
             >
               <Image
                 src={src}
@@ -463,7 +448,7 @@ function FeaturePanel({
         ) : (
           <span
             className={cn(
-              "flex h-11 w-11 items-center justify-center rounded-md border shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]",
+              "flex h-11 w-11 items-center justify-center rounded-md border shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.12)]",
               "border-accent/25 bg-accent/10 text-accent",
             )}
           >
@@ -473,10 +458,7 @@ function FeaturePanel({
                 alt=""
                 width={36}
                 height={36}
-                className={cn(
-                  "object-contain",
-                  iconClassName ?? "h-5.5 w-5.5",
-                )}
+                className={cn("object-contain", iconClassName ?? "h-5.5 w-5.5")}
               />
             ) : (
               <Icon name={icon} size={18} />

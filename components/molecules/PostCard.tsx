@@ -7,6 +7,7 @@ export type PostCardData = {
   title: string;
   description: string;
   date: string;
+  readingMinutes: number;
   tags?: readonly string[];
   cover?: string;
 };
@@ -29,19 +30,20 @@ export function PostCard({
     <Link
       href={`/blog/${post.slug}/`}
       className={cn(
-        "group relative flex h-full flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_24px_48px_-28px_rgba(0,0,0,0.55)] transition-all duration-300 hover:border-accent/35 hover:bg-white/6 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_32px_60px_-24px_rgba(255,56,60,0.28)]",
+        "ui-interactive ui-panel-soft group relative flex h-full flex-col overflow-hidden rounded-xl shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.1),0_24px_48px_-28px_oklch(0_0_0/0.72)]",
+        isList && "rounded-lg",
         className,
       )}
     >
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-x-5 top-0 h-px bg-linear-to-r from-transparent via-white/25 to-transparent"
+        className="pointer-events-none absolute inset-x-5 top-0 z-20 h-px bg-linear-to-r from-transparent via-line-strong to-transparent"
       />
 
       {post.cover && !isList ? (
         <div
           className={cn(
-            "relative w-full overflow-hidden border-b border-white/8 bg-bg",
+            "relative w-full overflow-hidden border-b border-line bg-bg",
             isHero ? "aspect-2/1" : "aspect-21/10",
           )}
         >
@@ -54,20 +56,30 @@ export function PostCard({
                 ? "(min-width: 768px) 720px, 100vw"
                 : "(min-width: 768px) 480px, 100vw"
             }
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className="object-cover transition-[filter] duration-300 group-hover:brightness-105 group-hover:saturate-110"
             priority={isHero}
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-linear-to-t from-bg/50 via-transparent to-transparent"
+            className="pointer-events-none absolute inset-0 bg-linear-to-t from-panel-deep/95 via-panel-deep/5 to-transparent"
           />
+          {isHero ? (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 opacity-70 transition-opacity duration-500 group-hover:opacity-100"
+              style={{
+                background:
+                  "radial-gradient(ellipse 65% 85% at 8% 35%, var(--ui-glow-accent-soft), transparent 72%), radial-gradient(ellipse 58% 72% at 92% 18%, var(--ui-glow-cool-soft), transparent 72%)",
+              }}
+            />
+          ) : null}
         </div>
       ) : null}
 
       <div
         className={cn(
           "relative flex flex-1 flex-col",
-          isHero ? "p-7 md:p-8" : "p-6",
+          isHero ? "p-7 md:p-8" : "p-5 md:p-6",
         )}
       >
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
@@ -89,7 +101,7 @@ export function PostCard({
             {post.tags.slice(0, isHero ? 6 : 4).map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted"
+                className="rounded-full border border-line bg-overlay px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted transition-colors group-hover:border-line-strong"
               >
                 {tag}
               </span>
@@ -101,7 +113,7 @@ export function PostCard({
             "mt-auto flex items-center gap-1.5 pt-4 text-xs font-semibold uppercase tracking-[0.18em] text-muted transition-colors group-hover:text-accent",
           )}
         >
-          Read
+          Read article
           <svg
             aria-hidden
             className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1"

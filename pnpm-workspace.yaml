@@ -1,5 +1,4 @@
 allowBuilds:
-  '@posthog/cli': true
   core-js: true
   protobufjs: true
   sharp: true

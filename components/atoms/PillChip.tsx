@@ -10,11 +10,11 @@ type Props = {
 const baseClasses =
   "relative inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium tracking-tight text-text " +
   "border border-white/15 bg-white/6 backdrop-blur-xl " +
-  "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.22),inset_0_-1px_0_0_rgba(0,0,0,0.25),0_8px_32px_-8px_rgba(0,0,0,0.55)] " +
+  "shadow-[inset_0_1px_0_0_oklch(1_0_0/0.22),inset_0_-1px_0_0_oklch(0_0_0/0.25),0_8px_32px_-8px_oklch(0_0_0/0.55)] " +
   "transition-all md:text-base";
 
 const interactiveClasses =
-  "hover:border-white/25 hover:bg-white/10 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_0_28px_rgba(255,56,60,0.25),0_8px_32px_-8px_rgba(0,0,0,0.55)] " +
+  "hover:border-white/25 hover:bg-white/10 hover:brightness-105 hover:saturate-110 hover:shadow-[inset_0_1px_0_0_oklch(1_0_0/0.3),0_12px_30px_-22px_oklch(0_0_0/0.9)] " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
 
 function PillContent({ children }: { children: React.ReactNode }) {
@@ -22,7 +22,7 @@ function PillContent({ children }: { children: React.ReactNode }) {
     <>
       <span
         aria-hidden
-        className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_rgba(255,56,60,0.95)]"
+        className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_oklch(0.6532_0.2328_25.7/0.95)]"
       />
       <span
         aria-hidden

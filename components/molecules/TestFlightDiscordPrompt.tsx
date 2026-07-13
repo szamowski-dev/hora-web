@@ -139,10 +139,10 @@ export function TestFlightDiscordPrompt() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="testflight-discord-title"
-      className="fixed inset-0 z-70 flex items-center justify-center overflow-hidden bg-[radial-gradient(900px_520px_at_50%_35%,rgba(255,56,60,0.20),transparent_66%),linear-gradient(180deg,rgba(0,0,0,0.62),rgba(0,0,0,0.82))] px-4 py-6 backdrop-blur-lg"
+      className="fixed inset-0 z-70 flex items-center justify-center overflow-hidden bg-[radial-gradient(700px_460px_at_35%_28%,var(--ui-glow-accent-soft),transparent_68%),radial-gradient(760px_500px_at_70%_68%,var(--ui-glow-cool-soft),transparent_72%),linear-gradient(180deg,oklch(0_0_0/0.68),oklch(0_0_0/0.86))] px-4 py-6 backdrop-blur-lg"
     >
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-90 w-90 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/18 blur-3xl" />
-      <div className="relative w-full max-w-125 overflow-hidden rounded-2xl border border-white/18 bg-white/7.5 p-5 text-left shadow-[0_40px_110px_-44px_rgba(255,56,60,0.85),0_24px_80px_-48px_rgba(255,255,255,0.48),inset_0_1px_0_rgba(255,255,255,0.32),inset_0_-1px_0_rgba(255,255,255,0.08)] backdrop-blur-2xl sm:p-7">
+      <div className="shader-panel relative w-full max-w-125 overflow-hidden rounded-2xl border border-line-strong bg-white/7.5 p-5 text-left shadow-[0_40px_110px_-44px_oklch(0_0_0/0.94),-18px_18px_82px_-72px_oklch(0.6532_0.2328_25.7/0.42),20px_-16px_82px_-72px_oklch(0.4269_0.1069_255.7/0.48),inset_0_1px_0_oklch(0.9851_0_0/0.22)] backdrop-blur-2xl sm:p-7">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.24),rgba(255,255,255,0.05)_34%,rgba(255,255,255,0.02)_64%,rgba(255,255,255,0.12))]"

@@ -33,6 +33,7 @@ export type PostFrontmatter = Omit<PostFrontmatterRaw, "tags"> & {
 export type PostMeta = {
   slug: string;
   frontmatter: PostFrontmatter;
+  readingMinutes: number;
 };
 
 export type Post = PostMeta & {
@@ -49,6 +50,16 @@ function parseTags(tags: string | undefined): string[] {
 
 function formatDate(date: string): string {
   return date.length > 10 ? date : date;
+}
+
+function estimateReadingMinutes(source: string): number {
+  const content = source
+    .replace(/^---[\s\S]*?---/, "")
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/<[^>]+>/g, " ");
+  const words = content.match(/[\p{L}\p{N}’'-]+/gu)?.length ?? 0;
+
+  return Math.max(1, Math.ceil(words / 220));
 }
 
 const remarkPlugins: PluggableList = [remarkGfm];
@@ -103,6 +114,7 @@ export const getAllPosts = cache(async (): Promise<PostMeta[]> => {
       });
       return {
         slug,
+        readingMinutes: estimateReadingMinutes(raw),
         frontmatter: {
           ...frontmatter,
           date: formatDate(frontmatter.date),
@@ -130,6 +142,7 @@ export const getPostBySlug = cache(
       });
       return {
         slug,
+        readingMinutes: estimateReadingMinutes(raw),
         frontmatter: {
           ...frontmatter,
           date: formatDate(frontmatter.date),

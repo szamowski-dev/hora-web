@@ -1,5 +1,6 @@
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { site } from "@/content/site";
+import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 
 export function OneMoreThing({
   tweetUrl = "https://twitter.com/intent/tweet?text=I%E2%80%99ve%20been%20using%20a%20new%20native%20Google%20Calendar%20app%20for%20macOS%2C%20and%20I%20think%20it%20is%E2%80%A6&url=https%3A%2F%2Fhoracal.app%2F%3Futm_source%3Dblog%26utm_medium%3Ddevlog%26utm_campaign%3Dmac_launch%26utm_content%3Done_more_thing_tweet",
@@ -15,11 +16,10 @@ export function OneMoreThing({
   return (
     <div className="not-prose my-12">
       <div
-        className="relative overflow-hidden rounded-3xl px-6 py-10 sm:px-10 sm:py-12"
+        className="shader-panel ui-panel-deep relative overflow-hidden rounded-xl px-6 py-10 sm:px-10 sm:py-12"
         style={{
-          border: "1px solid rgba(255,56,60,0.24)",
           background:
-            "radial-gradient(ellipse 600px 300px at 50% 0%, rgba(255,56,60,0.22), rgba(255,56,60,0.04) 70%), #140a0a",
+            "radial-gradient(ellipse 520px 280px at 25% 0%, var(--ui-glow-accent-soft), transparent 70%), radial-gradient(ellipse 560px 320px at 82% 100%, var(--ui-glow-cool-soft), transparent 72%), var(--ui-panel-deep)",
         }}
       >
         <p
@@ -39,8 +39,8 @@ export function OneMoreThing({
           style={{ color: "#c9c9c9", lineHeight: 1.7 }}
         >
           I&rsquo;m building hora solo &mdash; no team, no ads, no VC clock. If
-          the app clicks with you, a few small things help more than
-          you&rsquo;d guess:
+          the app clicks with you, a few small things help more than you&rsquo;d
+          guess:
         </p>
         <ul
           className="m-0 mb-7 list-disc pl-5 text-[15px]"
@@ -53,7 +53,7 @@ export function OneMoreThing({
           <li className="mb-1">
             <strong className="text-white">Tell one friend</strong> who
             complains about Google Calendar on their Mac and send them to{" "}
-            <a
+            <AppStoreLink
               href={appUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -69,7 +69,7 @@ export function OneMoreThing({
               }}
             >
               the Mac App Store
-            </a>{" "}
+            </AppStoreLink>{" "}
             &mdash; worth more than a hundred impressions.
           </li>
           <li>

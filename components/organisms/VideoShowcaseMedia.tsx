@@ -115,7 +115,7 @@ export function VideoShowcaseMedia({
             {showReducedMotionPlayButton ? (
               <>
                 <span className="pointer-events-none absolute inset-0 bg-black/30 transition-colors group-hover:bg-black/40" />
-                <span className="pointer-events-none relative inline-flex h-16 w-16 items-center justify-center rounded-full bg-accent text-white shadow-[0_0_40px_rgba(255,56,60,0.45)]">
+                <span className="pointer-events-none relative inline-flex h-16 w-16 items-center justify-center rounded-full bg-accent text-white shadow-[0_18px_42px_-22px_oklch(0_0_0/0.96)]">
                   <svg
                     width="24"
                     height="24"

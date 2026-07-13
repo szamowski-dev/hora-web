@@ -83,7 +83,7 @@ export function BlogPostLayout({
         <aside className="mt-16 border-t border-border pt-8">
           <Link
             href="/about/"
-            className="group flex flex-col gap-5 rounded-lg border border-white/10 bg-white/[0.035] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-all duration-300 hover:border-accent/30 hover:bg-white/6 sm:flex-row sm:items-center sm:gap-6"
+            className="ui-interactive group flex flex-col gap-5 rounded-lg border border-line bg-overlay p-5 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] sm:flex-row sm:items-center sm:gap-6"
           >
             <Image
               src="/assets/maciej_szamowski.jpg"
@@ -120,7 +120,7 @@ export function BlogPostLayout({
             {previous ? (
               <Link
                 href={`/blog/${previous.slug}/`}
-                className="group rounded-md border border-border bg-white/2 p-5 transition-colors hover:border-accent/40 hover:bg-white/4"
+                className="ui-interactive group rounded-md border border-line bg-overlay p-5"
               >
                 <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
                   ← Previous
@@ -135,7 +135,7 @@ export function BlogPostLayout({
             {next ? (
               <Link
                 href={`/blog/${next.slug}/`}
-                className="group rounded-md border border-border bg-white/2 p-5 text-right transition-colors hover:border-accent/40 hover:bg-white/4 sm:text-right"
+                className="ui-interactive group rounded-md border border-line bg-overlay p-5 text-right sm:text-right"
               >
                 <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
                   Next →

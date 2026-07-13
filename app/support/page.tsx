@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Icon } from "@/components/atoms/Icon";
+import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { FaqItem } from "@/components/molecules/FaqItem";
 import { SupportForm } from "@/components/organisms/SupportForm";
 import { defaultOg } from "@/lib/og";
@@ -75,72 +76,102 @@ export default function SupportPage() {
 
   return (
     <>
-      <section className="relative overflow-hidden border-b border-white/8">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(760px_420px_at_22%_12%,rgba(255,56,60,0.19),transparent_68%),radial-gradient(700px_420px_at_88%_42%,rgba(131,199,255,0.08),transparent_72%)]"
-        />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-bg" />
+      <section className="home-section relative overflow-hidden border-y py-16 md:py-24">
+        <SectionBackdrop direction="balanced" />
 
-        <div className="relative mx-auto max-w-295 px-6 pt-16 pb-12 md:pt-24 md:pb-16">
-          <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+        <div className="relative mx-auto max-w-295 px-6">
+          <div className="flex flex-col gap-6 border-b border-line-strong pb-8 md:flex-row md:items-end md:justify-between md:pb-10">
             <div>
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-md border border-accent/25 bg-accent/10 text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]">
-                <Icon name="hand-heart" size={22} />
-              </div>
-              <h1 className="mt-6 max-w-[12ch] text-5xl font-semibold leading-[1.04] tracking-tight text-text md:text-[64px]">
+              <h1 className="text-5xl font-semibold leading-[1.04] tracking-tight text-text md:text-[64px]">
                 hora <span className="text-accent">Support</span>
               </h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-muted md:text-lg md:leading-8">
+              <p className="mt-5 max-w-3xl text-base leading-7 text-muted md:text-lg md:leading-8">
                 Report a bug, ask for help, or send a feature request. The form
                 sends your message directly to the developer, and Discord is
                 the fastest place for real-time feedback and follow-ups.
               </p>
+            </div>
+            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-dim">
+              Direct developer support
+            </p>
+          </div>
 
-              <div className="mt-8 grid gap-3">
+          <div className="mt-10 grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start md:mt-12">
+            <aside className="lg:sticky lg:top-24">
+              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-dim">
+                Before you send
+              </p>
+              <div className="mt-4 grid gap-3">
                 {quickLinks.map((item) => (
                   <div
                     key={item.title}
-                    className="rounded-md border border-white/10 bg-white/[0.035] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                    className="ui-panel-soft rounded-lg p-4 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)]"
                   >
                     <div className="flex gap-3">
-                      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/5 text-accent">
+                      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-accent/20 bg-accent/8 text-accent">
                         <Icon name={item.icon} size={17} />
                       </div>
                       <div>
-                        <h2 className="text-sm font-semibold text-text">{item.title}</h2>
-                        <p className="mt-1 text-sm leading-6 text-muted">{item.body}</p>
+                        <h2 className="text-sm font-semibold text-text">
+                          {item.title}
+                        </h2>
+                        <p className="mt-1 text-sm leading-6 text-muted">
+                          {item.body}
+                        </p>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </aside>
 
-            <SupportForm />
+            <div className="lg:pt-[31px]">
+              <SupportForm />
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-[#0b0c0f] py-16 md:py-20">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(720px_420px_at_15%_0%,rgba(255,56,60,0.08),transparent_68%)]"
-        />
+      <section className="home-section relative overflow-hidden border-y py-16 md:py-20">
+        <SectionBackdrop direction="right" />
         <div className="relative mx-auto max-w-295 px-6">
-          <div className="max-w-2xl">
-            <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
-              Common questions
-            </h2>
-            <p className="mt-4 text-base leading-7 text-muted md:text-lg md:leading-8">
-              Short answers about how hora works, what to include in support
-              requests, and how beta support is handled.
+          <div className="flex flex-col gap-5 border-b border-line-strong pb-8 md:flex-row md:items-end md:justify-between md:pb-10">
+            <div className="max-w-3xl">
+              <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
+                Common <span className="text-accent">questions</span>
+              </h2>
+              <p className="mt-4 text-base leading-7 text-muted md:text-lg md:leading-8">
+                Short answers about how hora works, what to include in support
+                requests, and how beta support is handled.
+              </p>
+            </div>
+            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-dim">
+              {String(faqItems.length).padStart(2, "0")} questions / quick
+              answers
             </p>
           </div>
 
-          <div className="mt-10 grid gap-3 md:grid-cols-2 md:gap-4">
-            {faqItems.map((item) => (
-              <FaqItem key={item.q} question={item.q} answer={item.a} />
+          <div className="shader-panel ui-panel-deep relative mt-10 overflow-hidden rounded-xl md:mt-12">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-x-8 top-0 z-10 h-px bg-linear-to-r from-transparent via-accent/70 to-transparent"
+            />
+            {faqItems.map((item, index) => (
+              <div
+                key={item.q}
+                className={
+                  index < faqItems.length - 1
+                    ? "border-b border-line"
+                    : undefined
+                }
+              >
+                <FaqItem
+                  question={item.q}
+                  answer={item.a}
+                  index={index}
+                  variant="integrated"
+                />
+              </div>
             ))}
           </div>
         </div>
