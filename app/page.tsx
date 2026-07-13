@@ -1,4 +1,5 @@
 import { Hero } from "@/components/organisms/Hero";
+import { FeaturedOn } from "@/components/organisms/FeaturedOn";
 import { VideoShowcase } from "@/components/organisms/VideoShowcase";
 import { UserProof } from "@/components/organisms/UserProof";
 import { FeaturesStory } from "@/components/organisms/FeaturesStory";
@@ -81,6 +82,7 @@ export default async function Home() {
   return (
     <>
       <Hero />
+      <FeaturedOn />
       <VideoShowcase />
       <UserProof />
       <FeaturesStory />

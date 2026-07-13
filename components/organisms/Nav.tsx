@@ -4,15 +4,14 @@ import { Icon } from "@/components/atoms/Icon";
 import { Logo } from "@/components/atoms/Logo";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
-import { ScrollProgressBar } from "@/components/molecules/ScrollProgressBar";
 import { MobileNav } from "./MobileNav";
 
 export function Nav({ activePath }: { activePath?: string }) {
   return (
-    <nav className="relative isolate border-b border-white/[0.045] bg-[#090a0c] md:bg-[#0b0c10]/68 md:shadow-[inset_0_1px_0_rgba(255,255,255,0.035),0_12px_36px_-28px_rgba(0,0,0,0.75)] md:backdrop-blur-2xl md:backdrop-saturate-150">
+    <nav className="relative isolate overflow-hidden border-b border-white/[0.045] bg-[#090a0c] md:mx-auto md:max-w-295 md:rounded-[22px] md:border md:border-white/[0.09] md:bg-[#0b0c10]/76 md:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_18px_52px_-24px_rgba(0,0,0,0.88),0_12px_46px_-32px_rgba(34,79,136,0.6)] md:backdrop-blur-2xl md:backdrop-saturate-150">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(115deg,rgba(255,255,255,0.045)_0%,rgba(255,255,255,0.012)_38%,rgba(34,79,136,0.04)_70%,rgba(255,56,60,0.035)_100%)] md:block"
+        className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(115deg,rgba(255,255,255,0.065)_0%,rgba(255,255,255,0.015)_38%,rgba(34,79,136,0.055)_70%,rgba(255,56,60,0.04)_100%)] md:block"
       />
       <div className="relative mx-auto flex h-16 max-w-295 items-center justify-between px-6">
         <Logo className="min-h-12" />
@@ -78,7 +77,6 @@ export function Nav({ activePath }: { activePath?: string }) {
           <MobileNav activePath={activePath} />
         </div>
       </div>
-      <ScrollProgressBar />
     </nav>
   );
 }

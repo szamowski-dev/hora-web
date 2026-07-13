@@ -3,7 +3,6 @@ import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { home } from "@/content/home";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
-import { FeaturedOn } from "./FeaturedOn";
 import { HeroShader } from "./HeroShader";
 
 export function HeroScene({ liveCount }: { liveCount: number }) {
@@ -120,7 +119,6 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             />
           </div>
 
-          <FeaturedOn compact />
         </div>
       </div>
     </section>

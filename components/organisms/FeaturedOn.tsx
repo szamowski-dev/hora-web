@@ -1,45 +1,8 @@
 import { home } from "@/content/home";
 import { cn } from "@/lib/cn";
 
-export function FeaturedOn({ compact = false }: { compact?: boolean }) {
+export function FeaturedOn() {
   const f = home.featuredOn;
-
-  if (compact) {
-    return (
-      <div
-        aria-label={f.label}
-        className="relative z-10 mx-auto mt-5 flex max-w-3xl flex-col gap-3 rounded-lg border border-white/[0.07] bg-[#0a0c10]/72 px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl sm:flex-row sm:items-center"
-      >
-        <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.22em] text-muted/70">
-          {f.label}
-        </span>
-        <span aria-hidden className="hidden h-5 w-px bg-white/10 sm:block" />
-        <ul className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2">
-          {f.badges.slice(0, 4).map((badge) => (
-            <li key={badge.href} className="flex min-w-0 items-center">
-              <a
-                href={badge.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-7 max-w-28 items-center opacity-55 grayscale transition-[opacity,filter] hover:opacity-100 hover:grayscale-0 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={badge.src}
-                  alt={badge.alt}
-                  width={badge.width}
-                  height={badge.height}
-                  loading="lazy"
-                  decoding="async"
-                  className="block max-h-7 max-w-full object-contain"
-                />
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
 
   return (
     <section
