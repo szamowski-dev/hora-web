@@ -9,7 +9,6 @@ import { BetaCta } from "@/components/organisms/BetaCta";
 import { Roadmap } from "@/components/organisms/Roadmap";
 import { Faq } from "@/components/organisms/Faq";
 import { BlogPreview } from "@/components/organisms/BlogPreview";
-import { LandingGsapAnimations } from "@/components/organisms/LandingGsapAnimations";
 import type { PostCardData } from "@/components/molecules/PostCard";
 import { getAllPosts } from "@/lib/mdx";
 
@@ -82,7 +81,6 @@ export default async function Home() {
 
   return (
     <>
-      <LandingGsapAnimations />
       <Hero />
       <FeaturedOn />
       <VideoShowcase />

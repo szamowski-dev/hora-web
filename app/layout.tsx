@@ -138,7 +138,7 @@ export default function RootLayout({
 
         <AmbientGlow />
         <LayoutEnhancements />
-        <header>
+        <header className="md:sticky md:top-0 md:z-50">
           <Nav />
         </header>
         <main className="flex-1">{children}</main>

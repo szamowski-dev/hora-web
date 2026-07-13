@@ -4,6 +4,7 @@ import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { home } from "@/content/home";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { HeroShader } from "./HeroShader";
 
 const heroPills: { key: string; label: React.ReactNode; icon: IconName }[] = [
   { key: "macos-native", label: "macOS Native", icon: "apple" },
@@ -37,28 +38,9 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
         aria-hidden
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <Image
-          src={hero.demo.posterSrc}
-          alt="hora Calendar macOS app interface"
-          fill
-          priority
-          fetchPriority="high"
-          quality={60}
-          sizes="(min-width: 1536px) 1455px, 100vw"
-          className="object-cover opacity-[0.1]"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.56)_0%,rgba(10,10,10,0.82)_58%,#0a0a0a_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(900px_520px_at_15%_24%,rgba(255,56,60,0.20),transparent_68%),radial-gradient(760px_460px_at_82%_20%,rgba(61,166,255,0.14),transparent_66%),radial-gradient(780px_520px_at_75%_86%,rgba(48,209,88,0.10),transparent_70%)]" />
-        <div
-          className="absolute inset-0 opacity-[0.18]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
-            backgroundSize: "72px 72px",
-            maskImage:
-              "linear-gradient(to bottom, transparent 0%, black 18%, black 72%, transparent 100%)",
-          }}
-        />
+        <HeroShader />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,9,12,0.78)_0%,rgba(8,9,12,0.36)_43%,rgba(8,9,12,0.08)_72%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,9,12,0.12)_0%,rgba(8,9,12,0.18)_62%,#0a0a0a_100%)]" />
       </div>
 
       <div className="relative z-10 mx-auto grid w-full max-w-7xl flex-1 items-center gap-8 px-6 pb-14 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-8 md:pb-12 md:pt-12 lg:gap-10">
@@ -67,23 +49,17 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             Now on the Mac App Store
           </div>
 
-          <h1
-            data-anim="hero-title"
-            className="mt-6 max-w-[12ch] text-5xl font-semibold leading-[1.02] tracking-tight text-text md:text-[68px] lg:text-[78px]"
-          >
+          <h1 className="mt-6 max-w-[12ch] text-5xl font-semibold leading-[1.02] tracking-tight text-text md:text-[68px] lg:text-[78px]">
             The Mac Calendar{" "}
             <span className="text-accent">Google never built.</span>
           </h1>
 
-          <p
-            data-anim="hero-copy"
-            className="mt-5 max-w-md text-pretty text-lg leading-8 text-muted md:text-[19px]"
-          >
+          <p className="mt-5 max-w-md text-pretty text-lg leading-8 text-muted md:text-[19px]">
             Fast, Native, Beautiful. Built for keyboard-driven workflows.
             Finally, Google Calendar feels at home on your Mac.
           </p>
 
-          <div data-anim="hero-cta" className="mt-7 flex flex-wrap items-center gap-3">
+          <div className="mt-7 flex flex-wrap items-center gap-3">
             <a
               href={site.cta.primary.href}
               target="_blank"
@@ -113,10 +89,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             </a>
           </div>
 
-          <div
-            data-anim="hero-proof"
-            className="mt-6 flex flex-col items-start gap-3 xl:flex-row xl:items-center xl:gap-6"
-          >
+          <div className="mt-6 flex flex-col items-start gap-3 xl:flex-row xl:items-center xl:gap-6">
             <div className="flex shrink-0 -space-x-2">
               {socialProof.avatars.slice(0, 5).map((avatar) => (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -151,10 +124,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             aria-hidden
             className="absolute inset-x-10 -bottom-9 h-20 rounded-full bg-[radial-gradient(ellipse,rgba(255,56,60,0.34)_0%,rgba(255,56,60,0.16)_42%,transparent_74%)] blur-2xl"
           />
-          <div
-            data-anim="hero-shot"
-            className="relative overflow-hidden rounded-[18px] shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9)]"
-          >
+          <div className="relative overflow-hidden rounded-[18px] shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9)]">
             <Image
               src={hero.demo.posterSrc}
               alt="hora Calendar macOS app interface"
@@ -171,7 +141,6 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             {heroPills.map((item) => (
                 <div
                   key={item.key}
-                  data-anim="hero-pill"
                   className="flex h-10 items-center justify-center gap-2 rounded-md border border-white/10 bg-[#111216]/88 px-2.5 text-[10px] font-medium leading-none shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] backdrop-blur-xl lg:text-[11px]"
                 >
                   <Icon name={item.icon} size={14} className="text-accent" />

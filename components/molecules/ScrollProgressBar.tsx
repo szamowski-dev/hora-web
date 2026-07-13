@@ -34,11 +34,11 @@ export function ScrollProgressBar() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-x-0 top-0 z-[60] hidden h-[2px] md:block"
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-10 hidden h-px md:block"
     >
       <div
         ref={ref}
-        className="h-full origin-left bg-linear-to-r from-accent via-accent-glow to-accent shadow-[0_0_12px_rgba(255,56,60,0.6)]"
+        className="h-full origin-left bg-linear-to-r from-accent via-accent-glow to-accent shadow-[0_0_10px_rgba(255,56,60,0.55)]"
         style={{ transform: "scaleX(0)" }}
       />
     </div>
