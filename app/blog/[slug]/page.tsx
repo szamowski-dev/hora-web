@@ -19,7 +19,7 @@ export async function generateMetadata({
   const post = await getPostBySlug(slug);
   if (!post) return {};
   const fm = post.frontmatter;
-  const og = fm.ogImage || fm.cover || "/assets/og-image.png";
+  const og = fm.ogImage || fm.cover || "/assets/seo/default-og-image.png";
   const canonical = `/blog/${slug}/`;
   return {
     title: fm.title,
@@ -66,7 +66,7 @@ export default async function BlogPostPage({
     : null;
 
   const fm = post.frontmatter;
-  const og = fm.ogImage || fm.cover || "/assets/og-image.png";
+  const og = fm.ogImage || fm.cover || "/assets/seo/default-og-image.png";
   const url = `https://horacal.app/blog/${slug}/`;
   const jsonLd = {
     "@context": "https://schema.org",

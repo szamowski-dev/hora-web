@@ -18,7 +18,7 @@ export const features = {
     {
       label: "Calendar Views",
       screenshot: {
-        src: "/assets/hero_features/updated/hora_week_view.webp",
+        src: "/assets/features/images/hora-week-view.webp",
         alt: "hora Calendar — Week, Month, and Day views",
         width: 3192,
         height: 1902,
@@ -53,7 +53,7 @@ export const features = {
     {
       label: "Event Management",
       screenshot: {
-        src: "/assets/hero_features/updated/new_event.webp",
+        src: "/assets/features/images/new-event.webp",
         alt: "hora Calendar — Event creation and drag & drop",
         width: 3186,
         height: 1899,
@@ -96,7 +96,7 @@ export const features = {
     {
       label: "Google Integration",
       screenshot: {
-        src: "/assets/hero_features/updated/hora_accounts.webp",
+        src: "/assets/features/images/hora-accounts.webp",
         alt: "hora Calendar — Multi-account Google Calendar sync",
         width: 3156,
         height: 1887,
@@ -127,7 +127,7 @@ export const features = {
     {
       label: "Productivity",
       screenshot: {
-        src: "/assets/hero_features/updated/hora_widget_menubar.webp",
+        src: "/assets/features/images/hora-widget-menubar.webp",
         alt: "hora Calendar — Menu bar widget with upcoming events",
         width: 2820,
         height: 1802,
@@ -171,7 +171,7 @@ export const features = {
     {
       label: "Appearance & Localization",
       screenshot: {
-        src: "/assets/hero_features/updated/hora_themes.webp",
+        src: "/assets/features/images/hora-themes.webp",
         alt: "hora Calendar — Appearance and language settings",
         width: 3188,
         height: 1900,

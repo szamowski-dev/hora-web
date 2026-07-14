@@ -48,10 +48,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/assets/hora-favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/assets/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
     ],
     apple: [
-      { url: "/assets/hora-apple-touch-180.png", sizes: "180x180", type: "image/png" },
+      { url: "/assets/brand/apple-touch-icon-180.png", sizes: "180x180", type: "image/png" },
     ],
   },
   alternates: {
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "hora Calendar",
     url: "https://horacal.app/",
-    images: [{ url: "/assets/og-image.png", width: 1200, height: 630 }],
+    images: [{ url: "/assets/seo/default-og-image.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
@@ -189,7 +189,7 @@ export default function RootLayout({
                   "@id": "https://horacal.app/#organization",
                   name: "hora Calendar",
                   url: "https://horacal.app/",
-                  logo: "https://horacal.app/assets/hora-icon.png",
+                  logo: "https://horacal.app/assets/brand/hora-icon.png",
                   sameAs: [
                     "https://x.com/moto_szama",
                     "https://github.com/szamski",

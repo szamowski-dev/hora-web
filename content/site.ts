@@ -3,7 +3,7 @@ export const site = {
     name: "hora Calendar",
     shortName: "Calendar",
     tagline: "The Google Calendar client that macOS deserves.",
-    logoSrc: "/assets/hora-icon.png",
+    logoSrc: "/assets/brand/hora-icon.png",
   },
   url: "https://horacal.app",
   author: {
@@ -31,7 +31,7 @@ export const site = {
     },
   },
   macAppStoreBadgeSrc:
-    "/assets/Download_on_the_Mac_App_Store_Badge_US-UK_RGB_blk_092917.svg",
+    "/assets/brand/mac-app-store-badge.svg",
   community: {
     discord: {
       label: "Join Discord",
@@ -55,7 +55,7 @@ export const site = {
       { label: "Bluesky", href: "https://bsky.app/profile/szamski.bsky.social", icon: "bluesky" },
     ],
   },
-  defaultOg: "/assets/og-image.png",
+  defaultOg: "/assets/seo/default-og-image.png",
   contactEmail: "hello@horacal.app",
   newsletter: {
     endpoint: "/api/subscribe",

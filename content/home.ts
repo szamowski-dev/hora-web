@@ -9,7 +9,7 @@ export const home = {
   },
 
   hero: {
-    iconSrc: "/assets/hora-icon.png",
+    iconSrc: "/assets/brand/hora-icon.png",
     title: { prefix: "hora", suffixGradient: "Calendar" },
     tagline: "The Mac calendar Google never built.",
     newsletter: {
@@ -50,13 +50,13 @@ export const home = {
     },
     demo: {
       videoSources: [
-        { src: "/assets/hora_brand_new.webm", type: "video/webm" },
-        { src: "/assets/hora_brand_new.mp4", type: "video/mp4" },
+        { src: "/assets/hero/launch.webm", type: "video/webm" },
+        { src: "/assets/hero/launch.mp4", type: "video/mp4" },
       ],
-      posterSrc: "/assets/redesign/updated/hora_hero.webp",
-      demoPosterSrc: "/assets/redesign/hora_demo_poster.webp",
-      videoPosterSrc: "/assets/hero_image_poster.webp",
-      captionsSrc: "/assets/hora-demo.vtt",
+      posterSrc: "/assets/hero/product-preview.webp",
+      demoPosterSrc: "/assets/demo/hora-demo-poster.webp",
+      videoPosterSrc: "/assets/hero/launch-poster.webp",
+      captionsSrc: "/assets/demo/hora-demo.vtt",
       ariaLabel:
         "hora Calendar demo showing week view, event creation, and calendar navigation",
     },
@@ -83,7 +83,7 @@ export const home = {
       },
       {
         href: "https://ufind.best",
-        src: "/assets/ufind-badge.svg",
+        src: "/assets/social/ufind-badge.svg",
         alt: "hora Calendar — Featured on ufind.best",
         width: 140.8,
         height: 40,

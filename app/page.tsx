@@ -27,8 +27,8 @@ const softwareAppLd = {
     name: "Maciej Szamowski",
     url: "https://szamowski.dev",
   },
-  image: "https://horacal.app/assets/hora-icon.png",
-  screenshot: "https://horacal.app/assets/hora-demo.gif",
+  image: "https://horacal.app/assets/brand/hora-icon.png",
+  screenshot: "https://horacal.app/assets/demo/hora-demo.gif",
 };
 
 const personLd = {
@@ -61,7 +61,7 @@ const videoLd = {
     name: "hora Calendar",
     logo: {
       "@type": "ImageObject",
-      url: "https://horacal.app/assets/hora-icon.png",
+      url: "https://horacal.app/assets/brand/hora-icon.png",
     },
   },
 };

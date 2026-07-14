@@ -55,7 +55,7 @@ export default async function AboutPage() {
     "@type": "Person",
     name: "Maciej Szamowski",
     url: "https://horacal.app/about/",
-    image: "https://horacal.app/assets/maciej_szamowski.jpg",
+    image: "https://horacal.app/assets/people/maciej-szamowski.jpg",
     jobTitle: "Independent macOS developer",
     worksFor: { "@id": "https://horacal.app/#organization" },
     nationality: "Polish",
@@ -92,7 +92,7 @@ export default async function AboutPage() {
               />
               <div className="flex items-center gap-4">
                 <Image
-                  src="/assets/maciej_szamowski.jpg"
+                  src="/assets/people/maciej-szamowski.jpg"
                   alt="Maciej Szamowski"
                   width={72}
                   height={72}

@@ -52,7 +52,7 @@ export function BlogPostLayout({
             rel="author"
           >
             <Image
-              src="/assets/maciej_szamowski.jpg"
+              src="/assets/people/maciej-szamowski.jpg"
               alt="Maciej Szamowski"
               width={32}
               height={32}
@@ -86,7 +86,7 @@ export function BlogPostLayout({
             className="ui-interactive group flex flex-col gap-5 rounded-lg border border-line bg-overlay p-5 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] sm:flex-row sm:items-center sm:gap-6"
           >
             <Image
-              src="/assets/maciej_szamowski.jpg"
+              src="/assets/people/maciej-szamowski.jpg"
               alt="Maciej Szamowski"
               width={64}
               height={64}

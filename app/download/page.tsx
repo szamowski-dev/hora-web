@@ -74,22 +74,22 @@ const coreReasons: {
 }[] = [
   {
     icon: "sync",
-    iconSrc: "/assets/redesign_raw/google-calendar.svg",
+    iconSrc: "/assets/integrations/google-calendar.svg",
     title: "Google API sync",
     body: "Real-time calendar updates without CalDAV drift. Event colors, blocking events, cross-calendar moves, and multiple Google accounts work natively.",
   },
   {
     icon: "meet",
     iconSrcs: [
-      "/assets/redesign_raw/zoom.svg",
-      "/assets/redesign_raw/microsoft-teams-2018.svg",
+      "/assets/integrations/zoom.svg",
+      "/assets/integrations/microsoft-teams.svg",
     ],
     title: "Zoom and Teams built in",
     body: "Create meeting links while editing events and join calls from hora in one click.",
   },
   {
     icon: "shield",
-    iconSrc: "/assets/keychain-access-2021-05-03.png.webp",
+    iconSrc: "/assets/support/keychain-access.webp",
     iconClassName: "h-[31px] w-[31px]",
     title: "Private by design",
     body: "Tokens stay in macOS Keychain. No telemetry pipeline, no middleware, no server sitting between your Mac and Google.",

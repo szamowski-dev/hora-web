@@ -13,25 +13,25 @@ const actionCards = [
   {
     title: "Focus Time Scheduling",
     body: "Block deep work without breaking your week.",
-    src: "/assets/redesign/updated/focus_time-card.webm",
+    src: "/assets/features/card-videos/focus-time.webm",
     label: "hora Calendar focus time scheduling demo",
   },
   {
     title: "NLP Quick add",
     body: "Type like you talk. Hora handles the rest.",
-    src: "/assets/redesign/updated/hora_quickadd-card.webm",
+    src: "/assets/features/card-videos/hora-quick-add.webm",
     label: "hora Calendar natural language quick add demo",
   },
   {
     title: "Menu bar",
     body: "Stay on top of your day without losing focus.",
-    src: "/assets/redesign/updated/hora_menubar-card.webm",
+    src: "/assets/features/card-videos/hora-menubar.webm",
     label: "hora Calendar menu bar popover demo",
   },
   {
     title: "Themes",
     body: "Match hora to your workspace, mood, and system appearance.",
-    src: "/assets/redesign/updated/hora_themes-card.webm",
+    src: "/assets/features/card-videos/hora-themes.webm",
     label: "hora Calendar themes demo",
   },
 ];
@@ -50,23 +50,23 @@ const integrations = [
   {
     name: "Google Calendar",
     detail: "Real-time sync with Google Calendar.",
-    iconSrc: "/assets/redesign_raw/google-calendar.svg",
+    iconSrc: "/assets/integrations/google-calendar.svg",
   },
   {
     name: "Zoom",
     detail: "Create & join Zoom meetings with one click.",
-    iconSrc: "/assets/redesign_raw/zoom.svg",
+    iconSrc: "/assets/integrations/zoom.svg",
   },
   {
     name: "Microsoft Teams",
     detail: "Create & join Microsoft Teams meetings with one click.",
-    iconSrc: "/assets/redesign_raw/microsoft-teams-2018.svg",
+    iconSrc: "/assets/integrations/microsoft-teams.svg",
   },
   {
     name: "Apple Intelligence",
     detail:
       "Quick Add, Focus Time Scheduling, and TL;DR meeting summaries on your machine.",
-    iconSrc: "/assets/redesign_raw/Apple_Intelligence.svg",
+    iconSrc: "/assets/integrations/apple-intelligence.svg",
   },
 ];
 
@@ -251,7 +251,7 @@ export function FeaturesOverview() {
 
             <figcaption className="flex items-center gap-3 border-t border-line pt-5 md:border-t-0 md:border-l md:pl-7 md:pt-0">
               <Image
-                src="/assets/maciej_szamowski.jpg"
+                src="/assets/people/maciej-szamowski.jpg"
                 alt="Maciej Szamowski"
                 width={40}
                 height={40}
