@@ -1,145 +1,189 @@
 ---
-title: "Google Calendar API vs CalDAV"
+title: "Google Calendar API vs CalDAV: Which Should You Use?"
 date: 2026-05-21
+updated: 2026-07-14
 category: engineering
-description: "Google Calendar API vs CalDAV: a practical breakdown of sync, features, auth, and performance so you can pick the right calendar integration."
-tags: google-calendar-api-vs-caldav, google-calendar-api, caldav, calendar-integration, macos
-cover: /assets/blog/google-calendar-api-vs-caldav-cover.webp
-ogImage: /assets/blog/google-calendar-api-vs-caldav-hero.webp
+heroImage: /assets/blog/google-calendar-api-vs-caldav-protocol-split.webp
+heroAlt: A CalDAV XML request and Google Calendar API JSON describing the same calendar event
+description: "Google Calendar API or CalDAV? Compare sync, auth, event support, and portability, plus the tradeoffs I learned while building hora for Google Calendar."
+tags: google-calendar-api-vs-caldav, google-calendar-api, caldav, calendar-integration, calendar-sync, macos
+cover: /assets/blog/google-calendar-api-vs-caldav-protocol-split.webp
+ogImage: /assets/blog/google-calendar-api-vs-caldav-protocol-split.webp
 ---
 
-![Google Calendar API vs CalDAV comparison](/assets/blog/google-calendar-api-vs-caldav-hero.webp)
+When I started hora, supporting every calendar provider looked like the responsible choice. A serious calendar app, I thought, should probably support Google, iCloud, Exchange, and every CalDAV server it could discover.
 
-If you are choosing between **Google Calendar API vs CalDAV**, the short answer is simple: use Google Calendar API if your product is Google-first and you need modern app behavior. Use CalDAV when you need protocol-level portability across providers.
+It also meant putting a translation layer between the app and the calendar most of its users already lived in.
 
-I build [hora Calendar](https://horacal.app), so I care about this choice in production, not in theory. We tested both paths and ended up integrating directly with Google Calendar’s REST API for reliability, richer event support, and cleaner sync control on macOS.
+I evaluated both approaches and chose the Google Calendar API because hora is intentionally Google-first. That decision narrowed the product, but it gave me a clearer contract: build the best Google Calendar experience I can on a Mac and accept that generic CalDAV accounts are not part of that promise.
 
-## Google Calendar API vs CalDAV at a Glance
+If you are choosing between **Google Calendar API vs CalDAV**, the short answer is this: choose the Google Calendar API for a Google-first product that needs Google's event model and documented change notifications. Choose CalDAV when interoperability across providers is a core product requirement, not a future checkbox.
 
-| Dimension | Google Calendar API | CalDAV (Google endpoint) |
+## Google Calendar API vs CalDAV at a glance
+
+| Dimension | Google Calendar API | CalDAV |
 |---|---|---|
-| Protocol | REST + JSON | WebDAV/CalDAV + XML + iCalendar |
-| Change detection | Push channels (`events.watch`) + incremental sync | Collection sync (`sync-collection`) + ETag/CTag style checks |
-| Google-specific fields | Full resource model (event types, extended properties, etc.) | Limited by Google’s CalDAV support matrix |
-| Ecosystem fit | Best for Google-only products | Better for multi-provider interoperability |
-| Client complexity | Strong client libs + modern HTTP patterns | More protocol surface and DAV semantics |
+| Best fit | Products built specifically around Google Calendar | Products that need a standards-based baseline across providers |
+| Wire format | REST and JSON | WebDAV, XML, and iCalendar |
+| Change detection | `watch` notification channels plus client-initiated reconciliation | Collection sync, sync tokens, ETags, and server-specific strategies |
+| Event model | Google's event resources and Google-specific fields | iCalendar resources mapped through each server's CalDAV implementation |
+| Authentication with Google | OAuth 2.0 over HTTPS | OAuth 2.0 over HTTPS |
+| Portability | Google-specific | Broader provider portability, with implementation differences |
+| Operational surface | Google endpoints, quotas, expiring channels, and recovery sync | DAV discovery, XML, iCalendar, validators, and provider differences |
 
-For Google-only products, this usually tilts toward the API.
+This is not a choice between a modern protocol and an obsolete one. It is a choice between provider depth and provider portability.
 
-## End-User Feature Matrix: CalDAV vs Google Calendar API
+The Google Calendar API gives you a direct contract with one provider. CalDAV gives you an open protocol that several providers implement. Neither removes synchronization complexity. They place it in different parts of your product.
 
-This is the practical view your users care about: what they can actually do in the app.
+## What CalDAV actually gives you
 
-![End-user feature matrix: CalDAV vs Google Calendar API](/assets/blog/google-calendar-api-vs-caldav-matrix.webp)
+CalDAV is an open standard built on WebDAV and iCalendar. It defines how a client discovers calendar collections, reads and writes calendar resources, and performs calendar-specific queries. The base specification is [RFC 4791](https://www.rfc-editor.org/rfc/rfc4791), while [RFC 6578](https://www.rfc-editor.org/rfc/rfc6578) adds a collection synchronization report that can make delta updates more efficient.
 
-| End-user capability | Via CalDAV | Via Google Calendar API |
-|---|---|---|
-| View and edit basic events | Yes | Yes |
-| Reliable near-real-time updates | Limited (depends on sync strategy/client behavior) | Yes (push channels + incremental sync) |
-| Rich Google event metadata support | Partial | Strong |
-| Advanced Google event types | Limited/partial mapping | Strong |
-| App-specific hidden event metadata | Limited | Yes (extended properties) |
-| Predictable handling of Google-specific edge cases | More fragile | Better |
-| Best fit for multi-provider portability | Yes | No (Google-specific) |
-| Best fit for Google-first UX | Usually no | Yes |
+That standards layer is valuable. A client can reuse the same conceptual model across iCloud, Fastmail, Nextcloud, Google, and other CalDAV servers instead of building a completely separate integration for every provider.
 
-If your users are mainly Google Calendar users on Mac, the API path tends to deliver fewer sync surprises and a more polished day-to-day experience.
+The important qualification is that CalDAV provides a portable baseline, not a zero-effort universal adapter.
 
-## Why I Prefer Google Calendar API for Product Integrations
+Servers support different extensions, authentication flows, scheduling features, and interpretations of edge cases. A client still has to handle discovery, XML, iCalendar serialization, recurrence, ETags, sync tokens, and the behavior of each provider it claims to support.
 
-### 1) Push-first sync is built in
+Refresh behavior is also more nuanced than "CalDAV is slow." A server can support efficient collection deltas, and a well-built client can keep a local calendar fresh. What the core standard does not provide is a universal webhook equivalent to Google's `events.watch`. How quickly a change appears depends on the server, its extensions, and the client's synchronization strategy.
 
-The Google Calendar API supports push notifications via `watch` endpoints and webhook channels, which is critical when you want fast updates without aggressive polling.
+Google's CalDAV endpoint is one implementation of CalDAV, not the definition of the protocol. Google documents its own supported and unsupported features in the [Google CalDAV support matrix](https://developers.google.com/workspace/calendar/caldav/v2/guide). Those boundaries should not be generalized to every CalDAV server.
 
-- Push notifications guide: [Google Calendar API push notifications](https://developers.google.com/workspace/calendar/api/guides/push)
-- `events.watch` reference: [Events: watch](https://developers.google.com/calendar/api/v3/reference/events/watch)
+If hora's promise were "all your calendars in one place," this portability would be hard to ignore. That was not the problem I wanted to solve.
 
-CalDAV is great for standards-based sync, but in Google’s own CalDAV guide the emphasis is on DAV sync mechanics and supported RFC subsets, not webhook-style push channels.
+## What the Google Calendar API gives you
 
-### 2) Incremental sync is explicit and production-friendly
+The Google Calendar API exposes Google's calendar model directly through REST and JSON. That includes the normal event fields you would expect, but also Google-specific behavior such as event types, conference data, extended properties, calendar-list metadata, and the relationship between recurring masters, instances, and exceptions.
 
-Google’s API documents a clear `syncToken` flow for full sync, then incremental sync. That pattern maps well to robust desktop/mobile clients.
+For synchronization, two primitives matter.
 
-- Sync guide: [Synchronize resources efficiently](https://developers.google.com/workspace/calendar/api/guides/sync)
+First, the API supports `watch` channels. Google sends an HTTPS notification when a watched resource changes. The notification is a hint, not the changed event. Calendar notifications contain headers and no event body, so the receiving application must make another API request to learn what changed. Google also states that a small percentage of notifications can be dropped, which means periodic reconciliation is still required.
 
-You can combine this with push to avoid both stale data and expensive full refresh loops.
+Second, the API documents incremental synchronization with `syncToken`. A client performs an initial fetch, stores the `nextSyncToken` from the last page, and sends that token with later requests. The response includes changed and deleted resources. If Google invalidates a token and returns `410 Gone`, the client must rebuild the synchronized state for that collection.
 
-### 3) You get Google-native event capabilities
+The official guides for [push notifications](https://developers.google.com/workspace/calendar/api/guides/push) and [incremental synchronization](https://developers.google.com/workspace/calendar/api/guides/sync) describe the clean version of this loop. Production adds the recovery paths.
 
-If you need event behavior beyond basic CRUD, the API exposes fields and workflows that matter in real products:
+## Why I chose the API for hora
 
-- Extended metadata: [Extended properties](https://developers.google.com/workspace/calendar/api/guides/extended-properties)
-- Event categories/behavior: [Event types](https://developers.google.com/workspace/calendar/api/guides/event-types)
+The deciding factor was not that JSON is objectively better than XML. It was that a direct mapping to Google's resource model was easier to reason about in hora's Swift codebase than a DAV and iCalendar translation layer.
 
-That is difficult to replicate cleanly through a protocol abstraction when your source of truth is Google Calendar.
+Google Calendar remains the source of truth. hora adds the native Mac layer around it: week and month views, menu bar access, widgets, keyboard workflows, focus planning, quick event creation, and local caching.
 
-### 4) Better fit for modern app architecture
+That product needs Google-specific details to survive the round trip. Event colors, conference links, attendee state, focus time, out-of-office events, working locations, moved recurring instances, and fields created by other clients should not disappear because my internal model was too generic.
 
-REST + JSON + typed clients are generally easier to instrument, test, and evolve than full WebDAV semantics. That means less time debugging protocol edges and more time improving UX.
+The API does not make those problems vanish. It gives me the provider's actual vocabulary for solving them.
 
-If you are building a native Mac experience, this matters. I covered a related tradeoff in [Native App vs Electron and PWA](/blog/2026-04-14-native-app-vs-electron-pwa), where integration depth directly impacts product feel.
+This was also a scope decision. Supporting only Google lets me spend engineering time on synchronization correctness and native Mac behavior instead of maintaining several provider adapters. The cost is equally clear: hora does not support iCloud, Exchange, or generic CalDAV accounts. If you need several providers in one app, a broader calendar client is a better fit.
 
-## Where CalDAV Still Wins
+I wrote more about the product side of that tradeoff in the [hora Calendar 1.0 launch story](/blog/2026-05-29-google-calendar-app-for-mac-hora-1-0/) and the platform side in [Native App vs Electron and PWA](/blog/2026-04-14-native-app-vs-electron-pwa/).
 
-CalDAV is still the right choice in some scenarios:
+## How synchronization actually works in hora
 
-- You must support multiple non-Google providers behind one protocol.
-- You need to reduce vendor lock-in at the integration layer.
-- Your product is infrastructure-first, not Google-feature-first.
+The neat architecture diagram says: receive a push, run an incremental sync, update the UI. The real implementation is more conservative.
 
-CalDAV is an open standard (RFC 4791), and that interoperability is valuable:
+![How Google Calendar change notifications reach hora while event content travels directly between the app and Google.](/assets/blog/google-calendar-api-vs-caldav-hora-sync-flow.webp)
 
-- CalDAV standard: [RFC 4791](https://datatracker.ietf.org/doc/html/rfc4791)
+hora creates a separate `events.watch` channel for each active calendar. When that calendar changes, Google sends a headers-only notification to a small webhook. A Cloudflare Worker maps the channel to the affected calendar and forwards a silent push through APNs.
 
-But if your users live in Google Calendar all day, portability can become a tax rather than an advantage.
+Google does not push event content into hora. The notification wakes the app, and the Mac fetches the actual calendar data directly from Google. The result is merged into a local SwiftData cache, so the calendar remains readable without a connection even though remote synchronization and edits still need the network.
 
-## Known Constraints in Google’s CalDAV Interface
+Regular synchronization cycles use `syncToken`. After a push, hora currently clears the token for the affected calendar and performs a bounded reconciliation instead of trusting a tiny delta to contain every relevant recurring-event change. Periodic sync remains a safety net in case a notification is delayed or dropped.
 
-Google’s CalDAV developer guide explicitly documents partial support across related specs. Examples include unsupported WebDAV methods, unsupported `VTODO`/`VJOURNAL`, and a deprecated older endpoint.
+That is less elegant than the first version of my diagram. It is also more honest.
 
-- CalDAV guide: [Google CalDAV API Developer's Guide](https://developers.google.com/workspace/calendar/caldav/v2/guide)
+The separate [real-time Google Calendar sync article](/blog/real-time-google-calendar-sync-macos/) tells the original implementation story. The recovery behavior described here reflects the current code.
 
-If you rely on CalDAV, read that support matrix line by line. Assumptions here can become costly production bugs.
+## Recurring events changed my definition of clean sync
 
-## Practical Decision Framework
+Recurring events were where the simple API comparison stopped being useful.
 
-If you are deciding this week, use this:
+![A recurring Google Calendar series with normal instances, a moved exception, and a cancelled occurrence.](/assets/blog/google-calendar-api-vs-caldav-recurring-events.webp)
 
-Choose **Google Calendar API** when:
+A repeating meeting is not one event copied several times. It has a master with an `RRULE`, generated instances, moved exceptions, and cancellations. A moved instance keeps an `originalStartTime` that identifies where it belonged before the move. Editing "this and future" can require splitting one series into two while preserving or deliberately replacing later exceptions.
 
-- Your roadmap is Google-first.
-- You need fast sync and app-driven workflows.
-- You need richer Google event semantics.
-- You want clean observability around rate limits and retries.
+This matters when the app only caches part of the timeline. A change to the master can affect future dates that are not currently visible. An exception can arrive without the piece of context the UI needs. A deleted occurrence still has to remove the correct local instance.
+
+CalDAV and iCalendar can represent recurrence through `RRULE` and `RECURRENCE-ID`. Recurrence is not a capability unique to the Google API. The advantage for hora is that Google's API exposes the exact master, instance, exception, and `originalStartTime` model used by its source of truth.
+
+In practice, recurring-instance edits were the reason I stopped treating push plus `syncToken` as a complete answer. The conservative reconciliation after a push costs more requests, but it is easier to trust than a beautiful incremental-sync path that occasionally leaves the wrong meeting on screen.
+
+Google's [recurring events guide](https://developers.google.com/workspace/calendar/api/guides/recurringevents) is useful here, but the production lesson only appeared after real calendars started producing exceptions.
+
+## The tradeoffs I accepted
+
+Choosing the Google Calendar API concentrated complexity instead of eliminating it.
+
+**Provider lock-in is real.** The event model, authentication, watch channels, and error handling are tied to Google. Supporting another provider later would still require a real integration, not a renamed adapter.
+
+**Push needs infrastructure.** `events.watch` requires a public HTTPS webhook, channel registration, renewal before expiration, cleanup, and a route back to the correct device. APNs adds another delivery system with its own failure modes.
+
+**Notifications are hints.** Google explicitly warns that push delivery is not guaranteed. A client that only syncs after a notification will eventually become stale. Recovery and periodic reconciliation are part of the feature.
+
+**OAuth and quotas become product work.** Scope selection, consent, token storage, throttling, backoff, and quota errors affect the user experience. hora uses a per-account token bucket, bounded concurrency, exponential backoff with jitter, and cooldowns instead of assuming retries will solve every burst.
+
+**Direct access does not excuse a lossy model.** Patching an attendee list, moving an event, or editing one recurring instance can change fields that are easy to miss. The API shows the provider semantics more clearly, but the client still has to preserve them.
+
+CalDAV has a different bill: server discovery, DAV methods, XML, iCalendar parsing, provider variation, and the parts of scheduling each server implements. The right question is not which option has no complexity. It is which complexity belongs in your product.
+
+## Which one should your product use?
+
+Choose the **Google Calendar API** when:
+
+- Google Calendar is the product's explicit source of truth.
+- You need Google-specific event types, conference data, or metadata.
+- Documented webhook channels and a direct resource model matter more than provider portability.
+- You are willing to own OAuth, channel renewal, quotas, and recovery sync.
 
 Choose **CalDAV** when:
 
-- You need one protocol for Google + non-Google servers.
-- Your product requirement is standards interoperability first.
-- You can accept Google CalDAV feature boundaries.
+- Supporting several calendar providers is a first-order requirement.
+- A standards-based integration surface matters more than one provider's deepest features.
+- Your team is prepared to handle DAV discovery, XML, iCalendar, and server differences.
+- The product can define a shared capability baseline and expose provider-specific limits honestly.
 
-If you are building a Mac-first Google Calendar app, I also recommend reading [Real-time Google Calendar sync on macOS](/blog/real-time-google-calendar-sync-macos/) and [Best Fantastical Alternative for Google Calendar Users (2026)](/blog/2026-05-06-fantastical-alternative-google-calendar) for implementation and product-level context.
+For a general calendar client, CalDAV can be the stronger architectural starting point. For a focused Google Calendar client, a generic abstraction can become the thing standing between the product and the behavior users expect.
 
-## FAQ
+## What I would choose today
 
-### Is Google Calendar API better than CalDAV?
+I would choose the Google Calendar API for hora again.
 
-For Google-only integrations, usually yes. You get push channels, explicit incremental sync, and richer Google-specific event handling. For multi-provider interoperability, CalDAV may still be the better base layer.
+Not because it wins every row in a comparison table. It does not. I would choose it because the product is deliberately narrow, the source of truth is Google Calendar, and direct provider semantics have proved more valuable than theoretical portability.
 
-### Does Google Calendar support CalDAV?
+If I were building an app whose central promise was "every calendar provider in one place," I would start from CalDAV and design the feature baseline around what multiple servers can reliably support.
 
-Yes, Google provides a CalDAV interface, but its support is documented as partial across related DAV/iCalendar specs. Check the official support matrix before committing architecture.
+For more implementation detail, read how I [migrated hora to Google's Swift package](/blog/2026-05-14-google-api-swift-package/) after first building the client by hand.
 
-### Can CalDAV do real-time sync like webhooks?
+If your calendar already lives in Google and you want to see what a focused API-first Mac client feels like, [try hora Calendar on the Mac App Store](https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_blog_api_vs_caldav&mt=8).
 
-CalDAV focuses on sync protocols (for example, collection sync patterns), while Google Calendar API provides explicit webhook/push channel primitives through `watch` endpoints.
-
-### Should I build a new app on CalDAV or Google Calendar API?
-
-If your product is primarily for Google Calendar users, start with Google Calendar API. If your product must be provider-agnostic from day one, start with CalDAV and accept feature tradeoffs.
-
----
-
-If this saved you a week of integration churn, it did its job.
-
-Follow the build at [@moto_szama](https://x.com/moto_szama), check out [hora Calendar](https://horacal.app), or reach out at [hello@horacal.app](mailto:hello@horacal.app).
+<BlogFaq id="faq" heading="FAQ">
+  <BlogFaqItem
+    id="google-calendar-api-better-than-caldav"
+    question="Is Google Calendar API better than CalDAV?"
+    answer="It is usually the better fit for a Google-first product because it exposes Google's resource model, watch channels, and incremental synchronization directly. CalDAV is often the better foundation when provider interoperability is more important than Google-specific depth."
+  />
+  <BlogFaqItem
+    id="does-google-calendar-support-caldav"
+    question="Does Google Calendar support CalDAV?"
+    answer="Yes. Google provides a CalDAV endpoint over HTTPS with OAuth 2.0. Its implementation has a documented support matrix, so clients should verify the exact DAV, iCalendar, and scheduling features they need."
+  />
+  <BlogFaqItem
+    id="what-is-a-caldav-calendar"
+    question="What is a CalDAV calendar?"
+    answer="A CalDAV calendar is a calendar collection exposed through an open protocol built on WebDAV and iCalendar. It lets compatible clients discover, query, create, update, and delete calendar resources across supporting servers."
+  />
+  <BlogFaqItem
+    id="caldav-real-time-sync"
+    question="Can CalDAV provide real-time calendar sync?"
+    answer="CalDAV can support efficient collection synchronization, but the core standard does not define a universal webhook like Google Calendar API watch channels. Update speed depends on the server, supported extensions, and the client's sync strategy."
+  />
+  <BlogFaqItem
+    id="google-calendar-api-incremental-sync"
+    question="Does Google Calendar API support incremental sync?"
+    answer="Yes. A client stores the nextSyncToken from a completed sync and sends it with later requests to retrieve changed and deleted resources. It still needs recovery logic for invalid tokens and missed push notifications."
+  />
+  <BlogFaqItem
+    id="when-calendar-app-should-use-caldav"
+    question="When should a calendar app choose CalDAV?"
+    answer="Choose CalDAV when support for multiple providers is a core requirement and a shared standards-based baseline is more valuable than the deepest features of one provider. Expect some server-specific behavior even with a common protocol."
+  />
+</BlogFaq>
