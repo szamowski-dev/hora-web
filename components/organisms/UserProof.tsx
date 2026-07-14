@@ -19,8 +19,8 @@ export async function UserProof() {
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-5 md:mt-14 md:grid-cols-[0.72fr_1.28fr] md:items-start">
-          <div className="shader-panel ui-panel relative flex min-h-[13.5rem] flex-col justify-center overflow-hidden rounded-lg p-6 md:h-[14.5rem]">
+        <div className="mt-12 grid gap-5 md:mt-14 md:auto-rows-[14.5rem] md:grid-cols-[0.72fr_1.28fr] md:items-stretch">
+          <div className="shader-panel ui-panel relative flex min-h-[13.5rem] flex-col justify-center overflow-hidden rounded-lg p-6 md:h-full md:min-h-0">
             <div>
               <p className="text-7xl font-semibold leading-[0.88] tracking-tight text-accent md:text-8xl">
                 <AnimatedCount value={liveCount} />+

@@ -42,7 +42,7 @@ export function TestimonialsCarousel({
 
   return (
     <div
-      className="shader-panel-soft ui-panel-soft relative min-h-[13.5rem] overflow-hidden rounded-lg md:min-h-0 md:h-[12rem]"
+      className="shader-panel-soft ui-panel-soft relative h-[13.5rem] overflow-hidden rounded-lg md:h-full"
       aria-roledescription="carousel"
       aria-label="Customer testimonials"
       onMouseEnter={() => setPaused(true)}
@@ -59,9 +59,10 @@ export function TestimonialsCarousel({
         &ldquo;
       </span>
 
-      <div className="relative h-[13.5rem] md:h-[12rem]">
+      <div className="relative h-full">
         {quotes.map((quote, index) => {
           const isActive = index === activeIndex;
+          const short = quote.text.length < 90;
           const compact = quote.text.length > 120;
           const veryCompact = quote.text.length > 190;
           const isReddit = quote.platform === "reddit";
@@ -88,7 +89,7 @@ export function TestimonialsCarousel({
             >
               <div
                 className={cn(
-                  "relative flex h-[7.1rem] items-center pt-5 transition-[opacity,transform] duration-500 ease-out motion-reduce:transition-none md:h-[5.4rem] md:pt-4",
+                  "relative flex min-h-0 flex-1 items-center pb-1 pt-3 transition-[opacity,transform] duration-500 ease-out motion-reduce:transition-none md:pt-2",
                   isActive
                     ? "translate-y-0 opacity-100"
                     : "translate-y-2 opacity-0",
@@ -96,12 +97,14 @@ export function TestimonialsCarousel({
               >
                 <blockquote
                   className={cn(
-                    "max-w-2xl text-pretty font-semibold tracking-tight text-text/95",
+                    "max-w-2xl text-pretty font-semibold tracking-tight text-text/95 md:-translate-y-[20%]",
                     veryCompact
-                      ? "text-[0.7rem] leading-[1.24] md:text-[0.82rem] md:leading-[1.3]"
+                      ? "text-[0.8rem] leading-[1.24] md:text-[1.08rem] md:leading-[1.26]"
                       : compact
-                      ? "text-[0.8rem] leading-[1.24] md:text-[0.92rem] md:leading-[1.32]"
-                      : "text-[1.18rem] leading-[1.18] md:text-[1.45rem] md:leading-[1.2]",
+                        ? "text-[0.9rem] leading-[1.24] md:text-[1.2rem] md:leading-[1.25]"
+                        : short
+                          ? "text-[1.32rem] leading-[1.14] md:text-[2rem] md:leading-[1.12]"
+                          : "text-[1.14rem] leading-[1.18] md:text-[1.55rem] md:leading-[1.16]",
                   )}
                 >
                   {quote.text}

@@ -82,11 +82,11 @@ export function MobileVideoCarousel({
                 01
               </span>
               <h3 className="text-sm font-semibold tracking-tight text-text">
-                hora Launch video
+                Meet hora
               </h3>
             </div>
             <p className="mt-2 text-xs leading-5 text-muted">
-              Watch hora in action and explore its key features.
+              Watch hora in action and discover its key features.
             </p>
           </div>
         </article>
