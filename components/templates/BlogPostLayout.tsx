@@ -111,7 +111,7 @@ export function BlogPostLayout({
 
           <Prose className="mx-auto mt-10 md:mt-12">{post.body}</Prose>
 
-          <footer className="mx-auto mt-14 max-w-[var(--container-article)] border-t border-line pt-7">
+          <footer className="mx-auto mt-14 max-w-[var(--container-blog-media)] border-t border-line pt-7">
             {post.tags.length > 0 ? (
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2 text-sm">
                 <span className="font-semibold text-text">Topics</span>
