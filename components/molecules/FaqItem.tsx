@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { track } from "@/lib/analytics";
 
@@ -11,7 +12,7 @@ export function FaqItem({
   variant = "card",
 }: {
   question: string;
-  answer: string;
+  answer: ReactNode;
   className?: string;
   index?: number;
   variant?: "card" | "integrated";

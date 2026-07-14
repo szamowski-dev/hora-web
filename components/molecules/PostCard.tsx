@@ -1,133 +1,187 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronRightIcon } from "@/components/ui/blog-icons";
+import { formatBlogDate } from "@/lib/blog";
+import type { BlogPostSummary } from "@/lib/blog-model";
 import { cn } from "@/lib/cn";
 
-export type PostCardData = {
-  slug: string;
-  title: string;
-  description: string;
-  date: string;
-  readingMinutes: number;
-  tags?: readonly string[];
-  cover?: string;
-};
-
-export type PostCardVariant = "hero" | "standard" | "list";
+export type PostCardVariant = "featured" | "row";
 
 export function PostCard({
   post,
-  variant = "standard",
+  variant = "row",
   className,
+  priority = false,
 }: {
-  post: PostCardData;
+  post: BlogPostSummary;
   variant?: PostCardVariant;
   className?: string;
+  priority?: boolean;
 }) {
-  const isHero = variant === "hero";
-  const isList = variant === "list";
+  if (variant === "featured") {
+    return (
+      <article
+        className={cn(
+          "grid gap-7 border-b border-line pb-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,0.92fr)] lg:items-center lg:gap-10",
+          className,
+        )}
+      >
+        {post.cover ? (
+          <Link
+            href={`/blog/${post.slug}/`}
+            className="group relative aspect-[16/9] overflow-hidden rounded-lg border border-line bg-panel-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-bg"
+            aria-label={`Read ${post.title}`}
+          >
+            <Image
+              src={post.cover.src}
+              alt={post.cover.alt}
+              fill
+              priority={priority}
+              sizes="(min-width: 1024px) 56vw, 100vw"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.015] motion-reduce:transition-none"
+            />
+          </Link>
+        ) : null}
+
+        <div className="min-w-0 py-1 lg:py-3">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">
+            {post.category.label}
+          </span>
+          <h2 className="mt-3 text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-text sm:text-4xl lg:text-[2.65rem]">
+            <Link
+              href={`/blog/${post.slug}/`}
+              className="rounded-sm transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            >
+              {post.title}
+            </Link>
+          </h2>
+          <p className="mt-4 max-w-xl font-editorial text-[17px] leading-7 text-muted md:text-lg md:leading-8">
+            {post.excerpt}
+          </p>
+          <PostMeta post={post} className="mt-6" showAuthorPortrait />
+        </div>
+      </article>
+    );
+  }
 
   return (
-    <Link
-      href={`/blog/${post.slug}/`}
+    <article
       className={cn(
-        "ui-interactive ui-panel-soft group relative flex h-full flex-col overflow-hidden rounded-xl shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.1),0_24px_48px_-28px_oklch(0_0_0/0.72)]",
-        isList && "rounded-lg",
+        "group grid gap-5 border-b border-line py-7 sm:grid-cols-[9rem_minmax(0,1fr)] sm:items-center lg:grid-cols-[9rem_minmax(0,1fr)_12.5rem] lg:gap-7",
         className,
       )}
     >
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-x-5 top-0 z-20 h-px bg-linear-to-r from-transparent via-line-strong to-transparent"
-      />
-
-      {post.cover && !isList ? (
-        <div
-          className={cn(
-            "relative w-full overflow-hidden border-b border-line bg-bg",
-            isHero ? "aspect-2/1" : "aspect-21/10",
-          )}
+      {post.cover ? (
+        <Link
+          href={`/blog/${post.slug}/`}
+          className="relative aspect-[16/9] overflow-hidden rounded-md border border-line bg-panel-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-bg"
+          aria-label={`Read ${post.title}`}
         >
           <Image
-            src={post.cover}
-            alt={post.title}
+            src={post.cover.src}
+            alt={post.cover.alt}
             fill
-            sizes={
-              isHero
-                ? "(min-width: 768px) 720px, 100vw"
-                : "(min-width: 768px) 480px, 100vw"
-            }
-            className="object-cover transition-[filter] duration-300 group-hover:brightness-105 group-hover:saturate-110"
-            priority={isHero}
+            sizes="(min-width: 640px) 144px, 100vw"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025] motion-reduce:transition-none"
           />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-linear-to-t from-panel-deep/95 via-panel-deep/5 to-transparent"
-          />
-          {isHero ? (
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-70 transition-opacity duration-500 group-hover:opacity-100"
-              style={{
-                background:
-                  "radial-gradient(ellipse 65% 85% at 8% 35%, var(--ui-glow-accent-soft), transparent 72%), radial-gradient(ellipse 58% 72% at 92% 18%, var(--ui-glow-cool-soft), transparent 72%)",
-              }}
-            />
-          ) : null}
-        </div>
+        </Link>
       ) : null}
 
-      <div
-        className={cn(
-          "relative flex flex-1 flex-col",
-          isHero ? "p-7 md:p-8" : "p-5 md:p-6",
-        )}
-      >
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
-          {post.date}
-        </p>
-        <h3
-          className={cn(
-            "mt-2 font-semibold leading-tight tracking-tight text-text transition-colors group-hover:text-accent",
-            isHero ? "text-2xl md:text-3xl" : "text-lg",
-          )}
-        >
-          {post.title}
-        </h3>
-        <p className="mt-3 text-sm leading-relaxed text-muted">
-          {post.description}
-        </p>
-        {post.tags && post.tags.length > 0 ? (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {post.tags.slice(0, isHero ? 6 : 4).map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-line bg-overlay px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted transition-colors group-hover:border-line-strong"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        ) : null}
-        <div
-          className={cn(
-            "mt-auto flex items-center gap-1.5 pt-4 text-xs font-semibold uppercase tracking-[0.18em] text-muted transition-colors group-hover:text-accent",
-          )}
-        >
-          Read article
-          <svg
-            aria-hidden
-            className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+      <div className="min-w-0">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-accent">
+          {post.category.label}
+        </span>
+        <h3 className="mt-2 text-xl font-semibold leading-tight tracking-[-0.025em] text-text md:text-2xl">
+          <Link
+            href={`/blog/${post.slug}/`}
+            className="rounded-sm transition-colors group-hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
           >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+            {post.title}
+          </Link>
+        </h3>
+        <p className="mt-2 line-clamp-2 max-w-2xl font-editorial text-[15px] leading-6 text-muted md:text-base">
+          {post.excerpt}
+        </p>
+        <PostMeta post={post} className="mt-4 lg:hidden" />
+      </div>
+
+      <div className="hidden grid-cols-[minmax(0,1fr)_2.75rem] items-center gap-2 lg:grid">
+        <PostMeta post={post} showAuthorPortrait layout="stacked" />
+        <Link
+          href={`/blog/${post.slug}/`}
+          aria-label={`Read ${post.title}`}
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-overlay hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        >
+          <ChevronRightIcon className="h-4 w-4" />
+        </Link>
+      </div>
+    </article>
+  );
+}
+
+function PostMeta({
+  post,
+  className,
+  showAuthorPortrait = false,
+  layout = "inline",
+}: {
+  post: BlogPostSummary;
+  className?: string;
+  showAuthorPortrait?: boolean;
+  layout?: "inline" | "stacked";
+}) {
+  if (layout === "stacked") {
+    return (
+      <div className={cn("flex min-w-0 items-start gap-3 text-xs", className)}>
+        {showAuthorPortrait ? (
+          <Image
+            src={post.author.portrait}
+            alt=""
+            width={28}
+            height={28}
+            className="mt-0.5 shrink-0 rounded-full border border-line"
+          />
+        ) : null}
+        <div className="flex min-w-0 flex-col gap-1 text-muted">
+          <span className="whitespace-nowrap font-medium leading-4 text-text">
+            {post.author.name}
+          </span>
+          <time className="whitespace-nowrap leading-4" dateTime={post.publishedAt}>
+            {formatBlogDate(post.publishedAt)}
+          </time>
+          <span className="whitespace-nowrap leading-4">
+            {post.readingMinutes} min read
+          </span>
         </div>
       </div>
-    </Link>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        "flex flex-wrap items-center gap-x-2.5 gap-y-2 text-xs text-muted",
+        className,
+      )}
+    >
+      {showAuthorPortrait ? (
+        <Image
+          src={post.author.portrait}
+          alt=""
+          width={28}
+          height={28}
+          className="rounded-full border border-line"
+        />
+      ) : null}
+      <span className="font-medium text-text">{post.author.name}</span>
+      <span aria-hidden className="text-dim">
+        ·
+      </span>
+      <time dateTime={post.publishedAt}>{formatBlogDate(post.publishedAt)}</time>
+      <span aria-hidden className="text-dim">
+        ·
+      </span>
+      <span>{post.readingMinutes} min read</span>
+    </div>
   );
 }

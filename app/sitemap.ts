@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/content/site";
+import { getPostsByCategory } from "@/lib/blog";
+import { BLOG_CATEGORIES } from "@/lib/blog-model";
 import { getAllPosts } from "@/lib/mdx";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -14,6 +16,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "monthly",
     priority: 0.7,
   }));
+
+  const categoryEntries: MetadataRoute.Sitemap = BLOG_CATEGORIES.map(
+    (category) => ({
+      url: `${base}/blog/category/${category.slug}/`,
+      lastModified:
+        getPostsByCategory(posts, category.slug)[0]?.frontmatter.date ??
+        latestPostDate,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }),
+  );
 
   return [
     {
@@ -41,6 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    ...categoryEntries,
     ...postEntries,
     {
       url: `${base}/features/`,

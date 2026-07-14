@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogPostLayout } from "@/components/templates/BlogPostLayout";
+import { getRelatedPosts, postToDetail } from "@/lib/blog";
 import { getAllPosts, getPostBySlug } from "@/lib/mdx";
 
 type Params = { slug: string };
@@ -55,16 +56,6 @@ export default async function BlogPostPage({
   ]);
   if (!post) notFound();
 
-  const idx = allPosts.findIndex((p) => p.slug === slug);
-  // allPosts is sorted newest → oldest, so the "previous" post (older) is
-  // at idx+1, and the "next" post (newer) is at idx-1.
-  const previous = allPosts[idx + 1]
-    ? { slug: allPosts[idx + 1].slug, title: allPosts[idx + 1].frontmatter.title }
-    : null;
-  const next = allPosts[idx - 1]
-    ? { slug: allPosts[idx - 1].slug, title: allPosts[idx - 1].frontmatter.title }
-    : null;
-
   const fm = post.frontmatter;
   const og = fm.ogImage || fm.cover || "/assets/seo/default-og-image.png";
   const url = `https://horacal.app/blog/${slug}/`;
@@ -115,9 +106,10 @@ export default async function BlogPostPage({
 
   return (
     <>
-      <BlogPostLayout frontmatter={fm} previous={previous} next={next}>
-        {post.content}
-      </BlogPostLayout>
+      <BlogPostLayout
+        post={postToDetail(post)}
+        relatedPosts={getRelatedPosts(allPosts, slug)}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

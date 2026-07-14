@@ -1,155 +1,169 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Icon } from "@/components/atoms/Icon";
 import { Prose } from "@/components/atoms/Prose";
-import { Tag } from "@/components/atoms/Tag";
+import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
+import { CopyLinkButton } from "@/components/molecules/CopyLinkButton";
+import { PostCard } from "@/components/molecules/PostCard";
+import { ShareButton } from "@/components/molecules/ShareButton";
 import { BetaCta } from "@/components/organisms/BetaCta";
-import type { PostFrontmatter, PostMeta } from "@/lib/mdx";
-
-type Adjacent = Pick<PostMeta, "slug"> & { title: string };
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
+import { site } from "@/content/site";
+import { formatBlogDate, tagLabel } from "@/lib/blog";
+import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
+import type {
+  BlogPostDetail,
+  BlogPostSummary,
+} from "@/lib/blog-model";
 
 export function BlogPostLayout({
-  frontmatter,
-  previous,
-  next,
-  children,
+  post,
+  relatedPosts,
 }: {
-  frontmatter: PostFrontmatter;
-  previous?: Adjacent | null;
-  next?: Adjacent | null;
-  children: React.ReactNode;
+  post: BlogPostDetail;
+  relatedPosts: readonly BlogPostSummary[];
 }) {
-  const dateIso = frontmatter.date.length > 10
-    ? frontmatter.date
-    : `${frontmatter.date}T00:00:00Z`;
-
   return (
     <>
-      <article className="mx-auto max-w-295 px-6 py-12 md:py-16">
-        <Link
-          href="/blog/"
-          className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-text"
-        >
-          ← All posts
-        </Link>
+      <article data-nav-underlay="flush" className="pb-16 md:pb-20">
+        <section className="home-section relative overflow-hidden border-y pb-10 pt-16 md:pb-12 md:pt-24">
+          <SectionBackdrop direction="balanced" />
 
-        <h1 className="text-3xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
-          {frontmatter.title}
-        </h1>
+          <header className="relative mx-auto max-w-295 px-6">
+            <div className="border-b border-line-strong pb-8 md:pb-10">
+              <nav
+                aria-label="Breadcrumb"
+                className="flex flex-wrap items-center gap-2 text-xs text-muted"
+              >
+                <Link
+                  href="/blog/"
+                  className="inline-flex min-h-11 items-center rounded-sm text-accent transition-colors hover:text-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-section"
+                >
+                  Blog
+                </Link>
+                <span aria-hidden>/</span>
+                <Link
+                  href={post.category.href}
+                  className="inline-flex min-h-11 items-center rounded-sm transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-section"
+                >
+                  {post.category.label}
+                </Link>
+              </nav>
 
-        <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Link
-            href="/about/"
-            className="group inline-flex items-center gap-2.5"
-            rel="author"
-          >
-            <Image
-              src="/assets/people/maciej-szamowski.jpg"
-              alt="Maciej Szamowski"
-              width={32}
-              height={32}
-              className="rounded-full border border-white/10"
-            />
-            <span className="text-sm font-medium text-text transition-colors group-hover:text-accent">
-              Maciej Szamowski
-            </span>
-          </Link>
-          <span aria-hidden className="text-muted">
-            ·
-          </span>
-          <time dateTime={dateIso} className="text-sm font-medium text-muted">
-            {formatDate(frontmatter.date)}
-          </time>
-        </div>
-
-        {frontmatter.tags.length > 0 ? (
-          <div className="mt-5 flex flex-wrap gap-1.5">
-            {frontmatter.tags.map((t) => (
-              <Tag key={t}>{t}</Tag>
-            ))}
-          </div>
-        ) : null}
-
-        <Prose className="mt-10">{children}</Prose>
-
-        <aside className="mt-16 border-t border-border pt-8">
-          <Link
-            href="/about/"
-            className="ui-interactive group flex flex-col gap-5 rounded-lg border border-line bg-overlay p-5 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] sm:flex-row sm:items-center sm:gap-6"
-          >
-            <Image
-              src="/assets/people/maciej-szamowski.jpg"
-              alt="Maciej Szamowski"
-              width={64}
-              height={64}
-              className="shrink-0 rounded-full border border-white/10"
-            />
-            <div className="flex-1">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
-                Written by
+              <h1 className="mt-3 max-w-[960px] text-5xl font-semibold leading-[1.04] tracking-[-0.045em] text-text md:text-[64px]">
+                {post.title}
+              </h1>
+              <p className="mt-5 max-w-[820px] text-base leading-7 text-muted md:text-lg md:leading-8">
+                {post.excerpt}
               </p>
-              <p className="mt-1 text-lg font-semibold text-text transition-colors group-hover:text-accent">
-                Maciej Szamowski
-              </p>
-              <p className="mt-1 text-sm text-muted">
-                Marketer of 16 years turned solo macOS developer. Building hora
-                Calendar in public from Poland.
-              </p>
+
+              <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-6">
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-muted">
+                  <Link
+                    href={post.author.href}
+                    rel="author"
+                    className="inline-flex min-h-11 items-center gap-2.5 rounded-sm font-medium text-text transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-section"
+                  >
+                    <Image
+                      src={post.author.portrait}
+                      alt=""
+                      width={28}
+                      height={28}
+                      className="rounded-full border border-line"
+                    />
+                    {post.author.name}
+                  </Link>
+                  <span aria-hidden className="text-dim">
+                    ·
+                  </span>
+                  <time dateTime={post.publishedAt}>
+                    {formatBlogDate(post.publishedAt)}
+                  </time>
+                  <span aria-hidden className="text-dim">
+                    ·
+                  </span>
+                  <span>{post.readingMinutes} min read</span>
+                </div>
+
+                <div className="flex items-center gap-5">
+                  <CopyLinkButton />
+                  <ShareButton
+                    title={post.title}
+                    text={post.excerpt}
+                    url={`${site.url}/blog/${post.slug}/`}
+                  />
+                </div>
+              </div>
             </div>
-            <Icon
-              name="arrow-right"
-              size={20}
-              className="shrink-0 text-muted transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent"
-            />
-          </Link>
-        </aside>
+          </header>
+        </section>
 
-        {previous || next ? (
-          <nav
-            aria-label="More posts"
-            className="mt-10 grid gap-4 sm:grid-cols-2"
-          >
-            {previous ? (
-              <Link
-                href={`/blog/${previous.slug}/`}
-                className="ui-interactive group rounded-md border border-line bg-overlay p-5"
-              >
-                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
-                  ← Previous
-                </span>
-                <span className="mt-2 block text-base font-semibold text-text group-hover:text-accent">
-                  {previous.title}
-                </span>
-              </Link>
-            ) : (
-              <span />
-            )}
-            {next ? (
-              <Link
-                href={`/blog/${next.slug}/`}
-                className="ui-interactive group rounded-md border border-line bg-overlay p-5 text-right sm:text-right"
-              >
-                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">
-                  Next →
-                </span>
-                <span className="mt-2 block text-base font-semibold text-text group-hover:text-accent">
-                  {next.title}
-                </span>
-              </Link>
+        <div className="px-6">
+          {post.heroImage ? (
+            <Image
+              src={post.heroImage.src}
+              alt={post.heroImage.alt}
+              width={post.heroImage.width ?? 1600}
+              height={post.heroImage.height ?? 900}
+              priority
+              sizes="(min-width: 1200px) 1120px, calc(100vw - 3rem)"
+              className="mx-auto mt-8 h-auto w-full max-w-[var(--container-blog-media)] rounded-lg border border-line bg-panel-deep md:mt-10"
+            />
+          ) : null}
+
+          <Prose className="mx-auto mt-10 md:mt-12">{post.body}</Prose>
+
+          <footer className="mx-auto mt-14 max-w-[var(--container-article)] border-t border-line pt-7">
+            {post.tags.length > 0 ? (
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2 text-sm">
+                <span className="font-semibold text-text">Topics</span>
+                {post.tags.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/blog/tag/${tag}/`}
+                    className="inline-flex min-h-11 items-center rounded-sm text-muted underline decoration-line-strong underline-offset-4 transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                  >
+                    {tagLabel(tag)}
+                  </Link>
+                ))}
+              </div>
             ) : null}
-          </nav>
-        ) : null}
+
+            <aside className="mt-8 flex gap-4 border-t border-line pt-8 sm:items-center sm:gap-5">
+              <Image
+                src={post.author.portrait}
+                alt=""
+                width={60}
+                height={60}
+                className="h-14 w-14 shrink-0 rounded-full border border-line sm:h-[60px] sm:w-[60px]"
+              />
+              <div>
+                <p className="text-sm font-semibold text-text">
+                  {post.author.name}
+                </p>
+                <p className="mt-1 text-sm leading-6 text-muted">
+                  {post.author.bio}
+                </p>
+              </div>
+            </aside>
+          </footer>
+        </div>
       </article>
 
-      <BetaCta placement="stay_in_loop" />
+      {relatedPosts.length > 0 ? (
+        <section className="mx-auto max-w-[960px] px-6 pb-16 md:pb-20">
+          <div className="border-t border-line pt-8">
+            <h2 className="text-2xl font-semibold tracking-[-0.03em] text-text md:text-3xl">
+              Related stories
+            </h2>
+            <div className="mt-3">
+              {relatedPosts.map((relatedPost) => (
+                <PostCard key={relatedPost.slug} post={relatedPost} />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <BetaCta placement={ANALYTICS_PLACEMENTS.blog} />
     </>
   );
 }

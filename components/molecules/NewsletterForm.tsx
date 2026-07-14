@@ -23,9 +23,15 @@ type Status = "idle" | "submitting" | "success" | "error";
 export function NewsletterForm({
   placement,
   className,
+  placeholder,
+  buttonLabel,
+  showButtonIcon = true,
 }: {
   placement: NewsletterPlacement;
   className?: string;
+  placeholder?: string;
+  buttonLabel?: string;
+  showButtonIcon?: boolean;
 }) {
   const emailId = useId();
   const [email, setEmail] = useState("");
@@ -115,6 +121,8 @@ export function NewsletterForm({
 
   const hero = home.hero.newsletter;
   const afterSignup = site.newsletter.afterSignup;
+  const resolvedPlaceholder = placeholder ?? hero.placeholder;
+  const resolvedButtonLabel = buttonLabel ?? hero.button;
 
   return (
     <div className={cn("w-full max-w-md", className)}>
@@ -134,7 +142,7 @@ export function NewsletterForm({
             autoComplete="email"
             name="email"
             required
-            placeholder={hero.placeholder}
+            placeholder={resolvedPlaceholder}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={status === "submitting"}
@@ -151,8 +159,8 @@ export function NewsletterForm({
               "Sending…"
             ) : (
               <>
-                <Icon name="bell" size={16} />
-                {hero.button}
+                {showButtonIcon ? <Icon name="bell" size={16} /> : null}
+                {resolvedButtonLabel}
               </>
             )}
           </Button>

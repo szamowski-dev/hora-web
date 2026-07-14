@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import localFont from "next/font/local";
-import { Geist } from "next/font/google";
+import { Geist, Newsreader } from "next/font/google";
 import { Nav } from "@/components/organisms/Nav";
 import { Footer } from "@/components/organisms/Footer";
 import { AmbientGlow } from "@/components/organisms/AmbientGlow";
@@ -13,6 +13,13 @@ const geist = Geist({
   variable: "--font-geist",
   subsets: ["latin"],
   display: "swap",
+});
+
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
 });
 
 const bumbbled = localFont({
@@ -92,7 +99,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${bumbbled.variable}`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${geist.variable} ${newsreader.variable} ${bumbbled.variable}`}
+    >
       <head>
         <link rel="preconnect" href="https://i.ytimg.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://plausible.io" />
@@ -100,6 +111,12 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://consentcdn.cookiebot.com" />
       </head>
       <body className="min-h-dvh flex flex-col text-text">
+        <a
+          href="#main-content"
+          className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-md bg-text px-4 py-3 text-sm font-semibold text-bg shadow-xl transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg motion-reduce:transition-none"
+        >
+          Skip to content
+        </a>
         <Script
           id="gads-consent"
           strategy="beforeInteractive"
@@ -141,7 +158,11 @@ export default function RootLayout({
         <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
           <Nav />
         </header>
-        <main className="flex-1 pt-[70px] max-md:[&>:first-child]:-mt-[70px] max-md:[&>:first-child]:pt-[134px] max-md:[&>[data-nav-underlay=flush]]:pt-[70px] md:pt-0">
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="flex-1 pt-[70px] max-md:[&>:first-child]:-mt-[70px] max-md:[&>:first-child]:pt-[134px] max-md:[&>[data-nav-underlay=flush]]:pt-[70px] md:pt-0"
+        >
           {children}
         </main>
         <Footer />

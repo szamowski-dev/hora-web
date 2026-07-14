@@ -29,8 +29,10 @@
 
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-brand: var(--font-bumbbled), var(--font-geist), sans-serif;
+  --font-editorial: var(--font-newsreader), Georgia, "Times New Roman", serif;
 
-  --container-article: 720px;
+  --container-article: 900px;
+  --container-blog-media: 1120px;
   --container-page: 960px;
 }
 
@@ -203,6 +205,46 @@ body:has(#mobile-navigation-toggle:checked) {
 
 .blog-tag-search-input::-webkit-search-cancel-button {
   display: none;
+}
+
+.blog-prose :where(.mdx-media) {
+  position: relative;
+  left: 50%;
+  width: min(var(--container-blog-media), calc(100vw - 3rem));
+  max-width: none;
+  transform: translateX(-50%);
+}
+
+.blog-prose :where(table) {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.blog-prose :where(.heading-anchor) {
+  margin-left: 0.4rem;
+  color: var(--color-muted);
+  font-family: var(--font-sans);
+  font-size: 0;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.blog-prose :where(.heading-anchor)::after {
+  content: "#";
+  font-size: 0.75rem;
+}
+
+.blog-prose :where(h2, h3):hover .heading-anchor,
+.blog-prose :where(.heading-anchor):focus-visible {
+  opacity: 1;
+}
+
+.blog-prose :where(.heading-anchor):focus-visible {
+  border-radius: 0.2rem;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {

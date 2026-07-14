@@ -3,9 +3,8 @@ import { notFound } from "next/navigation";
 import { BlogListingPage } from "@/components/templates/BlogListingPage";
 import {
   getBlogTags,
-  getMonthlyArchives,
   getPostsByTag,
-  postToCard,
+  postToSummary,
   tagLabel,
 } from "@/lib/blog";
 import { breadcrumbList } from "@/lib/jsonld";
@@ -66,18 +65,14 @@ export default async function BlogTagPage({
 
   return (
     <>
+      <BlogListingPage
+        title={label}
+        subtitle={`Articles tagged ${label} from the hora Calendar dev blog.`}
+        posts={taggedPosts.map(postToSummary)}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
-      />
-      <BlogListingPage
-        eyebrow="Blog tag"
-        title={label}
-        subtitle={`Articles tagged ${label} from the hora Calendar dev blog.`}
-        posts={taggedPosts.map(postToCard)}
-        tags={getBlogTags(posts)}
-        archives={getMonthlyArchives(posts)}
-        activeTag={tag}
       />
     </>
   );

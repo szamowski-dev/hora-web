@@ -7,7 +7,7 @@ import { BetaCta } from "@/components/organisms/BetaCta";
 import { Roadmap } from "@/components/organisms/Roadmap";
 import { Faq } from "@/components/organisms/Faq";
 import { BlogPreview } from "@/components/organisms/BlogPreview";
-import type { PostCardData } from "@/components/molecules/PostCard";
+import { postToSummary } from "@/lib/blog";
 import { getAllPosts } from "@/lib/mdx";
 
 export const dynamic = "force-dynamic";
@@ -68,15 +68,7 @@ const videoLd = {
 
 export default async function Home() {
   const allPosts = await getAllPosts();
-  const posts: PostCardData[] = allPosts.slice(0, 3).map((p) => ({
-    slug: p.slug,
-    title: p.frontmatter.title,
-    description: p.frontmatter.description,
-    date: p.frontmatter.date,
-    readingMinutes: p.readingMinutes,
-    tags: p.frontmatter.tags,
-    cover: p.frontmatter.cover,
-  }));
+  const posts = allPosts.slice(0, 3).map(postToSummary);
 
   return (
     <>

@@ -1,9 +1,18 @@
 import Link from "next/link";
-import { BlogTagSearch } from "@/components/molecules/BlogTagSearch";
-import { PostCard, type PostCardData } from "@/components/molecules/PostCard";
+import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
+import { PostCard } from "@/components/molecules/PostCard";
 import { BetaCta } from "@/components/organisms/BetaCta";
-import { blog } from "@/content/blog";
-import type { BlogArchive, BlogTag } from "@/lib/blog";
+import {
+  ChevronRightIcon,
+  RssIcon,
+  SearchIcon,
+} from "@/components/ui/blog-icons";
+import { getBlogCategories } from "@/lib/blog";
+import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
+import type {
+  BlogCategorySlug,
+  BlogPostSummary,
+} from "@/lib/blog-model";
 import { cn } from "@/lib/cn";
 
 type Pagination = {
@@ -13,176 +22,167 @@ type Pagination = {
 };
 
 type Props = {
-  eyebrow?: string;
-  heading?: typeof blog.heading;
   title?: string;
   subtitle?: string;
-  intro?: readonly string[];
-  posts: readonly PostCardData[];
-  tags: readonly BlogTag[];
-  archives: readonly BlogArchive[];
+  featured?: BlogPostSummary | null;
+  posts: readonly BlogPostSummary[];
   pagination?: Pagination;
-  activeTag?: string;
-  activeArchive?: string;
+  activeCategory?: BlogCategorySlug;
   emptyMessage?: string;
+  listHeading?: string;
+  searchQuery?: string;
+  allCategoryActive?: boolean;
 };
 
+const DEFAULT_SUBTITLE =
+  "Notes from building a faster Google Calendar app for Mac.";
+
 export function BlogListingPage({
-  heading = blog.heading,
-  title,
-  subtitle = blog.subtitle,
-  intro,
+  title = "Blog",
+  subtitle = DEFAULT_SUBTITLE,
+  featured,
   posts,
-  tags,
-  archives,
   pagination,
-  activeTag,
-  activeArchive,
-  emptyMessage = "No posts yet.",
+  activeCategory,
+  emptyMessage = "No stories found.",
+  listHeading,
+  searchQuery,
+  allCategoryActive,
 }: Props) {
-  const [hero, ...rest] = posts;
+  const categories = getBlogCategories();
+  const heading = listHeading ?? (featured ? "Latest stories" : "Stories");
+  const isAllCategoryActive =
+    allCategoryActive ?? (!activeCategory && title === "Blog");
 
   return (
     <>
-      <section className="relative overflow-hidden border-b border-line pt-16 md:pt-24">
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_90%_at_10%_0%,var(--ui-glow-accent-soft),transparent_68%),radial-gradient(ellipse_62%_80%_at_92%_10%,var(--ui-glow-cool-soft),transparent_72%)]"
-        />
-        <div className="relative mx-auto max-w-295 px-6 pb-10 md:pb-14">
-          <h1 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
-            {title ?? (
-              <>
-                {heading.prefix}
-                <span className="text-accent"> {heading.suffixGradient}</span>
-              </>
-            )}
-          </h1>
-          <p className="mt-4 max-w-4xl text-base leading-7 text-muted md:text-lg md:leading-8">
-            {subtitle}
-          </p>
-        </div>
-      </section>
+      <section className="home-section relative overflow-hidden border-y pb-10 pt-16 md:pb-8 md:pt-24">
+        <SectionBackdrop direction="left" />
 
-      {intro?.length ? (
-        <section className="mx-auto max-w-295 px-6 pt-8 md:pt-10">
-          <div className="shader-panel-soft ui-panel-soft relative overflow-hidden rounded-xl p-6 md:p-8">
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-accent/60 to-accent-cool/45"
-            />
-            <div className="relative z-10 grid gap-x-10 gap-y-6 text-base leading-7 text-muted md:grid-cols-2">
-              {intro.map((paragraph, index) => (
-                <p
-                  key={paragraph}
-                  className={
-                    index === intro.length - 1
-                      ? "border-t border-line pt-6 md:col-span-2"
-                      : undefined
-                  }
-                >
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-            <span
-              aria-hidden
-              className="home-grid pointer-events-none absolute inset-y-0 right-0 w-1/2 opacity-10 [mask-image:linear-gradient(to_left,black,transparent)]"
-              style={{ backgroundSize: "36px 36px" }}
-            />
-          </div>
-        </section>
-      ) : null}
-
-      <section className="mx-auto max-w-295 px-6 py-12 md:py-16">
-        <div className="shader-panel ui-panel-deep relative overflow-hidden rounded-xl p-4 md:p-5">
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-x-10 top-0 h-px bg-linear-to-r from-transparent via-accent/70 to-accent-cool/45"
-          />
-          <span
-            aria-hidden
-            className="pointer-events-none absolute -left-32 -top-40 h-96 w-96 rounded-full bg-[radial-gradient(circle,var(--ui-glow-accent-soft),transparent_70%)] blur-3xl"
-          />
-          <span
-            aria-hidden
-            className="pointer-events-none absolute -right-40 top-24 h-96 w-96 rounded-full bg-[radial-gradient(circle,var(--ui-glow-cool-soft),transparent_72%)] blur-3xl"
-          />
-
-          <div className="relative grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
+        <div className="relative mx-auto max-w-295 px-6">
+          <header className="flex flex-col gap-6 border-b border-line-strong pb-8 md:flex-row md:items-end md:justify-between">
             <div>
-              {posts.length === 0 ? (
-                <p className="text-center text-muted">{emptyMessage}</p>
-              ) : (
-                <div className="flex flex-col gap-4">
-                  {hero ? <PostCard post={hero} variant="hero" /> : null}
-                  {rest.map((post) => (
-                    <PostCard key={post.slug} post={post} variant="list" />
-                  ))}
-                </div>
-              )}
+              <h1 className="text-5xl font-semibold leading-[1.04] tracking-tight text-text md:text-[64px]">
+                {title}
+              </h1>
+              <p className="mt-5 max-w-3xl text-base leading-7 text-muted md:text-lg md:leading-8">
+                {subtitle}
+              </p>
             </div>
+            <Link
+              href="/blog/feed.xml"
+              className="inline-flex min-h-11 items-center gap-2 rounded-sm font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-section"
+            >
+              <RssIcon className="h-3.5 w-3.5" />
+              RSS
+            </Link>
+          </header>
 
-            <aside className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
-              <BlogTaxonomyCard title="Tags">
-                <BlogTagSearch tags={tags} activeTag={activeTag} />
-              </BlogTaxonomyCard>
+          <div className="mt-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <nav
+              aria-label="Blog categories"
+              className="flex flex-wrap items-center gap-x-1 gap-y-1"
+            >
+              <CategoryLink href="/blog/" active={isAllCategoryActive}>
+                All
+              </CategoryLink>
+              {categories.map((category) => (
+                <CategoryLink
+                  key={category.slug}
+                  href={category.href}
+                  active={activeCategory === category.slug}
+                >
+                  {category.label}
+                </CategoryLink>
+              ))}
+            </nav>
 
-              <BlogTaxonomyCard title="Archive">
-                <div className="flex flex-col gap-2">
-                  <Link
-                    href="/blog/archive/"
-                    className="text-sm font-medium text-muted transition-colors hover:text-text"
-                  >
-                    All months
-                  </Link>
-                  {archives.map((archive) => (
-                    <Link
-                      key={archive.slug}
-                      href={archive.href}
-                      className={cn(
-                        "flex items-center justify-between rounded-md border px-3 py-2 text-sm transition-colors",
-                        activeArchive === archive.slug
-                          ? "border-accent/45 bg-accent/12 text-text"
-                          : "border-line bg-overlay text-muted hover:border-line-strong hover:bg-overlay-strong hover:text-text",
-                      )}
-                    >
-                      <span>{archive.label}</span>
-                      <span className="text-xs text-muted">
-                        {archive.count}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </BlogTaxonomyCard>
-            </aside>
+            <form
+              action="/blog/search/"
+              role="search"
+              className="relative w-full lg:w-60"
+            >
+              <label htmlFor="blog-search" className="sr-only">
+                Search blog posts
+              </label>
+              <input
+                id="blog-search"
+                name="q"
+                type="search"
+                defaultValue={searchQuery}
+                placeholder="Search posts..."
+                className="h-11 w-full rounded-md border border-line bg-bg/35 pl-3.5 pr-11 text-sm text-text outline-none transition-colors placeholder:text-dim focus:border-line-strong focus:ring-2 focus:ring-accent/25"
+              />
+              <button
+                type="submit"
+                aria-label="Search"
+                className="absolute inset-y-0 right-0 inline-flex w-11 items-center justify-center rounded-r-md text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/70"
+              >
+                <SearchIcon className="h-4 w-4" />
+              </button>
+            </form>
           </div>
         </div>
-
-        {pagination ? (
-          <BlogPagination pagination={pagination} />
-        ) : null}
       </section>
 
-      <BetaCta placement="stay_in_loop" />
+      <div className="mx-auto max-w-295 px-6 pb-16 pt-8 md:pb-20 md:pt-10">
+        <div className="pt-4">
+          {featured ? (
+            <PostCard post={featured} variant="featured" priority />
+          ) : null}
+
+          {posts.length > 0 ? (
+            <section className={cn(featured ? "pt-7" : "pt-4")}>
+              <h2 className="text-xl font-semibold tracking-[-0.025em] text-text md:text-2xl">
+                {heading}
+              </h2>
+              <div className="mt-2">
+                {posts.map((post) => (
+                  <PostCard key={post.slug} post={post} />
+                ))}
+              </div>
+            </section>
+          ) : featured ? null : (
+            <p className="border-b border-line py-16 text-center font-editorial text-lg text-muted">
+              {emptyMessage}
+            </p>
+          )}
+
+          {pagination ? <BlogPagination pagination={pagination} /> : null}
+        </div>
+      </div>
+
+      <BetaCta placement={ANALYTICS_PLACEMENTS.blog} />
     </>
   );
 }
 
-function BlogTaxonomyCard({
-  title,
+function CategoryLink({
+  href,
+  active,
   children,
 }: {
-  title: string;
+  href: string;
+  active: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <section className="ui-panel-soft rounded-lg p-5 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.09)]">
-      <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-text">
-        {title}
-      </h2>
-      <div className="mt-4">{children}</div>
-    </section>
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "relative inline-flex min-h-11 items-center rounded-sm px-3 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+        active ? "text-text" : "text-muted hover:text-text",
+      )}
+    >
+      {children}
+      {active ? (
+        <span
+          aria-hidden
+          className="absolute inset-x-3 bottom-0 h-px bg-accent"
+        />
+      ) : null}
+    </Link>
   );
 }
 
@@ -196,28 +196,30 @@ function BlogPagination({ pagination }: { pagination: Pagination }) {
 
   return (
     <nav
-      className="mt-8 flex items-center justify-between gap-3 border-t border-line pt-6"
+      className="mt-6 flex items-center justify-between gap-3"
       aria-label="Blog pagination"
     >
       {currentPage > 1 ? (
         <Link
           href={previousHref}
-          className="ui-interactive rounded-md border border-line bg-overlay px-4 py-2 text-sm font-medium text-muted hover:text-text"
+          className="inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
         >
+          <ChevronRightIcon className="h-4 w-4 rotate-180" />
           Newer posts
         </Link>
       ) : (
         <span />
       )}
-      <span className="text-sm text-muted">
+      <span className="text-xs text-muted">
         Page {currentPage} of {totalPages}
       </span>
       {currentPage < totalPages ? (
         <Link
           href={nextHref}
-          className="ui-interactive rounded-md border border-line bg-overlay px-4 py-2 text-sm font-medium text-muted hover:text-text"
+          className="inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
         >
           Older posts
+          <ChevronRightIcon className="h-4 w-4" />
         </Link>
       ) : (
         <span />

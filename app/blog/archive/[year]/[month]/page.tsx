@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogListingPage } from "@/components/templates/BlogListingPage";
 import {
-  getBlogTags,
   getMonthlyArchives,
   getPostsByMonth,
-  postToCard,
+  postToSummary,
 } from "@/lib/blog";
 import { breadcrumbList } from "@/lib/jsonld";
 import { getAllPosts } from "@/lib/mdx";
@@ -73,18 +72,14 @@ export default async function BlogMonthlyArchivePage({
 
   return (
     <>
+      <BlogListingPage
+        title={archive.label}
+        subtitle={`hora Calendar blog posts from ${archive.label}: Mac calendar product updates, SwiftUI engineering notes, Google Calendar sync work, beta fixes, launch planning, and practical comparisons for people choosing a faster native calendar workflow.`}
+        posts={archivePosts.map(postToSummary)}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
-      />
-      <BlogListingPage
-        eyebrow="Monthly archive"
-        title={archive.label}
-        subtitle={`hora Calendar blog posts from ${archive.label}: Mac calendar product updates, SwiftUI engineering notes, Google Calendar sync work, beta fixes, launch planning, and practical comparisons for people choosing a faster native calendar workflow.`}
-        posts={archivePosts.map(postToCard)}
-        tags={getBlogTags(posts)}
-        archives={archives}
-        activeArchive={archive.slug}
       />
     </>
   );
