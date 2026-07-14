@@ -8,11 +8,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPosts();
   const base = site.url;
   const today = new Date().toISOString().split("T")[0];
-  const latestPostDate = posts[0]?.frontmatter.date ?? today;
+  const latestPostDate =
+    posts[0]?.frontmatter.updated ?? posts[0]?.frontmatter.date ?? today;
 
   const postEntries: MetadataRoute.Sitemap = posts.map((p) => ({
     url: `${base}/blog/${p.slug}/`,
-    lastModified: p.frontmatter.date,
+    lastModified: p.frontmatter.updated ?? p.frontmatter.date,
     changeFrequency: "monthly",
     priority: 0.7,
   }));
@@ -21,6 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     (category) => ({
       url: `${base}/blog/category/${category.slug}/`,
       lastModified:
+        getPostsByCategory(posts, category.slug)[0]?.frontmatter.updated ??
         getPostsByCategory(posts, category.slug)[0]?.frontmatter.date ??
         latestPostDate,
       changeFrequency: "weekly",

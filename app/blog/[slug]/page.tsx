@@ -33,6 +33,7 @@ export async function generateMetadata({
       url: `https://horacal.app${canonical}`,
       images: [{ url: og }],
       publishedTime: fm.date,
+      modifiedTime: fm.updated ?? fm.date,
       authors: ["Maciej Szamowski"],
     },
     twitter: {
@@ -67,7 +68,7 @@ export default async function BlogPostPage({
         headline: fm.title,
         description: fm.description,
         datePublished: fm.date,
-        dateModified: fm.date,
+        dateModified: fm.updated ?? fm.date,
         author: {
           "@type": "Person",
           name: "Maciej Szamowski",

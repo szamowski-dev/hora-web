@@ -24,6 +24,7 @@ export type PageFrontmatter = {
 type PostFrontmatterRaw = {
   title: string;
   date: string;
+  updated?: string;
   description: string;
   category: string;
   tags?: string;
@@ -70,6 +71,9 @@ function normalizeFrontmatter(frontmatter: PostFrontmatterRaw): PostFrontmatter 
     ...frontmatter,
     category: frontmatter.category,
     date: formatDate(frontmatter.date),
+    updated: frontmatter.updated
+      ? formatDate(frontmatter.updated)
+      : undefined,
     tags: parseTags(frontmatter.tags),
   };
 }

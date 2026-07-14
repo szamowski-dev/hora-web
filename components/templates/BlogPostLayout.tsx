@@ -28,7 +28,7 @@ export function BlogPostLayout({
           <SectionBackdrop direction="balanced" />
 
           <header className="relative mx-auto max-w-295 px-6">
-            <div className="border-b border-line-strong pb-8 md:pb-10">
+            <div className="pb-8 md:pb-10">
               <nav
                 aria-label="Breadcrumb"
                 className="flex flex-wrap items-center gap-2 text-xs text-muted"
