@@ -1,161 +1,283 @@
 ---
-title: "Fixing Calendar Tile Contrast with OKLCH"
+title: "How I Fixed SwiftUI Color Contrast with OKLCH and APCA"
 date: 2026-05-08
+updated: 2026-07-14
 category: engineering
-description: "How hora replaced ad-hoc tints with OKLCH-derived palettes and APCA-clamped contrast — 132 hue/mode/state combinations, all readable on Mac and iOS."
-tags: swift, swiftui, color, accessibility, oklch, apca, contrast, devlog
-cover: /assets/blog/yellow-on-yellow-calendar-event-tiles-oklch-apca-cover.webp
-ogImage: /assets/blog/oklch-apca-calendar-event-tiles-contrast-og-hero.webp
+heroImage: /assets/blog/calendar-tile-contrast-oklch-apca.webp
+heroAlt: A banana event tile in hora Calendar keeping its hue while its text changes from low contrast yellow to readable dark brown
+description: "A TestFlight screenshot exposed unreadable calendar tiles. Here is how I rebuilt hora's SwiftUI color system with OKLCH, APCA-style checks, and tests."
+tags: swiftui-color-contrast, oklch, apca, swiftui, accessibility, macos
+cover: /assets/blog/calendar-tile-contrast-oklch-apca.webp
+ogImage: /assets/blog/calendar-tile-contrast-oklch-apca.webp
 ---
 
-![hora Calendar yellow-on-yellow event tiles fixed with OKLCH palettes and APCA contrast](/assets/blog/oklch-apca-calendar-event-tiles-contrast-og-hero.webp)
+During the first days of hora's public beta, a tester sent me a screenshot of a banana-yellow event in light mode. The title was rendered in nearly the same yellow as the tile behind it.
 
-Within the first 48 hours of [hora Calendar](https://horacal.app)'s public beta, a TestFlight tester sent me a screenshot: a banana-yellow event tile in light mode, with the title text rendered in the same banana yellow on top. "I literally can't read this." He was right. I'd been looking at it for weeks and trained myself not to see it. That one screenshot kicked off a two-week rebuild of how every event tile in hora picks its colors — and the result is what shipped on `0.7.0`.
+"I literally can't read this."
 
-This is the technical write-up of how the color system works now: an **OKLCH-based palette resolver** plus an **APCA contrast clamp**, applied uniformly across Week / Day / Month and the "+N more" popover. 132 hue × mode × state combinations are now asserted at build time, and all of them pass.
+He was right. I had been looking at the same interface for weeks and had trained myself not to see the problem.
 
-## What was wrong
+It was the simplest possible **SwiftUI color contrast** bug, and I had missed it.
 
-Five concrete failures, all visible in the first beta:
+The screenshot stayed on my list for almost two weeks. On May 6, I stopped adjusting opacity values inside individual views and replaced the whole path with one shared SwiftUI color resolver.
 
-- **Light-mode banana, flamingo, and tangerine tiles** rendered the title in the brand color on a 25% tint of the *same* hue. APCA Lc landed around 30 — for context, anything under Lc 60 is unreadable for body text. Yellow-on-yellow.
-- **Pending invitations** showed faded text on a transparent fill with a dashed brand border. The text was there, the eye couldn't find it.
-- **Tile edges blended into the white grid.** No stroke, no definition. In dense weeks, two adjacent events looked like one.
-- **The shared-event indicator** was a stack of 3 pt color stripes down the left edge. Each extra calendar an event lived on added another stripe. It ate horizontal space and stopped scaling past one extra calendar.
-- **Light/dark opacity values were inverted** vs. Apple Calendar — `0.25` light / `0.15` dark, when Apple's heuristic (and the perceptually correct call) is the other way around.
+That resolver now does three jobs:
 
-The common thread: I'd treated the color system as "pick a brand hex, multiply opacity, ship it." That works for cool hues. It fails everywhere a warm color sits on a warm-tinted background.
+- It turns a user-selected Google Calendar color into a predictable light or dark event surface.
+- It moves title and secondary text lightness until the pair reaches hora's chosen Lc target.
+- It describes invitation and selection state with borders, opacity, and strikethrough, not color alone.
 
-## Why WCAG contrast checkers don't catch this
+This is the story of that rebuild, including the parts I described too confidently the first time around.
 
-I want to flag this because I keep seeing it in design tooling. **WCAG 2.1 contrast ratios do not work for tinted text on tinted backgrounds.** WCAG was calibrated for full-saturation text on near-white or near-black canvases. The moment you put a 75% banana text on a 25% banana background, WCAG's L\*/Y* math says "contrast ratio 3.8:1 — fine for large text." Your eye says "I'm squinting."
+## The screenshot I could not unsee
 
-The correct tool for this case is [APCA](https://git.apcacontrast.com/documentation/APCA_in_a_Nutshell.html) — Advanced Perceptual Contrast Algorithm. APCA was designed by the working group writing WCAG 3 specifically because the ratio model breaks down for tinted-on-tinted text. APCA returns an `Lc` value (lightness contrast) on a roughly -108 to +106 scale. The thresholds I picked:
+The first version of hora treated an event color as a hex value with opacity.
 
-- `Lc ≥ 75` for body title (event names)
-- `Lc ≥ 60` for secondary content (time, location)
+That approach looked fine with cool colors such as peacock and blueberry. It broke down with warmer colors such as banana, flamingo, and tangerine. A light tint made a pleasant tile background, but reusing the same brand color for text left too little separation between foreground and surface.
 
-These are lower than APCA's "spec" recommendations because event titles are short (3-5 words on average) and the user is scanning a calendar, not reading prose. But they're meaningfully harder to hit than WCAG's 4.5:1 for the same content — and they're the right thresholds.
+The bad banana tile was only the most obvious symptom.
 
-## What I built
+- Pending invitations used faded text over a transparent surface.
+- Tile edges disappeared into the white calendar grid.
+- Declined events relied mostly on lower opacity.
+- Selected warm colors could become too bright for white text.
+- Similar rules had started to drift between Week, Day, and Month views.
 
-The new color pipeline lives in `HoraCore/Colors/`. Four files, one entry point:
+I had already made an [earlier appearance fix](/blog/2026-04-08-swiftui-appearance-bug/) by separating some light and dark mode values. It improved the surface, but it was still a local patch. The foreground color could remain unreadable for a particular hue, and every view was responsible for remembering the same details.
+
+The real bug was not yellow. The bug was the absence of a color system.
+
+## The old combination failed every metric I used
+
+My original version of this post claimed that WCAG contrast ratios do not work for tinted text on tinted backgrounds. That was wrong.
+
+[WCAG 2.2](https://www.w3.org/TR/WCAG22/) calculates contrast from the final foreground and background colors. It does not stop applying because both colors are tinted. Normal text still needs a 4.5:1 contrast ratio under the current success criterion, and the old warm-hue combinations did not meet it.
+
+For a simple light-mode composite, the banana pairing measured roughly 1.60:1 under the WCAG 2 ratio. hora's local Lc implementation measured about 24.6. After the resolver changed the foreground lightness, the same banana surface reached roughly Lc 84.6.
+
+Those measurements are engineering signals, not a claim of formal accessibility conformance.
+
+I kept an Lc check based on the [APCA W3 formula](https://github.com/Myndex/apca-w3) because it is polarity-aware and useful for catching regressions in a dynamic palette. APCA is still work in progress, and [WCAG 3 remains a draft](https://www.w3.org/TR/wcag-3.0/). I use the Lc values alongside the current WCAG model and visual review, not as a replacement for them.
+
+The distinction matters:
+
+- WCAG 2 remains the current conformance standard.
+- OKLCH is a color model, not a contrast test.
+- hora's Lc thresholds are internal engineering targets.
+- A passing number does not replace checking the rendered interface.
+
+That is less dramatic than saying I found the one correct contrast algorithm. It is also much more honest.
+
+## Why OKLCH made the palette predictable
+
+I first considered HSL because it is familiar and easy to manipulate. The problem is that equal HSL lightness does not look equally light across hues. A numerical yellow and blue can share the same lightness while appearing very different on screen.
+
+[OKLCH](https://www.w3.org/TR/css-color-4/#ok-lab) gives me separate controls for perceived lightness, chroma, and hue:
+
+- `L` controls lightness.
+- `C` controls chroma.
+- `H` keeps the calendar color's hue identity.
+
+That makes the operation I actually need straightforward: preserve the user's hue, cap chroma for the surface, then move foreground lightness in small steps.
+
+![An OKLCH lightness path keeping the banana hue fixed while the event title darkens toward hora's Lc target.](/assets/blog/event-tile-adaptive-text-pipeline.webp)
+
+In light mode, an accepted tile currently starts with these values:
+
+- Background: `L 0.94`, with chroma capped at `0.06`.
+- Title: `L 0.34`, with chroma capped at `0.14`.
+- Secondary text: `L 0.44`, with chroma capped at `0.12`.
+
+If a foreground pair misses its target, the resolver lowers foreground `L` by `0.04` and checks again, up to six times.
+
+Dark mode uses the same idea in the other direction. The background starts at `L 0.26`, while title and secondary text begin at `L 0.88` and `L 0.78`. A failed pair moves brighter in `0.03` steps.
+
+These constants are not universal design tokens. They are the values that work for hora's tile sizes, type styles, and current surfaces. Keeping them in one place is what makes them maintainable.
+
+## One SwiftUI resolver instead of five local fixes
+
+The public entry point is deliberately small:
 
 ```swift
-// HoraCore/Colors/EventTileColors.swift
-public struct EventTileColors {
+public enum EventTileColors {
+    public static func resolve(
+        brand: Color,
+        scheme: ColorScheme,
+        state: TileState
+    ) -> EventTilePalette {
+        let key = CacheKey(
+            brand: brand,
+            scheme: scheme,
+            state: state
+        )
+
+        if let cached = cache.value(for: key) {
+            return cached
+        }
+
+        let palette = compute(
+            brand: brand,
+            scheme: scheme,
+            state: state
+        )
+        cache.set(palette, for: key)
+        return palette
+    }
+}
+```
+
+The returned `EventTilePalette` contains the complete visual contract for a tile:
+
+```swift
+public struct EventTilePalette: Sendable, Equatable {
     public let bg: Color
     public let fg: Color
     public let fgSecondary: Color
     public let stroke: Color
     public let accent: Color
-
-    public static func resolve(
-        brand: Color,
-        scheme: ColorScheme,
-        state: TileState
-    ) -> EventTileColors {
-        let oklch = OKLCH(brand)
-
-        // Per-hue lightness clamp — warm and cool land at the same
-        // *perceived* L instead of the same *numerical* L.
-        let bg = oklch.tinted(scheme: scheme, state: state)
-
-        // APCA contrast clamp — iterate fg lightness in 0.04-L steps
-        // until APCA Lc(fg, bg) >= 75 for the title slot.
-        let fg = APCA.clampLightness(
-            of: brand,
-            on: bg,
-            until: { lc in lc >= 75 }
-        )
-
-        let fgSecondary = APCA.clampLightness(
-            of: brand,
-            on: bg,
-            until: { lc in lc >= 60 }
-        )
-
-        return .init(
-            bg: bg,
-            fg: fg,
-            fgSecondary: fgSecondary,
-            stroke: oklch.stroke(scheme: scheme, state: state),
-            accent: brand
-        )
-    }
+    public let dimOpacity: Double
+    public let strikethrough: Bool
+    public let strokeIsDashed: Bool
 }
 ```
 
-**Why OKLCH and not HSL.** HSL is what most palette code reaches for first because it's everywhere. HSL is also perceptually wrong: yellow at L 50 looks dramatically brighter than blue at L 50, even though both have the same numerical lightness. [OKLCH (built on Björn Ottosson's OKLab)](https://bottosson.github.io/posts/oklab/) fixes this — equal numerical L corresponds to roughly equal perceived L across hues. That's what makes "clamp the title to the same perceived darkness across all 11 hues" possible. In HSL, you can't.
+The clamp itself is intentionally boring:
 
-**State conventions match Apple Calendar:**
+```swift
+private static func clampedFG(
+    targetLc: Double,
+    start: OKLCH,
+    bg: Color,
+    step: Double,
+    iterations: Int
+) -> Color {
+    var current = start
 
-| State | Visual |
+    for _ in 0..<iterations {
+        let candidate = current.toColor()
+        if APCA.lc(text: candidate, background: bg) >= targetLc {
+            return candidate
+        }
+
+        current = OKLCH(
+            L: max(0, min(1, current.L + step)),
+            C: current.C,
+            H: current.H
+        )
+    }
+
+    return current.toColor()
+}
+```
+
+There is no machine learning, no hidden system API, and no giant lookup table. It is a deterministic transformation that can be cached and tested.
+
+## State should not depend on color alone
+
+Fixing the accepted tile was only half the job. A calendar event also communicates whether it needs a response, has been declined, or is currently selected.
+
+The resolver now expresses five states users can actually see:
+
+| State | Visual treatment |
 |---|---|
-| Accepted | Filled tint (the default) |
-| Tentative | Dashed brand border |
-| Pending | Outline-only with solid brand stroke (carries the "needs response" semantic — no faded text) |
-| Declined | 40% opacity + strikethrough |
-| Selected | Full-saturation brand background + white text, with a per-hue darken pass so the white-on-banana case still hits Lc 60 |
+| Accepted | Filled surface with resolved title and secondary colors |
+| Tentative | Accepted surface plus a dashed brand border |
+| Pending | Transparent surface, solid brand outline, text resolved against the calendar canvas |
+| Declined | Accepted palette at 40% opacity plus strikethrough |
+| Selected | Saturated brand surface, clamped darker when white text misses hora's Lc 60 target |
 
-**Iconography over color stacking.** The shared-event stripe stack is gone. In its place: a 3 pt left bar plus an SF Symbol prefix in the title.
+The code also defines a cancelled palette, but the normal sync path removes or ignores cancelled events instead of presenting it as a common visible state.
 
-- `calendar.and.person` — events shared across calendars
-- `calendar.badge.lock` — events blocked by another calendar (the Family-on-Work pair)
+Shared-event stripes were simplified at the same time. A 3 pt leading bar preserves the source color, while an SF Symbol can communicate additional meaning:
 
-This scales arbitrarily — one icon, one bar, no matter how many calendars an event lives on.
+- `calendar.and.person` for an event shared across calendars.
+- `calendar.badge.lock` for an event blocked by another calendar.
 
-**Uniform across surfaces.** A `TileStateResolver` maps `Event → TileState` once. Every tile-rendering view (`WeekEventBlock`, `AllDayEventPill`, `MonthView.eventRow`) calls `EventTileColors.resolve(...)` with the same inputs and gets the same output. The "+N more" popover reuses the `eventRow` view directly, so the icon prefixes propagate without me having to remember to wire them up.
+That is more scalable than adding another colored stripe for every calendar relationship.
 
-**Dedup in MonthView.** Previously, an event living on three visible calendars rendered three times in MonthView (it was already deduped in WeekView). Now `EventDeduplicator` is wired into MonthView too — one render, with the shared-calendar icon, instead of three near-identical rows competing for vertical space.
+![A hora Calendar week view showing readable tiles across Google's eleven event hues and five visible states.](/assets/blog/event-tile-hues-and-states.webp)
 
-## The numbers that prove it
+Week and Day timed events use the full palette resolver. Their all-day pills use it too. Month view shares the same state model, but its compact timed rows deliberately keep system text colors for density. The `+N more` popover reuses the Month row rather than inventing another color path.
 
-I added 132 assertions to the `HoraCore` test suite — every reasonable combination of hue × mode × state, with the relevant APCA threshold:
+That detail is worth stating because "one resolver everywhere" sounds cleaner than the real implementation. The real implementation has one source of color and state truth, plus a few deliberate presentation differences.
 
-- 11 hues × 2 modes × {accepted, tentative, declined, cancelled} → fg-on-bg ≥ Lc 75
-- 11 × 2 × 1 → secondary ≥ Lc 60
-- 11 × 1 → white-on-clamped-brand (selected state) ≥ Lc 60
-- 11 × 2 → pending fg-on-canvas ≥ Lc 60
+## Testing SwiftUI color contrast across 11 hues
 
-All 132 pass. Receipts on the warm hues that started this rebuild:
+The test suite runs 143 contrast checks across Google's 11 event colors, light and dark appearance, and the states covered by the resolver.
 
-![APCA contrast matrix for hora Calendar event tiles using OKLCH colors](/assets/blog/apca-contrast-matrix-calendar-event-tiles-oklch.webp)
+The exact breakdown is:
 
-| Hue | Mode | Lc before | Lc after |
-|---|---|---|---|
-| Banana | Light | ≈30 | 84 |
-| Flamingo | Light | ≈34 | 80 |
-| Tangerine | Light | ≈36 | 81 |
+- 44 title checks for four filled states in light mode.
+- 44 title checks for the same filled states in dark mode.
+- 22 secondary-text checks across both appearances.
+- 11 selected-state checks with white text.
+- 22 pending-text checks against the light or dark canvas.
 
-## Why this matters beyond hora
+The title target is Lc 75. Secondary, pending, and selected text use Lc 60. Those are hora's regression thresholds, not a blanket promise that every text style at those values is accessible in every context.
 
-Google's web calendar uses white-on-saturated-brand for tile titles. It passes contrast for cool hues — peacock, blueberry, basil, sage. It fails on the warm ones. That's exactly the "yellow-on-yellow" my tester complained about, and Google has been shipping it for years.
+The tests also have limits:
 
-Apple Calendar handles it correctly — they clamp text lightness per hue, which is why a yellow event in Apple Calendar looks readable. But Apple doesn't expose the algorithm. You can't reach for it from a third-party app, you can't write tests against it, and you can't tell what'll change in the next macOS release.
+- They verify the resolver's base foreground and background pairs.
+- They do not measure declined or cancelled tiles after final opacity compositing.
+- Pending tiles are checked against a fixed white or near-black canvas.
+- They do not test color management, screenshots, or every final rendered pixel.
 
-hora now ships the algorithm. It's deterministic, it's testable, and — importantly for the next round of work — it's a clean drop-in layer for **Liquid Glass**. The OKLCH-derived `bg` swaps cleanly for `.glassEffect().tint(...)` while `fg` and `stroke` stay unchanged. That means we get Tahoe-era styling without redoing the contrast work.
+I want to add screenshot regression coverage later. A number can catch a palette drifting below a threshold, but it cannot tell me that a border feels too weak, a title wraps badly, or an event disappears when the calendar is dense.
 
-## What's deliberately out of scope
+## What actually shipped
 
-A few things this rebuild doesn't touch, on purpose:
+The shared resolver landed on May 6 under the SZA-321 color and state refactor. A follow-up wired Month view deduplication and the new shared-event icons. The cleaner event colors were later called out in the TestFlight 0.7.5 notes.
 
-- **Liquid Glass adoption** — staged separately for the macOS 26 GA cut.
-- **Widgets, notifications, Pomodoro time strings** — they still defer to system locale and don't go through `EventTileColors`. Not the right scope to mix in.
-- **All-day pill shared-event detection in MonthView** — the all-day strip needs its own dedup hook, tracked as a follow-up.
+That history is less tidy than the original claim that a two-week rewrite shipped as one perfectly scoped release. The screenshot waited for almost two weeks. The core implementation happened mostly in one focused morning, followed by integration fixes.
 
-The temptation when you finally have the right primitives is to apply them everywhere at once. That's how you ship a rewrite that breaks five things to fix one. This shipped the algorithm and the three highest-impact surfaces. The rest follows in `0.7.x`.
+I also removed an old promise from this post that the system was a clean drop-in for Liquid Glass. It is not. A material that changes with the content behind it changes the contrast problem too. If hora moves event tiles to glass, the final composited result needs to be measured and reviewed again.
 
-## The takeaway
+What I would add today:
 
-If you're shipping a calendar, a labels system, a Kanban board, or anything else where users pick a brand color and your UI tints around it — **WCAG contrast ratios will let you ship a yellow-on-yellow tile**. APCA won't. OKLCH won't.
+- Tests for the final composited declined state.
+- Canvas colors supplied by the active theme instead of fixed constants.
+- Screenshot fixtures for the warmest and lightest hues.
+- Explicit variants for Increase Contrast and Differentiate Without Color.
+- A small audit that checks WCAG 2 ratios alongside hora's Lc regression targets.
 
-Two weeks of rewriting a color system because a tester sent me one screenshot was, in the end, the highest-leverage two weeks of the beta. The next 11-hue feature I add lands on top of a system that already proves its own correctness in tests.
+This is the part of building a native Swift app that I enjoy. The fix is not a CSS override around a web view. It becomes a small product primitive shared by calendar surfaces. I wrote more about that tradeoff in [Native App vs Electron and PWA](/blog/2026-04-14-native-app-vs-electron-pwa/).
 
-<DiscordCta />
+## The lesson I kept
 
----
+The useful lesson was not "use APCA" or "use OKLCH."
 
-If you want to see the new color system in action, the [hora Calendar](https://horacal.app) public beta is on TestFlight. If you want to switch from Fantastical or BusyCal, [the comparison post from Tuesday](/blog/2026-05-06-fantastical-alternative-google-calendar/) goes through the why.
+It was this: if users can choose the hue, opacity is not a color system.
 
-Follow the build at [@moto_szama](https://x.com/moto_szama), check out [hora Calendar](https://horacal.app), or reach out at [hello@horacal.app](mailto:hello@horacal.app).
+OKLCH made the adjustments predictable. The Lc checks gave me another regression signal. The state model stopped color from carrying every meaning by itself. The 143 checks made it harder for the same yellow-on-yellow bug to return unnoticed.
+
+One tester screenshot forced me to replace a pile of local fixes with a primitive I can still reason about months later. That is exactly the kind of beta feedback I want.
+
+The resolver described here now powers calendar views in [hora Calendar 1.0](/blog/2026-05-29-google-calendar-app-for-mac-hora-1-0/). If your schedule lives in Google Calendar and you want to see the result in a native Mac app, [try hora Calendar on the Mac App Store](https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_blog_swiftui_color_contrast&mt=8).
+
+<BlogFaq id="faq" heading="SwiftUI color contrast FAQ">
+  <BlogFaqItem
+    id="what-is-oklch"
+    question="What is OKLCH, and why use it for UI colors?"
+    answer="OKLCH represents a color as lightness, chroma, and hue. It makes perceived lightness adjustments more predictable across warm and cool colors. It does not guarantee readable contrast by itself, so every final foreground and background pair still needs to be tested."
+  />
+  <BlogFaqItem
+    id="oklch-accessible-contrast"
+    question="Does OKLCH guarantee accessible color contrast?"
+    answer="No. OKLCH is a color model, not an accessibility test. Text size, font weight, opacity, appearance mode, and the final foreground and background values all affect readability."
+  />
+  <BlogFaqItem
+    id="apca-replace-wcag"
+    question="Should APCA replace WCAG contrast testing?"
+    answer="No. APCA can be a useful additional perceptual signal, but WCAG 2.2 remains the current W3C recommendation and WCAG 3 is still a draft. hora uses local Lc checks as engineering regression targets alongside current WCAG ratios and visual review."
+  />
+  <BlogFaqItem
+    id="swiftui-increase-contrast"
+    question="How do I support Increase Contrast in SwiftUI?"
+    answer="Read colorSchemeContrast from the SwiftUI environment and provide stronger variants when it is set to increased. For interfaces where color carries meaning, also consider accessibilityDifferentiateWithoutColor and add another visible cue such as a border, icon, label, or strikethrough."
+  />
+  <BlogFaqItem
+    id="test-dynamic-color-system"
+    question="How do you test a dynamic SwiftUI color system?"
+    answer="Build a matrix across every supported hue, appearance mode, and UI state. Test primary text, secondary text, selection, invitation states, borders, and icons. Then review screenshots because a passing numeric threshold does not catch every visual problem."
+  />
+</BlogFaq>
