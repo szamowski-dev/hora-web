@@ -5,6 +5,7 @@ import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { home } from "@/content/home";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 
 export function PricingSection() {
   const pricing = home.pricing;
@@ -151,7 +152,7 @@ export function PricingSection() {
                 rel="noopener noreferrer"
                 aria-label={pricing.appStoreLabel}
                 {...analyticsAttrs("app_store_cta_click", {
-                  placement: "pricing",
+                  placement: ANALYTICS_PLACEMENTS.pricing,
                   destination: "mac_app_store",
                 })}
                 className="app-store-interactive inline-flex h-11 items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"

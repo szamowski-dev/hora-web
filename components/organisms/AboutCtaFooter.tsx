@@ -4,6 +4,7 @@ import { Icon } from "@/components/atoms/Icon";
 import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 
 export function AboutCtaFooter() {
   return (
@@ -31,7 +32,7 @@ export function AboutCtaFooter() {
               target="_blank"
               rel="noopener noreferrer"
               {...analyticsAttrs("app_store_cta_click", {
-                placement: "about_page",
+                placement: ANALYTICS_PLACEMENTS.about,
                 destination: "mac_app_store",
               })}
               className="flex min-h-14 items-center justify-between rounded-lg border border-accent/40 bg-accent px-5 py-4 font-semibold text-text transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text"

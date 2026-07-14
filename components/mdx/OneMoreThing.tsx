@@ -1,4 +1,5 @@
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { site } from "@/content/site";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 
@@ -58,7 +59,7 @@ export function OneMoreThing({
               target="_blank"
               rel="noopener noreferrer"
               {...analyticsAttrs("app_store_cta_click", {
-                placement: "blog_one_more_thing_inline",
+                placement: ANALYTICS_PLACEMENTS.blog,
                 destination: "mac_app_store",
               })}
               style={{

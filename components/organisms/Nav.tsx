@@ -4,6 +4,7 @@ import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { Logo } from "@/components/atoms/Logo";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { MobileNav } from "./MobileNav";
 
 export function Nav({ activePath }: { activePath?: string }) {
@@ -40,7 +41,7 @@ export function Nav({ activePath }: { activePath?: string }) {
               rel="noopener noreferrer"
               aria-label={site.cta.primary.label}
               {...analyticsAttrs("app_store_cta_click", {
-                placement: "nav_desktop",
+                placement: ANALYTICS_PLACEMENTS.nav,
                 destination: "mac_app_store",
               })}
               className="app-store-interactive inline-flex h-10 shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"

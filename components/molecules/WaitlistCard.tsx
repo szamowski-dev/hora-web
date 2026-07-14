@@ -3,20 +3,16 @@ import { WaitlistImpression } from "@/components/molecules/WaitlistImpression";
 import { Icon } from "@/components/atoms/Icon";
 import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { cn } from "@/lib/cn";
+import type { NewsletterPlacement } from "@/lib/analyticsSchema";
 
 type Avatar = {
   src: string;
   alt: string;
 };
 
-export type WaitlistPlacement =
-  | "beta_cta"
-  | "stay_in_loop"
-  | "testflight";
-
 type Props = {
   id?: string;
-  placement: WaitlistPlacement;
+  placement: NewsletterPlacement;
   eyebrow?: string;
   headline: string;
   subheadline?: string;
@@ -122,7 +118,7 @@ export function WaitlistCard({
       </div>
 
       <div className="relative mt-4">
-        <NewsletterForm className="max-w-none" />
+        <NewsletterForm placement={placement} className="max-w-none" />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/atoms/Icon";
 import { site } from "@/content/site";
 import { track } from "@/lib/analytics";
+import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 
 const TESTFLIGHT_HOST = "testflight.apple.com";
 const OPEN_DELAY_SECONDS = 3;
@@ -51,7 +52,7 @@ export function TestFlightDiscordPrompt() {
     clearTimers();
     setSecondsLeft(0);
     track("testflight_cta_click", {
-      placement: "testflight_prompt",
+      placement: ANALYTICS_PLACEMENTS.testflightPrompt,
       destination: "testflight",
       trigger: source,
     });
@@ -60,7 +61,7 @@ export function TestFlightDiscordPrompt() {
       {
         destination: "testflight",
         delay_seconds: OPEN_DELAY_SECONDS,
-        location: "testflight_prompt",
+        placement: ANALYTICS_PLACEMENTS.testflightPrompt,
       },
     );
 
@@ -70,8 +71,7 @@ export function TestFlightDiscordPrompt() {
 
   function trackDiscordClick() {
     const props = {
-      location: "testflight_prompt",
-      source: "testflight_modal",
+      placement: ANALYTICS_PLACEMENTS.testflightPrompt,
     };
 
     track("discord_click", props);
@@ -110,6 +110,7 @@ export function TestFlightDiscordPrompt() {
       track("testflight_discord_prompt_view", {
         destination: "testflight",
         delay_seconds: OPEN_DELAY_SECONDS,
+        placement: ANALYTICS_PLACEMENTS.testflightPrompt,
       });
       scheduleTestFlightOpen();
     }

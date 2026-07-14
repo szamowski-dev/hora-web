@@ -16,10 +16,17 @@ import {
 } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import { normalizeEmail } from "@/lib/identity";
+import type { NewsletterPlacement } from "@/lib/analyticsSchema";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-export function NewsletterForm({ className }: { className?: string }) {
+export function NewsletterForm({
+  placement,
+  className,
+}: {
+  placement: NewsletterPlacement;
+  className?: string;
+}) {
   const emailId = useId();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
@@ -34,7 +41,7 @@ export function NewsletterForm({ className }: { className?: string }) {
     setStatus("submitting");
     setMessage("");
     const attribution = getAttribution();
-    track("newsletter_submit", { method: "email", ...attribution });
+    track("newsletter_submit", { method: "email", placement, ...attribution });
 
     try {
       const res = await fetch(site.newsletter.endpoint, {
@@ -45,7 +52,11 @@ export function NewsletterForm({ className }: { className?: string }) {
       if (!res.ok) throw new Error("Request failed");
       setStatus("success");
       setMessage(site.newsletter.afterSignup.title);
-      track("newsletter_form_success", { method: "email", ...attribution });
+      track("newsletter_form_success", {
+        method: "email",
+        placement,
+        ...attribution,
+      });
       trackConversion(CONVERSION_TAGS.waitlistSignup);
       redditIdentify(normalizedEmail).then(() => {
         redditTrack("SignUp");
@@ -55,14 +66,22 @@ export function NewsletterForm({ className }: { className?: string }) {
       setMessage(
         `Something went wrong. Try again or email ${site.contactEmail}.`,
       );
-      track("newsletter_signup_error", { method: "email", ...attribution });
+      track("newsletter_signup_error", {
+        method: "email",
+        placement,
+        ...attribution,
+      });
     }
   }
 
   async function onShare() {
     const { shareText, shareUrl } = site.newsletter.afterSignup;
     const attribution = getAttribution();
-    track("post_signup_share_click", { method: "native_or_clipboard", ...attribution });
+    track("post_signup_share_click", {
+      method: "native_or_clipboard",
+      placement,
+      ...attribution,
+    });
 
     if (navigator.share) {
       try {
@@ -89,6 +108,7 @@ export function NewsletterForm({ className }: { className?: string }) {
   function onDiscordClick() {
     track("post_signup_discord_click", {
       method: "success_panel",
+      placement,
       ...getAttribution(),
     });
   }

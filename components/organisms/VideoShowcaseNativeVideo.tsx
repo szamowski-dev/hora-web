@@ -62,7 +62,7 @@ export function VideoShowcaseNativeVideo({
     if (shouldLoad) {
       if (trackedViewedRef.current) return;
       trackedViewedRef.current = true;
-      track("demo_viewed", { asset: "hero_gif" });
+      track("demo_viewed", { video_id: videoId });
       return;
     }
 
@@ -71,7 +71,7 @@ export function VideoShowcaseNativeVideo({
         if (!entry?.isIntersecting || trackedViewedRef.current) return;
         setShouldLoad(true);
         trackedViewedRef.current = true;
-        track("demo_viewed", { asset: "hero_gif" });
+        track("demo_viewed", { video_id: videoId });
         io.disconnect();
       },
       { rootMargin: "360px 0px", threshold: 0.25 },
@@ -79,7 +79,7 @@ export function VideoShowcaseNativeVideo({
 
     io.observe(video);
     return () => io.disconnect();
-  }, [shouldLoad]);
+  }, [shouldLoad, videoId]);
 
   const trackProgress = useCallback(() => {
     const video = videoRef.current;

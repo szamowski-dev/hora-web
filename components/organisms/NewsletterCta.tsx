@@ -1,13 +1,13 @@
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
 import { WaitlistImpression } from "@/components/molecules/WaitlistImpression";
-import type { WaitlistPlacement } from "@/components/molecules/WaitlistCard";
+import type { NewsletterPlacement } from "@/lib/analyticsSchema";
 
 type Props = {
   id?: string;
   eyebrow: string;
   heading: string;
   subtitle: string;
-  placement: WaitlistPlacement;
+  placement: NewsletterPlacement;
 };
 
 export function NewsletterCta({
@@ -51,7 +51,10 @@ export function NewsletterCta({
             aria-hidden
             className="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-line-strong to-transparent"
           />
-          <NewsletterForm className="relative max-w-none" />
+          <NewsletterForm
+            placement={placement}
+            className="relative max-w-none"
+          />
         </div>
       </div>
     </section>

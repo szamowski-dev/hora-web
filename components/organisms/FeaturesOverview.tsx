@@ -6,8 +6,7 @@ import { LazyLoopingVideo } from "@/components/organisms/LazyLoopingVideo";
 import { MobileVideoCarousel } from "@/components/organisms/MobileVideoCarousel";
 import { VideoShowcaseNativeVideo } from "@/components/organisms/VideoShowcaseNativeVideo";
 import { home } from "@/content/home";
-
-const DEMO_VIDEO_ID = "ahVV5J25cYM";
+import { HORA_HERO_VIDEO_ID } from "@/lib/analyticsSchema";
 
 const actionCards = [
   {
@@ -99,7 +98,7 @@ export function FeaturesOverview() {
               sources: demo.videoSources,
             }}
             actionCards={actionCards}
-            videoId={DEMO_VIDEO_ID}
+            videoId={HORA_HERO_VIDEO_ID}
           />
 
           <div className="hidden md:block">
@@ -111,7 +110,7 @@ export function FeaturesOverview() {
                 ariaLabel={demo.ariaLabel}
                 poster={demo.demoPosterSrc}
                 sources={demo.videoSources}
-                videoId={DEMO_VIDEO_ID}
+                videoId={HORA_HERO_VIDEO_ID}
               />
             </div>
 

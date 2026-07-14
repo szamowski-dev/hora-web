@@ -28,7 +28,6 @@ export function FooterSocialLink({
       rel={external ? "noopener noreferrer" : undefined}
       {...analyticsAttrs("social_click", {
         platform: platformFromHref(href),
-        action: "footer_click",
       })}
       className="inline-flex h-11 w-11 items-center justify-center rounded-md text-muted transition-colors hover:bg-white/4.5 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
     >

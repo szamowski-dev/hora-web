@@ -4,6 +4,7 @@ import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { home } from "@/content/home";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { HeroShader } from "./HeroShader";
 
 export function HeroScene({ liveCount }: { liveCount: number }) {
@@ -45,7 +46,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
               rel="noopener noreferrer"
               aria-label={site.cta.primary.label}
               {...analyticsAttrs("app_store_cta_click", {
-                placement: "hero",
+                placement: ANALYTICS_PLACEMENTS.hero,
                 destination: "mac_app_store",
               })}
               className="app-store-interactive inline-flex h-12 min-w-0 items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"

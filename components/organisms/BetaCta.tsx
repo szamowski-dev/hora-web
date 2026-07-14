@@ -1,11 +1,14 @@
 import { NewsletterCta } from "@/components/organisms/NewsletterCta";
-import type { WaitlistPlacement } from "@/components/molecules/WaitlistCard";
 import { home } from "@/content/home";
+import {
+  ANALYTICS_PLACEMENTS,
+  type NewsletterPlacement,
+} from "@/lib/analyticsSchema";
 
 export function BetaCta({
-  placement = "beta_cta",
+  placement = ANALYTICS_PLACEMENTS.betaCta,
 }: {
-  placement?: WaitlistPlacement;
+  placement?: NewsletterPlacement;
 }) {
   const cta = home.betaCta;
 

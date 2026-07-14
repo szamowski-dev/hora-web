@@ -1,4 +1,5 @@
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 
 export function DiscordCta({
   href = "https://discord.gg/8JFz4FfBGQ",
@@ -43,7 +44,9 @@ export function DiscordCta({
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          {...analyticsAttrs("discord_click", { location: "blog_cta" })}
+          {...analyticsAttrs("discord_click", {
+            placement: ANALYTICS_PLACEMENTS.blog,
+          })}
           className="inline-block font-bold text-white no-underline transition hover:brightness-110"
           style={{
             background: "var(--color-discord)",
