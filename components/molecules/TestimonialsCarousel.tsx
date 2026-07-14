@@ -5,11 +5,13 @@ import { Icon } from "@/components/atoms/Icon";
 import { cn } from "@/lib/cn";
 
 type Testimonial = {
+  id: string;
   text: string;
   author: string;
   handle: string;
   href: string;
   avatarSrc: string;
+  platform?: "x" | "reddit" | "discord";
 };
 
 export function TestimonialsCarousel({
@@ -40,7 +42,7 @@ export function TestimonialsCarousel({
 
   return (
     <div
-      className="shader-panel-soft ui-panel-soft relative min-h-[13.5rem] overflow-hidden rounded-lg md:h-[14.5rem]"
+      className="shader-panel-soft ui-panel-soft relative min-h-[13.5rem] overflow-hidden rounded-lg md:min-h-0 md:h-[12rem]"
       aria-roledescription="carousel"
       aria-label="Customer testimonials"
       onMouseEnter={() => setPaused(true)}
@@ -57,14 +59,27 @@ export function TestimonialsCarousel({
         &ldquo;
       </span>
 
-      <div className="relative h-[13.5rem] md:h-[14.5rem]">
+      <div className="relative h-[13.5rem] md:h-[12rem]">
         {quotes.map((quote, index) => {
           const isActive = index === activeIndex;
           const compact = quote.text.length > 120;
+          const veryCompact = quote.text.length > 190;
+          const isReddit = quote.platform === "reddit";
+          const isDiscord = quote.platform === "discord";
+          const platformLabel = isReddit
+            ? "Reddit"
+            : isDiscord
+              ? "Discord"
+              : "X";
+          const platformIcon = isReddit
+            ? "reddit"
+            : isDiscord
+              ? "discord"
+              : "x";
 
           return (
             <figure
-              key={quote.href}
+              key={quote.id}
               aria-hidden={!isActive}
               className={cn(
                 "absolute inset-0 flex flex-col px-5 py-5 text-left md:px-6 md:py-6",
@@ -73,7 +88,7 @@ export function TestimonialsCarousel({
             >
               <div
                 className={cn(
-                  "relative flex h-[7.1rem] items-center pt-5 transition-[opacity,transform] duration-500 ease-out motion-reduce:transition-none",
+                  "relative flex h-[7.1rem] items-center pt-5 transition-[opacity,transform] duration-500 ease-out motion-reduce:transition-none md:h-[5.4rem] md:pt-4",
                   isActive
                     ? "translate-y-0 opacity-100"
                     : "translate-y-2 opacity-0",
@@ -82,7 +97,9 @@ export function TestimonialsCarousel({
                 <blockquote
                   className={cn(
                     "max-w-2xl text-pretty font-semibold tracking-tight text-text/95",
-                    compact
+                    veryCompact
+                      ? "text-[0.7rem] leading-[1.24] md:text-[0.82rem] md:leading-[1.3]"
+                      : compact
                       ? "text-[0.8rem] leading-[1.24] md:text-[0.92rem] md:leading-[1.32]"
                       : "text-[1.18rem] leading-[1.18] md:text-[1.45rem] md:leading-[1.2]",
                   )}
@@ -118,10 +135,10 @@ export function TestimonialsCarousel({
                     target="_blank"
                     rel="noopener noreferrer"
                     tabIndex={isActive ? 0 : -1}
-                    aria-label={`Open ${quote.author} on X`}
+                    aria-label={`Open ${quote.author} on ${platformLabel}`}
                     className="mt-0.5 inline-flex items-center gap-1.5 text-xs text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:text-accent"
                   >
-                    <Icon name="x" size={12} />
+                    <Icon name={platformIcon} size={12} />
                     {quote.handle}
                   </a>
                 </div>

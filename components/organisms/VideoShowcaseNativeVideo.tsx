@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
+import { cn } from "@/lib/cn";
 
 type VideoSource = {
   src: string;
@@ -14,12 +15,14 @@ export function VideoShowcaseNativeVideo({
   sources,
   videoId,
   active = true,
+  className,
 }: {
   ariaLabel: string;
   poster: string;
   sources: readonly VideoSource[];
   videoId: string;
   active?: boolean;
+  className?: string;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const trackedViewedRef = useRef(false);
@@ -110,7 +113,10 @@ export function VideoShowcaseNativeVideo({
   return (
     <video
       ref={videoRef}
-      className="aspect-video w-full bg-black object-cover"
+      className={cn(
+        "w-full bg-black object-cover",
+        className ?? "aspect-video",
+      )}
       autoPlay={active && !reducedMotion}
       controls
       loop={!reducedMotion}

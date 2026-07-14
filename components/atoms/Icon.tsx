@@ -18,6 +18,7 @@ import LayoutDashboardIcon from "@/components/ui/layout-dashboard-icon";
 import MailFilledIcon from "@/components/ui/mail-filled-icon";
 import PenIcon from "@/components/ui/pen-icon";
 import RefreshIcon from "@/components/ui/refresh-icon";
+import RedditIcon from "@/components/ui/reddit-icon";
 import RightChevron from "@/components/ui/right-chevron";
 import ShieldCheck from "@/components/ui/shield-check";
 import TwitterXIcon from "@/components/ui/twitter-x-icon";
@@ -39,6 +40,7 @@ export type IconName =
   | "x"
   | "bluesky"
   | "discord"
+  | "reddit"
   | "apple"
   | "shield"
   | "arrow-right"
@@ -66,6 +68,7 @@ const iconMap: Record<IconName, AnimatedIconComponent> = {
   x: TwitterXIcon,
   bluesky: BlueskyIcon,
   discord: DiscordIcon,
+  reddit: RedditIcon,
   apple: AppleBrandLogo,
   shield: ShieldCheck,
   "arrow-right": RightChevron,

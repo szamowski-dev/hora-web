@@ -180,20 +180,25 @@ body:has(#mobile-navigation-toggle:checked) {
 }
 
 .discord-cta-button {
-  background: var(--color-discord);
-  color: var(--color-text);
+  border: 1px solid oklch(0.5774 0.2091 273.9 / 0.42);
+  background: oklch(0.4967 0.176 273.9 / 0.15);
+  color: var(--color-discord-text);
   box-shadow:
-    inset 0 1px 0 oklch(0.9851 0 0 / 0.18),
-    0 8px 18px -14px oklch(0.5774 0.2091 273.9 / 0.35);
+    inset 0 1px 0 oklch(0.9851 0 0 / 0.09),
+    0 14px 32px -26px var(--ui-shadow-neutral);
+  transition-property: color, background-color, border-color, box-shadow, filter;
+  transition-duration: 180ms;
 }
 
 .discord-cta-button:hover {
-  background: var(--color-discord-hover);
+  border-color: oklch(0.5774 0.2091 273.9 / 0.66);
+  background: oklch(0.4967 0.176 273.9 / 0.24);
   color: var(--color-text);
   box-shadow:
-    inset 0 1px 0 oklch(0.9851 0 0 / 0.28),
-    0 12px 26px -12px oklch(0.5774 0.2091 273.9 / 0.72),
-    0 0 18px oklch(0.5774 0.2091 273.9 / 0.18);
+    inset 0 1px 0 oklch(0.9851 0 0 / 0.13),
+    0 16px 36px -27px var(--ui-shadow-neutral),
+    0 12px 28px -25px oklch(0.5774 0.2091 273.9 / 0.42);
+  filter: brightness(1.06) saturate(1.05);
 }
 
 .blog-tag-search-input::-webkit-search-cancel-button {

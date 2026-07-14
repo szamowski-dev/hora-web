@@ -134,6 +134,7 @@ export const home = {
     },
     quotes: [
       {
+        id: "ivor-x",
         text: "Finally an app that does not ship a whole browser alongside it.",
         author: "Ivor",
         handle: "@ivorisnoob",
@@ -141,11 +142,42 @@ export const home = {
         avatarSrc: "https://unavatar.io/x/ivorisnoob",
       },
       {
+        id: "sparekontox-x",
         text: "Discovered this calendar by accident, on the #mimestream reddit. Great piece of software for those who use Google Calendar either through workspace or ordinary GMail account! Thanks!",
         author: "sparekontoX",
         handle: "@sparekontoX",
         href: "https://x.com/sparekontoX/status/2063127382555308147",
         avatarSrc: "https://unavatar.io/x/sparekontoX",
+      },
+      {
+        id: "narich-reddit",
+        text: "There's a new calendar app with a \"Mimestream feel\". Taking a Google service and making a native Mac App to utilize it. It's still in beta but I think it will get there.",
+        author: "narich",
+        handle: "u/narich",
+        href: "https://www.reddit.com/r/mimestream/comments/1txs58r/comment/opyx8bw/",
+        avatarSrc:
+          "https://i.redd.it/snoovatar/avatars/b6c3fbed-34db-405c-bea7-acbfdf4b4d76.png",
+        platform: "reddit" as const,
+      },
+      {
+        id: "luchian-bordiyan-discord",
+        text: "First of all great work with the application so far, just got the invitation and still testing. Finally a decent MacOS calendar app!",
+        author: "luchian.bordiyan",
+        handle: "Discord",
+        href: "https://discord.com/users/753186509217202216",
+        avatarSrc:
+          "https://cdn.discordapp.com/avatars/753186509217202216/86d177ff80f08cd09123e430b30f5518.webp?size=240",
+        platform: "discord" as const,
+      },
+      {
+        id: "sj-discord",
+        text: "I don't know how I stumbled across this app but I am so grateful that I did. I use Mime Stream for emails and kept on thinking to myself, I wish there was a really well-made Mac-native app for calendar just like I see MimeStream for my mail.",
+        author: "sj",
+        handle: "Discord",
+        href: "https://discord.com/users/822528250596163614",
+        avatarSrc:
+          "https://cdn.discordapp.com/avatars/822528250596163614/a0f7eecb32a55bdfd433e5c601a12b84.webp?size=240",
+        platform: "discord" as const,
       },
     ],
   },

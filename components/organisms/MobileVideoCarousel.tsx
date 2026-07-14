@@ -66,26 +66,27 @@ export function MobileVideoCarousel({
           className="shader-panel ui-panel w-[calc(100vw-3rem)] shrink-0 snap-center overflow-hidden rounded-xl"
           aria-label={`Slide 1 of ${slideCount}`}
         >
-          <div className="overflow-hidden border-b border-line">
+          <div className="relative aspect-[16/10] overflow-hidden border-b border-line">
             <VideoShowcaseNativeVideo
               ariaLabel={launchVideo.ariaLabel}
               poster={launchVideo.poster}
               sources={launchVideo.sources}
               videoId={videoId}
               active={activeIndex === 0}
+              className="h-full"
             />
           </div>
-          <div className="p-4">
+          <div className="h-32 p-4">
             <div className="flex items-center gap-3">
               <span className="font-mono text-[10px] tracking-[0.16em] text-accent/75">
                 01
               </span>
               <h3 className="text-sm font-semibold tracking-tight text-text">
-                Learn more about hora and its features.
+                hora Launch video
               </h3>
             </div>
             <p className="mt-2 text-xs leading-5 text-muted">
-              Watch this short video to learn more about hora and its features.
+              Watch hora in action and explore its key features.
             </p>
           </div>
         </article>
@@ -106,7 +107,7 @@ export function MobileVideoCarousel({
                   active={activeIndex === slideIndex}
                 />
               </div>
-              <div className="p-4">
+              <div className="h-32 p-4">
                 <div className="flex items-center gap-3">
                   <span className="font-mono text-[10px] tracking-[0.16em] text-accent/75">
                     {String(slideIndex + 1).padStart(2, "0")}

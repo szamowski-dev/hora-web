@@ -205,7 +205,7 @@ export function TestFlightDiscordPrompt() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={trackDiscordClick}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-[#5865F2] px-5 text-sm font-semibold text-white shadow-[0_18px_48px_-24px_rgba(88,101,242,0.95),inset_0_1px_0_rgba(255,255,255,0.26)] transition-colors hover:bg-[#6975ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8790ff]"
+              className="discord-cta-button inline-flex h-12 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-discord-hover"
             >
               <Icon name="discord" size={18} />
               Join Discord
