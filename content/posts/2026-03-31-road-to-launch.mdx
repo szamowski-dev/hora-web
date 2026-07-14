@@ -1,72 +1,137 @@
 ---
-title: "Road to Launch: Where hora Calendar Stands Today"
+title: "Five Days Later: The Road to Launching hora Calendar"
 date: 2026-03-31
+updated: 2026-07-14
 category: build-notes
-description: "hora Calendar is almost ready. Here's where we are with App Store prep, Google Cloud verification, TestFlight, and what's coming next."
-tags: indie-dev, build-in-public, macos, google-calendar, swiftui, app-store, testflight
-cover: /assets/blog/road-to-launch-cover.webp
+heroImage: /assets/blog/hora-road-to-launch-gate-map.webp
+heroAlt: A launch path for hora Calendar moving through reliability work, OAuth verification, TestFlight, and the Mac App Store
+description: "Five days after I first wrote about hora, the visible app worked. The road to launch was now OAuth verification, TestFlight, reliability, and feedback."
+tags: hora-calendar, mac-app-launch, google-calendar, testflight, oauth, indie-development, build-in-public
+cover: /assets/blog/hora-road-to-launch-gate-map.webp
+ogImage: /assets/blog/hora-road-to-launch-gate-map.webp
 ---
 
-It's been five days since I [started building hora](/blog/2026-03-26-building-hora/), and the app has gone from prototype to something I genuinely use every day. A lot happened since [the first 48-hour sprint](/blog/native-macos-google-calendar-app-48-hours/). Here's an honest update on where things stand.
+Five days after I first wrote about hora, the app had crossed an important line. I was no longer opening it to admire a prototype. I was opening it because my next meeting was there.
 
-## The App Is Real
+That felt like progress. It also made the remaining work harder to ignore.
 
-hora Calendar is now a fully functional native macOS Google Calendar client. Not a demo, not a mockup — a real app that I've been using as my daily driver for the past week. Multiple Google accounts, week/month/day views, menu bar widget, Pomodoro timer, keyboard shortcuts, drag & drop, the works.
+The calendar worked on my Mac. Launching it for other people meant proving that it could survive accounts, network conditions, and schedules I did not control.
 
-This week was all about hardening. The kind of work that's invisible to users but makes the difference between "cool side project" and "app I'd trust with my schedule":
+This is the state of the project as I recorded it on March 31, 2026. hora eventually reached the Mac App Store on June 30. Looking back, this was the moment the project stopped being mainly about features and became a reliability exercise.
 
-- **Security audit** — PrivacyInfo.xcprivacy manifest, proper entitlements, PKCE OAuth flow review
-- **Retry logic** — exponential backoff on Google API rate limits and network failures (no more silent sync drops)
-- **Pagination** — proper handling of large calendars with 2500+ events
-- **Undo/redo** — Cmd+Z works for creating, editing, and deleting events
-- **StoreKit 2** — subscription flow with grace period detection, TestFlight bypass
-- **Concurrent sync** — calendars now sync in parallel, not one by one
+For the earlier context, start with [why I built hora](/blog/2026-03-26-building-hora/) and [the first 48-hour sprint](/blog/native-macos-google-calendar-app-48-hours/).
 
-## Waiting on Google
+## The daily driver test changed the work
 
-Here's the honest part: we're currently waiting on **Google Cloud OAuth verification**. This is the process where Google reviews your app before allowing unrestricted access to their APIs. Until it's approved, new users see a scary "This app isn't verified" warning when signing in.
+By this point, hora could handle the calendar I used every day:
 
-You can still sign in — click "Advanced" then "Go to hora Calendar (unsafe)" — but it's not the experience I want for launch. Google's review typically takes 2-4 weeks, so we're in a holding pattern.
+- Multiple Google accounts and calendars.
+- Day, week, and month views.
+- Event creation, editing, dragging, and resizing.
+- A menu bar agenda and Pomodoro timer.
+- Keyboard commands and availability sharing.
+- Native notifications and a local calendar cache.
 
-## TestFlight Is Live
+The feature list made the app sound close to finished. My own usage made the opposite case.
 
-The app is on TestFlight. Internal testing is running, and I'm preparing to open external testing soon. If you're on the [waitlist](https://horacal.app/#newsletter), you'll be among the first to get access.
+Once the app became my daily driver, small failures stopped being interesting bugs. A duplicate event was no longer a curious edge case. It was two conflicting answers to where I needed to be. A silent sync failure meant the app could no longer be trusted.
 
-TestFlight builds get the full app experience without the subscription paywall — I want testers focused on finding bugs, not navigating payment flows.
+That changed the definition of launch readiness.
 
-## What Features Matter to You?
+## The work nobody sees in a launch screenshot
 
-This is where I need your help. hora Calendar is built for people who actually use Google Calendar on Mac every day. But "people who use Google Calendar" is a wide group — freelancers, engineering managers, founders, students.
+The last days of March went into the parts of the app that should disappear when they work.
 
-**I want to hear what features would make hora your default calendar app.**
+![The reliability layers behind hora Calendar before launch, including retries, pagination, privacy, sync, and undo](/assets/blog/hora-launch-reliability-stack.webp)
 
-Some things on my radar:
-- iOS / iPadOS companion app
-- Apple Intelligence integration (meeting briefings, smart scheduling)
-- Natural language event creation ("Coffee with Anna tomorrow at 3")
-- ICS file import/export
-- Deeper Google Workspace integration
+### Retry without hiding failure
 
-**Send your thoughts to [hello@horacal.app](mailto:hello@horacal.app)** — every email gets read. Tell me what's missing from your current calendar setup, what annoys you about existing apps, or what would make you switch.
+Google Calendar requests can fail because of a connection drop, a server error, or a rate limit. The app gained exponential backoff for retryable network errors and API responses such as `429`, `500`, and `503`.
 
-## What's Next
+The goal was not to retry forever. It was to distinguish a temporary failure from a state that required the user or a full synchronization to intervene.
 
-The roadmap has shifted. Day View and Menu Bar Widget are done. Here's the updated plan:
+### Paginate real calendars
 
-**Phase 1 — Launch & Polish** (now)
-Mac App Store submission, macOS 27 compatibility, performance optimization, and the final round of QA.
+My development account did not contain enough history to expose every pagination path.
 
-**Phase 2 — iOS & iPadOS**
-A native companion app — not a port, not a web wrapper. Same SwiftUI foundation, designed for touch from the ground up.
+The app needed to keep requesting pages for both full event fetches and incremental changes, then persist the final synchronization token. Google's [incremental sync documentation](https://developers.google.com/workspace/calendar/api/guides/sync) is explicit that a new sync token may only arrive on the last page.
 
-**Phase 3 — Apple Intelligence**
-Apple Intelligence for focus time planning, meeting prep briefings, and smart scheduling suggestions.
+Ignoring that detail works until it does not. Large calendars are very effective at finding shortcuts in sync code.
 
-**Phase 4 — Google Workspace**
-Gmail context for meetings, contact enrichment, and deeper integration with Google's ecosystem.
+### Make local actions reversible
 
-The foundation is solid. Now it's about getting it into your hands.
+Undo and redo arrived for creating, editing, and deleting events.
 
----
+This was more than wiring `Cmd+Z` to an in-memory change. The local optimistic update, the Google API request, and the eventual synchronized result all had to agree about what had happened.
 
-Join the [waitlist](https://horacal.app/#newsletter), follow the build on [@moto_szama](https://x.com/moto_szama), or just send me what you'd want from a Mac calendar app: [hello@horacal.app](mailto:hello@horacal.app).
+### Prepare the app for distribution
+
+I added the privacy manifest, reviewed entitlements and permission descriptions, corrected StoreKit subscription states, and separated TestFlight behavior from the future paid release.
+
+The app also started synchronizing calendars concurrently instead of waiting for each one in sequence. That made multi-calendar accounts faster, but it increased the need for clear isolation between accounts and local writes.
+
+This was the kind of week where a smaller diff could represent more product progress than a new screen.
+
+## Google OAuth verification became the external gate
+
+The largest launch dependency was no longer in the Xcode project. It was Google OAuth verification.
+
+hora requests access to Google Calendar data on behalf of the signed-in person. Public apps that request sensitive scopes may need Google's review before launch. Google's current [OAuth verification guide](https://support.google.com/cloud/answer/13463073?hl=en) explains the scope categories and requirements.
+
+While the production configuration was unverified, new users could encounter an "unverified app" warning and the project was subject to a user cap. Google documents both behaviors in its [unverified apps guidance](https://support.google.com/cloud/answer/7454865?hl=en).
+
+I could keep developing and testing. I did not want that warning to become somebody's first impression of the product.
+
+That waiting period was frustrating because there was no code change that could make the queue move faster. It was also useful. External review forced the website, privacy policy, scopes, consent screen, and product description to tell the same story.
+
+## TestFlight made the app real in a different way
+
+The first internal TestFlight builds were live.
+
+Installing a build through Apple's distribution path feels different from running it in Xcode. Signing, entitlements, widgets, purchase environments, and account state all have a chance to behave differently.
+
+Apple positions [TestFlight](https://developer.apple.com/help/app-store-connect/test-a-beta-version/testflight-overview) as a way to distribute beta builds, manage testers, and collect feedback before App Review. At this stage I kept the TestFlight experience focused on testing the calendar rather than evaluating a paywall.
+
+The build was usable, but external testing still required the surrounding product to be ready: test instructions, a support route, privacy language, and a way to understand what happened when something failed.
+
+## The question I was asking too broadly
+
+In the original version of this update, I asked readers which features would make hora their default calendar app.
+
+My list included an iPhone and iPad companion, natural-language event creation, smarter scheduling, ICS support, and deeper Google Workspace integrations.
+
+It was an enthusiastic question, but not a very good research prompt. People answer broad roadmap questions with broad wishes.
+
+The useful feedback arrived when I asked about a moment instead:
+
+- What do you do just before a meeting?
+- Where does Google Calendar on Mac slow you down?
+- Which event changes do you not trust another app to make?
+- What makes you return to the browser?
+
+Those questions produced bug reports and workflows I could build around. They also made it easier to say no to features that sounded impressive but did not strengthen the core product.
+
+## The roadmap was a direction, not a contract
+
+At the end of March, the planned order was:
+
+1. Finish the Mac launch and reliability work.
+2. Explore a native iPhone and iPad companion.
+3. Add focused intelligence where it improved planning or meeting context.
+4. Go deeper into useful Google Workspace workflows.
+
+That sequence captured the ambition, but it was not a promise that every idea would ship unchanged.
+
+The immediate product still had to earn the right to expand. A native Mac calendar that could not reliably synchronize recurrence, invitations, and large accounts did not need a more ambitious roadmap. It needed fewer surprises.
+
+## What happened next
+
+Two days later, I published the [week one breakdown](/blog/2026-04-02-week-one/) with the commit count, the issue list, and the parts of the app that were still rough.
+
+The first public beta followed in April. Real calendars exposed more work in recurrence, event identity, performance, and synchronization than any private checklist could. The [first public beta retrospective](/blog/2026-04-29-public-beta-week-one/) tells that part of the story.
+
+hora 1.0 eventually shipped on June 30. The launch took longer than the first burst of building, which is exactly what a calendar app needed.
+
+The visible product began in a few intense days. Trust arrived one edge case at a time.
+
+[Try hora Calendar on the Mac App Store](https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_blog_road_to_launch&mt=8)

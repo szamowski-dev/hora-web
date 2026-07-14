@@ -1,139 +1,153 @@
 ---
-title: "Public Beta Week One: Sentry and Shipping"
+title: "What hora's First Public Beta Broke in Five Days"
 date: 2026-04-29
+updated: 2026-07-14
 category: build-notes
-description: "Five days after hora Calendar's public beta on TestFlight: three patch releases, ~24 fixes, the SwiftData hang cluster Sentry caught on day one, and what's next for 0.7."
+heroImage: /assets/blog/hora-beta-week-one-signal-map.webp
+heroAlt: Sentry traces and tester reports converging on a native hora Calendar build during its first public beta week
+description: "Five days into hora's public beta, real calendars exposed SwiftData hangs, OAuth edge cases, and sync assumptions my test account never could."
 tags: macos, testflight, public-beta, swiftdata, sentry, swiftui, devlog
-cover: /assets/blog/public-beta-week-one-cover.webp
-ogImage: /assets/blog/public-beta-week-one-hero.webp
+cover: /assets/blog/hora-beta-week-one-signal-map.webp
+ogImage: /assets/blog/hora-beta-week-one-signal-map.webp
 ---
 
-![hora Calendar public beta — week one recap](/assets/blog/public-beta-week-one-hero.webp)
+Five days after hora entered public TestFlight, the app had moved from build 71 to build 89. I had shipped three patch releases, closed roughly 24 issues, and learned how little a development calendar can tell you about calendar software.
 
-Friday morning 2 weeks ago, the beta went out on TestFlight. By Saturday lunchtime Sentry was loud, Linear was filling up, and I had the first concrete answer to "does it work on machines that aren't mine."
+This is a historical build note from April 2026. hora has since reached the Mac App Store, but the first beta week still explains several decisions in the current app: tighter SwiftData queries, background export work, defensive Google API handling, and a preference for real traces over guesses.
 
-Five days later, [hora Calendar](https://horacal.app) is on **0.6.1** build 89, with three patch releases since launch, roughly two dozen issues closed, and the worst hangs already in the rear-view mirror. This is what week one of public beta actually looked like — the stats, the failures, the fixes, and what I'm carrying into 0.7.
+The beta did not reveal one spectacular failure. It revealed a cluster of ordinary assumptions that stopped being true on someone else's Mac.
 
-![Linear board - progress since beta opened](/assets/blog/linear-blog.webp)
+## Week one in numbers
 
-## The week in numbers
+- **0.6.0 build 71 to 0.6.1 build 89** in five days.
+- **Three patch releases** built around failures from real use.
+- **About 24 issues closed**, including bugs, interaction polish, and small missing workflows.
+- **Eight Sentry issue groups** triaged in the first 48 hours.
+- **Four main-thread hang groups** with the same underlying SwiftData pattern.
 
-- **0.6.0 build 71 → 0.6.1 build 89** in five days. Three patch releases chasing real-world bugs.
-- **+24 Linear issues closed** since the beta dropped — bugs, polish, and a handful of small features.
-- **Eight distinct Sentry issue groups** triaged in the first 48 hours, four of them in the same SwiftData cluster.
-- 
-- **App-side telemetry**: hora doesn't phone home with usage analytics. The truth about what's running on people's Macs comes from Sentry — and from Discord.
+Those figures were not a growth dashboard. hora did not ship product analytics that recorded what people did in their calendars. I had crash and performance diagnostics through Sentry, plus direct reports from testers.
 
-That last point matters: I deliberately don't ship product analytics in the app. A Mac calendar is not a web product. The user gets to assume that nothing about their schedule is leaving their machine for *me*. So when I say "the app is hanging on N machines," I mean Sentry told me. There is no DAU dashboard.
+That distinction mattered to me. A calendar needs enough diagnostics to recover from failures without turning a person's schedule into product telemetry.
 
-## Sentry landed two days before TestFlight
+## Sentry arrived one day after the people did
 
-The single best decision I made the week before launch was wiring up Sentry on **April 25**, two days before the beta went out, instead of "after launch when there's time." It caught the four worst hangs within 24 hours of the first installs.
+I had postponed diagnostics until the beta was already open. There was always another visible feature that felt more urgent.
 
-![Sentry Issues today](/assets/blog/sentry-blog.webp)
+Adding Sentry on April 25, one day after the first public build, was the most valuable correction of the week. The setup was modest: the Cocoa SDK, release identifiers based on `MARKETING_VERSION` and the CI build number, and an Xcode Cloud script that uploaded dSYMs.
 
-The setup is small: the Sentry Cocoa SDK in the app, a post-build script in Xcode Cloud that uploads dSYMs, release tracking tagged with `MARKETING_VERSION+CI_BUILD_NUMBER` so I can tell which build a hang came from. The full integration took a day. The first hang report came in within hours of the first install.
+Within hours, I had call stacks for failures I could not reproduce locally. Without them, the reports would have sounded like "the app sometimes freezes." With them, four apparently different hangs pointed to one shape.
 
-## The SwiftData lesson — four hangs, same shape
+![A broad SwiftData query faults thousands of models on the main thread before a narrow background fetch removes the bottleneck.](/assets/blog/hora-beta-week-one-hang-trace.webp)
 
-By Sunday afternoon I had a pattern. Four separate Sentry issues — `HORA-APP-Z`, `HORA-APP-15`, `HORA-APP-19/1C`, `HORA-APP-1V/1W/20` — all said the same thing: **App Hanging for at least 2000 ms**, all on the main thread, all in code that touched my SwiftData `@Query`.
+## Four SwiftData hangs, one pattern
 
-The shape was identical across the four:
+The affected views did different jobs. One exported widget data. Another calculated invitation badges. A third prepared notifications. All held or fetched a broad set of `Event` models and then read properties from them on the main actor.
 
-1. A SwiftUI view holds a broad `@Query` for `Event` (e.g. all events, or all events for the next N days).
-2. A computed property iterates them and reads `attendeesJSON` (a `String?` storing the JSON-encoded attendees array).
-3. Iterating + reading that property faults each `Event` model into memory and decodes the JSON.
-4. With **30 events** on my dev account: invisible. With **3,000 events** on a real calendar: a half-second of main-thread work every render.
+The sequence looked like this:
 
-The worst offender, `WidgetDataExporter.exportEvents`, was annotated `@MainActor` and faulted *all* events to filter for the next 48 hours. The fix:
+1. A view or service accessed a large collection of events.
+2. A computed property iterated the collection.
+3. Reading `attendeesJSON` faulted models into memory and decoded data.
+4. SwiftUI repeated the work during rendering or state updates.
+
+With 30 events in my test account, the cost was invisible. With 3,000 events in a real account, it became a visible main-thread pause.
+
+The worst example was the widget exporter. It fetched every event, then filtered the next 48 hours in memory while running on `@MainActor`.
+
+The corrected direction was to fetch only the required time window in a dedicated context away from the main actor:
 
 ```swift
-// Before: @MainActor exporter, faults every event to find the next 48h
-@MainActor
 final class WidgetDataExporter {
-    func exportEvents(modelContext: ModelContext) {
-        let allEvents = try modelContext.fetch(FetchDescriptor<Event>())
-        let window = allEvents.filter { /* next 48h */ }
-        // ... encode JSON, write App Group files ...
-    }
-}
-
-// After: detached, dedicated ModelContext, windowed predicate
-final class WidgetDataExporter {
-    func exportEvents(container: ModelContainer) async {
-        let accounts = await MainActor.run { /* capture small main inputs */ }
-        await Task.detached(priority: .utility) {
+    func exportEvents(container: ModelContainer) async throws {
+        try await Task.detached(priority: .utility) {
             let context = ModelContext(container)
             let now = Date()
             let end = now.addingTimeInterval(48 * 3600)
             let descriptor = FetchDescriptor<Event>(
-                predicate: #Predicate { $0.startDate >= now && $0.startDate <= end }
+                predicate: #Predicate {
+                    $0.startDate >= now && $0.startDate <= end
+                }
             )
             let events = try context.fetch(descriptor)
-            // ... encode JSON, write App Group files ...
+            // Encode the small result and update the widget files.
         }.value
-        await MainActor.run { WidgetCenter.shared.reloadAllTimelines() }
+
+        await MainActor.run {
+            WidgetCenter.shared.reloadAllTimelines()
+        }
     }
 }
 ```
 
-Same pattern applied to `SidebarModePickerWithBadge`, the `NotificationService` cluster (`pendingInvitationIDs`, `scheduleInvitationNotifications`, `updateDockBadge`), and `InvitationsView`. The latter also got a tighter `@Query` — `attendeesJSON != nil` — so the iteration domain shrinks from ~3,000 events to the few hundred actually carrying invites.
+The same principle tightened invitation queries to events that actually contained attendee data and removed broad model iteration from notification and badge paths.
 
-The lesson, written down so I don't forget: **`@MainActor` on a function whose body iterates `@Model` instances is a code smell**. SwiftData faults are I/O. I/O on main is a hang waiting for someone with a big enough calendar.
+The rule I wrote down was simple: if a main-actor function iterates SwiftData models, assume it can perform I/O until proven otherwise.
 
-## Launch-time hang: open SwiftData off-main
+## Launch was also doing too much synchronously
 
-The most painful issue of the week was `HORA-APP-13` — **95 events from 3 users in a single day**, hanging on `HoraApp.$main`. A launch-time hang. The first thing those three users saw of hora was a beachball.
+One issue appeared during startup while the app opened its `ModelContainer` against a large cold store. The first thing affected users saw was a beachball.
 
-Cause: opening the SwiftData `ModelContainer` synchronously on a cold disk with a large store. Fix: open it in a `Task`, show a tiny launch splash while it warms up, only mount the main scene once the container is ready. Cosmetic-looking, but the difference between "the app is broken" and "the app is loading" is the whole product on first launch.
+I moved container preparation out of the synchronous launch path and kept a small launch screen visible until the store was ready.
 
-<AutoVideo src="/assets/blog/hora-splash.webm" />
+That change looked cosmetic in a screenshot. It was architectural in use. "The app is loading" and "the app is frozen" can describe the same duration, but they are not the same product experience.
 
-## Google's edge cases — auth and rate limits
+<AutoVideo
+  src="/assets/blog/hora-splash.webm"
+  className="mdx-media border-0 shadow-[0_28px_86px_-54px_rgba(255,56,60,0.48),0_36px_100px_-42px_rgba(0,0,0,0.9)]"
+/>
 
-Two more Sentry findings worth their own mention:
+## Google accounts brought their own history
 
-- **`HORA-APP-R` — 403 Insufficient authentication scopes**, 160 events from 2 users. The OAuth grant succeeded, but a follow-up call asked for a scope the user hadn't approved. Fix: detect the specific 403 reason and re-prompt with the missing scope, instead of treating it as a generic API error.
-- **`HORA-APP-S` — quota exceeded** on the Google Calendar API. Two flavors of 403 (`rateLimitExceeded` vs per-user `Queries per minute per user`) needed different responses. Fix: exponential backoff with jitter, plus a token bucket so we stop hammering the same endpoint even when retries succeed.
+My Google account had a fresh OAuth grant and predictable usage. Public testers arrived with older grants, multiple accounts, different Workspace policies, and much busier calendars.
 
-These are the kind of bugs that don't exist on a developer's machine because *I* never re-grant scopes or burn quota. They show up the moment a real user has two Google accounts and a calendar that mutates faster than my tests assume.
+Two failures were especially useful.
 
-## Polish, not just hangs
+### Missing OAuth scopes
 
-The other half of the week was small things that add up:
+A request returned `403 Insufficient authentication scopes` even though sign-in itself had succeeded. Treating every 403 as a generic API error gave the user no path forward.
 
-- **Escape dismisses everything** — sheets, the Go-to-Date overlay, the search panel. (`SZA-153`, `SZA-129`)
-- **Menu-bar shows "ends in 14m"** while a meeting is in progress, instead of vanishing the moment the meeting starts. (`SZA-157`)
-- **Switching video-link provider** (Meet → Zoom → Custom) now clears the stale link, and `conferenceData: null` is sent to Google so the old Meet doesn't ghost-resurrect on next sync. (`SZA-149`)
-- **Instant local refresh** after CRUD — the calendar grid updates the moment a write completes, not on the next sync tick. The RRULE parser was rewritten component-wise so DAILY/WEEKLY presets round-trip cleanly. (`SZA-135`)
-- **Widget deep-links** route through `AppDelegate` and drain on first appear, so tapping a widget event after a cold launch lands you on the right event instead of the dashboard. (`SZA-137`)
-- **Discord link in About**, **Settings… in the dock menu**, and a rebranded launch splash that finally matches the rest of the app's look. (`SZA-130/257`, `SZA-250`)
-- **Push channel cleanup on sign-out** — the live `events.watch` channels now get an explicit `events.stop` before the OAuth token is deleted, so Google doesn't keep pushing to a dead Mac for the channel's remaining TTL. (`SZA-181`)
-- **Drop focus-triggered sync** — the focus-on-window sync was a pre-push fallback; now that APNs push is live, it's a redundant API call every time you tab back. Removed. (`SZA-136`)
+The fix was to recognize the missing-scope reason and request the required authorization again. Authentication had succeeded. Authorization for that operation had not.
 
-## What didn't ship
+### Different forms of quota pressure
 
-Being honest about what the week didn't get to:
+Google Calendar can report both general rate limits and per-user query limits. Retrying both in the same way meant the client could keep adding pressure to an already limited endpoint.
 
-- **0.7.0 work paused.** Apple Intelligence quick-add, focus-time planning, in-app calendar CRUD — all sitting on a branch. Stabilization comes first.
-- **Translations** are still mostly machine-generated. I got some help with German — that's the unblock I'm most excited about.
+I added exponential backoff with jitter during the first beta week. A local token bucket followed on May 5, after the beta had shown why a successful retry should not release every waiting request at once.
 
-## What I'm carrying into next week
+This later became part of the broader sync architecture described in [Real-time Google Calendar Sync on macOS](/blog/real-time-google-calendar-sync-macos/) and [Google Calendar API vs CalDAV](/blog/2026-05-21-google-calendar-api-vs-caldav/).
 
-- **Finish the 0.6.x stabilization tail.** A handful of WIP fixes from the 0.6.1 batch are still in flight.
-- **Ramp the second 200-tester batch.** The first wave was ~200; the [horacal.app/download](https://horacal.app/download/?utm_source=blog&utm_medium=devlog&utm_campaign=v0_6_3_week_one) link is live for the next batch.
-- **Resume 0.7.0 work** mid-week, once Sentry's been quiet for 48 hours straight.
+## The small fixes mattered too
 
-## The takeaway
+The first week was not only performance work.
 
-You only see your own calendar in dev. Production has 3,000-event accounts, expired OAuth grants, multiple Google sign-ins, and all the weird shapes of real life. Two days of Sentry instrumentation before launch saved me an entire week of "one user reported…" guesswork — and gave me concrete stacks to fix instead of vibes.
+- Escape began dismissing sheets, search, and the Go to Date overlay consistently.
+- The menu bar showed how long an active meeting had left instead of hiding it at the start time.
+- Changing a conference provider cleared the old link both locally and in Google Calendar.
+- Event edits refreshed the local grid immediately instead of waiting for the next sync signal.
+- Widget links survived a cold launch and opened the intended event.
+- Signing out explicitly stopped live Google watch channels before deleting the OAuth token.
+- The old focus-triggered refresh disappeared once push notifications made it redundant.
 
-If you're shipping a TestFlight beta this month, wire Sentry (or your equivalent) in *before* you go out the door. The flight time from "first install" to "first hang" is shorter than you think.
+Each item closed a gap between "the feature exists" and "the workflow remains coherent."
 
-<DiscordCta />
+## What I paused
 
----
+I had planned to move directly into natural-language Quick Add, focus planning, and in-app calendar management. Instead, feature work stopped while the 0.6 branch stabilized.
 
-If you're already on the beta, thanks for finding the rough edges. If you're not, the [waitlist](https://horacal.app/#newsletter) is still open and the second 200-tester batch lands this week.
+That was the correct choice. A new planning tool would not help someone whose existing calendar froze during launch.
 
-Follow the build at [@moto_szama](https://x.com/moto_szama), check out [hora Calendar](https://horacal.app), or reach out at [hello@horacal.app](mailto:hello@horacal.app).
+Some roadmap ideas returned later in better form. Quick Add and Focus Time became part of hora 1.0. Others stayed out because beta feedback changed their priority. The [1.0 retrospective](/blog/2026-05-29-google-calendar-app-for-mac-hora-1-0/) has the current version of that story.
+
+## What the first week taught me
+
+You only see your own data distribution during development.
+
+My calendar had dozens of relevant events. Testers had thousands. My OAuth grant was current. Theirs carried history. My API usage was calm. Theirs combined multiple accounts, widgets, menu bar updates, edits from phones, and colleagues moving meetings.
+
+The most useful beta question was not "does this feature work?" It was "what size, state, or history makes this feature stop working?"
+
+Sentry supplied the traces. Testers supplied the context. Neither would have been enough alone.
+
+That first public week made the roadmap less exciting for a few days and made the app more dependable. I would make that trade again.
+
+If you use Google Calendar on a Mac and want to try the current release, [download hora Calendar from the Mac App Store](https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_blog_beta_week_one&mt=8).

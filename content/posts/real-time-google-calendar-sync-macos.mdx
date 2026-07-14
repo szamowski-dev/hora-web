@@ -1,114 +1,267 @@
 ---
-title: "Real-time Google Calendar sync on macOS"
+title: "Real-Time Google Calendar Sync on macOS"
 date: 2026-04-16
+updated: 2026-07-14
 category: engineering
-description: "How hora moved from 5-minute polling to real-time Google Calendar sync on macOS — events.watch, a Cloudflare Worker, and APNs silent push."
-tags: google-calendar, real-time-sync, apns, cloudflare-workers, macos, swift, devlog
-cover: /assets/blog/from-polling-to-push-cover.webp
-ogImage: /assets/blog/from-polling-to-push-hero.webp
+heroImage: /assets/blog/google-calendar-change-signal-macos.webp
+heroAlt: A Google Calendar change signal traveling through a webhook and APNs before hora refreshes the affected Mac calendar
+description: "How hora uses Google Calendar watch channels, a Cloudflare Worker, APNs, and fallback polling to keep its native Mac calendar fresh and reliable."
+tags: google-calendar-push-notifications, real-time-calendar-sync, events-watch, apns, cloudflare-workers, macos
+cover: /assets/blog/google-calendar-change-signal-macos.webp
+ogImage: /assets/blog/google-calendar-change-signal-macos.webp
 ---
 
-Picture this. You're on a call, laptop in front of you. The other side says "actually, can we push to tomorrow at 10?" You tab to Google Calendar in the browser, drag the meeting, say thanks, close the tab. Two minutes later you glance at the hora menu bar. It's still counting down to the old slot. Five minutes from now, maybe, it'll catch up. Until then, the calendar on your desk is quietly wrong.
+The first sync loop in hora was deliberately boring. Every five minutes, fetch changes from Google Calendar and update the local cache.
 
-That's what 5-minute polling feels like. And for the last three days I've been tearing it out.
+It was easy to understand and hard to trust.
 
-[hora Calendar](https://horacal.app) — the native [macOS calendar app](https://horacal.app) I've been building in Swift and SwiftUI — now gets **real-time Google Calendar sync**: changes show up on your Mac in under three seconds, via a silent push pipeline on top of Google's `events.watch`, a small Cloudflare Worker, and APNs silent push. This post is why that matters more than it sounds like it does, and what the plumbing looks like from ten thousand feet.
+If somebody moved a meeting in the browser, the menu bar could keep showing the old time until the next poll. If I answered an invitation on my phone, the Mac app could keep the old response state. Nothing was permanently broken, but the dedicated calendar was temporarily less correct than the browser tab it was supposed to replace.
 
-## Why 5-minute polling breaks Google Calendar sync
+That is why I added a faster path:
 
-Polling every five minutes feels like a reasonable compromise — it's what most third-party calendar apps do. It's also wrong. Not technically, but experientially. Here's what five minutes of lag actually buys you:
+```text
+Google Calendar -> HTTPS webhook -> Cloudflare Worker -> APNs -> hora -> Google Calendar API
+```
 
-- **Double-bookings you can see happening.** Someone in Slack asks if you're free at 3. You glance at hora. You say yes. The meeting you accepted on the web two minutes ago doesn't show up for another three.
-- **Invitations you already answered.** You RSVP in the Google Calendar web UI. The hora menu bar still shows the red "unanswered" dot. Every glance is a half-second "did I forget something?" spike.
-- **Countdowns that are wrong by default.** A collaborator reschedules a 1:1 five minutes before it starts. Your next-meeting widget cheerfully tells you the old time. You show up late.
-- **The trust problem.** Once you've seen one of these, you stop trusting what the app shows. You double-check in the Google Calendar web UI. At that point you're not really using hora.
+I still call it real-time sync because changes normally trigger work instead of waiting for a timer. But it is not a real-time guarantee. Google says Calendar watch notifications are not 100 percent reliable, and Apple treats background notifications as low priority and does not guarantee delivery.
 
-Most of the pain isn't catastrophic failure — it's the hundred little moments where the calendar and reality disagree, and you end up tabbing to Chrome to verify. A calendar has exactly one job: be right about what happens next. Five minutes of stale data is five minutes of not doing that job. For a Mac-native calendar app that's trying to earn a permanent spot in your menu bar, that gap isn't acceptable.
+The production design therefore uses push as an invalidation signal and polling as reconciliation. That distinction is the whole architecture.
 
-## What real-time Google Calendar sync actually means
+## The short answer: Google push does not contain the changed event
 
-"Real-time" is a word people throw at anything faster than hourly, so let me be specific about end-to-end latency.
+Google Calendar supports [`events.watch`](https://developers.google.com/workspace/calendar/api/v3/reference/events/watch), which creates a notification channel for one calendar's event collection.
 
-When you change an event in Google Calendar — from any client, on any device — hora sees the change and updates on screen in **under three seconds**, typically closer to one. Not on next sync. Not after you click back into the app. Right then, while the browser tab is still open.
+When something changes, Google sends an HTTPS `POST` to the registered webhook. The request contains `X-Goog-*` headers such as the channel ID, resource ID, resource state, and message number.
 
-| Change happens                | Polling (before)   | Real-time push (now) |
-| ----------------------------- | ------------------ | -------------------- |
-| RSVP on the web               | Up to 5:00         | ~1.5s                |
-| Organiser reschedules a 1:1   | Up to 5:00         | ~1.5s                |
-| You delete an event on web    | Up to 5:00         | ~1.5s                |
-| Countdown widget reflects it  | 5:00 + widget tick | Next widget tick     |
+It does not contain the changed event.
 
-The result: hora's menu bar countdown, its week view, the `WidgetKit` complication — all reflect reality in roughly the time it takes Google to round-trip a webhook. On a cold MacBook waking from sleep, a little longer. On a desk that's been open all day, usually under a second.
+Google's [push notification guide](https://developers.google.com/workspace/calendar/api/guides/push) explicitly says Calendar notification messages have no body and require another API call to retrieve the details.
 
-![Up to 5 minutes of lag with polling vs. ~1.5 seconds end-to-end with push](/assets/blog/from-polling-to-push-latency.webp)
+That makes the webhook a doorbell, not a delivery truck. It tells hora that a calendar may be stale. The Mac still fetches event data directly from Google with the user's OAuth session.
 
-## How the Google → Cloudflare Worker → APNs pipeline works
+## The pipeline in hora
 
-Four moving parts. None especially clever on their own — the value is in stitching them together into a real-time Google Calendar sync pipeline.
+The current flow has six steps.
 
-![Google → Cloudflare Worker → APNs → Mac pipeline, three-step diagram](/assets/blog/from-polling-to-push-pipeline.webp)
+### 1. The Mac registers with APNs
 
-**1. `events.watch` channel.** When hora sees a calendar you're syncing, it asks Google Calendar: *"when anything changes on this calendar, please POST a notification to a URL I control."* Google confirms with a channel ID and an expiration date (max 7 days out). This is Google's push notifications API — publicly documented, widely used, and criminally underused by consumer calendar apps.
+After the first app frame is visible, hora calls `registerForRemoteNotifications()`. AppKit returns a device token through `NSApplicationDelegate`.
 
-**2. Cloudflare Worker.** The URL Google POSTs to is a small Worker I run. Cheapest always-on infrastructure you can buy — globally distributed, scales to zero when idle, cold starts measured in milliseconds. Its job is to receive Google's ping, verify it really came from Google, look up which Mac belongs to that channel, and fire a silent push to it via Apple's APNs.
+hora uploads this routing information to the Worker:
 
-**3. APNs silent push.** A silent push is an APNs message that wakes the app without showing any UI — no banner, no sound, no dock bounce. The app just gets a few hundred milliseconds of runtime to do one thing. (The magic incantation is `content-available: 1` with no `alert` payload.) This is the same primitive iOS uses for background refresh, and it works beautifully on the Mac.
+```swift
+let body: [String: Any] = [
+    "userId": account,
+    "apnsToken": token,
+    "apnsEnv": environment,
+    "bundleId": bundleIdentifier,
+]
+```
 
-**4. Incremental sync via `syncToken`.** The app wakes, calls Google Calendar with the `syncToken` it saved from its last sync, and Google returns only what changed — usually one or two events. They're merged into SwiftData and the UI updates through `@Query`. No full-calendar refetch, no visible flicker, no spinner.
+The environment and bundle identifier matter because development and App Store builds use different APNs routing contexts.
 
-End to end: your edit in the browser → Google → Worker → Apple → Mac → Google → SwiftData → screen. A handful of hops, a couple of seconds.
+### 2. hora watches each active Google calendar
 
-## Edge cases in Google Calendar push notifications
+For each calendar the user keeps visible and enabled for events, the app creates a unique `events.watch` channel.
 
-Three details make the difference between "works in a demo" and "works on everyone's account."
+The request includes:
 
-**Google's magic calendars don't support push.** Holiday calendars, the contacts birthdays calendar, weather — Google refuses `events.watch` on these with a 400 `pushNotSupportedForRequestedResource`. hora skips the known ones up front, and caches any new rejection so it never retries. Otherwise every launch would burn three pointless API calls and a noisy log line.
+- a fresh UUID for the channel
+- the public HTTPS webhook address
+- a channel token used to validate the incoming notification
+- a requested TTL of 604,800 seconds, which is seven days
 
-**Channels expire, so we rotate them.** Google caps `events.watch` channel lifetime at 7 days. The app keeps a record of every live channel locally, wakes every hour, and swaps any channel with less than 24 hours left for a fresh one. The old channel gets an explicit `events.stop` so Google doesn't keep pushing to a dead ID — which it will, for the full remaining TTL, if you forget.
+Google returns a resource ID and an expiration timestamp. hora stores the channel record in `UserDefaults` because this is short-lived device bookkeeping, not calendar content.
 
-**Polling is now a safety net, not the primary path.** If a channel registration is in flight, or the device hasn't finished its first handshake, or you launched offline — the old polling loop still fires. Once push is active, polling drops to every 30 minutes. Belt and braces, but the braces are doing almost all the work.
+The [`events.watch` reference](https://developers.google.com/workspace/calendar/api/v3/reference/events/watch) lists seven days as the default TTL. The broader push guide notes that Google's own limits can shorten a requested expiration, so hora trusts the returned timestamp rather than assuming the request was accepted exactly.
+
+### 3. Google calls the Worker
+
+When the watched event collection changes, Google sends a headers-only `POST` to the Cloudflare Worker.
+
+The Worker validates and maps the channel, then sends an APNs background notification to the registered app instance. The payload is intentionally small:
+
+```json
+{
+  "aps": { "content-available": 1 },
+  "hora": {
+    "calendarId": "calendar-id",
+    "channelId": "channel-id"
+  }
+}
+```
+
+There is no event title, attendee list, description, or meeting note in this relay. Google did not send that content to the webhook, and the Mac retrieves it directly from the Calendar API after the signal arrives.
+
+Cloudflare Workers fit this job because the runtime's [`fetch` handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/) can receive an external HTTP request and return a response without a permanently running application server.
+
+### 4. APNs wakes the sync path
+
+Apple calls this a background notification. Many developers call it a silent push because it has no alert, badge, or sound.
+
+Apple's [background update documentation](https://developer.apple.com/documentation/usernotifications/pushing-background-updates-to-your-app) describes `content-available: 1` and is also clear about the limitation: delivery can be delayed, coalesced, throttled, or dropped.
+
+When hora receives the payload, it records the push for watchdog health, identifies the affected calendar, and schedules a sync. A two-second debounce coalesces several notifications that arrive close together.
+
+### 5. The app fetches from Google
+
+The original implementation went straight to incremental sync using the last `syncToken`. That is the normal design described in Google's [incremental synchronization guide](https://developers.google.com/workspace/calendar/api/guides/sync): perform a full seed, store `nextSyncToken`, then request only changes on later passes.
+
+hora still uses sync tokens for ordinary synchronization. The pushed path has one extra safety rule.
+
+After I found recurring instance edits that could leave the local grid stale, the APNs handler started clearing the token for the calendar named in the push:
+
+```swift
+if let calendarID {
+    SyncTokenStore.setToken(nil, for: calendarID)
+}
+
+Task { @MainActor in
+    await PushChannelService.shared.triggerImmediateSyncFromPush()
+}
+```
+
+On the next sync pass, that affected calendar receives a fresh fetch for hora's active 90-day window, from 30 days ago to 60 days ahead. Other calendars can still use their incremental tokens.
+
+This costs more than a perfect one-event delta. It is also a deliberate correctness tradeoff. A push that arrives quickly but leaves one exception from a recurring series stale is not a successful real-time sync.
+
+### 6. The local model and system surfaces update
+
+Network results are processed in a background SwiftData context and then made visible to the main context. The same completed sync also feeds notifications, the menu bar model, widgets, and other cached surfaces.
+
+The push itself never edits local events. It only starts the reconciliation path.
+
+![The fast push path, the direct Google API fetch, and the polling safety loop used by hora on macOS.](/assets/blog/google-calendar-push-fallback-loop.webp)
+
+## Why polling still exists
+
+Two separate providers can drop or delay the signal:
+
+- Google says a small percentage of Calendar notifications can be dropped under normal conditions.
+- Apple says background notifications are low priority and not guaranteed.
+
+Removing polling would turn an optimization into a single point of failure.
+
+hora therefore changes the timer based on channel health:
 
 ```swift
 private var syncInterval: TimeInterval {
-    let base = max(1, userSetting ?? 5)
-    let effective = pushActive ? max(base, 30) : base
+    let configured = max(1, userSetting ?? 5)
+    let effective = pushActive ? max(configured, 30) : configured
     return TimeInterval(effective) * 60
 }
 ```
 
-The single flag `pushActive` is how the sync manager knows to relax. It flips to `true` the moment the first channel registers, and back to `false` on full logout.
+When at least one healthy watch channel is active, periodic polling relaxes to no more frequently than every 30 minutes. If push setup is disabled or the service degrades, the normal configured interval takes over again.
 
-## What this cost me
+This means push improves freshness and reduces unnecessary polling, but the timer remains the repair mechanism for a missed signal.
 
-About three days. The Swift side — the push-channel service, the Google watch/stop API bindings, the AppDelegate token plumbing — took roughly a day. The Worker took another. The last day was all edge cases: expiration rotation, the holiday-calendar 400, logout cleanup, and "what if the app relaunches with stale channel records and a fresh APNs token on the same morning."
+## Expiring channels are normal, not an error
 
-The thing I'd tell myself on day one: don't over-model the bookkeeping. I spent an hour sketching a SwiftData `@Model` for push channels before realising nothing about this data belongs to the user's calendar graph. It's device-local scaffolding with a 7-day lifetime — `UserDefaults` is exactly the shape of that. A flat list of records, serialised once per change, restored on launch. That's the whole API surface.
+Google does not renew notification channels automatically. The app must create a new channel with a new ID before the old one expires.
 
-## What's next
+hora stores:
 
-- **CalDAV accounts** (iCloud, Exchange via EAS) already surface through EventKit, which is local — changes are near-instant via `EKEventStore` notifications. The push work was Google-specific because Google is the only account type that needs a server round-trip at all.
-- **Coalescing for recurring edits.** If you move an entire recurring series from the web, Google can emit a handful of push pings in quick succession. The Worker already debounces per channel; for series edits I want to soften that a bit more to avoid thrashing the `syncToken`.
-- **A "live" indicator.** A tiny dot somewhere in the UI that says "this account is syncing live" vs "falling back to polling" — mostly so you can tell, when push is temporarily off, whether to trust what you see.
+```swift
+struct PushChannelRecord: Codable {
+    var channelId: String
+    var accountEmail: String
+    var calendarId: String
+    var resourceId: String
+    var expirationMs: Int64
+}
+```
 
-## FAQ: Google Calendar push, APNs silent push, and real-time sync on macOS
+The service checks returned expirations and rotates a channel when less than 24 hours remain. It makes a best-effort `channels.stop` call for the old channel and unregisters the mapping from the Worker.
 
-**Does Google Calendar support push notifications?**
-Yes. Google's `events.watch` endpoint lets a client register a webhook URL per calendar. Google POSTs a notification whenever anything on that calendar changes, up to a 7-day channel expiration — after which you re-register. The content of the push is minimal; you use your saved `syncToken` to fetch what actually changed.
+The order matters at logout too. hora stops the user's Google channels before deleting the OAuth session. If the token disappears first, the app no longer has the authorization context required to stop channels created by that account.
 
-**What is an APNs silent push, and why use it for a calendar?**
-An APNs silent push is an Apple Push Notification that wakes the app for a short background execution window without any visible UI (no banner, no sound). For a calendar, that's exactly right — you don't want a notification every time a colleague nudges a meeting. You want the app to quietly update itself so the next time you look, it's correct.
+Expired or already removed channels can return `404` or `410`. The current cleanup path treats those as steady-state outcomes rather than user-facing failures.
 
-**Is polling every 5 minutes enough for a calendar app?**
-In practice, no. Five minutes is long enough to miss meeting moves, stale RSVPs, and drive-by reschedules. The user-visible effect is a calendar you can't trust without double-checking — which defeats the point of having a dedicated app.
+## The race that changed my retry policy
 
-**How much does real-time sync cost to run?**
-Very little. The Cloudflare Workers free tier handles the webhook volume of a single-developer product comfortably, and APNs itself is free for registered Apple developers. The expensive part is the three days of engineering, not the monthly bill.
+A watch request can fail from the client's point of view after Google has already created the channel. A timeout or `5xx` does not prove the server did nothing.
 
-**Can a PWA or Electron app do the same thing on macOS?**
-A PWA can't — background silent push on macOS requires native integration with APNs, which browser-installed apps don't get. Electron apps can technically call into native code for APNs, but it's an unusual path and most Electron calendar apps just keep polling. (More on the native-vs-wrapper trade-offs in [last week's post on native apps vs Electron vs PWA](/blog/2026-04-14-native-app-vs-electron-pwa/).)
+Blindly retrying the same ID can then produce "Channel id not unique." Retrying with new IDs can leak several live channels that all notify the same webhook.
 
----
+The current implementation avoids automatic transient retries inside the one watch request. It records a pending channel ID before sending, then lets the channel service perform a later attempt with fresh bookkeeping and cooldown rules.
 
-If you want to see the difference for yourself, [hora](https://horacal.app) is on TestFlight for the Mac. Open Google Calendar in a browser, move an event, and watch hora's next-meeting widget flinch before your hand leaves the mouse.
+This is the kind of failure mode that did not appear in the happy-path diagram. It became much more important once real users had multiple accounts and calendars.
 
-Follow the build at [@moto_szama](https://x.com/moto_szama), check out [hora Calendar](https://horacal.app), or reach out at [hello@horacal.app](mailto:hello@horacal.app).
+## Quiet calendars made the watchdog harder than expected
+
+I added a watchdog to detect an account that had not received any push for a while. The first version was too eager.
+
+A quiet holiday or read-only calendar is not evidence of a broken channel. Recreating healthy channels every time a calendar stays quiet creates registration churn and more ways to hit Google limits.
+
+The current watchdog waits for consecutive silent windows, applies an exponential recovery backoff, and only tears down channels that are already near expiration. Repeated failures disable the push fast path so normal polling can keep the data fresh.
+
+This is a better operational rule than "no notification means broken."
+
+## Some Google-managed calendars need a different path
+
+During registration, hora encountered calendars that rejected `events.watch` with `pushNotSupportedForRequestedResource`. The app skips known Google-managed calendar suffixes for holidays, contacts, and weather, and caches new unsupported responses per account and calendar.
+
+That is an implementation observation, not a claim that every subscribed or read-only calendar rejects push. The service attempts the supported path and remembers the calendars Google explicitly declines.
+
+## What real-time means in the product
+
+I removed the old table claiming every change arrived in about 1.5 seconds. I did not have durable production evidence for a universal latency number, and neither Google nor Apple provides that guarantee.
+
+The honest promise is simpler:
+
+- a calendar change normally creates a signal instead of waiting for the next five-minute poll
+- the Mac fetches event content directly from Google after that signal
+- repeated signals are debounced
+- missed signals are repaired by polling
+- an invalid sync token produces a fresh sync rather than a permanently stale cache
+
+Fast is valuable. Correct after sleep, dropped notifications, expiration, logout, and recurring edits is more valuable.
+
+## What I would improve next
+
+The pushed path currently starts an application-wide sync cycle across every configured account, even though the payload identifies one calendar. Most other calendars use cheap incremental requests, but the trigger could still become more targeted.
+
+I would also like stronger end-to-end observability that separates these timings:
+
+1. Google change to webhook receipt
+2. webhook receipt to APNs acceptance
+3. APNs delivery to sync start
+4. Google fetch to visible local update
+
+That would support a latency statement based on percentiles instead of one test on my desk.
+
+The architecture described here is the sync path behind [hora Calendar 1.0](/blog/2026-05-29-google-calendar-app-for-mac-hora-1-0/). If you live in Google Calendar and want a native Mac client with push-assisted sync, [try hora Calendar on the Mac App Store](https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_blog_google_calendar_realtime_sync&mt=8).
+
+<BlogFaq id="faq" heading="Google Calendar push sync FAQ">
+  <BlogFaqItem
+    id="google-calendar-push-notifications"
+    question="Does Google Calendar support push notifications?"
+    answer="Yes. The Calendar API exposes watch methods for resources including Events. A client creates a notification channel with an HTTPS webhook, and Google sends a headers-only POST when the watched resource changes."
+  />
+  <BlogFaqItem
+    id="google-calendar-push-event-body"
+    question="Does a Google Calendar push contain the changed event?"
+    answer="No. Calendar push messages contain X-Goog headers but no event body. The receiving application must make another authenticated Calendar API request to discover and fetch the changes."
+  />
+  <BlogFaqItem
+    id="google-calendar-sync-token"
+    question="What is a Google Calendar sync token?"
+    answer="A sync token represents the state after a completed list operation. The client stores nextSyncToken and sends it with a later request to retrieve changes and deletions. If Google returns 410 Gone, the token is invalid and the client must perform a new full sync."
+  />
+  <BlogFaqItem
+    id="apns-silent-push-guaranteed"
+    question="Are APNs silent pushes guaranteed to arrive?"
+    answer="No. Apple calls them background notifications and may delay, coalesce, throttle, or drop them. They are useful as a refresh signal, but a reliable calendar client still needs periodic reconciliation."
+  />
+  <BlogFaqItem
+    id="calendar-watch-channel-renewal"
+    question="Do Google Calendar watch channels renew automatically?"
+    answer="No. A channel has an expiration returned by Google. Before it expires, the client must create a replacement with a new channel ID and should stop the old channel when possible."
+  />
+  <BlogFaqItem
+    id="hora-worker-calendar-data"
+    question="Does hora send event details through the Cloudflare Worker?"
+    answer="The Google webhook message has no event body, and hora's APNs payload carries routing identifiers such as the calendar and channel IDs. Event titles, descriptions, attendees, and meeting details are fetched by the Mac directly from Google after the signal arrives."
+  />
+</BlogFaq>
