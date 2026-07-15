@@ -3,12 +3,11 @@ import { draftMode } from "next/headers";
 import Script from "next/script";
 import localFont from "next/font/local";
 import { Geist, Newsreader } from "next/font/google";
-import { VisualEditing } from "next-sanity/visual-editing";
 import { Nav } from "@/components/organisms/Nav";
 import { Footer } from "@/components/organisms/Footer";
 import { AmbientGlow } from "@/components/organisms/AmbientGlow";
 import { LayoutEnhancements } from "@/components/molecules/LayoutEnhancements";
-import { DisableDraftMode } from "@/components/sanity/DisableDraftMode";
+import { DraftModeTools } from "@/components/sanity/DraftModeTools";
 import { REDDIT_PIXEL_ID } from "@/lib/analytics";
 import "./globals.css";
 
@@ -110,7 +109,6 @@ export default async function RootLayout({
       className={`${geist.variable} ${newsreader.variable} ${bumbbled.variable}`}
     >
       <head>
-        <link rel="preconnect" href="https://i.ytimg.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://plausible.io" />
         <link rel="dns-prefetch" href="https://consent.cookiebot.com" />
         <link rel="dns-prefetch" href="https://consentcdn.cookiebot.com" />
@@ -172,12 +170,7 @@ export default async function RootLayout({
         </main>
         <Footer />
 
-        {isDraftMode ? (
-          <>
-            <VisualEditing />
-            <DisableDraftMode />
-          </>
-        ) : null}
+        {isDraftMode ? <DraftModeTools /> : null}
 
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
@@ -199,7 +192,7 @@ export default async function RootLayout({
         <Script
           id="plausible"
           src="https://plausible.io/js/pa-wsB6_ypdQmpn7Lf06SUrR.js"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         <Script id="plausible-init" strategy="afterInteractive">
           {`window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()`}

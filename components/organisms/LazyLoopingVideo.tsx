@@ -19,7 +19,7 @@ export function LazyLoopingVideo({
 
   useEffect(() => {
     const root = rootRef.current;
-    if (!root || shouldLoad) return;
+    if (!root || shouldLoad || !active) return;
 
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -27,12 +27,12 @@ export function LazyLoopingVideo({
         setShouldLoad(true);
         io.disconnect();
       },
-      { rootMargin: "360px 0px" },
+      { rootMargin: "0px", threshold: 0.15 },
     );
 
     io.observe(root);
     return () => io.disconnect();
-  }, [shouldLoad]);
+  }, [active, shouldLoad]);
 
   useEffect(() => {
     const video = videoRef.current;

@@ -104,7 +104,8 @@ export function HeroScene({
               width={content.screenshot.width}
               height={content.screenshot.height}
               priority
-              quality={90}
+              fetchPriority="high"
+              quality={75}
               placeholder={content.screenshot.blurDataURL ? "blur" : "empty"}
               blurDataURL={content.screenshot.blurDataURL}
               sizes="(min-width: 1280px) 820px, (min-width: 1024px) 68vw, 100vw"

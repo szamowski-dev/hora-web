@@ -130,8 +130,8 @@ function mapImage(
     invalidHome(`${field}.asset dimensions are missing`);
   }
   const src = sanityImageUrl(value, {
-    width: Math.min(dimensions.width, 3200),
-    quality: 90,
+    width: Math.min(dimensions.width, 1920),
+    quality: 82,
   });
   if (!src) invalidHome(`${field}.asset is missing`);
 

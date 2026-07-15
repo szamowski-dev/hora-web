@@ -74,7 +74,7 @@ export function VideoShowcaseNativeVideo({
         track("demo_viewed", { video_id: videoId });
         io.disconnect();
       },
-      { rootMargin: "360px 0px", threshold: 0.25 },
+      { rootMargin: "0px", threshold: 0.25 },
     );
 
     io.observe(video);
@@ -122,7 +122,7 @@ export function VideoShowcaseNativeVideo({
       loop={!reducedMotion}
       muted
       playsInline
-      preload="metadata"
+      preload="none"
       poster={poster}
       aria-label={ariaLabel}
       onPlay={trackPlayed}

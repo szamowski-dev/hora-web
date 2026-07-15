@@ -13,7 +13,7 @@ import { getHomePage } from "@/lib/home-repository";
 import { defaultOg } from "@/lib/og";
 import { getTestFlightTesterCount } from "@/lib/testflight";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 600;
 
 const personLd = {
   "@context": "https://schema.org",
