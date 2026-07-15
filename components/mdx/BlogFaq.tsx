@@ -24,9 +24,15 @@ export function BlogFaqItem(_props: BlogFaqItemProps) {
 }
 
 function faqAnswerText(item: BlogFaqItemModel) {
-  if (!item.answerLink) return item.answer;
+  const answer =
+    item.plainAnswer ??
+    (typeof item.answer === "string" || typeof item.answer === "number"
+      ? String(item.answer)
+      : "");
 
-  return [item.answer, item.answerLink.label, item.answerLink.trailingText]
+  if (!item.answerLink) return answer;
+
+  return [answer, item.answerLink.label, item.answerLink.trailingText]
     .filter(Boolean)
     .join(" ");
 }

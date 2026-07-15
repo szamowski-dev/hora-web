@@ -7,9 +7,9 @@ import {
   RssIcon,
   SearchIcon,
 } from "@/components/ui/blog-icons";
-import { getBlogCategories } from "@/lib/blog";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import type {
+  BlogCategory,
   BlogCategorySlug,
   BlogPostSummary,
 } from "@/lib/blog-model";
@@ -24,6 +24,7 @@ type Pagination = {
 type Props = {
   title?: string;
   subtitle?: string;
+  categories: readonly BlogCategory[];
   featured?: BlogPostSummary | null;
   posts: readonly BlogPostSummary[];
   pagination?: Pagination;
@@ -40,6 +41,7 @@ const DEFAULT_SUBTITLE =
 export function BlogListingPage({
   title = "Blog",
   subtitle = DEFAULT_SUBTITLE,
+  categories,
   featured,
   posts,
   pagination,
@@ -49,7 +51,6 @@ export function BlogListingPage({
   searchQuery,
   allCategoryActive,
 }: Props) {
-  const categories = getBlogCategories();
   const heading = listHeading ?? (featured ? "Latest stories" : "Stories");
   const isAllCategoryActive =
     allCategoryActive ?? (!activeCategory && title === "Blog");

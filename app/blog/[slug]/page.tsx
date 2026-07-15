@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogPostLayout } from "@/components/templates/BlogPostLayout";
-import { getRelatedPosts, postToDetail } from "@/lib/blog";
-import { getAllPosts, getPostBySlug } from "@/lib/mdx";
+import { site } from "@/content/site";
+import { getRelatedPosts } from "@/lib/blog";
+import {
+  getAllBlogPosts,
+  getBlogPostBySlug,
+} from "@/lib/blog-repository";
 
 type Params = { slug: string };
 
 export async function generateStaticParams(): Promise<Params[]> {
-  const posts = await getAllPosts();
+  const posts = await getAllBlogPosts({
+    perspective: "published",
+    stega: false,
+  });
   return posts.map((p) => ({ slug: p.slug }));
 }
 
@@ -17,30 +24,44 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const post = await getBlogPostBySlug(slug, {
+    perspective: "published",
+    stega: false,
+  });
   if (!post) return {};
-  const fm = post.frontmatter;
-  const og = fm.ogImage || fm.cover || "/assets/seo/default-og-image.png";
-  const canonical = `/blog/${slug}/`;
+
+  const image = post.ogImage ?? post.heroImage;
+  const imageUrl = image?.src ?? "/assets/seo/default-og-image.png";
+  const canonical = post.seo.canonicalUrl || `/blog/${slug}/`;
+  const canonicalUrl = absoluteUrl(canonical);
+
   return {
-    title: fm.title,
-    description: fm.description,
+    title: post.seo.title,
+    description: post.seo.description,
     alternates: { canonical },
+    robots: { index: !post.seo.noIndex, follow: true },
     openGraph: {
       type: "article",
-      title: fm.title,
-      description: fm.description,
-      url: `https://horacal.app${canonical}`,
-      images: [{ url: og }],
-      publishedTime: fm.date,
-      modifiedTime: fm.updated ?? fm.date,
-      authors: ["Maciej Szamowski"],
+      title: post.seo.title,
+      description: post.seo.description,
+      url: canonicalUrl,
+      images: [
+        {
+          url: imageUrl,
+          ...(image?.width ? { width: image.width } : {}),
+          ...(image?.height ? { height: image.height } : {}),
+          alt: image?.alt || post.title,
+        },
+      ],
+      publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
+      authors: [post.author.name],
     },
     twitter: {
       card: "summary_large_image",
-      title: fm.title,
-      description: fm.description,
-      images: [og],
+      title: post.seo.title,
+      description: post.seo.description,
+      images: [imageUrl],
     },
   };
 }
@@ -52,31 +73,33 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params;
   const [post, allPosts] = await Promise.all([
-    getPostBySlug(slug),
-    getAllPosts(),
+    getBlogPostBySlug(slug),
+    getAllBlogPosts(),
   ]);
   if (!post) notFound();
 
-  const fm = post.frontmatter;
-  const og = fm.ogImage || fm.cover || "/assets/seo/default-og-image.png";
-  const url = `https://horacal.app/blog/${slug}/`;
+  const image = post.ogImage ?? post.heroImage;
+  const imageUrl = absoluteUrl(
+    image?.src ?? "/assets/seo/default-og-image.png",
+  );
+  const url = absoluteUrl(post.seo.canonicalUrl || `/blog/${slug}/`);
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "BlogPosting",
-        headline: fm.title,
-        description: fm.description,
-        datePublished: fm.date,
-        dateModified: fm.updated ?? fm.date,
+        headline: post.title,
+        description: post.excerpt,
+        datePublished: post.publishedAt,
+        dateModified: post.updatedAt,
         author: {
           "@type": "Person",
-          name: "Maciej Szamowski",
-          url: "https://szamowski.dev",
+          name: post.author.name,
+          url: absoluteUrl(post.author.href),
         },
         publisher: { "@id": "https://horacal.app/#organization" },
         url,
-        image: og.startsWith("http") ? og : `https://horacal.app${og}`,
+        image: imageUrl,
         mainEntityOfPage: url,
       },
       {
@@ -97,24 +120,29 @@ export default async function BlogPostPage({
           {
             "@type": "ListItem",
             position: 3,
-            name: fm.title,
+            name: post.title,
             item: url,
           },
         ],
       },
     ],
   };
+  const serializedJsonLd = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 
   return (
     <>
       <BlogPostLayout
-        post={postToDetail(post)}
+        post={post}
         relatedPosts={getRelatedPosts(allPosts, slug)}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializedJsonLd }}
       />
     </>
   );
+}
+
+function absoluteUrl(value: string): string {
+  return new URL(value, site.url).toString();
 }

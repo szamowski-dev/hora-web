@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BlogListingPage } from "@/components/templates/BlogListingPage";
-import { postToSummary, searchPosts } from "@/lib/blog";
-import { getAllPosts } from "@/lib/mdx";
+import { getBlogCategories, searchPosts } from "@/lib/blog";
+import { getAllBlogPosts } from "@/lib/blog-repository";
 
 type SearchParams = { q?: string | string[] };
 
@@ -19,8 +19,8 @@ export default async function BlogSearchPage({
 }) {
   const { q } = await searchParams;
   const query = (Array.isArray(q) ? q[0] : q)?.trim() ?? "";
-  const allPosts = await getAllPosts();
-  const posts = query ? searchPosts(allPosts, query).map(postToSummary) : [];
+  const allPosts = await getAllBlogPosts();
+  const posts = query ? searchPosts(allPosts, query) : [];
   const title = query
     ? `Search results for “${query}”`
     : "Search the blog";
@@ -35,6 +35,7 @@ export default async function BlogSearchPage({
     <BlogListingPage
       title={title}
       subtitle={subtitle}
+      categories={getBlogCategories(allPosts)}
       posts={posts}
       emptyMessage={emptyMessage}
       searchQuery={query}

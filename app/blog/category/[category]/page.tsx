@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogListingPage } from "@/components/templates/BlogListingPage";
-import { getPostsByCategory, postToSummary } from "@/lib/blog";
-import { BLOG_CATEGORIES } from "@/lib/blog-model";
-import { getAllPosts } from "@/lib/mdx";
+import { getBlogCategories, getPostsByCategory } from "@/lib/blog";
+import { getAllBlogPosts } from "@/lib/blog-repository";
 import { defaultOg } from "@/lib/og";
 
 type Params = { category: string };
 
 export const revalidate = 600;
 
-export function generateStaticParams(): Params[] {
-  return BLOG_CATEGORIES.map((category) => ({ category: category.slug }));
+export async function generateStaticParams(): Promise<Params[]> {
+  const posts = await getAllBlogPosts({
+    perspective: "published",
+    stega: false,
+  });
+  return getBlogCategories(posts).map((category) => ({
+    category: category.slug,
+  }));
 }
 
 export async function generateMetadata({
@@ -20,7 +25,11 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { category: categorySlug } = await params;
-  const category = BLOG_CATEGORIES.find(
+  const posts = await getAllBlogPosts({
+    perspective: "published",
+    stega: false,
+  });
+  const category = getBlogCategories(posts).find(
     (item) => item.slug === categorySlug,
   );
   if (!category) return {};
@@ -44,20 +53,22 @@ export default async function BlogCategoryPage({
   params: Promise<Params>;
 }) {
   const { category: categorySlug } = await params;
-  const category = BLOG_CATEGORIES.find(
+  const posts = await getAllBlogPosts();
+  const categories = getBlogCategories(posts);
+  const category = categories.find(
     (item) => item.slug === categorySlug,
   );
   if (!category) notFound();
 
-  const posts = await getAllPosts();
   const categoryPosts = getPostsByCategory(posts, category.slug);
 
   return (
     <BlogListingPage
       title={category.label}
       subtitle={category.description}
+      categories={categories}
       activeCategory={category.slug}
-      posts={categoryPosts.map(postToSummary)}
+      posts={categoryPosts}
     />
   );
 }

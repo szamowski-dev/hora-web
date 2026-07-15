@@ -1,5 +1,5 @@
-import { getAllPosts } from "@/lib/mdx";
 import { site } from "@/content/site";
+import { getAllBlogPosts } from "@/lib/blog-repository";
 
 export const dynamic = "force-static";
 
@@ -13,18 +13,24 @@ function escapeXml(s: string): string {
 }
 
 export async function GET() {
-  const posts = await getAllPosts();
+  const posts = await getAllBlogPosts({
+    perspective: "published",
+    stega: false,
+  });
 
   const items = posts
+    .filter((post) => !post.seo.noIndex)
     .map((post) => {
-      const { slug, frontmatter } = post;
-      const url = `${site.url}/blog/${slug}/`;
+      const url = new URL(
+        post.seo.canonicalUrl || `/blog/${post.slug}/`,
+        site.url,
+      ).toString();
       return `    <item>
-      <title>${escapeXml(frontmatter.title)}</title>
-      <link>${url}</link>
-      <guid>${url}</guid>
-      <pubDate>${new Date(frontmatter.date).toUTCString()}</pubDate>
-      <description>${escapeXml(frontmatter.description)}</description>
+      <title>${escapeXml(post.title)}</title>
+      <link>${escapeXml(url)}</link>
+      <guid>${escapeXml(url)}</guid>
+      <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
+      <description>${escapeXml(post.excerpt)}</description>
     </item>`;
     })
     .join("\n");

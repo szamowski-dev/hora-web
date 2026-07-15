@@ -3,10 +3,10 @@ import { BlogListingPage } from "@/components/templates/BlogListingPage";
 import { blog } from "@/content/blog";
 import {
   BLOG_PAGE_SIZE,
+  getBlogCategories,
   paginateEditorialPosts,
-  postToSummary,
 } from "@/lib/blog";
-import { getAllPosts } from "@/lib/mdx";
+import { getAllBlogPosts } from "@/lib/blog-repository";
 import { defaultOg } from "@/lib/og";
 import { breadcrumbList } from "@/lib/jsonld";
 
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogIndexPage() {
-  const posts = await getAllPosts();
+  const posts = await getAllBlogPosts();
   const page = paginateEditorialPosts(posts, 1, BLOG_PAGE_SIZE);
   const breadcrumbs = breadcrumbList([
     { name: "Home", url: "https://horacal.app/" },
@@ -41,8 +41,9 @@ export default async function BlogIndexPage() {
   return (
     <>
       <BlogListingPage
-        featured={page.featured ? postToSummary(page.featured) : null}
-        posts={page.posts.map(postToSummary)}
+        categories={getBlogCategories(posts)}
+        featured={page.featured}
+        posts={page.posts}
         pagination={{
           currentPage: page.page,
           totalPages: page.totalPages,

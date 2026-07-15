@@ -7,7 +7,7 @@ import { PostCard } from "@/components/molecules/PostCard";
 import { ShareButton } from "@/components/molecules/ShareButton";
 import { BetaCta } from "@/components/organisms/BetaCta";
 import { site } from "@/content/site";
-import { formatBlogDate, tagLabel } from "@/lib/blog";
+import { formatBlogDate } from "@/lib/blog";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import type {
   BlogPostDetail,
@@ -117,11 +117,11 @@ export function BlogPostLayout({
                 <span className="font-semibold text-text">Topics</span>
                 {post.tags.map((tag) => (
                   <Link
-                    key={tag}
-                    href={`/blog/tag/${tag}/`}
+                    key={tag.slug}
+                    href={`/blog/tag/${tag.slug}/`}
                     className="inline-flex min-h-11 items-center rounded-sm text-muted underline decoration-line-strong underline-offset-4 transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                   >
-                    {tagLabel(tag)}
+                    {tag.label}
                   </Link>
                 ))}
               </div>

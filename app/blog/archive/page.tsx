@@ -4,8 +4,8 @@ import { BetaCta } from "@/components/organisms/BetaCta";
 import { ChevronRightIcon } from "@/components/ui/blog-icons";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { getMonthlyArchives } from "@/lib/blog";
+import { getAllBlogPosts } from "@/lib/blog-repository";
 import { breadcrumbList } from "@/lib/jsonld";
-import { getAllPosts } from "@/lib/mdx";
 import { defaultOg } from "@/lib/og";
 
 export const revalidate = 600;
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogArchiveIndexPage() {
-  const posts = await getAllPosts();
+  const posts = await getAllBlogPosts();
   const archives = getMonthlyArchives(posts);
   const breadcrumbs = breadcrumbList([
     { name: "Home", url: "https://horacal.app/" },

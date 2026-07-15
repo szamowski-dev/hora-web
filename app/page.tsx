@@ -7,8 +7,7 @@ import { BetaCta } from "@/components/organisms/BetaCta";
 import { Roadmap } from "@/components/organisms/Roadmap";
 import { Faq } from "@/components/organisms/Faq";
 import { BlogPreview } from "@/components/organisms/BlogPreview";
-import { postToSummary } from "@/lib/blog";
-import { getAllPosts } from "@/lib/mdx";
+import { getAllBlogPosts } from "@/lib/blog-repository";
 
 export const dynamic = "force-dynamic";
 
@@ -67,8 +66,8 @@ const videoLd = {
 };
 
 export default async function Home() {
-  const allPosts = await getAllPosts();
-  const posts = allPosts.slice(0, 3).map(postToSummary);
+  const allPosts = await getAllBlogPosts();
+  const posts = allPosts.slice(0, 3);
 
   return (
     <>
