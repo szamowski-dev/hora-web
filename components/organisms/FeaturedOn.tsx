@@ -1,12 +1,14 @@
-import { home } from "@/content/home";
 import { cn } from "@/lib/cn";
+import type { HomePageContent } from "@/lib/home-model";
 
-export function FeaturedOn() {
-  const f = home.featuredOn;
-
+export function FeaturedOn({
+  content,
+}: {
+  content: HomePageContent["featuredOn"];
+}) {
   return (
     <section
-      aria-label={f.label}
+      aria-label={content.label}
       className="home-section relative overflow-hidden border-b py-10 md:py-12"
     >
       <div
@@ -26,11 +28,11 @@ export function FeaturedOn() {
       <div className="relative mx-auto max-w-295 px-6">
         <div className="grid gap-5 md:grid-cols-[7.5rem_minmax(0,1fr)] md:items-center">
           <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted/80 md:whitespace-nowrap">
-            {f.label}
+            {content.label}
           </span>
           <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 sm:gap-x-6 md:justify-start lg:gap-x-7">
-            {f.badges.map((badge) => (
-              <li key={badge.href} data-anim="featured-badge" className="flex min-w-0 items-center justify-center">
+            {content.badges.map((badge) => (
+              <li key={badge.name} data-anim="featured-badge" className="flex min-w-0 items-center justify-center">
                 <a
                   href={badge.href}
                   target="_blank"
@@ -47,8 +49,8 @@ export function FeaturedOn() {
                     decoding="async"
                     className={cn(
                       "block",
-                      "className" in badge && badge.className
-                        ? badge.className
+                      badge.variant === "productHunt"
+                        ? "h-11 w-[8.75rem] max-w-none object-fill md:h-16 md:w-[12.5rem]"
                         : "h-10 w-auto object-contain md:h-11",
                     )}
                   />

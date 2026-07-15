@@ -1,18 +1,21 @@
 import { FaqItem } from "@/components/molecules/FaqItem";
 import { Icon } from "@/components/atoms/Icon";
 import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
-import { home } from "@/content/home";
 import { site } from "@/content/site";
+import type { HomePageContent } from "@/lib/home-model";
 
-export function Faq() {
-  const faq = home.faq;
+export function Faq({
+  content,
+}: {
+  content: HomePageContent["faq"];
+}) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: faq.items.map((item) => ({
+    mainEntity: content.items.map((item) => ({
       "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
     })),
   };
 
@@ -27,15 +30,15 @@ export function Faq() {
         <div className="flex flex-col gap-5 border-b border-line-strong pb-8 md:flex-row md:items-end md:justify-between md:pb-10">
           <div>
             <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
-              {faq.heading.prefix}
-              <span className="text-accent"> {faq.heading.suffixGradient}</span>
+              {content.titlePrefix}
+              <span className="text-accent"> {content.titleAccent}</span>
             </h2>
             <p className="mt-4 max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
-              {faq.subtitle}
+              {content.subtitle}
             </p>
           </div>
           <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-dim">
-            {String(faq.items.length).padStart(2, "0")} questions / quick
+            {String(content.items.length).padStart(2, "0")} questions / quick
             answers
           </p>
         </div>
@@ -46,19 +49,19 @@ export function Faq() {
             className="pointer-events-none absolute inset-x-8 top-0 z-10 h-px bg-linear-to-r from-transparent via-accent/70 to-transparent"
           />
           <div>
-            {faq.items.map((item, index) => (
+            {content.items.map((item, index) => (
               <div
-                key={item.q}
+                key={item.question}
                 data-anim="faq-item"
                 className={
-                  index < faq.items.length - 1
+                  index < content.items.length - 1
                     ? "border-b border-line"
                     : undefined
                 }
               >
                 <FaqItem
-                  question={item.q}
-                  answer={item.a}
+                  question={item.question}
+                  answer={item.answer}
                   index={index}
                   variant="integrated"
                 />
@@ -69,10 +72,10 @@ export function Faq() {
           <div className="flex flex-col gap-4 border-t border-line bg-overlay px-5 py-5 sm:flex-row sm:items-center sm:justify-between md:px-6">
             <div>
               <p className="text-sm font-medium text-text">
-                Still have questions?
+                {content.footerTitle}
               </p>
               <p className="mt-1 text-xs leading-5 text-muted">
-                Talk directly with the community and the developer behind hora.
+                {content.footerDescription}
               </p>
             </div>
             <a
@@ -82,7 +85,7 @@ export function Faq() {
               className="discord-cta-button inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md px-4 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-discord-hover focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
               <Icon name="discord" size={17} />
-              Join hora Discord
+              {content.footerLinkLabel}
             </a>
           </div>
         </div>

@@ -1,89 +1,28 @@
-"use client";
+import { DesktopHeroShader } from "@/components/organisms/DesktopHeroShader";
 
-import { useEffect, useState } from "react";
-import {
-  Ascii,
-  Blob,
-  ChromaFlow,
-  FilmGrain,
-  LinearGradient,
-  Shader,
-} from "shaders/react";
+const heroBackground = [
+  "radial-gradient(ellipse 74% 78% at 6% 18%, oklch(0.6532 0.2328 25.7 / 0.34), transparent 66%)",
+  "radial-gradient(ellipse 70% 82% at 88% 18%, oklch(0.4269 0.1069 255.7 / 0.38), transparent 68%)",
+  "radial-gradient(ellipse 68% 70% at 76% 86%, oklch(0.42 0.1 160 / 0.18), transparent 70%)",
+  "radial-gradient(ellipse 74% 76% at 40% 54%, oklch(0.407 0.128 306 / 0.14), transparent 72%)",
+  "linear-gradient(135deg, oklch(0.1438 0.0075 256.9), oklch(0.105 0.008 261.8))",
+].join(", ");
 
+/**
+ * Server-rendered fallback for every device. The real WebGL layer is restored
+ * on desktop by DesktopHeroShader, but stays outside the mobile bundle.
+ */
 export function HeroShader() {
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [showAscii, setShowAscii] = useState(false);
-
-  useEffect(() => {
-    const motionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const desktopMedia = window.matchMedia("(min-width: 768px)");
-    const update = () => {
-      setReducedMotion(motionMedia.matches);
-      setShowAscii(desktopMedia.matches);
-    };
-
-    update();
-    motionMedia.addEventListener("change", update);
-    desktopMedia.addEventListener("change", update);
-    return () => {
-      motionMedia.removeEventListener("change", update);
-      desktopMedia.removeEventListener("change", update);
-    };
-  }, []);
-
   return (
-    <div className="absolute inset-0 bg-panel-deep">
-      <Shader
-        className="h-full w-full"
-        colorSpace="p3-linear"
-        toneMapping="aces"
-        disableTelemetry
-      >
-        <LinearGradient
-          id="hero-gradient-mask"
-          angle={62}
-          colorA="oklch(0.6532 0.2328 25.7)"
-          colorB="oklch(0.1438 0.0075 256.9)"
-          colorSpace="oklch"
-          edges="mirror"
-          end={{ x: 1, y: 0 }}
-        />
-        <Blob
-          id="hero-flow-mask"
-          blendMode="normal-oklch"
-          center={{ x: 1, y: 0.5 }}
-          colorA="oklch(0.4269 0.1069 255.7)"
-          colorB="oklch(0.3345 0.121 25.7)"
-          colorSpace="oklch"
-          highlightColor="oklch(0.6532 0.2328 25.7)"
-          highlightIntensity={0.3}
-          maskSource="hero-gradient-mask"
-          opacity={0.52}
-          size={0.85}
-          speed={reducedMotion ? 0 : 0.18}
-        />
-        <Ascii
-          alphaThreshold={0.06}
-          blendMode="screen"
-          cellSize={18}
-          characters="01<>/{}=+-. "
-          fontFamily="Geist Mono"
-          gamma={1.45}
-          opacity={0.28}
-          preserveAlpha
-          spacing={0.82}
-          visible={showAscii}
-        />
-        <FilmGrain strength={0.1} animated={false} />
-        <ChromaFlow
-          blendMode="normal"
-          intensity={reducedMotion ? 0 : 0.7}
-          maskSource="hero-flow-mask"
-          momentum={reducedMotion ? 0 : 36}
-          opacity={0.7}
-          radius={1.6}
-        />
-      </Shader>
+    <div className="absolute inset-0 overflow-hidden bg-panel-deep">
+      <div
+        className="absolute inset-0"
+        style={{ backgroundImage: heroBackground }}
+      />
+      <div className="home-grid absolute inset-0 opacity-45" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_58%_68%_at_58%_34%,transparent_0%,oklch(0.105_0.008_261.8/0.14)_68%,oklch(0.105_0.008_261.8/0.42)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.9851_0_0/0.025),transparent_28%,oklch(0_0_0/0.2))]" />
+      <DesktopHeroShader />
     </div>
   );
 }

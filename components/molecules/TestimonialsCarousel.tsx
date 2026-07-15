@@ -3,21 +3,14 @@
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/atoms/Icon";
 import { cn } from "@/lib/cn";
-
-type Testimonial = {
-  id: string;
-  text: string;
-  author: string;
-  handle: string;
-  href: string;
-  avatarSrc: string;
-  platform?: "x" | "reddit" | "discord";
-};
+import type { HomePageContent } from "@/lib/home-model";
 
 export function TestimonialsCarousel({
   quotes,
 }: {
-  quotes: readonly Testimonial[];
+  quotes: ReadonlyArray<
+    HomePageContent["socialProof"]["testimonials"][number]
+  >;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -62,9 +55,9 @@ export function TestimonialsCarousel({
       <div className="relative h-full">
         {quotes.map((quote, index) => {
           const isActive = index === activeIndex;
-          const short = quote.text.length < 90;
-          const compact = quote.text.length > 120;
-          const veryCompact = quote.text.length > 190;
+          const short = quote.quote.length < 90;
+          const compact = quote.quote.length > 120;
+          const veryCompact = quote.quote.length > 190;
           const isReddit = quote.platform === "reddit";
           const isDiscord = quote.platform === "discord";
           const platformLabel = isReddit
@@ -107,7 +100,7 @@ export function TestimonialsCarousel({
                           : "text-[1.14rem] leading-[1.18] md:text-[1.55rem] md:leading-[1.16]",
                   )}
                 >
-                  {quote.text}
+                  {quote.quote}
                 </blockquote>
               </div>
 
@@ -121,7 +114,7 @@ export function TestimonialsCarousel({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={quote.avatarSrc}
+                  src={quote.avatarUrl}
                   alt={`${quote.author} avatar`}
                   width={48}
                   height={48}

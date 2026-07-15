@@ -2,12 +2,23 @@ import type { MetadataRoute } from "next";
 import { site } from "@/content/site";
 import { getBlogCategories, getPostsByCategory } from "@/lib/blog";
 import { getAllBlogPosts } from "@/lib/blog-repository";
+import { getSitemapPageMetadata } from "@/sanity/lib/sitemap-page-dates";
+
+function includeIndexedPage(
+  noIndex: boolean,
+  entry: MetadataRoute.Sitemap[number],
+): MetadataRoute.Sitemap {
+  return noIndex ? [] : [entry];
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getAllBlogPosts({
-    perspective: "published",
-    stega: false,
-  });
+  const [posts, pageMetadata] = await Promise.all([
+    getAllBlogPosts({
+      perspective: "published",
+      stega: false,
+    }),
+    getSitemapPageMetadata(),
+  ]);
   const base = site.url;
   const today = new Date().toISOString().split("T")[0];
   const latestPostDate =
@@ -45,9 +56,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   return [
-    {
+    ...includeIndexedPage(pageMetadata.home.noIndex, {
       url: `${base}/`,
-      lastModified: today,
+      lastModified: pageMetadata.home.lastModified,
       changeFrequency: "weekly",
       priority: 1.0,
       videos: [
@@ -63,7 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           live: "no",
         },
       ],
-    },
+    }),
     {
       url: `${base}/blog/`,
       lastModified: latestPostDate,
@@ -72,42 +83,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...categoryEntries,
     ...postEntries,
-    {
+    ...includeIndexedPage(pageMetadata.features.noIndex, {
       url: `${base}/features/`,
-      lastModified: today,
+      lastModified: pageMetadata.features.lastModified,
       changeFrequency: "weekly",
       priority: 0.8,
-    },
+    }),
     {
       url: `${base}/download/`,
       lastModified: today,
       changeFrequency: "weekly",
       priority: 0.7,
     },
-    {
+    ...includeIndexedPage(pageMetadata.about.noIndex, {
       url: `${base}/about/`,
-      lastModified: "2026-04-24",
+      lastModified: pageMetadata.about.lastModified,
       changeFrequency: "monthly",
       priority: 0.6,
-    },
+    }),
     {
       url: `${base}/support/`,
       lastModified: today,
       changeFrequency: "monthly",
       priority: 0.6,
     },
-    {
+    ...includeIndexedPage(pageMetadata.privacy.noIndex, {
       url: `${base}/privacy/`,
-      lastModified: "2026-05-13",
+      lastModified: pageMetadata.privacy.lastModified,
       changeFrequency: "yearly",
       priority: 0.3,
-    },
-    {
+    }),
+    ...includeIndexedPage(pageMetadata.terms.noIndex, {
       url: `${base}/terms/`,
-      lastModified: "2026-05-13",
+      lastModified: pageMetadata.terms.lastModified,
       changeFrequency: "yearly",
       priority: 0.3,
-    },
+    }),
     {
       url: `${base}/zoom-guide/`,
       lastModified: "2026-05-13",

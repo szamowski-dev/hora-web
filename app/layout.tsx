@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { draftMode } from "next/headers";
 import Script from "next/script";
 import localFont from "next/font/local";
 import { Geist, Newsreader } from "next/font/google";
@@ -6,6 +7,7 @@ import { Nav } from "@/components/organisms/Nav";
 import { Footer } from "@/components/organisms/Footer";
 import { AmbientGlow } from "@/components/organisms/AmbientGlow";
 import { LayoutEnhancements } from "@/components/molecules/LayoutEnhancements";
+import { DraftModeTools } from "@/components/sanity/DraftModeTools";
 import { REDDIT_PIXEL_ID } from "@/lib/analytics";
 import "./globals.css";
 
@@ -95,9 +97,11 @@ export const viewport: Viewport = {
 const GA_MEASUREMENT_ID = "G-WQZ32S81FX";
 const GOOGLE_ADS_ID = "AW-18070613857";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const { isEnabled: isDraftMode } = await draftMode();
+
   return (
     <html
       lang="en"
@@ -105,7 +109,6 @@ export default function RootLayout({
       className={`${geist.variable} ${newsreader.variable} ${bumbbled.variable}`}
     >
       <head>
-        <link rel="preconnect" href="https://i.ytimg.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://plausible.io" />
         <link rel="dns-prefetch" href="https://consent.cookiebot.com" />
         <link rel="dns-prefetch" href="https://consentcdn.cookiebot.com" />
@@ -167,6 +170,8 @@ export default function RootLayout({
         </main>
         <Footer />
 
+        {isDraftMode ? <DraftModeTools /> : null}
+
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="lazyOnload"
@@ -187,7 +192,7 @@ export default function RootLayout({
         <Script
           id="plausible"
           src="https://plausible.io/js/pa-wsB6_ypdQmpn7Lf06SUrR.js"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         <Script id="plausible-init" strategy="afterInteractive">
           {`window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()`}

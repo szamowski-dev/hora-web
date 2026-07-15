@@ -5,11 +5,11 @@ export function AmbientGlow() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[radial-gradient(ellipse_85%_58%_at_8%_8%,oklch(0.4269_0.1069_255.7/0.045),transparent_70%),radial-gradient(ellipse_90%_62%_at_88%_100%,oklch(0.6532_0.2328_25.7/0.025),transparent_72%)] md:bg-none"
     >
       {/* Bottom-center ember */}
       <div
-        className="absolute bottom-[-15%] left-1/2 h-[75%] w-[90%] rounded-full blur-[80px]"
+        className="absolute bottom-[-15%] left-1/2 hidden h-[75%] w-[90%] rounded-full blur-[80px] md:block"
         style={{
           background:
             "radial-gradient(ellipse, oklch(0.6532 0.2328 25.7 / 0.035) 0%, oklch(0.725 0.18 27 / 0.015) 30%, oklch(0.6532 0.2328 25.7 / 0.005) 55%, transparent 75%)",
@@ -20,7 +20,7 @@ export function AmbientGlow() {
 
       {/* Top-left soft glow */}
       <div
-        className="absolute top-[-10%] left-[-10%] h-[55%] w-[55%] rounded-full blur-[70px]"
+        className="absolute top-[-10%] left-[-10%] hidden h-[55%] w-[55%] rounded-full blur-[70px] md:block"
         style={{
           background:
             "radial-gradient(ellipse, oklch(0.4269 0.1069 255.7 / 0.055) 0%, oklch(0.4269 0.1069 255.7 / 0.018) 40%, transparent 70%)",
@@ -32,7 +32,7 @@ export function AmbientGlow() {
 
       {/* Top-right accent */}
       <div
-        className="absolute top-0 right-[-5%] h-[55%] w-[50%] rounded-full blur-[60px]"
+        className="absolute top-0 right-[-5%] hidden h-[55%] w-[50%] rounded-full blur-[60px] md:block"
         style={{
           background:
             "radial-gradient(ellipse, oklch(0.8056 0.1054 244.5 / 0.025) 0%, oklch(0.4269 0.1069 255.7 / 0.012) 40%, transparent 65%)",
@@ -44,7 +44,7 @@ export function AmbientGlow() {
 
       {/* Fine grain noise */}
       <div
-        className="absolute inset-0 opacity-[0.035] mix-blend-overlay"
+        className="absolute inset-0 hidden opacity-[0.035] mix-blend-overlay md:block"
         style={{ backgroundImage: noiseUrl, backgroundSize: "200px 200px" }}
       />
     </div>

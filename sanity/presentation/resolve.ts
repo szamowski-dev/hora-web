@@ -2,6 +2,26 @@ import { defineDocuments, defineLocations } from "sanity/presentation";
 
 const mainDocuments = defineDocuments([
   {
+    route: "/",
+    type: "homePage",
+  },
+  {
+    route: "/features/",
+    type: "featuresPage",
+  },
+  {
+    route: "/about/",
+    type: "aboutPage",
+  },
+  {
+    route: "/privacy/",
+    filter: `_type == "legalPage" && kind == "privacy"`,
+  },
+  {
+    route: "/terms/",
+    filter: `_type == "legalPage" && kind == "terms"`,
+  },
+  {
     route: "/blog/",
     type: "blogSettings",
   },
@@ -18,6 +38,31 @@ const mainDocuments = defineDocuments([
 ]);
 
 const locations = {
+  homePage: defineLocations({
+    locations: [{ title: "Homepage", href: "/" }],
+  }),
+  featuresPage: defineLocations({
+    locations: [{ title: "Features", href: "/features/" }],
+  }),
+  aboutPage: defineLocations({
+    locations: [{ title: "About", href: "/about/" }],
+  }),
+  legalPage: defineLocations({
+    select: { kind: "kind" },
+    resolve: (document) => {
+      if (document?.kind === "privacy") {
+        return {
+          locations: [{ title: "Privacy Policy", href: "/privacy/" }],
+        };
+      }
+      if (document?.kind === "terms") {
+        return {
+          locations: [{ title: "Terms of Service", href: "/terms/" }],
+        };
+      }
+      return { locations: [] };
+    },
+  }),
   blogPost: defineLocations({
     select: {
       title: "title",

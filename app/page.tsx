@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/organisms/Hero";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
 import { FeaturesOverview } from "@/components/organisms/FeaturesOverview";
@@ -8,27 +9,11 @@ import { Roadmap } from "@/components/organisms/Roadmap";
 import { Faq } from "@/components/organisms/Faq";
 import { BlogPreview } from "@/components/organisms/BlogPreview";
 import { getAllBlogPosts } from "@/lib/blog-repository";
+import { getHomePage } from "@/lib/home-repository";
+import { defaultOg } from "@/lib/og";
+import { getTestFlightTesterCount } from "@/lib/testflight";
 
-export const dynamic = "force-dynamic";
-
-const softwareAppLd = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "hora Calendar",
-  description:
-    "The Mac calendar Google never built. Fast, native, private — a native macOS Google Calendar client built with SwiftUI.",
-  url: "https://horacal.app",
-  applicationCategory: "BusinessApplication",
-  operatingSystem: "macOS",
-  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  author: {
-    "@type": "Person",
-    name: "Maciej Szamowski",
-    url: "https://szamowski.dev",
-  },
-  image: "https://horacal.app/assets/brand/hora-icon.png",
-  screenshot: "https://horacal.app/assets/demo/hora-demo.gif",
-};
+export const revalidate = 600;
 
 const personLd = {
   "@context": "https://schema.org",
@@ -66,19 +51,52 @@ const videoLd = {
 };
 
 export default async function Home() {
-  const allPosts = await getAllBlogPosts();
+  const [content, allPosts] = await Promise.all([
+    getHomePage(),
+    getAllBlogPosts(),
+  ]);
+  const liveCount = await getTestFlightTesterCount(
+    content.hero.socialProof.fallbackCount,
+  );
   const posts = allPosts.slice(0, 3);
+  const softwareAppLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "hora Calendar",
+    description: content.seo.description,
+    url: "https://horacal.app",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "macOS",
+    offers: {
+      "@type": "AggregateOffer",
+      lowPrice: "29.99",
+      highPrice: "49.90",
+      priceCurrency: "USD",
+      offerCount: 2,
+    },
+    author: {
+      "@type": "Person",
+      name: content.integrations.founderNote.author.name,
+      url: "https://szamowski.dev",
+    },
+    image: "https://horacal.app/assets/brand/hora-icon.png",
+    screenshot: content.hero.screenshot.src,
+  };
 
   return (
     <>
-      <Hero />
-      <FeaturedOn />
-      <FeaturesOverview />
-      <UserProof />
-      <PricingSection />
+      <Hero content={content.hero} liveCount={liveCount} />
+      <FeaturedOn content={content.featuredOn} />
+      <FeaturesOverview
+        showcase={content.showcase}
+        featureOverview={content.featureOverview}
+        integrations={content.integrations}
+      />
+      <UserProof content={content.socialProof} liveCount={liveCount} />
+      <PricingSection content={content.pricing} />
       <BetaCta />
-      <Roadmap />
-      <Faq />
+      <Roadmap content={content.roadmap} />
+      <Faq content={content.faq} />
       <BlogPreview posts={posts} />
       <script
         type="application/ld+json"
@@ -94,4 +112,48 @@ export default async function Home() {
       />
     </>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getHomePage();
+  const ogImage = content.seo.ogImage;
+  const socialTitle = content.seo.ogTitle ?? content.seo.title;
+  const socialDescription =
+    content.seo.ogDescription ?? content.seo.description;
+  const socialImage = ogImage?.src ?? "/assets/seo/default-og-image.png";
+
+  return {
+    title: { absolute: content.seo.title },
+    description: content.seo.description,
+    alternates: { canonical: "/" },
+    robots: {
+      index: !content.seo.noIndex,
+      follow: true,
+    },
+    openGraph: defaultOg({
+      title: socialTitle,
+      description: socialDescription,
+      url: "https://horacal.app/",
+      ...(ogImage
+        ? {
+            images: [
+              {
+                url: ogImage.src,
+                width: ogImage.width,
+                height: ogImage.height,
+                alt: ogImage.alt,
+              },
+            ],
+          }
+        : {}),
+    }),
+    twitter: {
+      card: "summary_large_image",
+      site: "@moto_szama",
+      creator: "@moto_szama",
+      title: socialTitle,
+      description: socialDescription,
+      images: [socialImage],
+    },
+  };
 }

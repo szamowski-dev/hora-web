@@ -1,16 +1,20 @@
 import Image from "next/image";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { AnimatedCount } from "@/components/molecules/AnimatedCount";
-import { home } from "@/content/home";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
+import type { HomePageContent } from "@/lib/home-model";
 import { HeroShader } from "./HeroShader";
 
-export function HeroScene({ liveCount }: { liveCount: number }) {
-  const hero = home.hero;
-  const newsletter = hero.newsletter;
-  const socialProof = newsletter.socialProof;
+export function HeroScene({
+  content,
+  liveCount,
+}: {
+  content: HomePageContent["hero"];
+  liveCount: number;
+}) {
+  const socialProof = content.socialProof;
 
   return (
     <section
@@ -30,13 +34,12 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
       <div className="relative z-10 mx-auto grid w-full max-w-7xl flex-1 items-center gap-8 px-6 pb-14 pt-10 md:grid-cols-[0.72fr_1.28fr] md:gap-8 md:pb-12 md:pt-28 lg:gap-10">
         <div className="max-w-140 text-left">
           <h1 className="max-w-[12ch] text-5xl font-semibold leading-[1.02] tracking-tight text-text md:text-[68px] lg:text-[78px]">
-            The Mac Calendar{" "}
-            <span className="text-accent">Google never built.</span>
+            {content.titlePrefix}{" "}
+            <span className="text-accent">{content.titleAccent}</span>
           </h1>
 
           <p className="mt-5 max-w-md text-pretty text-lg leading-8 text-muted md:text-[19px]">
-            Fast, Native, Beautiful. Built for keyboard-driven workflows.
-            Finally, Google Calendar feels at home on your Mac.
+            {content.description}
           </p>
 
           <div className="mt-7 flex flex-row items-stretch gap-2 sm:items-center sm:gap-3">
@@ -64,7 +67,7 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
               data-scroll-align="center"
               className="ui-interactive inline-flex h-12 min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-line-strong bg-overlay px-2 text-[11px] font-semibold text-text shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.12)] backdrop-blur-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent min-[360px]:px-3 min-[360px]:text-xs sm:gap-2 sm:px-5 sm:text-sm"
             >
-              Watch 1:43 Demo
+              {content.watchDemoLabel}
               <span aria-hidden>▸</span>
             </a>
           </div>
@@ -87,9 +90,8 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
             </div>
             <p className="max-w-100 text-sm leading-snug text-muted sm:max-w-108">
               <span className="font-semibold text-text">
-                <AnimatedCount value={liveCount} />+ Mac users
-              </span>{" "}
-              already use hora.
+                <AnimatedCount value={liveCount} />+ {socialProof.label}
+              </span>
             </p>
           </div>
         </div>
@@ -97,12 +99,15 @@ export function HeroScene({ liveCount }: { liveCount: number }) {
         <div className="relative -mr-6 w-[calc(100%+6rem)] md:-mt-14 md:mr-0 md:w-auto md:max-[1440px]:-mr-48 md:max-[1440px]:-mt-24 md:max-[1440px]:w-[calc(100%+12rem)] lg:-mt-18 xl:max-[1440px]:-mr-24 xl:max-[1440px]:w-[calc(100%+6rem)] xl:max-[1440px]:translate-x-16">
           <div className="relative overflow-visible rounded-none shadow-[0_0_72px_16px_oklch(0_0_0/0.78)] md:overflow-hidden md:rounded-[12px]">
             <Image
-              src={hero.demo.posterSrc}
-              alt="hora Calendar macOS app interface"
-              width={3188}
-              height={1903}
+              src={content.screenshot.src}
+              alt={content.screenshot.alt}
+              width={content.screenshot.width}
+              height={content.screenshot.height}
               priority
-              quality={90}
+              fetchPriority="high"
+              quality={75}
+              placeholder={content.screenshot.blurDataURL ? "blur" : "empty"}
+              blurDataURL={content.screenshot.blurDataURL}
               sizes="(min-width: 1280px) 820px, (min-width: 1024px) 68vw, 100vw"
               className="w-full object-contain"
             />
