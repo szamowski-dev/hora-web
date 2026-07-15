@@ -1,27 +1,15 @@
-import { createHash } from "node:crypto";
-import { readdir, readFile } from "node:fs/promises";
-import path from "node:path";
-import matter from "gray-matter";
 import { getCliClient } from "sanity/cli";
+import { BLOG_CATEGORIES } from "../lib/blog-model";
+import { projectId, dataset } from "../sanity/env";
 import { calculateReadingMinutes } from "../sanity/lib/readingTime";
 
 const API_VERSION = "2026-07-15";
-const POSTS_DIR = path.join(process.cwd(), "content", "posts");
-const AUTHOR_ID = "author-maciej-szamowski";
-
-function postDocumentId(slug: string) {
-  return `blog-post-${slug}`;
-}
-
-function categoryDocumentId(slug: string) {
-  return `blog-category-${slug}`;
-}
-
-function tagDocumentId(slug: string) {
-  return `blog-tag-${slug}`;
-}
+const PUBLIC_ID_PATTERN = /^[^.]+$/;
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 type Reference = { _type?: string; _ref?: string };
+type ImageValue = { alt?: string; asset?: Reference };
 
 type SanityPost = {
   _id: string;
@@ -34,19 +22,32 @@ type SanityPost = {
   author?: Reference;
   category?: Reference;
   tags?: Reference[];
-  heroImage?: { alt?: string; asset?: Reference };
+  heroImage?: ImageValue;
   body?: Array<Record<string, unknown>>;
-  seo?: { noIndex?: boolean };
   legacySourceFile?: string;
   legacyChecksum?: string;
 };
 
+type SlugDocument = {
+  _id: string;
+  title?: string;
+  slug?: { current?: string };
+};
+
 type Snapshot = {
   posts: SanityPost[];
-  categories: Array<{ _id: string; slug?: { current?: string } }>;
-  tags: Array<{ _id: string; slug?: { current?: string } }>;
-  authors: Array<{ _id: string }>;
+  categories: Array<SlugDocument & { order?: number }>;
+  tags: SlugDocument[];
+  authors: Array<{ _id: string; name?: string; portrait?: ImageValue }>;
   settings: { _id?: string; featuredPost?: Reference } | null;
+};
+
+type PublicCounts = {
+  posts: number;
+  categories: number;
+  tags: number;
+  authors: number;
+  settings: number;
 };
 
 function fail(message: string): never {
@@ -57,37 +58,36 @@ function expect(condition: unknown, message: string): asserts condition {
   if (!condition) fail(message);
 }
 
-function normalizeDate(value: unknown) {
-  if (value instanceof Date) return value.toISOString().slice(0, 10);
-  return typeof value === "string" ? value.slice(0, 10) : "";
-}
-
-function parseTags(value: unknown) {
-  return (Array.isArray(value)
-    ? value.map(String)
-    : typeof value === "string"
-      ? value.split(",")
-      : []
-  )
-    .map((tag) => tag.trim())
-    .filter(Boolean);
+function expectText(value: string | undefined, field: string, documentId: string) {
+  expect(Boolean(value?.trim()), `${documentId} is missing ${field}`);
+  expect(value === value?.trim(), `${documentId} ${field} has outer whitespace`);
 }
 
 function collectReferences(value: unknown, output = new Set<string>()) {
   if (!value || typeof value !== "object") return output;
+
   if (Array.isArray(value)) {
     for (const item of value) collectReferences(item, output);
     return output;
   }
+
   const record = value as Record<string, unknown>;
   if (typeof record._ref === "string") output.add(record._ref);
   for (const child of Object.values(record)) collectReferences(child, output);
   return output;
 }
 
-function countBodyTypes(posts: SanityPost[]) {
+function uniqueSlugs(documents: SlugDocument[], type: string) {
+  const slugs = documents.map((document) => document.slug?.current ?? "");
+  expect(slugs.every((slug) => SLUG_PATTERN.test(slug)), `${type} slugs are missing or invalid`);
+  expect(new Set(slugs).size === slugs.length, `${type} slugs are duplicated`);
+  return slugs;
+}
+
+function bodyCounts(posts: SanityPost[]) {
   const counts = new Map<string, number>();
   let faqItems = 0;
+
   for (const post of posts) {
     for (const block of post.body ?? []) {
       const type = typeof block._type === "string" ? block._type : "missing";
@@ -97,41 +97,43 @@ function countBodyTypes(posts: SanityPost[]) {
       }
     }
   }
+
   return { counts, faqItems };
 }
 
-async function localSources() {
-  const files = (await readdir(POSTS_DIR))
-    .filter((file) => file.endsWith(".mdx"))
-    .sort();
-  return Promise.all(
-    files.map(async (file) => {
-      const raw = await readFile(path.join(POSTS_DIR, file), "utf8");
-      const parsed = matter(raw);
-      const data = parsed.data as Record<string, unknown>;
-      return {
-        file,
-        slug: file.replace(/\.mdx$/, ""),
-        title: String(data.title ?? ""),
-        description: String(data.description ?? ""),
-        publishedAt: normalizeDate(data.date),
-        contentUpdatedAt: normalizeDate(data.updated ?? data.date),
-        category: String(data.category ?? ""),
-        tags: parseTags(data.tags).sort(),
-        heroAlt: String(data.heroAlt ?? ""),
-        checksum: createHash("sha256").update(raw).digest("hex"),
-        featured: data.featured === true,
-      };
-    }),
+async function publicCounts() {
+  const query = `{
+    "posts": count(*[_type == "blogPost"]),
+    "categories": count(*[_type == "blogCategory"]),
+    "tags": count(*[_type == "blogTag"]),
+    "authors": count(*[_type == "author"]),
+    "settings": count(*[_type == "blogSettings"])
+  }`;
+  const url = new URL(
+    `https://${projectId}.api.sanity.io/v${API_VERSION}/data/query/${dataset}`,
   );
+  url.searchParams.set("query", query);
+
+  const response = await fetch(url, {
+    headers: { Accept: "application/json" },
+  });
+  expect(response.ok, `anonymous Content Lake query returned ${response.status}`);
+  const payload = (await response.json()) as { result?: PublicCounts };
+  expect(payload.result, "anonymous Content Lake query returned no result");
+  return payload.result;
 }
 
 async function main() {
-  const client = getCliClient({ apiVersion: API_VERSION });
-  const [sources, snapshot] = await Promise.all([
-    localSources(),
+  const client = getCliClient({ apiVersion: API_VERSION }).withConfig({
+    perspective: "raw",
+    useCdn: false,
+  });
+  const publishedFilter =
+    '!(_id in path("drafts.**")) && !(_id in path("versions.**"))';
+
+  const [snapshot, publicDocumentCounts] = await Promise.all([
     client.fetch<Snapshot>(`{
-      "posts": *[_type == "blogPost"] | order(publishedAt asc) {
+      "posts": *[_type == "blogPost" && ${publishedFilter}] | order(publishedAt asc) {
         _id,
         title,
         slug,
@@ -144,150 +146,121 @@ async function main() {
         tags,
         heroImage,
         body,
-        seo,
         legacySourceFile,
         legacyChecksum
       },
-      "categories": *[_type == "blogCategory"] {_id, slug},
-      "tags": *[_type == "blogTag"] {_id, slug},
-      "authors": *[_type == "author"] {_id},
+      "categories": *[_type == "blogCategory" && ${publishedFilter}] {_id, title, slug, order},
+      "tags": *[_type == "blogTag" && ${publishedFilter}] {_id, title, slug},
+      "authors": *[_type == "author" && ${publishedFilter}] {_id, name, portrait},
       "settings": *[_id == "blogSettings"][0] {_id, featuredPost}
     }`),
+    publicCounts(),
   ]);
 
-  expect(snapshot.posts.length === 20, `found ${snapshot.posts.length} posts, expected 20`);
-  expect(snapshot.categories.length === 4, `found ${snapshot.categories.length} categories, expected 4`);
-  expect(snapshot.tags.length === 68, `found ${snapshot.tags.length} tags, expected 68`);
-  expect(snapshot.authors.length === 1, `found ${snapshot.authors.length} authors, expected 1`);
-  expect(snapshot.authors[0]?._id === AUTHOR_ID, "author document is missing or has an unexpected ID");
+  expect(snapshot.posts.length > 0, "no published posts found");
+  expect(
+    snapshot.categories.length === BLOG_CATEGORIES.length,
+    `found ${snapshot.categories.length} categories, expected ${BLOG_CATEGORIES.length}`,
+  );
+  expect(snapshot.tags.length > 0, "no published tags found");
+  expect(snapshot.authors.length > 0, "no published authors found");
   expect(snapshot.settings?._id === "blogSettings", "blogSettings singleton is missing");
 
-  const publicDocumentIds = [
+  expect(publicDocumentCounts.posts === snapshot.posts.length, "anonymous post count differs from the published dataset");
+  expect(publicDocumentCounts.categories === snapshot.categories.length, "anonymous category count differs from the published dataset");
+  expect(publicDocumentCounts.tags === snapshot.tags.length, "anonymous tag count differs from the published dataset");
+  expect(publicDocumentCounts.authors === snapshot.authors.length, "anonymous author count differs from the published dataset");
+  expect(publicDocumentCounts.settings === 1, "blogSettings is not publicly readable");
+
+  const publicIds = [
     ...snapshot.posts.map((post) => post._id),
     ...snapshot.categories.map((category) => category._id),
     ...snapshot.tags.map((tag) => tag._id),
     ...snapshot.authors.map((author) => author._id),
-    ...(snapshot.settings?._id ? [snapshot.settings._id] : []),
+    snapshot.settings._id,
   ];
-  const dotIds = publicDocumentIds.filter((id) => id.includes("."));
   expect(
-    dotIds.length === 0,
-    `public blog document IDs contain dots: ${dotIds.join(", ")}`,
+    publicIds.every((id) => PUBLIC_ID_PATTERN.test(id)),
+    "public blog document IDs must not contain dots",
   );
 
-  const postsBySlug = new Map(
-    snapshot.posts.map((post) => [post.slug?.current ?? "", post]),
-  );
-  expect(postsBySlug.size === snapshot.posts.length, "post slugs are missing or duplicated");
+  const postSlugs = uniqueSlugs(snapshot.posts, "post");
+  const categorySlugs = uniqueSlugs(snapshot.categories, "category");
+  uniqueSlugs(snapshot.tags, "tag");
 
-  for (const source of sources) {
-    const post = postsBySlug.get(source.slug);
-    expect(post, `missing post ${source.slug}`);
-    expect(post._id === postDocumentId(source.slug), `${source.slug} has an unexpected document ID`);
-    expect(post.title === source.title, `${source.slug} title differs from MDX`);
-    expect(post.description === source.description, `${source.slug} description differs from MDX`);
-    expect(post.publishedAt === source.publishedAt, `${source.slug} published date differs from MDX`);
-    expect(post.contentUpdatedAt === source.contentUpdatedAt, `${source.slug} updated date differs from MDX`);
+  const expectedCategorySlugs = BLOG_CATEGORIES.map((category) => category.slug).sort();
+  expect(
+    JSON.stringify([...categorySlugs].sort()) === JSON.stringify(expectedCategorySlugs),
+    "published categories differ from the supported blog navigation",
+  );
+
+  const postIds = new Set(snapshot.posts.map((post) => post._id));
+  expect(
+    Boolean(snapshot.settings.featuredPost?._ref),
+    "blogSettings has no featured post",
+  );
+  expect(
+    postIds.has(snapshot.settings.featuredPost?._ref ?? ""),
+    "featured post reference does not resolve to a published post",
+  );
+
+  for (const post of snapshot.posts) {
+    const slug = post.slug?.current ?? post._id;
+    expectText(post.title, "title", slug);
+    expectText(post.description, "description", slug);
+    expect(DATE_PATTERN.test(post.publishedAt ?? ""), `${slug} has an invalid published date`);
+    expect(DATE_PATTERN.test(post.contentUpdatedAt ?? ""), `${slug} has an invalid updated date`);
+    expect(
+      (post.contentUpdatedAt ?? "") >= (post.publishedAt ?? ""),
+      `${slug} has an updated date before its published date`,
+    );
     expect(
       post.readingMinutes === calculateReadingMinutes(post.body),
-      `${source.slug} reading time differs from its Portable Text body`,
+      `${slug} reading time differs from its Portable Text body`,
     );
-    expect(post.author?._ref === AUTHOR_ID, `${source.slug} author reference is wrong`);
-    expect(post.category?._ref === categoryDocumentId(source.category), `${source.slug} category differs from MDX`);
-    const tagSlugs = (post.tags ?? [])
-      .map((tag) => tag._ref?.replace(/^blog-tag-/, "") ?? "")
-      .sort();
-    expect(JSON.stringify(tagSlugs) === JSON.stringify(source.tags), `${source.slug} tags differ from MDX`);
-    expect(Boolean(post.heroImage?.asset?._ref), `${source.slug} hero asset is missing`);
-    expect(post.heroImage?.alt === source.heroAlt, `${source.slug} hero alt differs from MDX`);
-    expect(Array.isArray(post.body) && post.body.length > 0, `${source.slug} body is empty`);
-    expect(post.seo?.noIndex === false, `${source.slug} was unexpectedly marked noindex`);
-    expect(post.legacySourceFile === source.file, `${source.slug} legacy source filename differs`);
-    expect(post.legacyChecksum === source.checksum, `${source.slug} legacy checksum differs`);
+    expect(Boolean(post.author?._ref), `${slug} has no author reference`);
+    expect(Boolean(post.category?._ref), `${slug} has no category reference`);
+    expect((post.tags?.length ?? 0) > 0, `${slug} has no tags`);
+    const tagRefs = (post.tags ?? []).map((tag) => tag._ref ?? "");
+    expect(tagRefs.every(Boolean), `${slug} has an invalid tag reference`);
+    expect(new Set(tagRefs).size === tagRefs.length, `${slug} repeats a tag`);
+    expect(Boolean(post.heroImage?.asset?._ref), `${slug} has no hero asset`);
+    expectText(post.heroImage?.alt, "hero alt", slug);
+    expect((post.body?.length ?? 0) > 0, `${slug} body is empty`);
+    expect(!post.legacySourceFile && !post.legacyChecksum, `${slug} still contains legacy MDX metadata`);
   }
 
-  const expectedCategorySlugs = Array.from(
-    new Set(sources.map((source) => source.category)),
-  ).sort();
-  const categoriesBySlug = new Map(
-    snapshot.categories.map((category) => [category.slug?.current ?? "", category]),
-  );
+  for (const category of snapshot.categories) {
+    expectText(category.title, "title", category._id);
+    expect(Number.isInteger(category.order), `${category._id} has no valid order`);
+  }
+  for (const tag of snapshot.tags) expectText(tag.title, "title", tag._id);
+  for (const author of snapshot.authors) {
+    expectText(author.name, "name", author._id);
+    expect(Boolean(author.portrait?.asset?._ref), `${author._id} has no portrait asset`);
+  }
+
+  const references = Array.from(collectReferences(snapshot));
   expect(
-    categoriesBySlug.size === snapshot.categories.length,
-    "category slugs are missing or duplicated",
-  );
-  for (const slug of expectedCategorySlugs) {
-    const category = categoriesBySlug.get(slug);
-    expect(category, `missing category ${slug}`);
-    expect(
-      category._id === categoryDocumentId(slug),
-      `${slug} category has an unexpected document ID`,
-    );
-  }
-
-  const expectedTagSlugs = Array.from(
-    new Set(sources.flatMap((source) => source.tags)),
-  ).sort();
-  const tagsBySlug = new Map(
-    snapshot.tags.map((tag) => [tag.slug?.current ?? "", tag]),
-  );
-  expect(tagsBySlug.size === snapshot.tags.length, "tag slugs are missing or duplicated");
-  for (const slug of expectedTagSlugs) {
-    const tag = tagsBySlug.get(slug);
-    expect(tag, `missing tag ${slug}`);
-    expect(
-      tag._id === tagDocumentId(slug),
-      `${slug} tag has an unexpected document ID`,
-    );
-  }
-
-  const localSlugs = new Set(sources.map((source) => source.slug));
-  for (const slug of postsBySlug.keys()) {
-    expect(localSlugs.has(slug), `Sanity contains an unexpected migrated post: ${slug}`);
-  }
-
-  const featured = sources.filter((source) => source.featured);
-  expect(featured.length === 1, `local source contains ${featured.length} featured posts`);
-  expect(
-    snapshot.settings?.featuredPost?._ref === postDocumentId(featured[0].slug),
-    "blogSettings featuredPost differs from MDX",
-  );
-
-  const { counts, faqItems } = countBodyTypes(snapshot.posts);
-  const expectedBodyCounts: Record<string, number> = {
-    blogImage: 28,
-    blogVideo: 5,
-    codeBlock: 30,
-    blogTable: 13,
-    blogFaq: 14,
-  };
-  for (const [type, expected] of Object.entries(expectedBodyCounts)) {
-    expect((counts.get(type) ?? 0) === expected, `${type} count is ${counts.get(type) ?? 0}, expected ${expected}`);
-  }
-  expect(faqItems === 75, `FAQ item count is ${faqItems}, expected 75`);
-
-  const references = collectReferences(snapshot);
-  const referenceIds = Array.from(references);
-  const dotReferences = referenceIds.filter((id) => id.includes("."));
-  expect(
-    dotReferences.length === 0,
-    `blog references contain legacy dot IDs: ${dotReferences.join(", ")}`,
+    references.every((id) => PUBLIC_ID_PATTERN.test(id)),
+    "blog references contain private dot IDs",
   );
   const resolved = new Set(
-    await client.fetch<string[]>(`*[_id in $ids]._id`, { ids: referenceIds }),
+    await client.fetch<string[]>(`*[_id in $ids]._id`, { ids: references }),
   );
-  const missingReferences = referenceIds.filter((id) => !resolved.has(id));
-  expect(
-    missingReferences.length === 0,
-    `unresolved references: ${missingReferences.join(", ")}`,
-  );
+  const missingReferences = references.filter((id) => !resolved.has(id));
+  expect(missingReferences.length === 0, `unresolved references: ${missingReferences.join(", ")}`);
 
+  const { counts, faqItems } = bodyCounts(snapshot.posts);
   console.log("\nSANITY BLOG VERIFIED");
   console.log(
-    `20 posts, 4 categories, 68 tags, ${counts.get("blogImage")} body images, ${counts.get("blogVideo")} videos, ${counts.get("codeBlock")} code blocks, ${counts.get("blogTable")} tables, ${counts.get("blogFaq")} FAQ blocks / ${faqItems} questions`,
+    `${postSlugs.length} posts, ${categorySlugs.length} categories, ${snapshot.tags.length} tags, ${snapshot.authors.length} ${snapshot.authors.length === 1 ? "author" : "authors"}`,
   );
-  console.log(`Resolved references: ${referenceIds.length}; missing: 0`);
-  console.log(`Featured: ${featured[0].slug}`);
+  console.log(
+    `${counts.get("blogImage") ?? 0} body images, ${counts.get("blogVideo") ?? 0} videos, ${counts.get("codeBlock") ?? 0} code blocks, ${counts.get("blogTable") ?? 0} tables, ${counts.get("blogFaq") ?? 0} FAQ blocks / ${faqItems} questions`,
+  );
+  console.log(`Resolved references: ${references.length}; missing: 0`);
+  console.log(`Featured: ${snapshot.settings.featuredPost?._ref}`);
 }
 
 main().catch((error) => {

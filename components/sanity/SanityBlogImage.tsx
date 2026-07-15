@@ -18,7 +18,7 @@ export function SanityBlogImage({ value }: { value: SanityBlogImageValue }) {
   const isWide = stegaClean(value.presentation) !== "content";
 
   return (
-    <figure className={cn("my-8", isWide && "mdx-media")}>
+    <figure className={cn("my-8", isWide && "blog-wide")}>
       <Image
         src={src}
         alt={value.alt ?? ""}

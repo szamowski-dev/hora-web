@@ -203,11 +203,7 @@ body:has(#mobile-navigation-toggle:checked) {
   filter: brightness(1.06) saturate(1.05);
 }
 
-.blog-tag-search-input::-webkit-search-cancel-button {
-  display: none;
-}
-
-.blog-prose :where(.mdx-media) {
+.blog-prose :where(.blog-wide) {
   position: relative;
   left: 50%;
   width: min(var(--container-blog-media), calc(100vw - 3rem));

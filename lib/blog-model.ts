@@ -94,11 +94,6 @@ export type BlogFaqItem = {
   question: string;
   answer: ReactNode;
   plainAnswer?: string;
-  answerLink?: {
-    href: string;
-    label: string;
-    trailingText?: string;
-  };
 };
 
 export type BlogFaqBlock = {
@@ -106,14 +101,6 @@ export type BlogFaqBlock = {
   heading?: string;
   intro?: string;
   items: readonly BlogFaqItem[];
-};
-
-export const BLOG_AUTHOR: BlogAuthor = {
-  name: "Maciej Szamowski",
-  role: "Founder and developer",
-  bio: "Marketer of 16 years turned solo macOS developer. Building hora Calendar in public from Poland.",
-  href: "/about/",
-  portrait: "/assets/people/maciej-szamowski.jpg",
 };
 
 export function isBlogCategorySlug(value: string): value is BlogCategorySlug {

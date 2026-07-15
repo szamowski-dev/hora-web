@@ -4,7 +4,7 @@ Project: `tbqxupiq` (`hora Calendar`)
 Dataset: `production`
 Embedded Studio: `/studio/`
 
-Sanity is the source of truth for blog posts, categories, tags, authors, settings, and blog media. The files in `content/posts/` remain in Git as rollback material and as the deterministic input for the migration audit.
+Sanity is the only source of truth for blog posts, categories, tags, authors, settings, and blog media. The repository contains the presentation layer and schema, but no duplicate article content.
 
 ## Local environment
 
@@ -19,23 +19,21 @@ SANITY_API_READ_TOKEN=
 SANITY_REVALIDATE_SECRET=
 ```
 
-Never expose either token with a `NEXT_PUBLIC_` prefix. A write token is not required by the website and must not be added to Vercel.
+Never expose either server-only value with a `NEXT_PUBLIC_` prefix. A write token is not required by the website and must not be added to Vercel.
 
 ## Commands
 
 ```bash
 pnpm sanity:schema
 pnpm sanity schemas deploy --workspace default
-pnpm sanity:migrate:blog
-pnpm sanity:migrate:blog:write
 pnpm sanity:verify:blog
 ```
 
-The migration is dry-run by default. The write command uploads assets and uses deterministic root document IDs without dots, such as `blog-post-{slug}`. Sanity treats IDs containing dots as private sub-path documents, even in a public dataset. Verification therefore rejects dots in public blog document IDs and references, compares all migrated metadata with MDX, and checks block counts plus every document and asset reference.
+The verifier checks the published dataset independently of any local content snapshot. It validates required post fields, slugs, reading time, categories, the featured post, public document IDs, and every document and asset reference. It is safe to run after adding future posts.
 
-The write migration is intentionally write-once. It refuses to replace existing managed documents, protecting later Studio edits. `--force-overwrite` exists only for an intentional restore from the MDX rollback snapshot.
+## Legacy blog media
 
-Migration writes authenticate with the user session provided by `sanity exec --with-user-token`. The website never needs a write token.
+Historical `/assets/blog/*` URLs are preserved as permanent redirects to their archived copies on the Sanity CDN. The complete static mapping lives in `lib/legacy-blog-asset-redirects.ts`. Keep those archived Sanity assets even when they are no longer referenced by a post, because external sites may still link to the old public paths.
 
 ## Draft preview
 
@@ -61,6 +59,12 @@ Use the same value for the webhook secret and `SANITY_REVALIDATE_SECRET`. The pr
 
 ```groq
 {_id, _type, "slug": slug.current}
+```
+
+Use the filter below and leave draft triggers disabled:
+
+```groq
+_type in ["blogPost", "blogCategory", "blogTag", "author", "blogSettings"]
 ```
 
 The endpoint validates Sanity's signature, invalidates the shared blog queries and the affected post query, then refreshes RSS and the sitemap. The existing ten-minute revalidation remains a fallback.

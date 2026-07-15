@@ -29,7 +29,7 @@ export const blogPost = defineType({
       title: "Slug",
       type: "slug",
       description:
-        "This is the permanent public URL. Preserve imported slugs exactly.",
+        "This is the permanent public URL. Avoid changing it after publication.",
       options: { source: "title", maxLength: 120 },
       validation: (rule) =>
         rule.required().custom((value) =>
@@ -140,34 +140,6 @@ export const blogPost = defineType({
       name: "seo",
       title: "SEO",
       type: "seo",
-    }),
-    defineField({
-      name: "legacySourceFile",
-      title: "Legacy MDX source",
-      type: "string",
-      description: "Original filename retained for migration audits.",
-      readOnly: true,
-      hidden: true,
-      validation: (rule) =>
-        rule.custom((value) =>
-          !value || /^[a-z0-9][a-z0-9-]*\.mdx$/.test(value)
-            ? true
-            : "Expected a lowercase MDX filename.",
-        ),
-    }),
-    defineField({
-      name: "legacyChecksum",
-      title: "Legacy MDX checksum",
-      type: "string",
-      description: "SHA-256 checksum retained for idempotent migrations.",
-      readOnly: true,
-      hidden: true,
-      validation: (rule) =>
-        rule.custom((value) =>
-          !value || /^[a-f0-9]{64}$/.test(value)
-            ? true
-            : "Expected a lowercase SHA-256 checksum.",
-        ),
     }),
   ],
   orderings: [

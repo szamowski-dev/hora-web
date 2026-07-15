@@ -34,7 +34,7 @@ export const blogFaqItem = defineType({
       name: "anchorId",
       title: "Anchor ID",
       type: "string",
-      description: "Stable ID used for migration, analytics, and deep links.",
+      description: "Stable ID used for analytics and deep links.",
       validation: (rule) =>
         rule.required().min(3).max(120).custom(anchorValidation),
     }),
