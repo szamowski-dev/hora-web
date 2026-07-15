@@ -1,30 +1,45 @@
 import type { Metadata } from "next";
-import { getPageMdx } from "@/lib/mdx";
+import { PagePortableText } from "@/components/sanity/PagePortableText";
 import { LegalPageLayout } from "@/components/templates/LegalPageLayout";
 import { defaultOg } from "@/lib/og";
+import { getLegalPage } from "@/lib/site-page-repository";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { frontmatter } = await getPageMdx("terms");
+  const { seo } = await getLegalPage("terms");
   return {
-    title: frontmatter.title,
-    description: frontmatter.description,
+    title: seo.metaTitle,
+    description: seo.metaDescription,
     alternates: { canonical: "/terms/" },
+    ...(seo.noIndex ? { robots: { index: false, follow: true } } : {}),
     openGraph: defaultOg({
-      title: frontmatter.title,
-      description: frontmatter.description,
+      title: seo.ogTitle ?? seo.metaTitle,
+      description: seo.ogDescription ?? seo.metaDescription,
       url: "https://horacal.app/terms/",
+      ...(seo.ogImage
+        ? {
+            images: [
+              {
+                url: seo.ogImage.src,
+                width: seo.ogImage.width,
+                height: seo.ogImage.height,
+                alt: seo.ogImage.alt,
+              },
+            ],
+          }
+        : {}),
     }),
   };
 }
 
 export default async function TermsPage() {
-  const { content, frontmatter } = await getPageMdx("terms");
+  const page = await getLegalPage("terms");
   return (
     <LegalPageLayout
-      title={frontmatter.title}
-      lastUpdated={frontmatter.lastUpdated}
+      kind={page.kind}
+      title={page.title}
+      lastUpdated={page.lastUpdated}
     >
-      {content}
+      <PagePortableText value={page.body} />
     </LegalPageLayout>
   );
 }

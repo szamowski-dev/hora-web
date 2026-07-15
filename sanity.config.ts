@@ -1,7 +1,7 @@
 "use client";
 
 import { visionTool } from "@sanity/vision";
-import { defineConfig } from "sanity";
+import { defineConfig, type Template } from "sanity";
 import { presentationTool } from "sanity/presentation";
 import { structureTool } from "sanity/structure";
 import {
@@ -14,6 +14,34 @@ import {
 import { resolve } from "./sanity/presentation/resolve";
 import { schemaTypes } from "./sanity/schemaTypes";
 import { structure } from "./sanity/structure";
+
+const singletonTypes = new Set([
+  "blogSettings",
+  "homePage",
+  "featuresPage",
+  "aboutPage",
+  "legalPage",
+]);
+
+const singletonActions = new Set(["publish", "discardChanges", "restore"]);
+
+type LegalPageTemplateParameters = {
+  kind: "privacy" | "terms";
+};
+
+const legalPageTemplate: Template<LegalPageTemplateParameters> = {
+  id: "legalPage",
+  title: "Legal page",
+  schemaType: "legalPage",
+  parameters: [
+    {
+      name: "kind",
+      title: "Document kind",
+      type: "string",
+    },
+  ],
+  value: ({ kind }: LegalPageTemplateParameters) => ({ kind }),
+};
 
 export default defineConfig({
   name: "default",
@@ -38,5 +66,19 @@ export default defineConfig({
   ],
   schema: {
     types: schemaTypes,
+    templates: (templates) => [
+      ...templates.filter(
+        ({ schemaType }) => !singletonTypes.has(schemaType),
+      ),
+      legalPageTemplate,
+    ],
+  },
+  document: {
+    actions: (actions, context) =>
+      singletonTypes.has(context.schemaType)
+        ? actions.filter(
+            ({ action }) => action && singletonActions.has(action),
+          )
+        : actions,
   },
 });

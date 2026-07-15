@@ -1,7 +1,5 @@
 import { cache } from "react";
-import { cookies, draftMode } from "next/headers";
 import { stegaClean } from "next-sanity";
-import { resolvePerspectiveFromCookies } from "next-sanity/live";
 import { BlogPortableText } from "@/components/sanity/BlogPortableText";
 import {
   getBlogCategory,
@@ -11,8 +9,10 @@ import {
   type BlogPostDetail,
   type BlogPostSummary,
 } from "@/lib/blog-model";
-import { client } from "@/sanity/lib/client";
-import { studioUrl } from "@/sanity/env";
+import {
+  getSanityFetchContext,
+  type SanityRepositoryOptions,
+} from "@/sanity/lib/fetch-context";
 import { sanityImageUrl } from "@/sanity/lib/image";
 import {
   BLOG_POST_QUERY,
@@ -27,46 +27,10 @@ import {
 
 const BLOG_REVALIDATE_SECONDS = 600;
 
-export type BlogRepositoryOptions = {
-  perspective?: "auto" | "published";
-  stega?: boolean;
-};
+export type BlogRepositoryOptions = SanityRepositoryOptions;
 
 function publishedDocumentId(value: string | undefined): string | undefined {
   return value ? stegaClean(value).replace(/^drafts\./, "") : undefined;
-}
-
-async function getFetchContext({
-  perspective = "auto",
-  stega = true,
-}: BlogRepositoryOptions) {
-  if (perspective === "published") {
-    return { client, draft: false } as const;
-  }
-
-  const { isEnabled } = await draftMode();
-  if (!isEnabled) return { client, draft: false } as const;
-
-  const token = process.env.SANITY_API_READ_TOKEN?.trim();
-  if (!token) {
-    throw new Error(
-      "Sanity Draft Mode is active, but SANITY_API_READ_TOKEN is missing. Add a read token to preview draft blog content.",
-    );
-  }
-
-  const previewPerspective = await resolvePerspectiveFromCookies({
-    cookies: await cookies(),
-  });
-
-  return {
-    client: client.withConfig({
-      perspective: previewPerspective,
-      useCdn: false,
-      token,
-      stega: { enabled: stega, studioUrl },
-    }),
-    draft: true,
-  } as const;
 }
 
 function invalidPost(documentId: string | undefined, message: string): never {
@@ -289,7 +253,7 @@ const getAllBlogPostsCached = cache(
     perspective: NonNullable<BlogRepositoryOptions["perspective"]>,
     stega: boolean,
   ): Promise<BlogPostSummary[]> => {
-    const context = await getFetchContext({ perspective, stega });
+    const context = await getSanityFetchContext({ perspective, stega });
     const result = context.draft
       ? await context.client.fetch<BlogPostsQueryResult>(
           BLOG_POSTS_QUERY,
@@ -322,7 +286,7 @@ const getBlogPostBySlugCached = cache(
     const normalizedSlug = slug.trim();
     if (!normalizedSlug) return null;
 
-    const context = await getFetchContext({ perspective, stega });
+    const context = await getSanityFetchContext({ perspective, stega });
     const result = context.draft
       ? await context.client.fetch<BlogPostQueryResult>(
           BLOG_POST_QUERY,

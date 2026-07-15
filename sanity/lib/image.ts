@@ -2,13 +2,20 @@ import {
   createImageUrlBuilder,
   type SanityImageSource,
 } from "@sanity/image-url";
+import type { SanityImageCrop, SanityImageHotspot } from "@sanity/image-url";
 import { stegaClean } from "next-sanity";
 import { client } from "@/sanity/lib/client";
-import type { SanityBlogImageValue } from "@/sanity/lib/queries";
+import type { SanityImageAsset } from "@/sanity/lib/queries";
+
+export type SanityImageValue = {
+  crop?: SanityImageCrop;
+  hotspot?: SanityImageHotspot;
+  asset?: SanityImageAsset;
+};
 
 const imageBuilder = createImageUrlBuilder(client);
 
-function imageSource(value: SanityBlogImageValue): SanityImageSource | null {
+function imageSource(value: SanityImageValue): SanityImageSource | null {
   const asset = value.asset?._id
     ? { _id: stegaClean(value.asset._id) }
     : value.asset?.url
@@ -24,7 +31,7 @@ function imageSource(value: SanityBlogImageValue): SanityImageSource | null {
   };
 }
 
-export function sanityImageDimensions(value: SanityBlogImageValue) {
+export function sanityImageDimensions(value: SanityImageValue) {
   const sourceWidth = value.asset?.metadata?.dimensions?.width;
   const sourceHeight = value.asset?.metadata?.dimensions?.height;
   const horizontalCrop = (value.crop?.left ?? 0) + (value.crop?.right ?? 0);
@@ -43,7 +50,7 @@ export function sanityImageDimensions(value: SanityBlogImageValue) {
 }
 
 export function sanityImageUrl(
-  value: SanityBlogImageValue,
+  value: SanityImageValue,
   options: { width?: number; height?: number; quality?: number } = {},
 ) {
   const source = imageSource(value);

@@ -1,28 +1,46 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { FeatureCard } from "@/components/molecules/FeatureCard";
-import { features } from "@/content/features";
 import { defaultOg } from "@/lib/og";
+import { getFeaturesPage } from "@/lib/site-page-repository";
 
-export const metadata: Metadata = {
-  title: features.seo.title,
-  description: features.seo.description,
-  alternates: { canonical: "/features/" },
-  openGraph: defaultOg({
-    title: features.seo.ogTitle,
-    description: features.seo.ogDescription,
-    url: "https://horacal.app/features/",
-  }),
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { seo } = await getFeaturesPage();
+  return {
+    title: seo.metaTitle,
+    description: seo.metaDescription,
+    alternates: { canonical: "/features/" },
+    ...(seo.noIndex ? { robots: { index: false, follow: true } } : {}),
+    openGraph: defaultOg({
+      title: seo.ogTitle ?? seo.metaTitle,
+      description: seo.ogDescription ?? seo.metaDescription,
+      url: "https://horacal.app/features/",
+      ...(seo.ogImage
+        ? {
+            images: [
+              {
+                url: seo.ogImage.src,
+                width: seo.ogImage.width,
+                height: seo.ogImage.height,
+                alt: seo.ogImage.alt,
+              },
+            ],
+          }
+        : {}),
+    }),
+  };
+}
 
-export default function FeaturesPage() {
+export default async function FeaturesPage() {
+  const features = await getFeaturesPage();
+
   return (
     <>
       <div className="mx-auto max-w-295 px-6 pb-14 pt-16 md:pb-16 md:pt-24">
         <h1 className="max-w-4xl text-4xl font-semibold leading-tight text-text md:text-6xl">
           {features.hero.title.prefix}{" "}
           <span className="text-accent">
-            {features.hero.title.suffixGradient}
+            {features.hero.title.accent}
           </span>
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
@@ -104,8 +122,12 @@ export default function FeaturesPage() {
                 <Image
                   src={section.screenshot.src}
                   alt={section.screenshot.alt}
-                  width={section.screenshot.width ?? 1600}
-                  height={section.screenshot.height ?? 1000}
+                  width={section.screenshot.width}
+                  height={section.screenshot.height}
+                  placeholder={
+                    section.screenshot.blurDataUrl ? "blur" : undefined
+                  }
+                  blurDataURL={section.screenshot.blurDataUrl}
                   className="block h-auto w-full shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9)]"
                 />
               </div>

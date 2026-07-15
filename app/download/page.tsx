@@ -13,6 +13,7 @@ import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { cn } from "@/lib/cn";
+import { getHomePage } from "@/lib/home-repository";
 import { getTestFlightTesterCount } from "@/lib/testflight";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +21,7 @@ export const dynamic = "force-dynamic";
 const title = "Download hora Calendar for Mac";
 const description =
   "hora Calendar is on the Mac App Store: the native macOS Google Calendar client with real-time sync, menu bar access, Quick Add, Focus Time, availability sharing, and zero middleware. iOS/iPad coming next.";
+const socialImage = "/assets/seo/download-og-image.png";
 
 export const metadata: Metadata = {
   title: "Download hora Calendar",
@@ -33,7 +35,7 @@ export const metadata: Metadata = {
     description,
     images: [
       {
-        url: "/assets/social/testflight-share.png",
+        url: socialImage,
         width: 1200,
         height: 630,
         alt: title,
@@ -46,7 +48,7 @@ export const metadata: Metadata = {
     creator: "@moto_szama",
     title,
     description,
-    images: ["/assets/social/testflight-share.png"],
+    images: [socialImage],
   },
 };
 
@@ -133,9 +135,9 @@ const detailChips = [
 ];
 
 export default async function DownloadPage() {
-  const newsletter = home.hero.newsletter;
-  const socialProof = newsletter.socialProof;
-  const liveCount = await getTestFlightTesterCount(socialProof.count);
+  const homepage = await getHomePage();
+  const socialProof = homepage.hero.socialProof;
+  const liveCount = await getTestFlightTesterCount(socialProof.fallbackCount);
 
   return (
     <main className="relative overflow-hidden">
@@ -217,12 +219,16 @@ export default async function DownloadPage() {
           <div className="relative -mr-6 w-[calc(100%+6rem)] md:-mt-14 md:mr-0 md:w-auto md:max-[1440px]:-mr-48 md:max-[1440px]:-mt-24 md:max-[1440px]:w-[calc(100%+12rem)] lg:-mt-18 xl:max-[1440px]:-mr-24 xl:max-[1440px]:w-[calc(100%+6rem)] xl:max-[1440px]:translate-x-16">
             <div className="relative overflow-visible rounded-none shadow-[0_0_72px_16px_oklch(0_0_0/0.78)] md:overflow-hidden md:rounded-[12px]">
               <Image
-                src={home.hero.demo.posterSrc}
-                alt="hora Calendar macOS app interface"
-                width={3188}
-                height={1903}
+                src={homepage.hero.screenshot.src}
+                alt={homepage.hero.screenshot.alt}
+                width={homepage.hero.screenshot.width}
+                height={homepage.hero.screenshot.height}
                 priority
                 quality={90}
+                placeholder={
+                  homepage.hero.screenshot.blurDataURL ? "blur" : "empty"
+                }
+                blurDataURL={homepage.hero.screenshot.blurDataURL}
                 sizes="(min-width: 1280px) 820px, (min-width: 1024px) 68vw, 100vw"
                 className="w-full object-contain"
               />

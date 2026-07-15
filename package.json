@@ -10,7 +10,8 @@
     "indexnow": "node scripts/indexnow.mjs",
     "sanity": "sanity",
     "sanity:schema": "sanity schema validate",
-    "sanity:verify:blog": "sanity exec scripts/verify-sanity-blog.ts --with-user-token"
+    "sanity:verify:blog": "sanity exec scripts/verify-sanity-blog.ts --with-user-token",
+    "sanity:verify:site": "sanity exec scripts/verify-sanity-site.ts --with-user-token"
   },
   "dependencies": {
     "@portabletext/types": "4.0.2",

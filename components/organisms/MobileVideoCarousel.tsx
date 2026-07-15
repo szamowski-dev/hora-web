@@ -11,6 +11,7 @@ type VideoSource = {
 };
 
 type ActionCard = {
+  number: number;
   title: string;
   body: string;
   src: string;
@@ -26,6 +27,8 @@ export function MobileVideoCarousel({
     ariaLabel: string;
     poster: string;
     sources: readonly VideoSource[];
+    title: string;
+    description: string;
   };
   actionCards: readonly ActionCard[];
   videoId: string;
@@ -82,11 +85,11 @@ export function MobileVideoCarousel({
                 01
               </span>
               <h3 className="text-sm font-semibold tracking-tight text-text">
-                Meet hora
+                {launchVideo.title}
               </h3>
             </div>
             <p className="mt-2 text-xs leading-5 text-muted">
-              Watch hora in action and discover its key features.
+              {launchVideo.description}
             </p>
           </div>
         </article>
@@ -110,7 +113,7 @@ export function MobileVideoCarousel({
               <div className="h-32 p-4">
                 <div className="flex items-center gap-3">
                   <span className="font-mono text-[10px] tracking-[0.16em] text-accent/75">
-                    {String(slideIndex + 1).padStart(2, "0")}
+                    {String(card.number).padStart(2, "0")}
                   </span>
                   <h3 className="text-sm font-semibold tracking-tight text-text">
                     {card.title}

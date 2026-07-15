@@ -1,10 +1,22 @@
 import type { StructureResolver } from "sanity/structure";
 
 const managedDocumentTypes = new Set([
+  "homePage",
+  "featuresPage",
+  "aboutPage",
+  "legalPage",
   "blogPost",
   "blogCategory",
   "blogTag",
   "author",
+  "blogSettings",
+]);
+
+const singletonDocumentTypes = new Set([
+  "homePage",
+  "featuresPage",
+  "aboutPage",
+  "legalPage",
   "blogSettings",
 ]);
 
@@ -18,7 +30,70 @@ const categories = [
 export const structure: StructureResolver = (S) =>
   S.list()
     .title("Content")
+    .initialValueTemplates(
+      S.defaultInitialValueTemplateItems().filter(
+        (item) => !singletonDocumentTypes.has(item.getTemplateId() ?? ""),
+      ),
+    )
     .items([
+      S.listItem()
+        .id("homePage")
+        .title("Homepage")
+        .child(
+          S.document()
+            .schemaType("homePage")
+            .documentId("homePage")
+            .title("Homepage"),
+        ),
+      S.listItem()
+        .title("Site pages")
+        .child(
+          S.list()
+            .title("Site pages")
+            .initialValueTemplates([])
+            .items([
+              S.listItem()
+                .id("featuresPage")
+                .title("Features")
+                .child(
+                  S.document()
+                    .schemaType("featuresPage")
+                    .documentId("featuresPage")
+                    .title("Features"),
+                ),
+              S.listItem()
+                .id("aboutPage")
+                .title("About")
+                .child(
+                  S.document()
+                    .schemaType("aboutPage")
+                    .documentId("aboutPage")
+                    .title("About"),
+                ),
+              S.divider(),
+              S.listItem()
+                .id("privacyPage")
+                .title("Privacy Policy")
+                .child(
+                  S.document()
+                    .schemaType("legalPage")
+                    .documentId("privacyPage")
+                    .initialValueTemplate("legalPage", { kind: "privacy" })
+                    .title("Privacy Policy"),
+                ),
+              S.listItem()
+                .id("termsPage")
+                .title("Terms of Service")
+                .child(
+                  S.document()
+                    .schemaType("legalPage")
+                    .documentId("termsPage")
+                    .initialValueTemplate("legalPage", { kind: "terms" })
+                    .title("Terms of Service"),
+                ),
+            ]),
+        ),
+      S.divider(),
       S.documentTypeListItem("blogPost").title("Posts"),
       S.divider(),
       S.listItem()

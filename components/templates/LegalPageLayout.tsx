@@ -2,20 +2,48 @@ import Link from "next/link";
 import { Icon } from "@/components/atoms/Icon";
 import { Prose } from "@/components/atoms/Prose";
 import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
+import type { LegalPageKind, SplitHeading } from "@/lib/site-page-model";
+
+type LegalPageLayoutProps =
+  | {
+      kind: LegalPageKind;
+      title: SplitHeading;
+      lastUpdated: string;
+      children: React.ReactNode;
+    }
+  | {
+      kind?: never;
+      title: string;
+      lastUpdated: string;
+      children: React.ReactNode;
+    };
+
+function displayDate(value: string): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${value}T00:00:00Z`));
+}
 
 export function LegalPageLayout({
+  kind,
   title,
   lastUpdated,
   children,
-}: {
-  title: string;
-  lastUpdated: string;
-  children: React.ReactNode;
-}) {
-  const titleParts = title.split(" ");
-  const accentWord = titleParts.pop();
-  const titlePrefix = titleParts.join(" ");
-  const isPrivacy = title.toLowerCase().includes("privacy");
+}: LegalPageLayoutProps) {
+  const titleParts = typeof title === "string" ? title.split(" ") : [];
+  const accentWord =
+    typeof title === "string" ? titleParts.pop() : title.accent;
+  const titlePrefix =
+    typeof title === "string" ? titleParts.join(" ") : title.prefix;
+  const isPrivacy =
+    kind === "privacy" ||
+    (kind === undefined &&
+      typeof title === "string" &&
+      title.toLowerCase().includes("privacy"));
 
   return (
     <article className="home-section relative overflow-hidden border-y py-16 md:py-24">
@@ -30,7 +58,9 @@ export function LegalPageLayout({
             {titlePrefix}{" "}
             <span className="text-accent">{accentWord}</span>
           </h1>
-          <p className="mt-5 text-sm text-muted">Last updated: {lastUpdated}</p>
+          <p className="mt-5 text-sm text-muted">
+            Last updated: {displayDate(lastUpdated)}
+          </p>
         </header>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start md:mt-12">

@@ -1,12 +1,12 @@
-import { home } from "@/content/home";
 import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { cn } from "@/lib/cn";
-
-type Status =
-  "Shipped" | "Open Beta Tests" | "Up next" | "Planned" | "On the horizon";
+import type {
+  HomePageContent,
+  HomeRoadmapStatus,
+} from "@/lib/home-model";
 
 const statusStyles: Record<
-  Status,
+  HomeRoadmapStatus,
   { pill: string; dot: string; connector: string }
 > = {
   Shipped: {
@@ -36,10 +36,11 @@ const statusStyles: Record<
   },
 };
 
-export function Roadmap() {
-  const r = home.roadmap;
-  const items = r.items;
-
+export function Roadmap({
+  content,
+}: {
+  content: HomePageContent["roadmap"];
+}) {
   return (
     <section
       id="roadmap"
@@ -50,8 +51,8 @@ export function Roadmap() {
       <div className="relative mx-auto max-w-295 px-6">
         <div className="max-w-5xl">
           <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
-            {r.heading.prefix}
-            <span className="text-accent"> {r.heading.suffixGradient}</span>
+            {content.titlePrefix}
+            <span className="text-accent"> {content.titleAccent}</span>
           </h2>
         </div>
 
@@ -61,9 +62,9 @@ export function Roadmap() {
             className="absolute top-2 right-[16.666%] left-[16.666%] hidden h-px bg-linear-to-r from-success/50 via-accent/40 to-line md:block"
           />
           <ol className="space-y-4 md:grid md:grid-cols-3 md:gap-4 md:space-y-0">
-            {items.map((item, i) => {
+            {content.items.map((item, i) => {
               const styles = statusStyles[item.status];
-              const isLast = i === items.length - 1;
+              const isLast = i === content.items.length - 1;
               return (
                 <li
                   key={item.title}

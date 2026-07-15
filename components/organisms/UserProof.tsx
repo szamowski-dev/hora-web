@@ -1,13 +1,15 @@
 import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { AnimatedCount } from "@/components/molecules/AnimatedCount";
 import { TestimonialsCarousel } from "@/components/molecules/TestimonialsCarousel";
-import { home } from "@/content/home";
-import { getTestFlightTesterCount } from "@/lib/testflight";
+import type { HomePageContent } from "@/lib/home-model";
 
-export async function UserProof() {
-  const proof = home.userProof;
-  const testFlightProof = home.hero.newsletter.socialProof;
-  const liveCount = await getTestFlightTesterCount(testFlightProof.count);
+export function UserProof({
+  content,
+  liveCount,
+}: {
+  content: HomePageContent["socialProof"];
+  liveCount: number;
+}) {
   return (
     <section className="home-section relative overflow-hidden border-y py-20 md:py-24">
       <SectionBackdrop direction="left" />
@@ -15,7 +17,8 @@ export async function UserProof() {
       <div className="relative mx-auto max-w-295 px-6">
         <div className="max-w-5xl">
           <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
-            Already in <span className="text-accent">real Mac calendars.</span>
+            {content.titlePrefix}{" "}
+            <span className="text-accent">{content.titleAccent}</span>
           </h2>
         </div>
 
@@ -26,12 +29,12 @@ export async function UserProof() {
                 <AnimatedCount value={liveCount} />+
               </p>
               <p className="mt-4 max-w-sm text-balance text-base font-semibold leading-snug text-text md:text-lg">
-                {testFlightProof.label}
+                {content.description}
               </p>
             </div>
           </div>
 
-          <TestimonialsCarousel quotes={proof.quotes} />
+          <TestimonialsCarousel quotes={content.testimonials} />
         </div>
       </div>
     </section>

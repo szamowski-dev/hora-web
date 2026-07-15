@@ -14,8 +14,8 @@ export const externalLink = defineType({
       validation: (rule) =>
         rule
           .required()
-          .uri({ scheme: ["http", "https"] })
-          .error("Enter a complete http or https URL."),
+          .uri({ scheme: ["http", "https", "mailto"] })
+          .error("Enter a complete http, https, or mailto URL."),
     }),
     defineField({
       name: "openInNewTab",
