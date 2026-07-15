@@ -38,6 +38,33 @@ const legacyAssetRedirects = [
   ["/assets/keychain-access-2021-05-03.png.webp", "/assets/support/keychain-access.webp"],
 ] as const;
 
+const seoBlogPostRedirects = [
+  [
+    "/blog/2026-03-26-building-hora",
+    "/blog/2026-03-26-native-google-calendar-app-mac/",
+  ],
+  [
+    "/blog/2026-04-10-fixing-the-appearance-bug",
+    "/blog/2026-04-10-swiftui-appearance-switching-macos/",
+  ],
+  [
+    "/blog/2026-04-13-v0.6-qa-grind",
+    "/blog/2026-04-13-six-qa-groups-hora-reliability/",
+  ],
+  [
+    "/blog/2026-04-13-v0-6-qa-grind",
+    "/blog/2026-04-13-six-qa-groups-hora-reliability/",
+  ],
+  [
+    "/blog/2026-05-08-fixing-yellow-on-yellow-calendar-tiles",
+    "/blog/2026-05-08-swiftui-color-contrast-oklch-apca/",
+  ],
+  [
+    "/blog/2026-06-05-types-of-calendar-layouts",
+    "/blog/2026-06-05-google-calendar-views-day-week-month-schedule/",
+  ],
+] as const;
+
 const nextConfig: NextConfig = {
   trailingSlash: true,
   skipTrailingSlashRedirect: true,
@@ -54,16 +81,10 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      {
-        source: "/blog/2026-04-13-v0.6-qa-grind/",
-        destination: "/blog/2026-04-13-v0-6-qa-grind/",
-        permanent: true,
-      },
-      {
-        source: "/blog/2026-04-13-v0.6-qa-grind",
-        destination: "/blog/2026-04-13-v0-6-qa-grind/",
-        permanent: true,
-      },
+      ...seoBlogPostRedirects.flatMap(([source, destination]) => [
+        { source, destination, permanent: true },
+        { source: `${source}/`, destination, permanent: true },
+      ]),
       {
         source: "/blog/fantastical-alternative-google-calendar/",
         destination: "/blog/2026-05-06-fantastical-alternative-google-calendar/",

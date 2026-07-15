@@ -24,6 +24,9 @@ type SanityPost = {
   tags?: Reference[];
   heroImage?: ImageValue;
   body?: Array<Record<string, unknown>>;
+  seo?: {
+    metaTitle?: string;
+  };
   legacySourceFile?: string;
   legacyChecksum?: string;
 };
@@ -146,6 +149,7 @@ async function main() {
         tags,
         heroImage,
         body,
+        seo{metaTitle},
         legacySourceFile,
         legacyChecksum
       },
@@ -208,6 +212,14 @@ async function main() {
     const slug = post.slug?.current ?? post._id;
     expectText(post.title, "title", slug);
     expectText(post.description, "description", slug);
+    if (post.seo?.metaTitle) {
+      expectText(post.seo.metaTitle, "seo.metaTitle", slug);
+    }
+    const renderedTitle = `${post.seo?.metaTitle || post.title} — hora Calendar`;
+    expect(
+      renderedTitle.length <= 65,
+      `${slug} renders a ${renderedTitle.length}-character HTML title`,
+    );
     expect(DATE_PATTERN.test(post.publishedAt ?? ""), `${slug} has an invalid published date`);
     expect(DATE_PATTERN.test(post.contentUpdatedAt ?? ""), `${slug} has an invalid updated date`);
     expect(
