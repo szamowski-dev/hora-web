@@ -1,19 +1,48 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/content/site";
-import { getAllPosts } from "@/lib/mdx";
+import { getBlogCategories, getPostsByCategory } from "@/lib/blog";
+import { getAllBlogPosts } from "@/lib/blog-repository";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getAllPosts();
+  const posts = await getAllBlogPosts({
+    perspective: "published",
+    stega: false,
+  });
   const base = site.url;
   const today = new Date().toISOString().split("T")[0];
-  const latestPostDate = posts[0]?.frontmatter.date ?? today;
+  const latestPostDate =
+    posts[0]?.updatedAt ?? posts[0]?.publishedAt ?? today;
 
-  const postEntries: MetadataRoute.Sitemap = posts.map((p) => ({
-    url: `${base}/blog/${p.slug}/`,
-    lastModified: p.frontmatter.date,
-    changeFrequency: "monthly",
-    priority: 0.7,
-  }));
+  const postEntries: MetadataRoute.Sitemap = posts.flatMap((post) => {
+    if (post.seo.noIndex) return [];
+
+    const url = new URL(
+      post.seo.canonicalUrl || `/blog/${post.slug}/`,
+      base,
+    );
+    if (url.origin !== new URL(base).origin) return [];
+
+    return [
+      {
+        url: url.toString(),
+        lastModified: post.updatedAt ?? post.publishedAt,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+    ];
+  });
+
+  const categoryEntries: MetadataRoute.Sitemap = getBlogCategories(posts).map(
+    (category) => ({
+      url: `${base}/blog/category/${category.slug}/`,
+      lastModified:
+        getPostsByCategory(posts, category.slug)[0]?.updatedAt ??
+        getPostsByCategory(posts, category.slug)[0]?.publishedAt ??
+        latestPostDate,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }),
+  );
 
   return [
     {
@@ -41,6 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    ...categoryEntries,
     ...postEntries,
     {
       url: `${base}/features/`,

@@ -1,232 +1,192 @@
 ---
-title: "Google Calendar App for Mac: What hora 1.0 Brings"
+title: "hora Calendar 1.0: The Mac App I Wanted for Google Calendar"
 date: 2026-05-29
-description: "hora 1.0 is a native Google Calendar app for Mac with real-time sync, menu bar, widgets, quick add, Focus Time, and privacy-first design."
-tags: google-calendar-app-for-mac, google-calendar, macos, productivity, native-mac-app
-cover: /assets/blog/google-calendar-app-for-mac-hora-1-0-cover.webp
-ogImage: /assets/blog/google-calendar-app-for-mac-hora-1-0-hero.webp
+updated: 2026-07-14
+category: product-updates
+heroImage: /assets/blog/hora-calendar-1-0-launch.webp
+heroAlt: hora Calendar 1.0 release poster with the app icon, a large 1.0, and a native Mac week view
+description: "hora Calendar 1.0 is a native Google Calendar client for Mac with direct sync, menu bar access, focus planning, and privacy built around local data."
+tags: hora-calendar, google-calendar, google-calendar-app-for-mac, native-mac-app, product-update, macos
+cover: /assets/blog/hora-calendar-1-0-launch.webp
+ogImage: /assets/blog/hora-calendar-1-0-launch.webp
 ---
 
-<img
-  src="/assets/blog/google-calendar-app-for-mac-hora-1-0-hero.webp"
-  alt="Google Calendar app for Mac showing hora Calendar 1.0"
-  className="border-0 shadow-[0_28px_86px_-54px_rgba(255,56,60,0.55),0_36px_100px_-42px_rgba(0,0,0,0.9)]"
-/>
+I did not start hora because the world needed another calendar app. I started it because I opened Google Calendar in a browser every morning, then spent the rest of the day wishing it behaved like part of my Mac.
 
-If you are looking for a **Google Calendar app for Mac**, the real question is not whether Google Calendar works. It does. The problem is that it still feels like a browser product on a Mac.
+The first version of this post was written while 1.0 was still a target. hora reached the Mac App Store on June 30, 2026. Looking back now, a feature inventory feels less useful than explaining what the first release had to prove, what beta users changed, and what I deliberately left out.
 
-hora Calendar 1.0 is built for people who live in Google Calendar but want a real macOS app: native windows, keyboard-first workflows, menu bar access, agenda widgets, fast sync, one-click meeting joins, and a privacy model that does not route your calendar through another backend.
+If you are comparing every way to use Google Calendar on macOS, start with the broader [Google Calendar desktop app guide](/blog/2026-07-09-google-calendar-desktop-app-mac/). This is the story of the narrower product I chose to build.
 
-This is what to expect from 1.0.
+## What hora 1.0 had to prove
 
-## What hora 1.0 is built to solve
+I had three tests for the first public release:
 
-Google Calendar is excellent at collaboration. It is reliable, familiar, and deeply connected to Google Workspace. But on macOS, the default experience usually falls into one of three buckets:
+1. It had to understand Google Calendar instead of flattening it into a generic calendar model.
+2. It had to earn its place on a Mac through native workflows, not only a native-looking window.
+3. Its data path had to be simple enough that I could explain it without hiding behind a privacy slogan.
 
-- Use Google Calendar in a browser tab.
-- Connect Google Calendar to Apple Calendar and accept the limits of that bridge.
-- Use a broad calendar suite that supports everything, sometimes at the cost of Google-specific behavior.
+That removed a surprising number of ideas from the roadmap. Version 1.0 did not need every view, integration, or productivity system I could imagine. It needed to make the calendar I already used feel faster, calmer, and easier to trust.
 
-hora is intentionally narrower. It is a native Mac calendar app for Google Calendar users. That focus matters because Google Calendar has its own event model, colors, conference data, attendee behavior, reminders, sync rules, and API edge cases.
+## Google-first, not everything-calendar
 
-The goal for 1.0 is simple: keep the Google Calendar source of truth, but make the daily workflow feel like it belongs on macOS.
+Many established calendar apps support Google, iCloud, Exchange, Microsoft 365, and CalDAV. That breadth is valuable if your schedule is spread across several providers.
 
-<img
-  src="/assets/features/images/hora-week-view.webp"
-  alt="Native Mac week view for Google Calendar"
-  className="border-0 shadow-[0_28px_86px_-54px_rgba(255,56,60,0.48),0_36px_100px_-42px_rgba(0,0,0,0.9)]"
-/>
+It was not the problem I had.
 
-That means day, week, 3-day, 5-day, 7-day, and month views. It means keyboard shortcuts that feel familiar if you know Google Calendar. It means dragging, resizing, moving events across calendars, searching instantly, and joining meetings without digging through tabs.
+Google Calendar was already my source of truth. What I wanted was a native client that respected Google-specific details such as event colors, conference links, attendee state, blocking events, multiple accounts, and fast change notifications.
 
-It also means saying no to the easy route: no Electron shell, no WebView wrapper, no fake desktop app around the Google Calendar website.
+hora connects to the Google Calendar API instead of translating everything through CalDAV. That lets the app stay close to Google's event model and gives me control over synchronization, rate limits, retries, and partial updates.
 
-## Real-time Google Calendar sync without CalDAV tradeoffs
+The tradeoff is intentional. hora 1.0 does not support iCloud, Exchange, or general CalDAV accounts. If you need every provider in one window, a broader calendar app is probably the better choice.
 
-hora talks to Google Calendar through the Google Calendar API, not CalDAV.
+I explained the technical decision in more detail in [Google Calendar API vs CalDAV](/blog/2026-05-21-google-calendar-api-vs-caldav/).
 
-That choice is not cosmetic. It affects what the app can reliably do.
+## The Mac workflows that earned their place
 
-The Google Calendar API gives hora a more direct path to Google-native behavior:
+A native calendar should solve moments that a browser tab handles badly.
 
-- Real-time sync through Google Calendar push notifications and Apple Push Notification service.
-- Event colors that match the Google Calendar model.
-- Blocking events and availability-aware workflows.
-- Moving events across calendars and accounts without delete-and-recreate hacks.
-- Better handling of attendees, RSVP state, conference data, and Google-specific fields.
+The most obvious one happens just before a meeting. I do not want to find the right tab, scan an event description, and hunt for a call link. I want to glance at the menu bar and join.
 
-I wrote a deeper technical breakdown in [Google Calendar API vs CalDAV: Which Integration Wins?](/blog/2026-05-21-google-calendar-api-vs-caldav). The short version is this: CalDAV is useful when you need a provider-agnostic protocol. The Google Calendar API is the better fit when your product is intentionally Google-first.
+![hora Calendar across the main window, menu bar, and desktop surfaces on macOS.](/assets/blog/hora-calendar-mac-surfaces.webp)
 
-Google's own API includes push notification primitives for watching calendar resources, documented in the [Google Calendar API push notifications guide](https://developers.google.com/workspace/calendar/api/guides/push). That is the foundation for the kind of sync a native desktop calendar needs: fast enough that your calendar does not feel stale, without hammering the API with aggressive polling.
-
-For users, the implementation detail should disappear. You create an event on the web, on mobile, or from another client, and hora should catch up quickly. You move a meeting between calendars, and it should stay the same meeting. You change a color, respond to an invite, or update a conference link, and the app should respect the Google Calendar data model instead of flattening it.
-
-That is the kind of thing people only notice when it breaks. So 1.0 treats sync as product work, not plumbing.
-
-## Privacy: your calendar stays on your Mac
-
-The privacy model for hora 1.0 is direct:
-
-- Calendar data is not stored on hora servers.
-- OAuth tokens stay in macOS Keychain.
-- There is no middleware that proxies your calendar data.
-- There is no product telemetry tracking how you use the app.
-
-Your Mac talks to Google Calendar. When you connect Zoom or Microsoft Teams, those integrations are used to create or join meetings, not to build a second copy of your calendar somewhere else.
-
-This matters because calendar data is unusually sensitive. A calendar can reveal clients, doctors, interviews, personal routines, travel, relationships, location patterns, and what you are thinking about before it becomes public. Treating that as generic SaaS event data is the wrong default.
-
-hora still needs permissions to do useful work. A calendar app cannot create events, update invitations, or join meetings without access to the relevant APIs. The point is to keep the path narrow and understandable: local app, platform keychain, official provider APIs.
-
-No hidden sync service. No calendar data warehouse. No "AI productivity layer" quietly reading every meeting.
-
-## The Mac workflow layer Google Calendar never shipped
-
-The browser is fine when you are planning your week. It is not fine when your next meeting starts in 90 seconds and the link is buried in a tab, a Slack thread, or a long event description.
-
-hora 1.0 adds the Mac workflow layer around Google Calendar.
+The menu bar in hora shows today and tomorrow, keeps the next event close, and provides a direct route to Google Meet, Zoom, and Microsoft Teams calls. Agenda widgets make the same information available on the desktop without opening the main window.
 
 <AutoVideo
   src="/assets/blog/google-calendar-app-for-mac-menubar.webm"
   mp4Src="/assets/features/videos/hora-menubar.mp4"
   poster="/assets/features/images/hora-widget-menubar.webp"
-  className="border-0 shadow-[0_28px_86px_-54px_rgba(255,56,60,0.48),0_36px_100px_-42px_rgba(0,0,0,0.9)]"
+  className="mdx-media border-0 shadow-[0_28px_86px_-54px_rgba(255,56,60,0.48),0_36px_100px_-42px_rgba(0,0,0,0.9)]"
 />
 
-The menu bar shows what is coming up today and tomorrow. It gives you a fast path to meeting links. It makes the next event visible without switching context.
+Keyboard navigation and instant search came from the same principle. If I know what I want to do, the interface should not make me travel through several screens first.
 
-Agenda widgets do the same thing from the desktop. Instead of opening a full calendar just to answer "what is next?", you can glance at your day and move on.
+This is why building hora as a native Swift app mattered. Menu bar behavior, widgets, keyboard commands, local caching, drag and drop, and normal Mac window behavior are not decorations around the calendar. Together, they are the product.
 
-There is also instant search. When you know a meeting exists but not where it landed, search should feel like a native Mac command, not a page load.
+There is a longer version of that decision in [Native App vs Electron and PWA](/blog/2026-04-14-native-app-vs-electron-pwa/).
 
-For people with full calendars, hora also adds meeting-end alerts. The problem is not only missing meeting starts. It is also letting one meeting silently consume the next one. If a call is running long, the app can warn you before the next commitment gets squeezed.
+## Planning belongs beside the calendar
 
-And when that happens, 1.0 includes a "running late" style workflow so you can notify people quickly instead of manually typing the same message again.
+The first beta began as a faster way to view and edit Google Calendar. It gradually became clear that viewing the schedule was only half of the daily workflow.
 
-## Planning and deep work in hora 1.0
+The other half is deciding what deserves time before meetings consume it.
 
-A calendar is not only a record of meetings. It is also where deep work either gets protected or disappears.
-
-hora 1.0 has four planning features aimed at that problem: Quick Add, Focus Time Scheduler, Pomodoro, and Share Availability.
+Quick Add makes event creation fast enough to stay out of the way. I can type a sentence such as `Focus on launch notes tomorrow at 10`, check the parsed date and time, and edit the result before saving it.
 
 <AutoVideo
   src="/assets/blog/google-calendar-app-for-mac-quick-add.webm"
   mp4Src="/assets/features/videos/hora-quick-add.mp4"
   poster="/assets/features/images/new-event.webp"
-  className="border-0 shadow-[0_28px_86px_-54px_rgba(255,56,60,0.48),0_36px_100px_-42px_rgba(0,0,0,0.9)]"
+  className="mdx-media border-0 shadow-[0_28px_86px_-54px_rgba(255,56,60,0.48),0_36px_100px_-42px_rgba(0,0,0,0.9)]"
 />
 
-Quick Add uses natural language parsing so you can type like a person:
+Focus Time works at a different scale. I drag across one or more visible days, hora removes the time already occupied by events, and a preview shows the focus blocks before anything is created. Share Availability turns selected dates and hours into a message I can paste into email or chat. The Pomodoro timer keeps the execution step close to the plan.
 
-- `Lunch with Kasia tomorrow 1pm`
-- `Focus block Friday 9-11`
-- `Call with Janek next Tuesday 15:30`
+These are not four unrelated productivity tools. They form one loop:
 
-The parser supports multiple languages, including English, Polish, Spanish, Portuguese, German, and French. The goal is not to make event creation magical. It is to make it fast enough that you actually use it.
+1. Find the time.
+2. Protect it.
+3. Share the remaining availability.
+4. Do the work.
 
-Focus Time Scheduler is the more opinionated part. You can select a day or a whole week, and hora will help place blocks for deep work around your existing commitments.
+If you are deciding whether that style of planning fits you, I wrote a separate guide to [time blocking apps for Mac](/blog/2026-05-13-time-blocking-app-mac-2026/).
 
-<AutoVideo
-  src="/assets/blog/google-calendar-app-for-mac-focus-time.webm"
-  mp4Src="/assets/features/videos/focus-time.mp4"
-  poster="/assets/features/images/hora-week-view.webp"
-  className="border-0 shadow-[0_28px_86px_-54px_rgba(255,56,60,0.48),0_36px_100px_-42px_rgba(0,0,0,0.9)]"
-/>
+## The data path behind hora
 
-This is where a calendar app can become more useful than a grid. The grid shows what already happened to your time. Focus Time helps you protect what still can.
+Calendar data is personal enough that vague privacy language is not useful. The implementation needs to be understandable too.
 
-Pomodoro is built in for the same reason. You should not need a separate timer floating above the calendar when the calendar already knows what you planned to do.
+![How hora Calendar syncs event content directly with Google while a lightweight relay carries only change signals.](/assets/blog/hora-calendar-direct-sync-privacy.webp)
 
-Share Availability rounds out the planning loop. One keyboard shortcut prepares a short availability message you can paste into email or chat. Instead of sending three vague options and waiting for another round trip, you can share concrete windows based on your real calendar.
+Event content is fetched by the app directly from the Google Calendar API and cached locally on the Mac. OAuth tokens are stored in macOS Keychain.
 
-I covered the broader decision process in [Best Time Blocking App for Mac (2026)](/blog/2026-05-13-time-blocking-app-mac-2026), but the philosophy in hora is straightforward: planning and execution should live close together.
+Fast updates require one additional piece. hora registers Google Calendar watch channels. When something changes, a lightweight notification service receives Google's metadata-only notification and forwards a change signal through Apple Push Notification service. The notification does not contain the event body. After receiving the signal, the Mac requests the changed data directly from Google. Periodic sync remains as a safety net.
 
-## Meetings, invites, locations, and the small details
+Google describes this behavior in its [Calendar API push notifications documentation](https://developers.google.com/workspace/calendar/api/guides/push).
 
-Most calendar apps can create an event. The hard part is making the edge cases feel boring.
+I used to summarize the architecture as "no servers." I no longer think that wording is precise enough. The notification relay exists, but it does not proxy or store calendar titles, descriptions, attendees, or meeting notes.
 
-hora 1.0 includes Zoom and Microsoft Teams API integration so you can create meetings and join them in one click. Google Meet is already part of the Google Calendar workflow, but many real calendars mix Meet, Zoom, and Teams every week.
+The meaningful promise is simpler: there is no hora backend maintaining a second copy of your calendar.
 
-The app also expands invitation management. You can accept, decline, and ignore invitations. Ignoring matters because not every invitation deserves a hard yes/no response, and not every calendar workflow should send another email into the world.
+The current data-handling details are documented in the [hora privacy policy](/privacy/).
 
-For the same reason, hora supports choosing not to notify attendees by email when deleting an event or declining an invitation. Google documents email update behavior through parameters like `sendUpdates` in the Calendar API, including the tradeoffs around notifying attendees. The UI should make those choices visible when they matter.
+## What beta users changed
 
-Locations get a Mac-native treatment too. With Apple Maps and MapKit support, hora can add travel time to your calendar flow. Apple Calendar users already know this pattern from Apple's own [travel time support in Calendar on Mac](https://support.apple.com/en-euro/guide/calendar/icl43600). hora brings that expectation into a Google-first Mac calendar.
+Before the beta, I thought most of the work left for 1.0 was polishing visible features.
 
-Contacts are another small detail that becomes large in daily use. hora integrates with macOS Contacts and Google's "Other Contacts" API surface, so attendee suggestions include people Google has learned from your communication history, not only contacts you manually saved.
+Real calendars corrected that assumption quickly.
 
-That is the difference between a form and a calendar app that feels aware of your real work.
+Testers brought accounts with years of history, several calendars, recurring meetings, unusual colors, invitations in strange states, and changes arriving seconds before a call. Large accounts exposed quota behavior that did not appear in my own setup. Dragging, resizing, deleting, and moving through the calendar revealed states that a happy-path demo never reached.
 
-## Themes, views, and Mac-native performance
+That feedback shifted time away from adding more features and toward less visible work:
 
-hora 1.0 is built in Swift 6 with SwiftUI and AppKit. Sync uses Google APIs and Apple Push Notification service. The app is not Electron, not a WebView, and not a web wrapper.
+- Better rate-limit recovery and request pacing.
+- More reliable synchronization after sleep or a lost connection.
+- Consistent event state across the main window, menu bar, and widgets.
+- Deep links that open the event you actually selected.
+- Safer handling of invitations, recurring events, and partial updates.
 
-I care about that because calendars are opened constantly. They sit in the menu bar. They react to drag and drop. They scroll. They search. They render dense grids of text and color. A calendar app that feels heavy becomes a tax on the day.
+The [first public beta retrospective](/blog/2026-04-29-public-beta-week-one/) contains more of those details.
 
-The native stack also makes room for details that would otherwise be treated as nice-to-haves:
+The lesson was not subtle. A calendar app can look finished and still be untrustworthy. Version 1.0 had to be boring in the places where boring means reliable.
 
-- Day, week, 3-day, 5-day, 7-day, and month views.
-- Time zone support.
-- Different week starts.
-- Different time formats.
-- Native keyboard shortcuts.
-- System-aware window behavior.
-- Mac-style menus and controls where they make sense.
+## What I deliberately left out
 
-<AutoVideo
-  src="/assets/blog/google-calendar-app-for-mac-themes.webm"
-  mp4Src="/assets/features/videos/hora-themes.mp4"
-  poster="/assets/features/images/hora-themes.webp"
-  className="border-0 shadow-[0_28px_86px_-54px_rgba(255,56,60,0.48),0_36px_100px_-42px_rgba(0,0,0,0.9)]"
-/>
+hora 1.0 does not try to replace every calendar for every person.
 
-Themes are part of that too. hora 1.0 includes color themes like Tokyo Night, Catppuccin, Gruvbox, Osaka Jade, and others, plus support for selected Nerd Fonts.
+It does not combine Google Calendar with iCloud and Exchange. It does not turn the schedule into a project-management dashboard. It does not ask an AI model to reorganize the week automatically.
 
-This is not only decoration. Calendar apps are dense. Color, contrast, and typography affect whether you can scan your day quickly. If you stare at a calendar all week, it should be pleasant without becoming noisy.
+On supported configurations, optional on-device Foundation Models can polish an event title or availability message, name a focus block, or summarize an existing description. Each workflow still has a deterministic fallback. AI is a small convenience inside the calendar, not the reason the calendar exists.
 
-For more on why the native choice matters, I wrote about the tradeoff in [Native App vs Electron and PWA](/blog/2026-04-14-native-app-vs-electron-pwa).
+That restraint is part of the product. Supporting fewer systems lets me spend more time on the details Google Calendar users encounter every day.
 
-## Apple Intelligence where it makes sense
+## Who hora Calendar 1.0 is for
 
-hora 1.0 also includes Apple Intelligence support where Apple makes it available.
+hora is for you if Google Calendar is already the center of your schedule and you want:
 
-That qualifier is important. Apple Intelligence and Foundation Models availability depends on supported devices, system settings, regions, and languages. The app should not pretend AI is available everywhere when the platform does not.
+- A native Mac app instead of another permanent browser tab.
+- Fast access to the next event from the menu bar or desktop.
+- Google-specific event behavior without a CalDAV translation layer.
+- Keyboard-friendly planning, Quick Add, and focus scheduling.
+- A clear data path in which event content moves between your Mac and Google.
 
-Where it is available, Apple Intelligence can support workflows like:
+It is probably not the right fit if your work depends on combining several calendar providers in one app. Apple Calendar, Fantastical, or BusyCal may serve that setup better.
 
-- Improving Quick Add event titles and descriptions.
-- Helping Focus Time Scheduler produce better block names.
-- Turning availability into cleaner messages.
-- Summarizing long event descriptions into something readable.
+You can review the complete current feature set on the [hora features page](/features/).
 
-Apple's [Foundation Models framework](https://developer.apple.com/documentation/FoundationModels/) is designed for on-device language tasks, structured output, and tool calling. That makes it a better fit for local calendar assistance than shipping every meeting title and description to a random cloud model.
+[Try hora Calendar on the Mac App Store](https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_blog_hora_1_0&mt=8)
 
-In hora, AI is not the product. The calendar is the product. Apple Intelligence is useful when it removes friction from a real calendar task without changing the privacy posture.
+Version 1.0 did not mean the app was finished. It meant the original idea had survived contact with real calendars and real users.
 
-## FAQ
+Google Calendar remains the source of truth. hora is the Mac layer I wanted around it.
 
-### Is there a native Google Calendar app for Mac?
-
-Google does not ship a dedicated native Google Calendar app for macOS. You can use Google Calendar in the browser or as a Chrome-installed web app. hora is built as a native Mac app for Google Calendar users.
-
-### Does hora use CalDAV?
-
-No. hora uses the Google Calendar API directly. That gives it better access to Google-native behavior like event colors, conference data, push sync, attendee state, and moving events across calendars.
-
-### Does hora store my calendar data on a server?
-
-No. hora is designed so your calendar data stays between your Mac and the provider APIs you connect. Tokens are stored in macOS Keychain, and there is no hora middleware copying your calendar into a separate backend.
-
-### Does hora support Zoom and Microsoft Teams?
-
-Yes. hora 1.0 includes Zoom and Microsoft Teams API integration for creating meetings and joining calls quickly, alongside Google Meet support through Google Calendar.
-
-### Is hora a Fantastical alternative?
-
-For some users, yes. If you need broad support for iCloud, Exchange, CalDAV, and many calendar providers, Fantastical or BusyCal may be a better fit. If you are primarily a Google Calendar user on Mac and want a focused native app, hora is built for that workflow.
-
----
-
-If you have been waiting for Google Calendar to feel at home on macOS, hora 1.0 is the version that makes the shape of the product clear.
-
-Follow the build at [@moto_szama](https://x.com/moto_szama), check out [hora Calendar](https://horacal.app), or reach out at [hello@horacal.app](mailto:hello@horacal.app).
+<BlogFaq id="faq" heading="FAQ">
+  <BlogFaqItem
+    id="what-is-hora-calendar"
+    question="What is hora Calendar?"
+    answer="hora is a native Mac app focused on Google Calendar. Its calendar interface is built with Swift, SwiftUI, and AppKit rather than wrapping the Google Calendar website."
+  />
+  <BlogFaqItem
+    id="is-hora-made-by-google"
+    question="Is hora Calendar made by Google?"
+    answer="No. hora is an independent Mac app. It connects to Google Calendar through Google's official API, while Google remains the source of truth for your events."
+  />
+  <BlogFaqItem
+    id="hora-icloud-exchange-support"
+    question="Does hora support iCloud, Exchange, or CalDAV accounts?"
+    answer="No. hora 1.0 is focused specifically on Google Calendar. If you need several calendar providers combined in one app, a multi-provider calendar will be a better fit."
+  />
+  <BlogFaqItem
+    id="hora-google-calendar-api-caldav"
+    question="Does hora use CalDAV?"
+    answer="No. hora uses the Google Calendar API directly. This preserves Google-specific behavior such as event colors, conference links, attendee state, blocking events, and push change notifications without a CalDAV translation layer."
+  />
+  <BlogFaqItem
+    id="hora-calendar-data-storage"
+    question="How does hora handle my calendar data?"
+    answer="Event content is fetched directly from Google and cached locally on your Mac. A lightweight notification relay forwards change signals through APNs, but it does not proxy or store event titles, descriptions, attendees, or meeting notes."
+  />
+  <BlogFaqItem
+    id="hora-meeting-services"
+    question="Does hora support Google Meet, Zoom, and Microsoft Teams?"
+    answer="Yes. hora can create and join Google Meet calls through Google Calendar, and it includes Zoom and Microsoft Teams integrations for creating, updating, and joining supported meetings."
+  />
+</BlogFaq>

@@ -1,159 +1,125 @@
 ---
-title: "hora Calendar public beta on TestFlight"
+title: "What I Wanted hora's First Public Beta to Prove"
 date: 2026-04-22
-description: "hora Calendar 0.6.0 — the first public beta for macOS — opens Friday on TestFlight. Here's what's in it, what's coming in 0.7.0, and how to join the Discord."
+updated: 2026-07-14
+category: product-updates
+heroImage: /assets/blog/hora-public-beta-first-flight.webp
+heroAlt: A hora Calendar beta build leaving a private Mac workspace and reaching its first group of testers
+description: "A founder note prepared before hora's first public TestFlight beta: what version 0.6 shipped, what I asked testers to break, and what changed next."
 tags: macos, google-calendar, testflight, public-beta, swiftui, devlog
-cover: /assets/blog/public-beta-friday-cover.webp
-ogImage: /assets/blog/public-beta-friday-hero.webp
+cover: /assets/blog/hora-public-beta-first-flight.webp
+ogImage: /assets/blog/hora-public-beta-first-flight.webp
 ---
 
-![hora Calendar 0.6.0 public beta — TestFlight opens Friday](/assets/blog/public-beta-friday-hero.webp)
+On Friday, April 24, 2026, hora Calendar left my own Mac and entered public TestFlight.
 
-Friday morning, the first public beta of [hora Calendar](https://horacal.app) ships. Version **0.6.0**, straight to TestFlight, and a Discord opens alongside it so feedback, bug reports and "wait, is this meant to do that?" questions can happen in one place.
+I originally wrote this note two days before that happened. The app is now available on the Mac App Store, so the instructions to join the beta are no longer useful. The moment still is. Version 0.6 was the first honest test of whether the native Google Calendar client I had been building could survive calendars, accounts, and habits that were not mine.
 
-I've been heads-down on this for six weeks. Friday is the first time the app goes somewhere other than my own Mac. If you're on the waitlist, you're in.
+This is the launch note rewritten as a record: what the first testers received, what I wanted them to challenge, and which assumptions did not last the week.
 
-This is the post I'd want to read before installing a v0.6 of anything: what the beta actually is, what's in it right now, what's already queued for 0.7.0, and how I'd love you to test it.
+## What version 0.6 actually was
 
-## hora, in two sentences
+The first public build was deliberately narrower than the roadmap around it.
 
-hora is a native macOS Google Calendar app. Swift and SwiftUI, single binary, no Electron, no web wrapper, no background polling loop burning your battery.
+It could create, edit, move, resize, and delete Google Calendar events. It understood recurring rules, supported multiple Google accounts, and provided Day, Week, and Month views. A menu bar window kept the next meeting close, and a desktop widget deep-linked into the app.
 
-It exists because I couldn't find a good native Google Calendar client for Mac. Fantastical feels bloated. Notion Calendar is Electron. Apple Calendar doesn't really know what to do with Google accounts. So I built my own take — and now you get to shape it.
+That sounds like a normal calendar feature list now. At the time, each part carried an unanswered question:
 
-<AutoVideo src="/assets/blog/public-beta-friday-overview.webm" />
+- Would optimistic event edits stay consistent after Google sent the next update?
+- Would recurring exceptions behave across calendars created by different clients?
+- Would the app remain responsive on an account with years of history?
+- Would a menu bar countdown still be correct after a meeting moved elsewhere?
+- Would a widget tap land on the event instead of merely opening the app?
 
-## At a glance: 0.6.0 vs 0.7.0
+The beta was not a preview of every idea I had. It was a test of those promises.
 
-| Area                          | In 0.6.0 (this Friday)                 | Coming in 0.7.0                    |
-| ----------------------------- | -------------------------------------- | ---------------------------------- |
-| Event CRUD                    | Full, optimistic, synced to Google     | —                                  |
-| Recurring events              | RRULE + UNTIL/COUNT, "this & following" | —                                  |
-| Views                         | Day / Week / Month                     | —                                  |
-| Menu-bar extra                | Next-meeting countdown, one-click join | —                                  |
-| Multi-account                 | Personal + work side by side           | —                                  |
-| Video-link detection          | Meet / Zoom / Teams auto-join button   | —                                  |
-| Desktop widget                | WidgetKit, deep-links into the app     | —                                  |
-| Real-time sync                | APNs silent push, ~1s end-to-end       | —                                  |
-| In-app calendar CRUD          | —                                      | Create / delete / (un)subscribe    |
-| Google preferences            | —                                      | Week start, timezone, 12/24h, hide-declined |
-| Apple Intelligence            | —                                      | Quick Event Add, focus-time planning, availability messages |
+<AutoVideo
+  src="/assets/blog/public-beta-friday-overview.webm"
+  className="mdx-media border-0 shadow-[0_28px_86px_-54px_rgba(255,56,60,0.48),0_36px_100px_-42px_rgba(0,0,0,0.9)]"
+/>
 
-## What's shipped in 0.6.0
+## Why I built it as a native Mac app
 
-This is what you'll actually get when you install the beta on Friday:
+hora was written in Swift and SwiftUI because the Mac-specific surfaces were not extras. They were the reason to build the product.
 
-- **Full event CRUD**, synced directly with Google Calendar. Create, edit, delete, drag, resize — every mutation round-trips to Google with optimistic UI, so you never watch a spinner.
-- **Recurring events with proper end dates.** UNTIL and COUNT pickers, "this and following" deletes, correct RRULE handling. No more infinite series by accident.
-- **Day, Week, and Month views.** 
-- **Keyboard-driven navigation**, arrow keys between days, `T` for today, `C` for new event.
-- **Menu-bar extra with your next meeting.** A glanceable "next in 17m" countdown, one-click join for the video link. Deep-links land on the right event inside the app — not just the right day.
-- **Multi-account support.** Personal and work side by side, no "which account does this event belong to?" confusion.
-- **Auto-detected Meet / Zoom / Teams links.** hora sniffs the event description, pulls the join URL out, and gives you a dedicated join button.
-- **Desktop widget (WidgetKit).** Your next few events on the desktop, tappable, deep-linking straight into the app.
-- **Real-time Google Calendar sync.** Changes from the web, your phone, or a colleague's client show up on your Mac in roughly a second — not five minutes from now. Full write-up [here](/blog/real-time-google-calendar-sync-macos/).
-- **Availability sharing.** `Cmd+Shift+A`, picks free slots out of your actual schedule, copies to clipboard. No server, no intermediary — your data only ever touches Google.
+I wanted keyboard navigation that behaved like part of the app, not a browser tab. I wanted events in the menu bar, WidgetKit on the desktop, familiar window behavior, and a local cache that made the schedule immediately available.
 
-<AutoVideo src="/assets/blog/public-beta-friday-event-crud.webm" />
+I also wanted Google Calendar to remain the source of truth. hora connected directly to Google's calendar APIs rather than asking users to migrate their events into another planning service.
 
-![hora menu-bar extra showing the next-meeting countdown and one-click join](/assets/blog/public-beta-friday-menubar.webp)
+That decision created a clear boundary. The beta supported Google Calendar, not iCloud, Exchange, or general CalDAV accounts. If someone needed every provider in one window, hora was not the right beta for them. The later [Google Calendar API vs CalDAV](/blog/2026-05-21-google-calendar-api-vs-caldav/) article explains why I kept that boundary.
 
-Nine languages supported: English, Polish, German, Spanish, French, Italian, Japanese, Portuguese, Simplified Chinese. (More on the translation story further down — I need help.)
+## What shipped in the first beta
 
-## What's coming in 0.7.0
+The useful version of the 0.6 feature list looked like this:
 
-Already in flight, shipping in the next update cycle:
+| Workflow | What testers could do |
+|---|---|
+| Calendar views | Work in Day, Week, and Month views |
+| Event editing | Create, edit, drag, resize, and delete Google events |
+| Recurrence | Edit recurring series and handle end dates |
+| Accounts | See personal and work Google accounts together |
+| Meetings | Detect Google Meet, Zoom, and Microsoft Teams links |
+| Menu bar | Check the next event and join a call |
+| Desktop | View upcoming events in a WidgetKit widget |
+| Sync | Receive Google Calendar changes without waiting for a long polling interval |
+| Availability | Copy open slots from the current schedule |
 
-- **In-app calendar CRUD.** Create, delete, subscribe to, and unsubscribe from calendars without leaving hora — currently those flows still bounce you to the Google Calendar web UI.
-- **Respect your Google Calendar preferences.** First day of the week, timezone, 12/24-hour format, hide-declined — hora will read `settings.list` from your Google account and match your existing preferences on first launch instead of asking you to set them twice.
-- **Apple Intelligence — Quick Event Add.** Natural-language event creation — type "coffee with Anna tomorrow at 3" and hora drafts the event for you. Runs on your Mac, your text never leaves the device.
-- **Focus Time Planning.** hora looks at your week's meeting map and suggests where your protected deep-work blocks should go — before your calendar fills up for you.
-- **Availability Sharing with Apple Intelligence.** The `Cmd+Shift+A` flow already picks free slots out of your schedule. In 0.7.0, Apple Intelligence writes the message around them — a natural, context-aware "here's when I'm free" paragraph you can paste straight into an email with no editing.
+The build also shipped in nine languages. English and Polish were the only versions I could judge myself. I was explicit that the remaining translations needed native review, because "technically translated" is not the same as comfortable product copy.
 
-![Sneak peek: Apple Intelligence Quick Event Add in 0.7.0](/assets/blog/public-beta-friday-quick-event-add.webp)
+## What was still only a plan
 
-## What's still rough — please file bugs
+The original post had a large 0.6 versus 0.7 table. It mixed shipped behavior with a roadmap that included in-app calendar management, Google preference import, natural-language event creation, focus planning, and generated availability messages.
 
-Being honest about the current edges so you know what you're walking into:
+Some of those ideas shipped. Others changed shape after testing. That is why I no longer like presenting an early roadmap beside a release as if both columns have equal certainty.
 
-- **Drag-to-resize** works, but the snapping feels jumpy at certain zoom levels.
-- **Very large calendars.** Accounts with 10k+ events sync correctly, but first-paint after login is slower than I want. A performance pass is next.
-- **Non-English copy.** Most of the translations are machine-generated. They're functional but not idiomatic — which is why I'm asking for help below.
+A shipped feature is evidence. A planned feature is a hypothesis.
 
-If you hit anything else, Discord is the fastest path. `hello@horacal.app` works too and goes straight to me.
+The current product includes Quick Add and Focus Time, but they were refined through later beta builds rather than appearing exactly as described in April. The history of what reached 1.0 is in the [hora Calendar 1.0 launch note](/blog/2026-05-29-google-calendar-app-for-mac-hora-1-0/).
 
-## How to join
+![The first beta feedback loop connected real calendar use, Discord reports, Sentry traces, and the next TestFlight build.](/assets/blog/hora-beta-feedback-loop.webp)
 
-If you're on the [waitlist](https://horacal.app/#newsletter), you'll get the TestFlight link and the Discord invite on Friday morning. One-tap install, no paywall during beta.
+## What I asked people to test
 
-Not on the waitlist yet? [Sign up at horacal.app](https://horacal.app/#newsletter) before Friday and you're in the same batch.
+I did not need a group of people clicking every control once. I needed them to use hora as their calendar for a normal day.
 
-<DiscordCta />
+My testing request had five priorities.
 
-### Bring a friend
+### 1. Trust the result after sync
 
-After Friday, we're opening a **second batch — another 200 testers.** If hora clicks for you, send your Mac-using, Google-Calendar-complaining friends to [horacal.app/download](https://horacal.app/download/?utm_source=blog&utm_medium=devlog&utm_campaign=v0_6_0_beta&utm_content=bring_a_friend) — that's the direct invite URL for the next wave. Word of mouth from someone who already uses the app beats anything I can write.
+Create an event, move it, edit a recurring occurrence, and respond to an invitation. Then check Google Calendar elsewhere. The local animation did not matter if the server state disagreed five seconds later.
 
-### Requirements
+### 2. Notice every moment of hesitation
 
-- **macOS 26** or later
-- A Google account
-- Mac-native only — no iPhone or iPad build. (See the [native vs Electron/PWA post](/blog/2026-04-14-native-app-vs-electron-pwa/) for why that trade-off exists and why I'm not in a hurry to break it.)
+A calendar is opened repeatedly and often in a hurry. Scrolling, opening an editor, switching a week, or joining a call should not feel like the app is thinking.
 
-## What I'd like you to test
+### 3. Use more than one account
 
-Use hora the way you actually live in a calendar. That's the only test that matters. But if you want priorities, here's what I'm paying most attention to:
+My own setup was predictable. Work and personal accounts with different permissions, shared calendars, and old OAuth grants were where the real integration would be tested.
 
-1. **Predictable behavior** — CRUD, recurring edits, multi-account. When you do X, does Y happen, consistently? Does the state after a sync match what you'd see on the web UI?
-2. **UI feel** — responsiveness, polish, menu bar, widget. Does every interaction feel instant? If anything ever feels like it's *thinking*, flag it.
-3. **Speed** — scrolling between weeks, opening the popover, dragging an event, hitting a shortcut. A calendar is something you touch fifty times a day; it has to be quick.
-4. **Real use over a full day.** Don't test it like QA. Use it as your only calendar. Tell me the moment it makes you reach for Chrome.
-5. **Menu-bar countdown, for a full day.** The live "next meeting in 17m" label is the single most-looked-at surface in the app. If it's ever wrong, I want to know within the hour.
+### 4. Keep the menu bar running all day
 
-Found something? Got a half-baked idea? Drop it in Discord — even a one-line "this feels weird" helps more than you'd think.
+The next-meeting countdown was one of the smallest interfaces and one of the most visible. A stale label there could damage trust faster than a bug hidden deep in settings.
 
-## What's missing? Tell me.
+### 5. Tell me when Chrome was still necessary
 
-Just as important as bug reports: **what *isn't* in hora that you'd want to be?** Roadmaps are guesses. The features I spend the next month on should be the ones real people actually use, not the ones I find most interesting to build.
+The most valuable report was not "this button is broken." It was "I had to return to Google Calendar in the browser to do this." That exposed missing workflows rather than isolated controls.
 
-If you catch yourself switching back to another calendar for *anything* specific — a particular recurring rule, a natural-language flow, a keyboard shortcut, a Gmail integration — tell me. Even "I wish it could…" one-liners are useful.
+## The rough edges I knew about
 
-## Help wanted: native-language translators
+Before launch, drag-to-resize still felt jumpy at some zoom levels. Accounts with very large event histories took longer to paint than I wanted. Several translations were functional but awkward.
 
-hora ships in nine languages. English and Polish I wrote. The other seven are machine-translated — functional, but almost certainly not idiomatic. Calendar phrasing ("all-day", "every other week", "respond maybe") is exactly the kind of thing automated translation gets *almost* right and native speakers spot in two seconds.
+I listed those problems because pretending a beta is polished does not make feedback better. It only makes testers wonder whether the behavior they saw is worth reporting.
 
-**If you're a native speaker of German, Spanish, French, Italian, Japanese, Portuguese, or Simplified Chinese and want to help polish the strings, I'd love to hear from you.** A short pass through `Localizable.strings` goes a long way. Ping me in Discord or email [hello@horacal.app](mailto:hello@horacal.app). Credited in the app, obviously.
+What I did not anticipate was more useful. Large stores exposed main-thread SwiftData work. Real OAuth histories produced missing-scope errors. Google API quotas behaved differently with several active accounts. The [week-one retrospective](/blog/2026-04-29-public-beta-week-one/) covers those failures and the first patch cycle.
 
-<OneMoreThing />
+## What public beta changed for me
 
-## FAQ: hora public beta, TestFlight, and Discord
+Before April 24, I could test whether a feature worked. Public beta tested whether the app recovered.
 
-**When does the public beta open?**
-Friday, April 24, 2026. The TestFlight link and Discord invite go out to the waitlist that morning.
+What happens after a token expires? After a recurring event is deleted twice? After the network returns? After a calendar contains 3,000 events instead of 30? After the app launches from a widget into a view that does not exist yet?
 
-**How do I join the hora Calendar beta?**
-Sign up at [horacal.app](https://horacal.app/#newsletter). Everyone on the waitlist gets in on Friday. After Friday, a second 200-tester batch opens via [horacal.app/download](https://horacal.app/download/?utm_source=blog&utm_medium=devlog&utm_campaign=v0_6_0_beta&utm_content=faq) — share that link with friends.
+Those questions moved the product from feature development toward reliability work. The beta made the roadmap less tidy and the app much better.
 
-**Is the beta free?**
-Yes. No paywall during TestFlight. The subscription flow only activates after the App Store launch.
+hora eventually reached the Mac App Store on June 30, 2026. The public beta is history, but the testing principle survived: use the app in a real calendar, then follow every place where it makes you reach for the browser.
 
-**Is there an iPhone or iPad version?**
-No. hora is Mac-native only. Building well for one platform first beats spreading thin across many.
-
-**What macOS version do I need?**
-macOS 26 or later. Apple Silicon and Intel both supported.
-
-**Where do I report bugs or request features?**
-[Discord](https://discord.gg/8JFz4FfBGQ) is the fastest path. Email [hello@horacal.app](mailto:hello@horacal.app) works too, and goes straight to me — no ticketing layer in between.
-
-**Can I help translate the app?**
-Yes, please. The non-English locales are currently machine-translated and would benefit enormously from a native speaker's pass. Reach out on Discord or by email.
-
-**Does my calendar data leave my Mac?**
-Only to Google, the same as the Google Calendar web UI. hora's real-time sync routes a tiny change ping through a webhook I run, but the webhook never sees your event data — only a signal that something changed. The actual sync is your Mac talking to Google directly.
-
----
-
-Thanks for being here from the start 🙂 Friday's the first time this thing goes somewhere other than my Mac. I can't wait to see what you break.
-
-Follow the build at [@moto_szama](https://x.com/moto_szama), check out [hora Calendar](https://horacal.app), or reach out at [hello@horacal.app](mailto:hello@horacal.app).
+If you use Google Calendar on a Mac and want to try the release that grew from those builds, [download hora Calendar from the Mac App Store](https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_blog_first_public_beta&mt=8).

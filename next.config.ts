@@ -46,6 +46,14 @@ const nextConfig: NextConfig = {
   skipTrailingSlashRedirect: true,
   images: {
     qualities: [60, 75, 90],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        port: "",
+        pathname: "/images/tbqxupiq/production/**",
+      },
+    ],
   },
   pageExtensions: ["ts", "tsx", "mdx"],
   async redirects() {

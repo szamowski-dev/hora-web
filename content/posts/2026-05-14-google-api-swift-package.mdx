@@ -1,35 +1,40 @@
 ---
-title: "Google Calendar Swift Package Migration"
+title: "Google Calendar API in Swift: The Package I Missed"
 date: 2026-05-14
-description: "I spent a month hand-writing Google Calendar API code before switching to Google's Swift package. I would not do it again, but it was worth it."
-tags: swift, google-calendar, google-api, macos, devlog, api, swift-package-manager
-cover: /assets/blog/google-api-swift-package-cover.webp
-ogImage: /assets/blog/google-api-swift-package-og.webp
+updated: 2026-07-14
+category: engineering
+heroImage: /assets/blog/google-calendar-api-swift-migration.webp
+heroAlt: A Git-style migration poster showing URLComponents replaced by GTLRCalendarQuery in hora
+description: "I hand-built a Google Calendar API client in Swift, then migrated hora to Google's GTLR library. See the code, tradeoffs, and rate-limit lessons."
+tags: google-calendar-api-swift, google-calendar-api, gtlrcalendar, swift-package-manager, swift, macos
+cover: /assets/blog/google-calendar-api-swift-migration.webp
+ogImage: /assets/blog/google-calendar-api-swift-migration.webp
 ---
 
-![Hand-rolled Google Calendar API client replaced with Google's Swift Package](/assets/blog/google-api-swift-package-hero.webp)
+If you need the **Google Calendar API in Swift**, start by looking at Google's generated REST client. It is an Objective-C library for Apple platforms, installs through Swift Package Manager, and exposes Calendar types such as `GTLRCalendarService` and `GTLRCalendarQuery_EventsList`.
 
-I spent roughly a month building my own Google Calendar API client before I realized Google already ships a Swift Package for this.
+I learned this after spending roughly a month building the same API surface with `URLSession`.
 
-That sentence is painful to write, because it sounds like the kind of thing you are supposed to know before touching the code. But I am still learning the Swift ecosystem in public, and this is one of those places where the obvious thing was not obvious to me yet.
+That sentence is painful to write, because it sounds like the kind of thing you are supposed to know before touching the code. But I was learning the Swift ecosystem in public, and the obvious thing was not obvious to me yet.
 
 Would I hand-roll this integration again? No.
 
-Was it a waste of time? Also no.
+Was the month a waste of time? Also no.
 
-I learned more about Google Calendar's API surface in the last month and a half than I would have learned in years if I had started with the happy-path library wrapper.
+The package removed a lot of transport code. The mistakes I made before finding it taught me which parts of a calendar integration no package can own for me.
 
-## The version I built first
+## Why I wrote the Google Calendar REST client by hand
 
-The first version of hora's Google integration was a local Swift package called `HoraGoogleAPI`. It had no external Google client dependency. It was just Foundation, `URLSession`, access tokens, JSON decoding, and a lot of endpoint-specific code.
+The first version of hora's Google integration was a local Swift package called `HoraGoogleAPI`. It had no external Google client dependency. It was Foundation, access tokens, `URLSession`, JSON decoding, and endpoint-specific code.
 
-The package manifest was almost comically small:
+The manifest was almost comically small:
 
 ```swift
 // Packages/HoraGoogleAPI/Package.swift, before the migration
 dependencies: [
     .package(path: "../HoraCore"),
-],
+]
+
 targets: [
     .target(
         name: "HoraGoogleAPI",
@@ -38,7 +43,7 @@ targets: [
 ]
 ```
 
-That meant every API shape was my responsibility. Fetching events looked like normal app code until you remember how many details hide inside "normal":
+Fetching events looked like normal app code:
 
 ```swift
 let encodedID = calendarID.addingPercentEncoding(
@@ -52,7 +57,6 @@ components.queryItems = [
     URLQueryItem(name: "timeMin", value: formatter.string(from: min)),
     URLQueryItem(name: "timeMax", value: formatter.string(from: max)),
     URLQueryItem(name: "singleEvents", value: "true"),
-    URLQueryItem(name: "orderBy", value: "startTime"),
     URLQueryItem(name: "maxResults", value: "2500"),
 ]
 
@@ -60,65 +64,51 @@ let data = try await authenticatedRequestWithRetry(url: components.url!)
 let response = try JSONDecoder().decode(GoogleEventsResponse.self, from: data)
 ```
 
-There is nothing wrong with this code in isolation. The problem is that a calendar app is not one endpoint. It is a swarm of tiny contracts: list calendars, fetch colors, fetch events, sync tokens, create events, patch events, delete events, move events, expand recurring instances, RSVP, watch channels, stop channels, refresh auth, recover scopes, preserve fields from other clients, and do all of that without freezing SwiftUI or burning through quota.
+There is nothing inherently wrong with that code. The problem is everything hidden inside the word "events."
+
+A real calendar client has to list calendars, fetch colors, create and patch events, move events, expand recurring instances, respond to invitations, preserve fields written by other clients, register watch channels, refresh OAuth sessions, page through responses, recover invalid sync tokens, and do all of it without freezing the UI or burning through quota.
 
 I underestimated that surface area.
 
-## Linear became a map of everything I did not know
+The choice to build hora as a native Swift app was still deliberate. I wrote about that separately in [Native App vs Electron and PWA](/blog/2026-04-14-native-app-vs-electron-pwa/). Writing Google's entire transport layer myself was not part of that product decision. It was just a detour.
 
-The best way to see the cost of a hand-written API client is not the code. It is the bug tracker.
+## What hand-rolling the API taught me
 
-Before TestFlight, I opened a Google Calendar API audit issue because Proxyman showed something terrifying: editing, creating, and deleting events in the UI did not show the expected `PUT`, `POST`, `PATCH`, or `DELETE` calls to `/calendar/v3/calendars/{id}/events`. That became `SZA-86`.
+My Linear board became a map of everything I did not know. The useful lessons were not the ticket numbers. They were the contracts hiding behind operations that looked simple.
 
-Then the real edge cases started showing up:
+**A partial event model changes how you update data.** `PATCH` was safer for hora than rebuilding a full event with `PUT`, because fields omitted from a patch remain unchanged. That protects metadata the app does not model. It is not magic, though. Arrays included in a patch are replaced in full, and Google notes that a patch consumes more quota units than a normal request. For hora, preserving unknown fields was the more important tradeoff. Google's [Events.patch reference](https://developers.google.com/workspace/calendar/api/v3/reference/events/patch) documents both behaviors.
 
-| Issue | What it taught me |
-|---|---|
-| `SZA-88` | `events.update` with `PUT` is dangerous because fields your app does not serialize can be wiped. `PATCH` was the right default. |
-| `SZA-89` | Optimistic events can have an empty Google event ID for a short window. If the user edits or deletes during that window, you can build malformed URLs. |
-| `SZA-91` | Moving an event across calendars should use `events.move`, not delete-and-create, or you lose `etag`, `iCalUID`, Meet data, attachments, and attendee history. |
-| `SZA-92` | Google exposes color palettes through `/colors`; hardcoding the palette works until it does not. |
-| `SZA-93` | Calendar color, selected state, hidden state, and summary override live on `calendarList`, not the global `calendars` resource. |
-| `SZA-94` | My event body did not model enough of Google's event resource: `extendedProperties`, `guestsCan*`, `source`, email reminders, optional attendees. |
-| `SZA-95` | Recurring events are their own universe. `events.instances` exists for a reason. |
-| `SZA-187` / `SZA-256` | Retry is not enough for quota. You need rate limiting, cooldowns, and metrics. |
+**A new local event does not have a Google identity yet.** hora now gives an optimistic event a temporary `hora-temp` identifier until `events.insert` returns the real Google ID. A second edit, move, or delete has to wait instead of sending a request against the temporary value.
 
-![Linear issue map for the Google Calendar API edge cases](/assets/blog/google-api-swift-package-linear-map.webp)
+**Moving an event is not delete plus insert.** For eligible default events on calendars owned by the same signed-in account, hora uses `events.move`. The user must be able to change the organizer, so this is not a universal path, but it keeps the event's identity and avoids reconstructing it from the subset of fields hora knows. Cross-account moves still need a different strategy. The restrictions are described in Google's [Events.move documentation](https://developers.google.com/workspace/calendar/api/v3/reference/events/move).
 
-This is the part I am glad I did manually. Not because the manual client was the best long-term architecture, but because every issue forced me to understand the actual API contract.
+**Recurring events are a protocol, not a checkbox.** A series has a master, generated instances, moved exceptions, cancellations, and rules for what "this event" or "this and following" should mean. A typed query object can call `events.instances`, but it cannot decide how the result should reconcile with the local calendar.
 
-I now know why `PATCH` still replaces whole arrays. I know why `calendarList.patch` is not the same thing as `calendars.patch`. I know why delete-and-create is not a move. I know why "responding to an invite" means preserving everyone else in the attendee array, not sending only yourself. I know why a sync token expiring is not an error state, it is a protocol state.
+That knowledge was expensive. I paid for it with time, but it became the domain layer that survived the migration.
 
-That knowledge is expensive. I paid for it with time.
-
-## The rate limit bug that made the abstraction leak
+## The rate-limit bug that exposed the real complexity
 
 The most humbling bug was rate limiting.
 
-I already had exponential backoff, but Sentry still showed quota failures from beta builds. The error was Google's per-user query limit: `Queries per minute per user`. A single account could create enough pressure during sync, push renewal, and invitation refresh that retry only delayed the storm.
+I already had exponential backoff, but beta builds still hit per-user quota failures during sync, push renewal, and invitation refresh. Retry only delayed a request storm. It did not control its shape.
 
-So I added a token bucket inside `HoraGoogleAPI`:
+So I added client-side throttling at 8 requests per second with a burst of 10 inside each `GoogleCalendarService` instance. `SyncManager` also starts a 60-second cooldown after two consecutive rate-limit failures. A manual "Sync now" action can bypass that cooldown when the user knows the account should be reachable again.
 
-```swift
-// SZA-256: client-side throttle scoped per account so we never spend
-// Google's per-user 600 req/min quota faster than retry/backoff can
-// recover from.
-private let bucket = TokenBucket()
-```
+![A token-bucket pressure gauge showing hora's 8 requests per second throttle and 60-second sync cooldown.](/assets/blog/google-calendar-api-swift-rate-limit.webp)
 
-The fix had three layers:
+One detail matters here: this is service-local throttling, not one global per-account quota governor. The app can create more than one service instance during synchronization. It still reduces bursts at the request boundary, while the separate sync cooldown stops repeated failing cycles.
 
-- A per-account token bucket at 8 requests/second with burst 10.
-- A sync cooldown after repeated 429 or 403 rate-limit failures.
-- Metrics for request duration, API errors, cooldown trips, and token-bucket waits.
+At that point I also instrumented request duration, API errors, cooldown trips, and token-bucket waits. Those exact hooks have since changed with hora's observability layer, but the lesson remains: rate limits are product behavior. Users experience them as stale data, a spinner, or an edit that appears not to stick.
 
-That is the kind of plumbing you do not appreciate when you only call `service.executeQuery(...)` and move on. But it is also plumbing I do not want to keep reinventing forever.
+Google's client library did not remove this problem. It gave me a better request primitive on which to solve it.
 
-![Google Calendar API rate limit cooldown state in hora](/assets/blog/google-api-swift-package-rate-limit-banner.webp)
+## Adding Google's Calendar client with Swift Package Manager
 
-## Then I found the Google package
+The package I should have investigated first is the [Google APIs Client Library for Objective-C for REST](https://github.com/google/google-api-objectivec-client-for-rest). Google describes it as its recommended library for JSON-based Google APIs on Apple platforms and generates service interfaces for APIs such as Calendar and People.
 
-The package I should have known about earlier is Google's REST client for Apple platforms:
+It is important to call it what it is. This is not a modern Calendar SDK written natively in Swift. It is Google's Objective-C REST client, made available to a Swift project through Swift Package Manager.
+
+hora currently declares the Calendar client and GTMAppAuth like this:
 
 ```swift
 .package(
@@ -131,133 +121,125 @@ The package I should have known about earlier is Google's REST client for Apple 
 )
 ```
 
-The name is not glamorous. It is Objective-C under the hood. In Swift, the types have names like `GTLRCalendarQuery_EventsList`, `GTLRCalendar_Event`, and `GTLRCalendarService`.
-
-But it gives me something my hand-written client never could: generated query types for Google's API surface.
-
-After the migration, the package manifest changed from "just HoraCore" to:
+The types are unmistakably Objective-C:
 
 ```swift
-dependencies: [
-    .package(path: "../HoraCore"),
-    .package(
-        url: "https://github.com/google/google-api-objectivec-client-for-rest.git",
-        from: "5.2.0"
-    ),
-    .package(
-        url: "https://github.com/google/GTMAppAuth.git",
-        from: "5.0.0"
-    ),
-]
-```
-
-And the hand-built URL for listing events became a typed query:
-
-```swift
-let q = GTLRCalendarQuery_EventsList.query(withCalendarId: calendarID)
-q.timeMin = GTLRDateTime(date: min)
-q.timeMax = GTLRDateTime(date: max)
-q.singleEvents = true
-q.orderBy = kGTLRCalendarOrderByStartTime
-q.maxResults = 2500
-```
-
-For writes, the code now creates a `GTLRCalendar_Event` and uses the API's own query object:
-
-```swift
-let eventObj: GTLRCalendar_Event = makeGTLRObject(
-    GTLRCalendar_Event.self,
-    json: jsonObj
+let query = GTLRCalendarQuery_EventsList.query(
+    withCalendarId: calendarID
 )
+query.timeMin = GTLRDateTime(date: min)
+query.timeMax = GTLRDateTime(date: max)
+query.singleEvents = true
+query.maxResults = 2500
+```
+
+That query replaced manual URL construction and query-item encoding. It did not make the protocol impossible to misuse.
+
+An earlier version also set `orderBy = startTime`. The current client deliberately leaves it out because later incremental requests with `syncToken` cannot include `orderBy`. hora sorts the merged events locally instead. Google's [incremental synchronization guide](https://developers.google.com/workspace/calendar/api/guides/sync) requires compatible query parameters across the synchronization cycle and a full rebuild when a token is invalidated.
+
+Writes follow the same pattern. hora builds a `GTLRCalendar_Event`, then uses the generated patch query:
+
+```swift
+let eventObject: GTLRCalendar_Event = makeGTLRObject(
+    GTLRCalendar_Event.self,
+    json: jsonObject
+)
+
 let query = GTLRCalendarQuery_EventsPatch.query(
-    withObject: eventObj,
+    withObject: eventObject,
     calendarId: event.calendarID,
     eventId: event.googleEventID
 )
 query.sendUpdates = sendUpdates
 ```
 
-This is still not "free." I still bridge async/await. I still map Google's Objective-C error shapes into `AppError`. I still disable GTLR's internal retry because I want retries, token buckets, and metrics in one place. I still prewarm a few query types to avoid runtime first-touch races in tests.
+Typed queries removed URL mistakes. They did not remove calendar mistakes.
 
-But the center of gravity moved. I no longer have to manually assemble every endpoint and hope I encoded the shape correctly.
+## What GTLR handles and what hora still owns
 
-![Before and after: URLComponents code replaced with GTLR query objects](/assets/blog/google-api-swift-package-before-after-code.webp)
+The main migration commit, `c7d03e9`, changed 10 files with 468 insertions and 407 deletions. It replaced most hand-built Calendar and People request URLs with generated GTLR query types.
 
-## What changed in the migration
+It did not delete the integration layer.
 
-The actual migration commit touched the API package, push channels, authentication, and sync manager. The important part was not a giant rewrite. It was a swap of responsibility.
+![An exploded architecture stack showing the responsibility split between GTLR, HoraGoogleAPI, and HoraSync.](/assets/blog/google-calendar-api-swift-ownership-stack.webp)
 
-Before:
+| Google's client supplies | hora still owns |
+|---|---|
+| Generated Calendar and People query types | Event payload mapping and app models |
+| Generated Google resource types | Response decoding into hora's domain |
+| Query execution through `GTLRService` | Bearer token injection for Calendar queries |
+| Support for retry and automatic paging | Calendar retry policy and manual page loops |
+| Objective-C result and error objects | Error presentation, deadlines, cache, and reconciliation |
 
-- `HoraGoogleAPI` owned URL construction.
-- `HoraGoogleAPI` owned query parameters.
-- `HoraGoogleAPI` owned JSON request bodies.
-- `HoraGoogleAPI` owned pagination loops.
-- `HoraGoogleAPI` owned token refresh, retry, error mapping, and rate limiting.
+For Calendar requests, hora sets `isRetryEnabled = false` and `shouldFetchNextPages = false`. It clones queries for each attempt, performs its own pagination, refreshes once after a 401, and applies different retry limits to rate-limit, server, and network failures. The smaller People search adapter still uses GTLR's built-in retry path.
 
-After:
+Authentication has a similar boundary. [GTMAppAuth](https://github.com/google/GTMAppAuth) stores the OAuth session, refreshes it, and works with Keychain. hora then asks its `TokenProvider` for an access token and injects the Bearer header into each Calendar query.
 
-- GTLR owns the generated Google API query surface.
-- hora still owns product semantics: what counts as a sync, what gets cached, when to retry, when to cool down, what to preserve, and how to reconcile into SwiftData.
+Not every endpoint moved. `FreeBusyService` still uses `URLSession` directly. The migration was not an ideological purge of handwritten networking. It was a decision to stop manually reproducing Google's generated Calendar and People surface where the official client was the better primitive.
 
-That split feels much healthier.
+The first commit also needed follow-up work. I fixed query wiring and push deduplication, prewarmed GTLR types after test crashes, and taught delete and channel-stop operations to accept an empty success response. It was not a one-click dependency swap. It was a migration, then a production-hardening pass.
 
-The migration also hardened a few areas that had become fragile:
+For the broader architecture choice behind hora, read [Google Calendar API vs CalDAV](/blog/2026-05-21-google-calendar-api-vs-caldav/). For the notification and recovery path above this client, see [how real-time Google Calendar sync works in hora](/blog/real-time-google-calendar-sync-macos/).
 
-- Push sync dedupe around Google watch callbacks.
-- Void GTLR responses for operations like delete/stop channel.
-- Keychain auth recovery for stale `GTMAppAuth` sessions.
-- Scope errors becoming a clear "sign out and reconnect" path instead of a vague 403.
+## What I would do differently today
 
-This was not a "delete old code, everything works" day. It was a "move onto the right primitive, then spend another pass making it production-shaped" day.
+If I were starting from zero, I would spend the first hour looking for the boring official package.
 
-![Google Calendar push sync flow through hora](/assets/blog/google-api-swift-package-push-sync.webp)
+Then I would build a thin, explicit boundary around it:
 
-## The part I would do differently
+- Generated GTLR types at the transport edge.
+- One adapter for access tokens, retries, pagination, deadlines, and error mapping.
+- Repository code that speaks in hora concepts instead of Google transport objects.
+- Sync orchestration that owns tokens, caching, reconciliation, and optimistic UI.
+- Early testing with large, old, messy calendars instead of only a clean development account.
 
-If I were starting from zero today, I would not begin by writing a full REST client by hand.
+That is close to where the app is now.
 
-I would start with the official Google package, then immediately build a thin domain layer around it:
+The mistake was not writing code. The mistake was assuming that because REST looks simple, the integration would stay simple. Calendar APIs punish that assumption. They contain shared ownership, recurring exceptions, stale OAuth scopes, per-user overrides, quota limits, and synchronization contracts that usually appear only after real accounts connect.
 
-- `GoogleCalendarService` for Calendar API operations.
-- `GooglePeopleService` for contact search.
-- A single async executor that handles retry, token refresh, logging, metrics, and error mapping.
-- Typed repository code above it that speaks in hora concepts, not Google transport concepts.
+## Was the month of manual work wasted?
 
-That is basically where the app is now.
-
-The mistake was not "writing code." The mistake was assuming that because REST looks simple, the integration would stay simple. Calendar APIs punish that assumption. They are full of old data, shared ownership, recurring exceptions, other clients' metadata, per-user calendar overrides, OAuth scope drift, quota limits, and synchronization contracts that only show up when real users connect real accounts.
-
-## Why I am still glad I did it the hard way
-
-This is the annoying nuance: I would not do it again, but I am glad I did it once.
+No. I would not repeat it, but I am glad I did it once.
 
 If I had started with GTLR on day one, I probably would have shipped faster. I also would have understood less.
 
-I would have seen `GTLRCalendarQuery_EventsMove` and thought "nice, there is a move method." Instead, I first implemented delete-and-create, watched the edge cases, read the API docs, opened `SZA-91`, and understood why move preserves identity.
+I would have seen `GTLRCalendarQuery_EventsMove` and thought, "nice, there is a move method." Instead, I first saw what delete and insert could lose, then understood why event identity matters.
 
-I would have used `EventsPatch` without feeling the damage of `PUT`. Instead, `SZA-88` forced me to think about every field hora does not own.
+I would have used `EventsPatch` without feeling the damage of treating a partial local model as a complete Google event. I would have treated quota as an operational detail instead of something that shapes the synchronization architecture.
 
-I would have treated quota as an operational concern. Instead, `SZA-256` made rate limits part of the app architecture.
+The generated library now owns the repetitive request surface. The month of handwritten work left behind the part I actually want hora to own: product semantics, failure policy, and a much sharper sense of where the abstraction leaks.
 
-That is a different kind of learning. It is slower, but it sticks.
+The integration described here is the sync layer behind [hora Calendar 1.0](/blog/2026-05-29-google-calendar-app-for-mac-hora-1-0/). If your schedule already lives in Google Calendar and you want a native Mac client built around that API, [try hora Calendar on the Mac App Store](https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_blog_google_calendar_api_swift&mt=8).
 
-![The Google Calendar API learning loop: issue, docs, code, TestFlight feedback](/assets/blog/google-api-swift-package-learning-loop.webp)
-
-## The takeaway
-
-The lesson is not "never build your own client." Sometimes you need to. Sometimes the official library is missing a feature, does not fit your runtime, or hides too much.
-
-The lesson is: when you are new to an ecosystem, spend an hour looking for the boring official package before you spend a month proving why it exists.
-
-For hora, the result is better than either extreme. The app now sits on Google's generated API client, but the month of hand-written work left behind a much sharper domain layer. I know what abstractions I am accepting, and I know where they leak.
-
-That is probably the best outcome I could ask for from a mistake.
-
-<DiscordCta />
-
----
-
-The [hora Calendar](https://horacal.app) public beta is on TestFlight. If you are building anything serious on top of Google Calendar, I hope this saves you at least one wrong turn.
-
-Follow the build at [@moto_szama](https://x.com/moto_szama), check out [hora Calendar](https://horacal.app), or reach out at [hello@horacal.app](mailto:hello@horacal.app).
+<BlogFaq id="faq" heading="Google Calendar API client FAQ">
+  <BlogFaqItem
+    id="official-google-calendar-sdk-swift"
+    question="Is there an official Google Calendar API SDK for Swift?"
+    answer="Google does not ship a native Calendar SDK written in Swift. It provides the Google APIs Client Library for Objective-C for REST, which can be installed through Swift Package Manager and called from Swift. hora uses its generated Calendar and People service types."
+  />
+  <BlogFaqItem
+    id="add-google-calendar-api-swift-project"
+    question="How do I add Google Calendar API to a Swift project?"
+    answer="Add Google's google-api-objectivec-client-for-rest repository through Swift Package Manager, then include the GoogleAPIClientForREST_Calendar product in your target. You still need an OAuth flow, scopes, token storage, and an application-level integration layer."
+  />
+  <BlogFaqItem
+    id="urlsession-or-gtlrcalendar"
+    question="Should I use URLSession or GTLRCalendar in Swift?"
+    answer="For a substantial Google Calendar integration, GTLRCalendar removes repetitive URL construction and provides generated query and resource types. URLSession can still be reasonable for a narrow endpoint or a custom transport, but then your app owns every request and response contract."
+  />
+  <BlogFaqItem
+    id="gtmappauth-authorize-gtlr-requests"
+    question="Does GTMAppAuth automatically authorize GTLR requests?"
+    answer="That depends on the architecture. In hora, GTMAppAuth stores and refreshes the OAuth session. hora then obtains the access token through its TokenProvider and adds the Bearer header to each GTLR Calendar query."
+  />
+  <BlogFaqItem
+    id="gtlrcalendar-retries-pagination"
+    question="Does GTLR handle retries and pagination for hora?"
+    answer="GTLR supports both features, but hora disables them for Calendar requests. Calendar pagination and retries use hora's own policies so token refreshes, deadlines, throttling, and error mapping stay in one path. The smaller People search adapter still uses GTLR's built-in retry behavior."
+  />
+  <BlogFaqItem
+    id="gtlrcalendar-async-await"
+    question="Can GTLRCalendar work with Swift async and await?"
+    answer="Yes, but GTLR's query execution API is callback-based. hora wraps executeQuery with Swift continuations, then keeps retry, deadline, token refresh, and error mapping logic in its own async adapter."
+  />
+</BlogFaq>

@@ -15,4 +15,5 @@ export const ANALYTICS_PLACEMENTS = {
 export type NewsletterPlacement =
   | typeof ANALYTICS_PLACEMENTS.betaCta
   | typeof ANALYTICS_PLACEMENTS.stayInLoop
-  | typeof ANALYTICS_PLACEMENTS.download;
+  | typeof ANALYTICS_PLACEMENTS.download
+  | typeof ANALYTICS_PLACEMENTS.blog;

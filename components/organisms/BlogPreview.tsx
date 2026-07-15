@@ -1,9 +1,9 @@
 import Link from "next/link";
-import type { PostCardData } from "@/components/molecules/PostCard";
 import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { home } from "@/content/home";
+import type { BlogPostSummary } from "@/lib/blog-model";
 
-export function BlogPreview({ posts }: { posts: readonly PostCardData[] }) {
+export function BlogPreview({ posts }: { posts: readonly BlogPostSummary[] }) {
   if (posts.length === 0) return null;
   const b = home.blogPreview;
 
@@ -73,7 +73,7 @@ export function BlogPreview({ posts }: { posts: readonly PostCardData[] }) {
               ) : null}
               <article className="relative z-10 flex h-full flex-col">
                 <div className="flex min-w-0 items-center gap-3 pr-8 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted sm:text-[11px] sm:tracking-[0.17em]">
-                  <time dateTime={post.date}>{post.date}</time>
+                  <time dateTime={post.publishedAt}>{post.publishedAt}</time>
                   <span className="h-px w-5 bg-white/18" />
                   <span className="shrink-0">{post.readingMinutes} min read</span>
                 </div>
@@ -93,7 +93,7 @@ export function BlogPreview({ posts }: { posts: readonly PostCardData[] }) {
                       : "mt-3 line-clamp-2 max-w-xl text-sm leading-6 text-muted md:line-clamp-none"
                   }
                 >
-                  {post.description}
+                  {post.excerpt}
                 </p>
                 <span className="mt-5 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted transition-colors group-hover:text-text md:mt-7 md:text-xs md:tracking-[0.17em]">
                   Read article

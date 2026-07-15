@@ -1,85 +1,156 @@
 ---
-title: "Week One in Numbers"
+title: "Week One Building hora: 107 Commits Later"
 date: 2026-04-02
-description: "10 days, 107 commits, 15,000 lines of Swift. Here's the honest breakdown of hora Calendar's first week — what shipped, what broke, and what's next."
-tags: indie-dev, build-in-public, macos, google-calendar, swiftui, swift, open-source, week-one
-cover: /assets/blog/week-one-cover.webp
+updated: 2026-07-14
+category: build-notes
+heroImage: /assets/blog/hora-week-one-commit-river.webp
+heroAlt: A stream of 107 commits flowing through the first ten days of building hora Calendar
+description: "A candid snapshot of hora's first ten days: 107 commits, three Swift packages, 21 resolved issues, useful workflows, and plenty still rough."
+tags: hora-calendar, indie-development, swiftui, google-calendar, macos, build-in-public, engineering
+cover: /assets/blog/hora-week-one-commit-river.webp
+ogImage: /assets/blog/hora-week-one-commit-river.webp
 ---
 
-Few weeks ago, hora Calendar was a blank Xcode project. Today it's a fully functional native macOS Google Calendar client that I use as my daily driver. If you're new here, read [why I'm building hora](/blog/2026-03-26-building-hora/) and [how the first 48 hours went](/blog/native-macos-google-calendar-app-48-hours/). Here's the raw, unfiltered breakdown of week one.
+I called this "week one" when I first published it, but the numbers covered the first ten elapsed days of work, from March 23 through April 2, 2026.
 
-## The Numbers
+That detail is a useful correction. Early-stage projects compress time. A week becomes a sprint, sleep becomes an implementation detail, and a commit graph can make all of it look more deliberate than it felt.
 
-- **107 commits** across two repos (68 in the app, 39 on the website)
-- **87 Swift files**, ~15,800 lines of code
-- **3 Swift Packages** — modularized into HoraCore, HoraGoogleAPI, and HoraSync
-- **9 languages** supported (more on that below)
-- **2 CI pipelines** — Xcode Cloud + GitHub Actions
-- **21+ bugs** tracked and resolved via GitHub Issues
-- **3 blog posts** written, a landing page shipped, and a privacy policy that passed Google's review
-- **Version 0.0.1 → 0.5.1**
+This is the snapshot I recorded then, with the hindsight I have now.
 
-The busiest days? March 31 (18 commits) and April 1 (17 commits) — that's when the modularization happened and a wall of bugs got squashed.
+If you are joining the story here, start with [why I built hora](/blog/2026-03-26-building-hora/), then read [what happened during the first 48-hour sprint](/blog/native-macos-google-calendar-app-48-hours/).
 
-![hora Calendar GitHub Issues tracking bugs and features](/assets/blog/github-issues.webp)
+## The first ten days in numbers
 
-## What Actually Ships vs. What Looks Good on Paper
+My April 2 snapshot contained:
 
-Let me be honest about the state of things.
+- **107 commits** across the app and website repositories.
+- **87 Swift files** and roughly **15,800 lines of Swift**.
+- **3 local Swift packages**: HoraCore, HoraGoogleAPI, and HoraSync.
+- **9 interface languages**.
+- **2 CI configurations** across Xcode Cloud and GitHub Actions.
+- **More than 21 tracked issues resolved**.
+- **3 blog posts**, a landing page, and the privacy and terms pages needed for OAuth review.
+- A version jump from **0.0.1 to 0.5.1**.
 
-**What works well right now:**
+March 31 and April 1 were the busiest commit days. That was when distribution work, modularization, and a dense run of issue fixes collided.
 
-Creating events is smooth. Click an empty slot, type, done — it syncs to Google Calendar immediately with optimistic UI. No spinner, no waiting.
+The numbers are historically useful. They are not a quality score.
 
-<AutoVideo src="/assets/blog/event-creation.webm" />
+Fifteen thousand lines can mean a product is taking shape. It can also mean the architecture is still moving quickly enough to create tomorrow's cleanup. One of the largest changes that week added three packages while deleting and relocating much of the old monolithic target. A line count cannot distinguish growth from a boundary finally becoming clear.
 
-Availability sharing is one of my favorite features. Hit `Cmd+Shift+A`, hora queries Google's FreeBusy API, generates your free slots, and copies them to clipboard. Paste into Slack, email, wherever. Simple, fast, and your data never touches any server besides Google's.
+## What the app could actually do
 
-<AutoVideo src="/assets/blog/availability-sharing.webm" />
+A build log should separate shipped behavior from impressive-sounding infrastructure.
 
-**What's still rough around the edges:**
+By April 2, these workflows were useful enough that I relied on them:
 
-Drag & drop and event resizing work, but they're not as polished as I want them to be. Sometimes the snap feels off, sometimes the visual feedback lags behind. These are tracked issues and actively being worked on — but I'm not going to pretend they're perfect yet. That's the point of building in public.
+### Create and edit Google Calendar events
 
-## The Daily Driver Test
+I could click an empty slot, create an event, and see the local calendar update immediately while the request went to Google. Dragging, resizing, deleting, and undoing changes all existed.
 
-I've been using hora as my only calendar app for a week now. Multiple Google accounts, back-to-back meetings, recurring events, the works. Some things I noticed:
+The optimistic interface made the app feel fast. It also created a harder engineering obligation: if Google rejected a request or returned a different result, the local state had to reconcile without silently inventing a calendar history.
 
-![hora Calendar Week View showing real schedule with multiple calendars](/assets/blog/week-view-april.webp)
+### Share availability
 
-- **Sync is reliable.** Incremental sync with dirty-checking means changes appear fast and nothing gets lost.
-- **The menu bar widget is surprisingly useful.** A quick glance at what's next without switching windows.
-- **Keyboard shortcuts change everything.** `Cmd+N` for new event, `Cmd+T` for today, arrow keys to navigate. Once you go keyboard-first, clicking feels slow.
+The availability sheet queried Google's FreeBusy endpoint, turned busy intervals into open slots, and copied a readable list to the clipboard.
 
-![hora Calendar menu bar widget showing upcoming events](/assets/blog/menubar-widget.webp)
+This remained one of my favorite early features because it closed a complete loop. It started with real calendar data and ended in the email or chat where somebody had asked for time.
 
-## 9 Languages (and a Request)
+Google's [FreeBusy endpoint](https://developers.google.com/workspace/calendar/api/v3/reference/freebusy/query) returns busy ranges for selected calendars. hora handled the chosen working hours, free-slot calculation, and output locally.
 
-hora now supports **9 languages**: English, Polish, German, Spanish, French, Italian, Japanese, Portuguese, and Simplified Chinese.
+### Check the day without opening the full window
 
-Full transparency — most translations were generated by AI. They're functional, but almost certainly not perfect. Idioms, calendar-specific terminology, and natural phrasing are hard to get right with machine translation alone.
+The menu bar view showed upcoming events and a countdown. A WidgetKit extension put today's and tomorrow's agenda on the desktop. Both made the project feel like a Mac app rather than a calendar grid inside a window.
 
-**If you're a native speaker of any of these languages and want to help polish the translations, I'd love to hear from you.** Send a note to [hello@horacal.app](mailto:hello@horacal.app) — community contributions here would make a real difference.
+### Work with more than one Google account
 
-## The CI/CD Pipeline
+Multiple accounts were supported, but they also produced some of the week's most instructive bugs. Calendar and event identifiers that looked unique inside one account could collide when shared calendars appeared across accounts.
 
-One thing I'm proud of: the infrastructure. Xcode Cloud handles builds and TestFlight distribution. GitHub Actions runs the test suite on every pull request. Secrets are generated at build time, never committed to the repo.
+The fix was not another conditional in the interface. Identity needed to include enough account context throughout storage and synchronization.
 
-![Xcode Cloud build pipeline for hora Calendar](/assets/blog/xcode-cloud.webp)
+## The issue loop mattered more than the feature count
 
-It's not glamorous work, but it means I can ship with confidence. Every commit is tested, every build is reproducible.
+![A build, test, report, and fix loop turning early hora Calendar bugs into a more reliable Mac app](/assets/blog/hora-week-one-issue-loop.webp)
 
-## What's Next
+The most useful loop of the week was not build, announce, repeat. It was:
 
-There's still a long road ahead. The immediate focus:
+1. Use hora for a real day.
+2. Write down the moment it behaved strangely.
+3. Reduce that moment to a reproducible issue.
+4. Fix the underlying state, not only the visible symptom.
+5. Use it again.
 
-- **Drag & drop and resize polish** — making interactions feel truly native
-- **Google OAuth verification** — currently in review, which means new users still see a warning screen
-- **Performance optimization** — large calendars with thousands of events need to stay fast
-- **More bug fixes** — the issue tracker is honest about what's broken
+That process found problems in recurring-event deduplication, menu bar rendering, window restoration, invitations, multi-calendar event identity, drag behavior, and large sync histories.
 
-This is week was a part of a much longer journey. The foundation is solid, the app is usable, but "usable" and "great" are very different things.
+At the start of the week, I would often describe a feature as "working" once the happy path completed. By April 2, that word required more questions:
 
----
+- Does it work for a shared calendar?
+- Does it work for a recurring event?
+- Does it work after the Mac wakes from sleep?
+- Does the menu bar show the same answer as the main window?
+- Can the user undo it?
+- What happens when Google returns a retryable error?
 
-Check out [hora Calendar](https://horacal.app), follow the build at [@moto_szama](https://x.com/moto_szama), or reach out at [hello@horacal.app](mailto:hello@horacal.app) — whether it's translation help, feature requests, or just saying hi.
+That is where a calendar app starts becoming trustworthy.
+
+## Splitting the app into three Swift packages
+
+On April 1, the project moved from one growing target into three local packages:
+
+- **HoraCore** for shared models, API response types, and utilities.
+- **HoraGoogleAPI** for authentication-aware Google Calendar, People, and FreeBusy services.
+- **HoraSync** for the repository, synchronization manager, and event operations.
+
+The main app and widget could depend on the pieces they needed without turning every type into global project state.
+
+This was not architecture for a slide deck. The package boundaries followed pressure already visible in the code. Models needed to be shared with widgets. Network services needed token injection. Synchronization had grown large enough that UI concerns were making it harder to reason about failures.
+
+The split did not solve every problem. It made the next problem easier to locate.
+
+## Nine languages, with an uncomfortable caveat
+
+The app included English, Polish, German, Spanish, French, Italian, Japanese, Portuguese, and Simplified Chinese.
+
+Most of the first-pass translations were generated with AI.
+
+I was transparent about that because "supports nine languages" sounds much more complete than the actual state. The strings existed and the layouts could be tested, but calendar vocabulary, tone, pluralization, and natural phrasing still needed native review.
+
+Localization was useful this early because it exposed hard-coded text and layout assumptions. It was not finished simply because a string catalog had nine columns.
+
+That distinction still matters to me. Shipping a machine translation can start a feedback loop. Presenting it as polished localization ends the conversation too early.
+
+## The CI story was less tidy than I first wrote
+
+Xcode Cloud handled builds and TestFlight distribution. A GitHub Actions workflow existed for pull-request testing too.
+
+The original post made that sound like two healthy pipelines working together. In reality, the GitHub workflow was disabled on April 1 because the required macOS runner was not available for that configuration.
+
+So the honest state was:
+
+- Xcode Cloud was the active distribution path.
+- GitHub Actions expressed the intended test path, but could not yet be treated as a reliable green check.
+- Local testing and real TestFlight builds still carried more weight than I wanted.
+
+This is a small correction, but it captures why build-in-public notes should age honestly. A workflow file in the repository is not the same as a functioning safety net.
+
+## What was still rough
+
+The app was usable. It was not calm yet.
+
+Drag and resize interactions still had visual and snapping issues. Large histories needed more performance work. Google OAuth verification was still in progress. Recurring events and shared-calendar identity kept producing cases that did not exist in my simplest test account.
+
+The menu bar and widgets were useful, but every additional surface created another place where stale state could appear.
+
+This is why I no longer describe the week as "a solid foundation" without qualification. The foundation existed. Parts of it were still wet concrete.
+
+## What the numbers did not show
+
+The most important result was not 107 commits or version 0.5.1.
+
+It was that hora had become good enough to reveal its own weaknesses through daily use. I no longer needed to imagine what a Google Calendar user might do. I could reach for the app, notice friction, and follow it into the code.
+
+That loop carried the project into TestFlight and then the public beta. The [road-to-launch update](/blog/2026-03-31-road-to-launch/) captures the external gates at the time. The [first public beta retrospective](/blog/2026-04-29-public-beta-week-one/) shows what happened when far more varied calendars arrived.
+
+hora eventually reached the Mac App Store on June 30, 2026. The release was built on this fast first stretch, but it was shaped by the slower work that followed.
+
+[Try hora Calendar on the Mac App Store](https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_blog_week_one&mt=8)

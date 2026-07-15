@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogListingPage } from "@/components/templates/BlogListingPage";
 import {
-  getBlogTags,
+  getBlogCategories,
   getMonthlyArchives,
   getPostsByMonth,
-  postToCard,
 } from "@/lib/blog";
+import { getAllBlogPosts } from "@/lib/blog-repository";
 import { breadcrumbList } from "@/lib/jsonld";
-import { getAllPosts } from "@/lib/mdx";
 import { defaultOg } from "@/lib/og";
 
 type Params = { year: string; month: string };
@@ -16,7 +15,10 @@ type Params = { year: string; month: string };
 export const revalidate = 600;
 
 export async function generateStaticParams(): Promise<Params[]> {
-  const posts = await getAllPosts();
+  const posts = await getAllBlogPosts({
+    perspective: "published",
+    stega: false,
+  });
   return getMonthlyArchives(posts).map((archive) => ({
     year: archive.year,
     month: archive.month,
@@ -29,7 +31,10 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { year, month } = await params;
-  const posts = await getAllPosts();
+  const posts = await getAllBlogPosts({
+    perspective: "published",
+    stega: false,
+  });
   const archive = getMonthlyArchives(posts).find(
     (item) => item.year === year && item.month === month,
   );
@@ -55,7 +60,7 @@ export default async function BlogMonthlyArchivePage({
   params: Promise<Params>;
 }) {
   const { year, month } = await params;
-  const posts = await getAllPosts();
+  const posts = await getAllBlogPosts();
   const archives = getMonthlyArchives(posts);
   const archive = archives.find(
     (item) => item.year === year && item.month === month,
@@ -73,18 +78,15 @@ export default async function BlogMonthlyArchivePage({
 
   return (
     <>
+      <BlogListingPage
+        title={archive.label}
+        subtitle={`hora Calendar blog posts from ${archive.label}: Mac calendar product updates, SwiftUI engineering notes, Google Calendar sync work, beta fixes, launch planning, and practical comparisons for people choosing a faster native calendar workflow.`}
+        categories={getBlogCategories(posts)}
+        posts={archivePosts}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
-      />
-      <BlogListingPage
-        eyebrow="Monthly archive"
-        title={archive.label}
-        subtitle={`hora Calendar blog posts from ${archive.label}: Mac calendar product updates, SwiftUI engineering notes, Google Calendar sync work, beta fixes, launch planning, and practical comparisons for people choosing a faster native calendar workflow.`}
-        posts={archivePosts.map(postToCard)}
-        tags={getBlogTags(posts)}
-        archives={archives}
-        activeArchive={archive.slug}
       />
     </>
   );

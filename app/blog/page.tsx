@@ -3,12 +3,10 @@ import { BlogListingPage } from "@/components/templates/BlogListingPage";
 import { blog } from "@/content/blog";
 import {
   BLOG_PAGE_SIZE,
-  getBlogTags,
-  getMonthlyArchives,
-  paginatePosts,
-  postToCard,
+  getBlogCategories,
+  paginateEditorialPosts,
 } from "@/lib/blog";
-import { getAllPosts } from "@/lib/mdx";
+import { getAllBlogPosts } from "@/lib/blog-repository";
 import { defaultOg } from "@/lib/og";
 import { breadcrumbList } from "@/lib/jsonld";
 
@@ -33,8 +31,8 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogIndexPage() {
-  const posts = await getAllPosts();
-  const page = paginatePosts(posts, 1, BLOG_PAGE_SIZE);
+  const posts = await getAllBlogPosts();
+  const page = paginateEditorialPosts(posts, 1, BLOG_PAGE_SIZE);
   const breadcrumbs = breadcrumbList([
     { name: "Home", url: "https://horacal.app/" },
     { name: "Blog", url: "https://horacal.app/blog/" },
@@ -42,20 +40,19 @@ export default async function BlogIndexPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
-      />
       <BlogListingPage
-        intro={blog.intro}
-        posts={page.posts.map(postToCard)}
-        tags={getBlogTags(posts)}
-        archives={getMonthlyArchives(posts)}
+        categories={getBlogCategories(posts)}
+        featured={page.featured}
+        posts={page.posts}
         pagination={{
           currentPage: page.page,
           totalPages: page.totalPages,
           basePath: "/blog/page",
         }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
     </>
   );

@@ -5,17 +5,24 @@ export function AutoVideo({
   mp4Src,
   poster,
   className,
+  autoPlay = true,
+  loop = true,
+  muted = true,
 }: {
   src: string;
   mp4Src?: string;
   poster?: string;
   className?: string;
+  autoPlay?: boolean;
+  loop?: boolean;
+  muted?: boolean;
 }) {
   return (
     <video
-      autoPlay
-      loop
-      muted
+      autoPlay={autoPlay}
+      loop={loop}
+      muted={muted}
+      controls={!autoPlay}
       playsInline
       poster={poster}
       className={cn(

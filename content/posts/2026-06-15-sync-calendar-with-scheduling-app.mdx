@@ -1,112 +1,240 @@
 ---
-title: "How to Sync Your Calendar With a Scheduling App"
+title: "How to Sync Calendly With Google Calendar"
 date: 2026-06-15
-description: "How to sync your calendar with a scheduling app like Calendly: two-way sync, the Apple iCloud gotcha, and why busy times don't always block."
-tags: sync-calendar-with-scheduling-app, two-way-calendar-sync, calendly-apple-calendar, calendar-sync, macos
-cover: /assets/blog/sync-calendar-with-scheduling-app-cover.webp
-ogImage: /assets/blog/sync-calendar-with-scheduling-app-hero.webp
+updated: 2026-07-14
+category: guides
+heroImage: /assets/blog/calendly-google-calendar-sync-guide.webp
+heroAlt: Calendly checking several Google calendars for conflicts and adding a booking to one destination calendar
+description: "Connect Calendly to Google Calendar, choose conflict calendars, prevent double bookings, and understand the Apple Calendar and iCloud limits."
+tags: calendly-google-calendar-sync, calendly-calendar-sync, prevent-double-booking, scheduling-app, google-calendar, apple-calendar
+cover: /assets/blog/calendly-google-calendar-sync-guide.webp
+ogImage: /assets/blog/calendly-google-calendar-sync-guide.webp
 ---
 
-![How to sync your calendar with a scheduling app](/assets/blog/sync-calendar-with-scheduling-app-hero.webp)
+To sync Calendly with Google Calendar, open **Availability**, select **Calendar settings**, connect your Google account, then choose:
 
-To **sync your calendar with a scheduling app**, open the scheduler's calendar or integrations settings, connect your calendar account (Google, Outlook, or Apple), and choose which calendars it checks for conflicts and where new bookings land. Most tools — Calendly, Cal.com, Acuity, SavvyCal — do this in three or four clicks for Google and Outlook.
+1. The calendars Calendly should check for conflicts.
+2. The one calendar where new bookings should be added.
+3. Whether cancellations and reschedules made in Google Calendar should sync back to Calendly.
 
-The part nobody tells you up front: the experience is very different depending on which calendar you use. Google and Outlook get clean, real-time, two-way sync. Apple Calendar does not — and as of 2024, the most popular scheduler dropped iCloud support entirely. If you live on a Mac or iPhone, that detail changes everything.
+That is the setup. The part worth understanding is that these are three separate decisions. Connecting the right Google account does not automatically mean Calendly is checking every calendar inside it.
 
-I build [hora Calendar](https://horacal.app), a native calendar for Mac, so I spend a lot of time in the weeds of how calendar data actually moves between apps. Here's the practical version.
+While building hora, I have seen the same calendar problem in several forms: two apps both look correct, but they disagree about which calendar actually matters. The fix is usually not more software. It is making the map between those apps explicit.
 
-## What "syncing your calendar with a scheduling app" actually means
+## Calendly and Google Calendar sync has three jobs
 
-A scheduling app (also called a booking tool) shows other people your open time slots and lets them book you. For that to work without double-booking yourself, the scheduler needs to read your real calendar — your meetings, your focus blocks, your dentist appointment — and treat that time as unavailable.
+“Calendar sync” sounds like one feature. In practice, Calendly needs to handle three different jobs.
 
-So "syncing" is really two separate jobs:
+| Setting | What it does | What happens when it is wrong |
+|---|---|---|
+| Calendars to check for conflicts | Reads Busy events from the selected calendars | Someone can book you during an existing meeting |
+| Calendar to add events to | Creates each new Calendly booking on one destination calendar | The meeting appears somewhere you do not expect |
+| Cancellation and reschedule sync | Sends supported changes made in Google Calendar back to Calendly | Editing or deleting only the calendar event may leave the Calendly booking unchanged |
 
-- **Read availability:** the scheduler looks at your calendar and hides any slot you're already busy.
-- **Write bookings:** when someone books you, the scheduler creates an event on your calendar.
+The first two settings are the important ones.
 
-Whether a tool does one, the other, or both is the difference between one-way and two-way sync — and it's the first thing to check.
+Calendly can check several calendars for conflicts, but it adds new meetings to one selected calendar. That separation is useful. Your work and personal calendars can both protect your availability while every new booking still lands in one predictable place.
 
-## One-way vs. two-way sync (and why it matters)
+![Calendly checking multiple conflict calendars and writing bookings to one destination calendar](/assets/blog/calendly-google-calendar-conflict-map.webp)
 
-This is the single most important concept, so it goes first.
+This is more precise than calling the connection “two-way sync.” Availability checks, booking creation, cancellations, and reschedules do not all follow one universal rule. Each behavior depends on the settings you enable.
 
-- **One-way sync** moves data in a single direction. Usually: bookings flow *out* of the scheduler and onto your calendar. But events already on your calendar don't flow *back* to block your availability. Result: people can still book you during your existing meetings.
-- **Two-way sync** goes both directions. New bookings appear on your calendar, *and* events on your calendar block your booking page automatically. This is what prevents double-bookings.
+## How to connect Calendly to Google Calendar
 
-When a tool advertises "calendar sync," confirm it's two-way and that it's checking the specific calendar your events live on. A common failure mode is a one-way ICS feed dressed up to look like full sync — bookings land on your calendar, but your existing events never protect your time.
+The current Calendly setup takes a few minutes.
 
-## How to connect a Google or Outlook calendar
+1. Open Calendly and select **Availability**.
+2. Open the **Calendar settings** tab.
+3. Select **Connect calendar account** and choose **Google Calendar**.
+4. Sign in to the Google account that owns the calendars you want to use.
+5. Under **Calendars to check for conflicts**, select every calendar that contains real commitments.
+6. Under **Calendar to add events to**, choose one destination for new bookings.
+7. Review the optional sync settings for cancellations and reschedules.
 
-If your calendar is Google or Microsoft, you're on the easy path. Both expose a proper API, so schedulers can do real-time, two-way sync. The flow is nearly identical everywhere:
+Calendly documents the current flow in its [Google Calendar connection guide](https://calendly.com/help/how-to-connect-your-google-calendar).
 
-1. In the scheduling app, open **Availability → Calendar settings** (or **Integrations**).
-2. Click **Connect calendar account** and pick **Google** or **Outlook / Microsoft 365**.
-3. Sign in and grant the requested permissions.
-4. Choose which calendars to **check for conflicts** (read) and which calendar **new bookings** should be added to (write).
-5. Save.
+If you originally created your Calendly account using Google, the account may already be connected. Still check the conflict and destination settings. An active connection alone does not tell you which calendars Calendly is using.
 
-That's it. Bookings now appear instantly, and your existing events block your availability. Calendly, for instance, connects natively to Google, Outlook/Office 365, and Exchange this way ([Calendly Help](https://help.calendly.com/hc/en-us/articles/236174208)).
+Once the setup is complete, test it before sending the booking link to anyone:
 
-If you keep several calendars — work Google, personal Google, a shared team calendar — connect all of them as "check for conflicts" sources but pick a single one as the booking destination. Otherwise new bookings scatter across calendars and you lose track of them.
+1. Create a temporary Busy event in Google Calendar.
+2. Open your Calendly page in a private browser window.
+3. Confirm that the same time cannot be booked.
+4. Make a test booking and check which Google calendar receives it.
+5. Reschedule and cancel the test meeting to confirm how later changes behave.
 
-## The Apple Calendar problem (and the iCloud workaround)
+That five-minute test tells you more than a green “Connected” label.
 
-Here's the catch for Mac and iPhone users. **Apple Calendar has no public API.** Unlike Google and Microsoft, Apple doesn't offer a hosted way for third-party apps to read and write your iCloud calendar in real time. Schedulers can only reach iCloud through CalDAV, an older sync protocol, or a one-way ICS subscription feed.
+## Can Calendly sync with multiple calendars?
 
-It got worse in 2024: **Calendly removed the ability to connect an iCloud calendar on August 20, 2024** ([Calendly](https://calendly.com/help/icloud-overview)). If your availability lived in Apple Calendar, that integration simply stopped.
+Yes. Calendly can check multiple connected calendars for conflicts. The number of calendar connections available can depend on your plan, so check the current limit in your account.
 
-You have three realistic options:
+A practical setup might look like this:
 
-- **Bridge through Google.** If your events sync to a Google account that you *also* view inside Apple Calendar, connect the scheduler to the Google account instead of iCloud. The scheduler reads Google (with full two-way sync); you keep using Apple Calendar as your viewer. This is the cleanest workaround for the Calendly-style tools.
-- **Use a scheduler that still supports iCloud via CalDAV.** Some tools (Cal.com, Acuity, and others) still connect to Apple Calendar through CalDAV. Expect slower refresh — minutes, not seconds — and check whether it's true two-way sync or a one-way feed.
-- **Subscribe to a one-way ICS feed.** As a fallback, many schedulers publish an ICS link you can add to Apple Calendar so bookings *appear* there. Just know this is one-way: it won't block your booking page from your Apple events.
+- **Work calendar:** check for conflicts.
+- **Personal calendar:** check for conflicts.
+- **Shared team calendar:** check for conflicts if it contains commitments you must attend.
+- **Work calendar or a dedicated Bookings calendar:** add new meetings here.
 
-If the CalDAV-vs-API distinction matters to your setup, I went deep on the tradeoffs in [Google Calendar API vs CalDAV](/blog/2026-05-21-google-calendar-api-vs-caldav) — the short version is that API-based sync is faster and more reliable, which is exactly why the iCloud-only path feels laggy.
+Every calendar that can make you unavailable should be selected as a conflict source. Only one calendar needs to receive the booking.
 
-CalDAV itself is built on the open **iCalendar** standard (RFC 5545), the same `.ics` format used to share events across Google, Outlook, Apple, and basically every calendar app ([iCalendar, Wikipedia](https://en.wikipedia.org/wiki/ICalendar)). That portability is great for moving an event around; it's just not a substitute for real-time two-way sync.
+This is where many double bookings begin. Someone connects their work Google account, but their personal commitments live in a second calendar that Calendly never checks. From Calendly’s point of view, that time is still free.
 
-## Why your scheduler isn't blocking busy times
+Also check the availability status of the event itself. Calendly blocks time for events marked **Busy**. An event marked **Free** can remain bookable even when it is visible on your calendar.
 
-You connected your calendar, but people can still book you during meetings. This is the most common sync complaint, and it's almost always one of two fixes.
+## Apple Calendar and iCloud Calendar are not the same thing
 
-**1. Your events are marked "Free," not "Busy."** Calendars let each event carry an availability status. Most schedulers only treat **Busy** events as conflicts — a **Free** event won't block anything ([Calendly](https://calendly.com/help/how-to-troubleshoot-unavailable-times-that-should-be-available)). All-day events default to Free in a lot of calendars, which is why "I'm out all day" events famously fail to block bookings. Open the offending event and switch it to Busy.
+This distinction trips up a lot of Mac users.
 
-**2. The calendar isn't selected as a conflict source.** Connecting an account isn't the same as telling the scheduler to *check* that specific calendar. Go back to calendar settings and confirm every calendar that holds real commitments is ticked under "check for conflicts." A secondary or shared calendar is easy to miss here.
+**Apple Calendar is the app on your Mac.** It can display calendars from Google, iCloud, Exchange, and other accounts in one window.
 
-A couple of other usual suspects: sync delay (CalDAV and ICS feeds refresh on a timer, often every 5–15 minutes, so a just-added event may not block yet), and time-zone mismatches between your calendar and your scheduler.
+**iCloud Calendar is a calendar provider.** It is one of the accounts whose events Apple Calendar can display.
 
-## A cleaner setup: one calendar as the source of truth
+Seeing two calendars beside each other in the Apple Calendar app does not merge the providers behind them.
 
-The reason calendar sync gets messy is usually fragmentation — work events in Google, personal in iCloud, a side project in Outlook — with a scheduler trying to read across all of it. Every extra connection is another place sync can quietly break.
+If the events you see in Apple Calendar belong to a Google account, connect Calendly directly to that Google account. You can keep using Apple Calendar as the Mac interface. Calendly and Apple Calendar will both be working with the same Google Calendar data.
 
-The setup that holds up: pick **one calendar account as your source of truth**, route everything into it, and point your scheduler at that single account. On a Mac, that means using a fast, native calendar that sits on top of a real API rather than juggling browser tabs and laggy CalDAV feeds. That's the whole idea behind [hora](https://horacal.app) — a native Mac calendar built directly on the Google Calendar API, so what you see is what your scheduler sees, in near real time. I wrote about getting that sync to feel instant in [Real-time Google Calendar sync on macOS](/blog/real-time-google-calendar-sync-macos/), and about why a native app beats a web wrapper for this in [Best Fantastical Alternative for Google Calendar Users](/blog/2026-05-06-fantastical-alternative-google-calendar).
+If the events belong to iCloud, the situation is different. Calendly stopped accepting new iCloud Calendar connections on August 20, 2024. Existing iCloud connections continue to be supported, but a new user cannot create one through the current Calendly flow. Calendly maintains the current status in its [iCloud Calendar guidance](https://calendly.com/help/icloud-overview).
 
-You don't need a fancy stack. You need one calendar that's reliably synced, marked Busy where it matters, and connected to your scheduler as a conflict source. Get those three right and double-bookings basically stop.
+Some other scheduling tools still support iCloud. For example, [Cal.com documents an Apple Calendar connection](https://cal.com/help/quick-start/calendar) using an app-specific password. Apple also explains how supported third-party apps can request access to [iCloud Mail, Calendar, and Contacts](https://support.apple.com/en-us/121539).
 
-## FAQ
+An ICS subscription is another option you may encounter. It can make bookings appear in Apple Calendar, but it is not a replacement for conflict checking. A one-way booking feed cannot automatically use your existing iCloud events to protect availability.
 
-### Does Calendly work with Apple Calendar?
+![Apple Calendar displaying accounts from different providers without merging their underlying data](/assets/blog/apple-calendar-icloud-provider-map.webp)
 
-Not directly anymore. Calendly removed iCloud calendar connections on August 20, 2024. The common workaround is to connect Calendly to a Google account that your events also sync to, and keep viewing that calendar in the Apple Calendar app.
+If you want the technical reason these connections behave differently, read [Google Calendar API vs CalDAV](/blog/2026-05-21-google-calendar-api-vs-caldav/). The important practical point is simpler: connect the scheduling app to the provider that actually owns the events.
 
-### What's the difference between one-way and two-way calendar sync?
+## Why is Calendly not syncing with Google Calendar?
 
-One-way sync sends data in a single direction — usually bookings onto your calendar — but doesn't read your existing events to block availability. Two-way sync does both: bookings appear on your calendar and your calendar events block your booking page, which is what prevents double-bookings.
+“Calendly is not syncing” can describe several different problems. Start by identifying which part is failing.
 
-### Why isn't my scheduling app blocking out busy times?
+### 1. Existing meetings do not block the booking page
 
-Most often the conflicting events are marked "Free" instead of "Busy," so the scheduler ignores them — switch them to Busy. The other common cause is that the calendar holding those events isn't selected as a "check for conflicts" source in your scheduler's settings.
+Open **Calendar settings** and confirm that the calendar containing those meetings is selected under **Calendars to check for conflicts**.
 
-### How long does calendar sync take?
+Then open one of the affected Google Calendar events and check its availability status. It needs to be marked **Busy** if it should block a booking.
 
-Google and Outlook connections sync in near real time because they use push-based APIs. Apple Calendar and other CalDAV or ICS-based connections refresh on a timer, often every 5–15 minutes, so a newly added event may take a few minutes to block your availability.
+### 2. A time is blocked even though it should be available
 
-### Will syncing show my private event details on my booking page?
+Calendly has a built-in Troubleshoot tool for this.
 
-No. Schedulers read your events only to mark slots as busy; they show the time as unavailable, not the title or details. Your private event content stays private to your calendar.
+Open the affected event type, select **Preview**, then choose **Troubleshoot** at the bottom of the booking page. Select the date and time that look wrong.
 
----
+Calendly may show:
 
-If this saved you from a few double-bookings, it did its job.
+- **CALENDAR:** a Busy event on a connected calendar is blocking the time.
+- **NOCAL:** Calendly cannot access the connected calendar.
+- A buffer, meeting limit, minimum notice, date range, or another availability rule.
 
-Follow the build at [@moto_szama](https://x.com/moto_szama), check out [hora Calendar](https://horacal.app), or reach out at [hello@horacal.app](mailto:hello@horacal.app).
+The complete process is documented in Calendly’s [availability troubleshooting guide](https://calendly.com/help/how-to-troubleshoot-unavailable-times-that-should-be-available).
+
+If you see **NOCAL**, reconnect the account from Calendar settings. If you see **CALENDAR**, inspect the event that is blocking the slot before changing your general availability.
+
+### 3. New bookings appear on the wrong calendar
+
+This is a destination problem, not a conflict-checking problem.
+
+Return to **Calendar settings** and change **Calendar to add events to**. Calendly adds new meetings only to the destination selected there.
+
+### 4. A cancellation or reschedule does not update Calendly
+
+Check whether **Automatically sync cancellations and reschedules from this calendar to Calendly** is enabled.
+
+Calendly currently supports canceling a meeting when you decline or delete the Calendly event in Google Calendar, and rescheduling it when you change its date or time. That behavior depends on the optional sync setting.
+
+When in doubt, make the change from Calendly’s Meetings page or use the original reschedule link. It keeps the booking record, notifications, and calendar event in the same flow.
+
+### 5. The correct calendar is connected, but the slot still looks wrong
+
+Check the event type rules:
+
+- Working hours.
+- Date range.
+- Minimum scheduling notice.
+- Meeting limits.
+- Buffers before and after meetings.
+- Event duration.
+- Time zone shown on the booking page.
+
+Not every availability problem is a calendar sync problem. Sometimes Calendly is following a rule that is easy to forget you enabled.
+
+## Will Calendly show private event details?
+
+People visiting your booking page normally see that a time is unavailable. They do not see the title of the event that blocked it.
+
+That does not mean the scheduling provider has no access to calendar data.
+
+The exact data available to Calendly depends on the calendar permissions and features you use. Calendly says it may use limited scheduling information, including who you meet with and how often, to personalize parts of the product for selected users. You can read its current explanation in [How Calendly uses your calendar data](https://calendly.com/help/how-calendly-uses-your-calendar-data).
+
+Before connecting any scheduling tool to a work account, check:
+
+- The permissions requested during sign-in.
+- Your employer’s Google Workspace policy.
+- The provider’s privacy and retention documentation.
+- Which calendars actually need to be connected.
+
+The useful privacy promise is not “the scheduler sees nothing.” It is that invitees should see availability, not the private contents of the event that made you unavailable.
+
+## My recommended setup after building a calendar app
+
+I used to think everyone should force their schedule into one calendar account. That sounds tidy, but it is not how most people work.
+
+A better rule is to maintain one explicit calendar map:
+
+- Every calendar containing commitments is selected for conflict checking.
+- New bookings always go to one predictable destination.
+- Cancellation and reschedule behavior is intentionally enabled or disabled.
+- Every event that should protect time is marked Busy.
+
+Write that map down or take a screenshot of the settings. It sounds almost too simple, but it makes future troubleshooting much faster.
+
+It also gives you a useful question whenever something goes wrong:
+
+**Did Calendly fail to read a conflict, write a booking, or sync a later change?**
+
+Those are three different failures with three different fixes.
+
+## Where hora fits into this setup
+
+Calendly connects directly to Google Calendar. It does not connect through hora, and hora will not repair an incorrect Calendly configuration.
+
+hora can connect to the same Google account and give you a native Mac view of the events Calendly creates. That makes it easier to see where a booking landed, move through a busy week, and manage the Google Calendar that sits behind your scheduling page.
+
+I built it for people whose schedule already lives in Google Calendar but who do not want to spend the rest of the day in a browser tab. You can read more about the [Google Calendar sync architecture](/blog/real-time-google-calendar-sync-macos/), compare the main [Google Calendar options for Mac](/blog/2026-07-09-google-calendar-desktop-app-mac/), or review the current [hora features](/features/).
+
+If your only problem is creating a booking page, Calendly is doing the important work. If Google Calendar is also where you run the rest of your day and you want it to feel at home on macOS, hora is worth trying.
+
+[Try hora Calendar on the Mac App Store](https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_blog_calendly_sync&mt=8)
+
+<BlogFaq id="faq" heading="FAQ">
+  <BlogFaqItem
+    id="calendly-google-calendar-integration"
+    question="Does Calendly integrate with Google Calendar?"
+    answer="Yes. Connect Google Calendar from Availability, then Calendar settings. Calendly can check selected calendars for Busy events, add new meetings to one destination calendar, and optionally sync supported cancellations and reschedules."
+  />
+  <BlogFaqItem
+    id="calendly-multiple-calendars"
+    question="Can Calendly sync with multiple calendars?"
+    answer="Calendly can check multiple connected calendars for conflicts, although the number of available connections can depend on your plan. New bookings are added to one destination calendar that you select."
+  />
+  <BlogFaqItem
+    id="prevent-calendly-double-bookings"
+    question="How do I prevent double bookings in Calendly?"
+    answer="Select every calendar containing real commitments under Calendars to check for conflicts, make sure events that should block time are marked Busy, and test the booking page in a private browser window."
+  />
+  <BlogFaqItem
+    id="calendly-apple-calendar"
+    question="Does Calendly work with Apple Calendar?"
+    answer="It depends on the account behind the Apple Calendar app. If the events belong to Google, connect Calendly directly to Google Calendar. Calendly no longer accepts new iCloud Calendar connections, although existing iCloud connections continue to be supported."
+  />
+  <BlogFaqItem
+    id="calendly-not-syncing-google-calendar"
+    question="Why is Calendly not syncing with Google Calendar?"
+    answer="The usual causes are an unselected conflict calendar, an event marked Free instead of Busy, an expired calendar connection, a wrong booking destination, or an event type rule such as a buffer, meeting limit, or minimum notice."
+  />
+  <BlogFaqItem
+    id="calendly-google-calendar-sync-speed"
+    question="How often does Calendly sync with Google Calendar?"
+    answer="Calendly uses a direct Google Calendar connection to check availability and create bookings. Do not rely on a fixed delay guarantee. If availability looks stale, check the connection, event status, conflict calendars, and Calendly Troubleshoot codes."
+  />
+</BlogFaq>

@@ -15,8 +15,8 @@ export function MdxImage({
         alt={alt}
         width={1600}
         height={900}
-        sizes="(min-width: 768px) 720px, 100vw"
-        className={cn("my-6 h-auto w-full rounded-xl border border-border", className)}
+        sizes="(min-width: 1200px) 1120px, calc(100vw - 3rem)"
+        className={cn("mdx-media my-8 h-auto w-full rounded-lg border border-border", className)}
       />
     );
   }
@@ -26,7 +26,7 @@ export function MdxImage({
       src={src}
       alt={alt}
       loading="lazy"
-      className={cn("my-6 h-auto w-full rounded-xl border border-border", className)}
+      className={cn("mdx-media my-8 h-auto w-full rounded-lg border border-border", className)}
       {...rest}
     />
   );

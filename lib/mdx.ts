@@ -8,6 +8,10 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import { mdxComponents } from "@/components/mdx";
+import {
+  isBlogCategorySlug,
+  type BlogCategorySlug,
+} from "@/lib/blog-model";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 
@@ -20,13 +24,19 @@ export type PageFrontmatter = {
 type PostFrontmatterRaw = {
   title: string;
   date: string;
+  updated?: string;
   description: string;
+  category: string;
   tags?: string;
   cover?: string;
   ogImage?: string;
+  featured?: boolean;
+  heroImage?: string;
+  heroAlt?: string;
 };
 
-export type PostFrontmatter = Omit<PostFrontmatterRaw, "tags"> & {
+export type PostFrontmatter = Omit<PostFrontmatterRaw, "tags" | "category"> & {
+  category: BlogCategorySlug;
   tags: string[];
 };
 
@@ -52,6 +62,22 @@ function formatDate(date: string): string {
   return date.length > 10 ? date : date;
 }
 
+function normalizeFrontmatter(frontmatter: PostFrontmatterRaw): PostFrontmatter {
+  if (!isBlogCategorySlug(frontmatter.category)) {
+    throw new Error(`Invalid blog category: ${frontmatter.category}`);
+  }
+
+  return {
+    ...frontmatter,
+    category: frontmatter.category,
+    date: formatDate(frontmatter.date),
+    updated: frontmatter.updated
+      ? formatDate(frontmatter.updated)
+      : undefined,
+    tags: parseTags(frontmatter.tags),
+  };
+}
+
 function estimateReadingMinutes(source: string): number {
   const content = source
     .replace(/^---[\s\S]*?---/, "")
@@ -73,7 +99,6 @@ const rehypePlugins: PluggableList = [
       properties: {
         className: ["heading-anchor"],
         ariaLabel: "Link to section",
-        tabIndex: -1,
       },
     },
   ],
@@ -115,11 +140,7 @@ export const getAllPosts = cache(async (): Promise<PostMeta[]> => {
       return {
         slug,
         readingMinutes: estimateReadingMinutes(raw),
-        frontmatter: {
-          ...frontmatter,
-          date: formatDate(frontmatter.date),
-          tags: parseTags(frontmatter.tags),
-        },
+        frontmatter: normalizeFrontmatter(frontmatter),
       } satisfies PostMeta;
     }),
   );
@@ -143,11 +164,7 @@ export const getPostBySlug = cache(
       return {
         slug,
         readingMinutes: estimateReadingMinutes(raw),
-        frontmatter: {
-          ...frontmatter,
-          date: formatDate(frontmatter.date),
-          tags: parseTags(frontmatter.tags),
-        },
+        frontmatter: normalizeFrontmatter(frontmatter),
         content,
       };
     } catch {
