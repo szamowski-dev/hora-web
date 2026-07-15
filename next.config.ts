@@ -1,9 +1,6 @@
 import type { NextConfig } from "next";
-import createMDX from "@next/mdx";
 
-const withMDX = createMDX({
-  extension: /\.mdx?$/,
-});
+import { legacyBlogAssetRedirects } from "./lib/legacy-blog-asset-redirects";
 
 const legacyAssetRedirects = [
   ["/assets/Download_on_the_Mac_App_Store_Badge_US-UK_RGB_blk_092917.svg", "/assets/brand/mac-app-store-badge.svg"],
@@ -55,7 +52,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  pageExtensions: ["ts", "tsx", "mdx"],
   async redirects() {
     return [
       {
@@ -133,6 +129,11 @@ const nextConfig: NextConfig = {
         destination,
         permanent: true,
       })),
+      ...legacyBlogAssetRedirects.map(([source, destination]) => ({
+        source,
+        destination,
+        permanent: true,
+      })),
     ];
   },
   async headers() {
@@ -168,4 +169,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withMDX(nextConfig);
+export default nextConfig;

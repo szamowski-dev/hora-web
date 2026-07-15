@@ -9,7 +9,7 @@ export function SanityBlogTable({ value }: { value: SanityBlogTableValue }) {
   if (!headerRow?.cells?.length) return null;
 
   return (
-    <figure className="mdx-media not-prose my-10">
+    <figure className="blog-wide not-prose my-10">
       <div className="overflow-x-auto rounded-lg border border-border bg-panel-deep">
         <table className="w-full min-w-[42rem] border-collapse text-left font-sans text-sm leading-6 text-muted">
           <thead className="bg-overlay-strong text-text">

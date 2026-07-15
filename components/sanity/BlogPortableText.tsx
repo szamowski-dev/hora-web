@@ -4,7 +4,7 @@ import {
   toPlainText,
   type PortableTextComponents,
 } from "next-sanity";
-import { BlogFaq } from "@/components/mdx/BlogFaq";
+import { BlogFaq } from "@/components/sanity/BlogFaq";
 import {
   PortableTextParagraphs,
   portableTextMarks,

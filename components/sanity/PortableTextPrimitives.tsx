@@ -4,7 +4,7 @@ import {
   toPlainText,
   type PortableTextComponents,
 } from "next-sanity";
-import { MdxLink } from "@/components/mdx/MdxLink";
+import { ContentLink } from "@/components/atoms/ContentLink";
 import type {
   SanityExternalLink,
   SanityInternalPathLink,
@@ -27,14 +27,14 @@ export const portableTextMarks: NonNullable<
     const href = stegaClean(link.href);
 
     return (
-      <MdxLink
+      <ContentLink
         href={href}
         target={link.openInNewTab === false ? "_self" : "_blank"}
         rel={link.openInNewTab === false ? undefined : "noopener noreferrer"}
         className={linkClassName}
       >
         {children}
-      </MdxLink>
+      </ContentLink>
     );
   },
   internalPostLink: ({ children, value }) => {
@@ -47,9 +47,9 @@ export const portableTextMarks: NonNullable<
       : undefined;
     const href = `/blog/${slug}/${anchor ? `#${anchor}` : ""}`;
     return (
-      <MdxLink href={href} className={linkClassName}>
+      <ContentLink href={href} className={linkClassName}>
         {children}
-      </MdxLink>
+      </ContentLink>
     );
   },
   internalPathLink: ({ children, value }) => {
@@ -57,9 +57,9 @@ export const portableTextMarks: NonNullable<
     if (!link?.path) return <>{children}</>;
 
     return (
-      <MdxLink href={stegaClean(link.path)} className={linkClassName}>
+      <ContentLink href={stegaClean(link.path)} className={linkClassName}>
         {children}
-      </MdxLink>
+      </ContentLink>
     );
   },
 };

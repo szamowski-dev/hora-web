@@ -2,14 +2,14 @@ import Link from "next/link";
 import type { AnchorHTMLAttributes } from "react";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 
-export function MdxLink({
+export function ContentLink({
   href,
   children,
   ...rest
 }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   if (!href) return <a {...rest}>{children}</a>;
-  const isAppStore = /^https:\/\/apps\.apple\.com\//.test(href);
-  if (isAppStore) {
+
+  if (/^https:\/\/apps\.apple\.com\//.test(href)) {
     return (
       <AppStoreLink
         href={href}
@@ -22,14 +22,14 @@ export function MdxLink({
     );
   }
 
-  const isExternal = /^https?:\/\//.test(href);
-  if (isExternal) {
+  if (/^https?:\/\//.test(href)) {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" {...rest}>
         {children}
       </a>
     );
   }
+
   return (
     <Link href={href} {...rest}>
       {children}
