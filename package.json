@@ -2,6 +2,7 @@
   "name": "hora-web",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -17,7 +18,6 @@
     "@portabletext/types": "4.0.2",
     "@sanity/image-url": "2.1.1",
     "@sanity/vision": "6.4.0",
-    "motion": "^12.38.0",
     "next": "16.2.4",
     "next-mdx-remote": "^6.0.0",
     "next-sanity": "13.1.1",

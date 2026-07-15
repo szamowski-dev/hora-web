@@ -2,16 +2,9 @@ export const site = {
   brand: {
     name: "hora Calendar",
     shortName: "Calendar",
-    tagline: "The Google Calendar client that macOS deserves.",
     logoSrc: "/assets/brand/hora-icon.png",
   },
   url: "https://horacal.app",
-  author: {
-    name: "Maciej Szamowski",
-    url: "https://szamowski.dev",
-    twitter: "@moto_szama",
-    github: "https://github.com/szamski",
-  },
   nav: [
     { label: "Features", href: "/#features" },
     { label: "Pricing", href: "/#pricing" },
@@ -25,10 +18,6 @@ export const site = {
       label: "Download on the Mac App Store",
       href: "https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_website&mt=8",
     },
-    iosBeta: {
-      label: "Get the iOS/iPad beta note",
-      href: "/#newsletter",
-    },
   },
   macAppStoreBadgeSrc:
     "/assets/brand/mac-app-store-badge.svg",
@@ -40,7 +29,6 @@ export const site = {
   },
   footer: {
     copyright: "© 2026 hora Calendar",
-    developedBy: { label: "szamowski.dev", href: "https://szamowski.dev" },
     links: [
       { label: "About", href: "/about/" },
       { label: "Support", href: "/support/" },
@@ -55,7 +43,6 @@ export const site = {
       { label: "Bluesky", href: "https://bsky.app/profile/szamski.bsky.social", icon: "bluesky" },
     ],
   },
-  defaultOg: "/assets/seo/default-og-image.png",
   contactEmail: "hello@horacal.app",
   newsletter: {
     endpoint: "/api/subscribe",
@@ -73,5 +60,3 @@ export const site = {
     },
   },
 } as const;
-
-export type Site = typeof site;

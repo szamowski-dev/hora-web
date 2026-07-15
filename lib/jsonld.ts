@@ -12,10 +12,3 @@ export function breadcrumbList(crumbs: Crumb[]) {
     })),
   };
 }
-
-export function jsonLdScript(data: object) {
-  return {
-    type: "application/ld+json" as const,
-    dangerouslySetInnerHTML: { __html: JSON.stringify(data) },
-  };
-}

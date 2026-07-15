@@ -56,10 +56,6 @@ export function getSyntheticHoraUserCount(date = new Date()) {
   return count;
 }
 
-export async function fetchTestFlightTesterCount() {
-  return getSyntheticHoraUserCount();
-}
-
 export async function fetchHoraUserCount() {
   return getSyntheticHoraUserCount();
 }

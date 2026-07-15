@@ -8,5 +8,3 @@ export const blog = {
       "Practical calendar guides and honest notes from building hora Calendar.",
   },
 } as const;
-
-export type Blog = typeof blog;

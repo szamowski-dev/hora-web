@@ -163,25 +163,6 @@ export function paginateEditorialPosts(
   };
 }
 
-export function paginatePosts<T>(
-  posts: readonly T[],
-  page: number,
-  pageSize = BLOG_PAGE_SIZE,
-) {
-  const totalPages = Math.max(1, Math.ceil(posts.length / pageSize));
-  const safePage = Number.isFinite(page) ? page : 1;
-  const start = (safePage - 1) * pageSize;
-
-  return {
-    page: safePage,
-    pageSize,
-    totalPages,
-    posts: posts.slice(start, start + pageSize),
-    hasPrevious: safePage > 1,
-    hasNext: safePage < totalPages,
-  };
-}
-
 export function tagLabel(slug: string): string {
   return slug
     .split("-")

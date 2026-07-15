@@ -45,4 +45,5 @@ hora Calendar is available on the [Mac App Store](https://apps.apple.com/app/app
 
 - **App:** SwiftUI, SwiftData, WidgetKit (native macOS, no Electron, no web views)
 - **Sync:** Google Calendar API (OAuth 2.0 PKCE), APNs silent push, Cloudflare Workers webhook
-- **Website:** Next.js 16 App Router, MDX, deployed on Vercel
+- **Website:** Next.js 16 App Router with Sanity CMS, deployed on Vercel
+- **Standalone guide:** MDX powers the Zoom setup guide
