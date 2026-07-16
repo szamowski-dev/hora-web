@@ -59,3 +59,7 @@ posthog-setup-report.md
 AGENTS.md
 
 *.p8
+
+# MemPalace per-project files (issue #185)
+mempalace.yaml
+entities.json

@@ -317,32 +317,35 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
     featuredOn: {
       label: requiredString(featuredOn.label, "featuredOn.label"),
       badges: requiredArray(featuredOn.badges, "featuredOn.badges").map(
-        (badge, index) => ({
-          name: requiredString(badge.name, `featuredOn.badges[${index}].name`),
-          href: requiredUrl(badge.href, `featuredOn.badges[${index}].href`),
-          src: badge.src?.startsWith("/")
-            ? requiredMachineString(
-                badge.src,
-                `featuredOn.badges[${index}].src`,
-              )
-            : requiredUrl(badge.src, `featuredOn.badges[${index}].src`),
-          alt: requiredString(badge.alt, `featuredOn.badges[${index}].alt`),
-          width: requiredPositiveInteger(
-            badge.width,
-            `featuredOn.badges[${index}].width`,
-          ),
-          height: requiredPositiveInteger(
-            badge.height,
-            `featuredOn.badges[${index}].height`,
-          ),
-          variant:
-            requiredMachineString(
-              badge.variant,
-              `featuredOn.badges[${index}].variant`,
-            ) === "productHunt"
-              ? "productHunt"
-              : "standard",
-        }),
+        (badge, index) => {
+          const field = `featuredOn.badges[${index}]`;
+          const alt = requiredString(badge.alt, `${field}.alt`);
+          const uploadedImage = badge.image
+            ? mapImage(badge.image, `${field}.image`, alt)
+            : undefined;
+
+          return {
+            name: requiredString(badge.name, `${field}.name`),
+            href: requiredUrl(badge.href, `${field}.href`),
+            src:
+              uploadedImage?.src ??
+              (badge.src?.startsWith("/")
+                ? requiredMachineString(badge.src, `${field}.src`)
+                : requiredUrl(badge.src, `${field}.src`)),
+            alt,
+            width:
+              uploadedImage?.width ??
+              requiredPositiveInteger(badge.width, `${field}.width`),
+            height:
+              uploadedImage?.height ??
+              requiredPositiveInteger(badge.height, `${field}.height`),
+            variant:
+              requiredMachineString(badge.variant, `${field}.variant`) ===
+              "productHunt"
+                ? "productHunt"
+                : "standard",
+          };
+        },
       ),
     },
     showcase: {

@@ -169,12 +169,21 @@ export const homePage = defineType({
                 }),
                 defineField({
                   name: "src",
-                  title: "Badge image",
+                  title: "Badge image URL",
                   type: "string",
                   description:
-                    "A dynamic https badge URL or a site-relative asset path.",
+                    "Optional when you upload a badge image below.",
                   validation: (rule) =>
-                    rule.required().max(1000).custom(sitePathOrHttps),
+                    rule.max(1000).custom((value) =>
+                      !value || sitePathOrHttps(value),
+                    ),
+                }),
+                defineField({
+                  name: "image",
+                  title: "Badge image upload",
+                  type: "optionalSiteImage",
+                  description:
+                    "Upload a static badge here, or keep a URL above for dynamic badges.",
                 }),
                 defineField({
                   name: "alt",
@@ -186,15 +195,31 @@ export const homePage = defineType({
                   name: "width",
                   title: "Intrinsic width",
                   type: "number",
-                  description: "The source badge width used to reserve layout space.",
-                  validation: (rule) => rule.required().integer().min(1).max(4000),
+                  description:
+                    "Required only for a URL badge. Uploads use their intrinsic dimensions.",
+                  validation: (rule) =>
+                    rule.integer().min(1).max(4000).custom((value, context) =>
+                      value ||
+                        (context.parent as { image?: { asset?: unknown } })
+                          ?.image?.asset
+                        ? true
+                        : "Add the width for a URL badge.",
+                    ),
                 }),
                 defineField({
                   name: "height",
                   title: "Intrinsic height",
                   type: "number",
-                  description: "The source badge height used to reserve layout space.",
-                  validation: (rule) => rule.required().integer().min(1).max(4000),
+                  description:
+                    "Required only for a URL badge. Uploads use their intrinsic dimensions.",
+                  validation: (rule) =>
+                    rule.integer().min(1).max(4000).custom((value, context) =>
+                      value ||
+                        (context.parent as { image?: { asset?: unknown } })
+                          ?.image?.asset
+                        ? true
+                        : "Add the height for a URL badge.",
+                    ),
                 }),
                 defineField({
                   name: "variant",
@@ -214,6 +239,15 @@ export const homePage = defineType({
               preview: {
                 select: { title: "name", subtitle: "href" },
               },
+              validation: (rule) =>
+                rule.custom((value) => {
+                  const badge = value as
+                    | { src?: string; image?: { asset?: unknown } }
+                    | undefined;
+                  return badge?.src || badge?.image?.asset
+                    ? true
+                    : "Add a badge image URL or upload a badge image.";
+                }),
             }),
           ],
           validation: (rule) =>

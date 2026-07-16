@@ -46,6 +46,7 @@ export type SanityHomePageDocument = {
       name?: string;
       href?: string;
       src?: string;
+      image?: SanitySiteImageValue;
       alt?: string;
       width?: number;
       height?: number;
@@ -214,7 +215,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
     },
     featuredOn{
       label,
-      badges[]{_key, name, href, src, alt, width, height, variant}
+      badges[]{_key, name, href, src, "image": image${siteImageProjection}, alt, width, height, variant}
     },
     showcase{
       eyebrow,
