@@ -37,6 +37,15 @@ export const structure: StructureResolver = (S) =>
     )
     .items([
       S.listItem()
+        .id("drafts")
+        .title("Drafts")
+        .child(
+          S.documentList()
+            .title("Drafts")
+            .filter('_id in path("drafts.**")'),
+        ),
+      S.divider(),
+      S.listItem()
         .id("homePage")
         .title("Homepage")
         .child(
