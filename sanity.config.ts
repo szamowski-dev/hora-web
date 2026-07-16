@@ -14,6 +14,7 @@ import {
 import { resolve } from "./sanity/presentation/resolve";
 import { schemaTypes } from "./sanity/schemaTypes";
 import { structure } from "./sanity/structure";
+import { StudioIcon } from "./sanity/StudioIcon";
 
 const singletonTypes = new Set([
   "blogSettings",
@@ -49,6 +50,7 @@ export default defineConfig({
   basePath: studioBasePath,
   projectId,
   dataset,
+  icon: StudioIcon,
   plugins: [
     structureTool({ structure }),
     presentationTool({
