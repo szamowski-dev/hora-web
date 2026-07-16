@@ -125,6 +125,21 @@ const seoBlogPostRedirects = [
   ],
 ] as const;
 
+const sharedSecurityHeaders = [
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains; preload",
+  },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-DNS-Prefetch-Control", value: "on" },
+  { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+  },
+] as const;
+
 const nextConfig: NextConfig = {
   trailingSlash: true,
   skipTrailingSlashRedirect: true,
@@ -234,21 +249,20 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/:path*",
+        source: "/studio/:path*",
         headers: [
+          ...sharedSecurityHeaders,
           {
-            key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
+            key: "Content-Security-Policy",
+            value: "frame-ancestors 'self' https://*.sanity.io",
           },
-          { key: "X-Content-Type-Options", value: "nosniff" },
+        ],
+      },
+      {
+        source: "/:path((?!studio(?:/|$)).*)",
+        headers: [
+          ...sharedSecurityHeaders,
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
-          { key: "X-DNS-Prefetch-Control", value: "on" },
-          { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
-          },
         ],
       },
     ];

@@ -37,13 +37,15 @@ export const structure: StructureResolver = (S) =>
     )
     .items([
       S.listItem()
-        .id("drafts")
-        .title("Drafts")
+        .id("recentlyEdited")
+        .title("Recently edited")
         .child(
           S.documentList()
-            .title("Drafts")
-            .apiVersion("2025-01-01")
-            .filter('_id in path("drafts.**")'),
+            .title("Recently edited")
+            .filter(
+              '_type in ["homePage", "featuresPage", "aboutPage", "legalPage", "blogPost", "blogCategory", "blogTag", "author", "blogSettings"]',
+            )
+            .defaultOrdering([{ field: "_updatedAt", direction: "desc" }]),
         ),
       S.divider(),
       S.listItem()
