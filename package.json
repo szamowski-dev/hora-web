@@ -5,7 +5,7 @@
   "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "sanity manifest extract --path public/studio/static && next build",
     "start": "next start",
     "lint": "eslint",
     "indexnow": "node scripts/indexnow.mjs",
