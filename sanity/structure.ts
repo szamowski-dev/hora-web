@@ -42,6 +42,7 @@ export const structure: StructureResolver = (S) =>
         .child(
           S.documentList()
             .title("Drafts")
+            .apiVersion("2025-01-01")
             .filter('_id in path("drafts.**")'),
         ),
       S.divider(),
