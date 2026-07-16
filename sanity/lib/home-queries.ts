@@ -179,8 +179,8 @@ const siteImageProjection = `{
 }`;
 
 const siteVideoProjection = `{
-  "webmUrl": webm.asset->url,
-  "mp4Url": mp4.asset->url,
+  "webmUrl": coalesce(webmUrl, webm.asset->url),
+  "mp4Url": coalesce(mp4Url, mp4.asset->url),
   "poster": poster${siteImageProjection},
   accessibilityLabel
 }`;

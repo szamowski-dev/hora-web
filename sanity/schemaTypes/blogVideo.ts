@@ -16,13 +16,26 @@ export const blogVideo = defineType({
       title: "WebM video",
       type: "file",
       options: { accept: "video/webm" },
-      validation: (rule) => rule.required(),
+      description: "Legacy Sanity-hosted source. Prefer the R2 URL below for new uploads.",
+    }),
+    defineField({
+      name: "webmUrl",
+      title: "WebM URL (R2)",
+      type: "url",
+      description: "Public URL from assets.horacal.app.",
     }),
     defineField({
       name: "mp4",
       title: "MP4 fallback",
       type: "file",
       options: { accept: "video/mp4" },
+      description: "Legacy Sanity-hosted fallback. Prefer the R2 URL below for new uploads.",
+    }),
+    defineField({
+      name: "mp4Url",
+      title: "MP4 fallback URL (R2)",
+      type: "url",
+      description: "Public URL from assets.horacal.app.",
     }),
     defineField({
       name: "poster",
@@ -86,7 +99,9 @@ export const blogVideo = defineType({
   validation: (rule) =>
     rule.custom((value) => {
       const video = value as BlogVideoValue | undefined;
-      if (!video?.webm?.asset) return "Upload a WebM video.";
+      if (!video?.webm?.asset && !video?.webmUrl) {
+        return "Upload a WebM video or provide its R2 URL.";
+      }
       if (video.autoplay && video.muted === false) {
         return "Autoplay video must be muted.";
       }

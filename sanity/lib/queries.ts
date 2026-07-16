@@ -330,8 +330,8 @@ export const BLOG_POST_QUERY = defineQuery(`
           }
         },
         _type == "blogVideo" => {
-          "webmUrl": webm.asset->url,
-          "mp4Url": mp4.asset->url,
+          "webmUrl": coalesce(webmUrl, webm.asset->url),
+          "mp4Url": coalesce(mp4Url, mp4.asset->url),
           "poster": poster{
             "asset": asset->{
               _id,
