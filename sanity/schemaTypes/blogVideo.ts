@@ -4,6 +4,7 @@ type BlogVideoValue = {
   autoplay?: boolean;
   muted?: boolean;
   webm?: { asset?: unknown };
+  webmUrl?: string;
 };
 
 export const blogVideo = defineType({

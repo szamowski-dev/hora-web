@@ -4,6 +4,7 @@ type SiteVideoValue = {
   autoplay?: boolean;
   muted?: boolean;
   webm?: { asset?: unknown };
+  webmUrl?: string;
 };
 
 export const siteVideo = defineType({
