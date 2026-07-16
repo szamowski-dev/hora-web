@@ -76,7 +76,7 @@ export const featuresPage = defineType({
             defineField({
               name: "screenshot",
               title: "Screenshot",
-              type: "siteImage",
+              type: "optionalSiteImage",
               description: "Optional. Some feature groups are text-only.",
             }),
             defineField({

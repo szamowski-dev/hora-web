@@ -17,6 +17,7 @@ import { legalPage } from "./legalPage";
 import { pageBody } from "./pageBody";
 import { pageSeo } from "./pageSeo";
 import { seo } from "./seo";
+import { optionalSiteImage } from "./optionalSiteImage";
 import { siteImage } from "./siteImage";
 import { siteVideo } from "./siteVideo";
 import { videoPoster } from "./videoPoster";
@@ -26,6 +27,7 @@ export const schemaTypes = [
   internalPostLink,
   internalPathLink,
   siteImage,
+  optionalSiteImage,
   videoPoster,
   siteVideo,
   pageSeo,
