@@ -50,6 +50,8 @@ export type SanityHomePageDocument = {
       alt?: string;
       width?: number;
       height?: number;
+      displayWidth?: number;
+      displayHeight?: number;
       variant?: string;
     }>;
   };
@@ -215,7 +217,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
     },
     featuredOn{
       label,
-      badges[]{_key, name, href, src, "image": image${siteImageProjection}, alt, width, height, variant}
+      badges[]{_key, name, href, src, "image": image${siteImageProjection}, alt, width, height, displayWidth, displayHeight, variant}
     },
     showcase{
       eyebrow,

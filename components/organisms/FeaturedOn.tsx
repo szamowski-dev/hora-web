@@ -47,10 +47,14 @@ export function FeaturedOn({
                     height={badge.height}
                     loading="lazy"
                     decoding="async"
+                    style={{
+                      width: badge.displayWidth,
+                      height: badge.displayHeight,
+                    }}
                     className={cn(
                       "block",
                       badge.variant === "productHunt"
-                        ? "h-11 w-[8.75rem] max-w-none object-fill md:h-16 md:w-[12.5rem]"
+                        ? "h-11 w-auto max-w-none object-contain md:h-16"
                         : "h-10 w-auto object-contain md:h-11",
                     )}
                   />

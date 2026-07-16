@@ -108,6 +108,14 @@ function requiredPositiveInteger(
   return value;
 }
 
+function optionalPositiveInteger(
+  value: number | undefined,
+  field: string,
+): number | undefined {
+  if (value === undefined) return undefined;
+  return requiredPositiveInteger(value, field);
+}
+
 function requiredArray<T>(
   value: T[] | undefined,
   field: string,
@@ -339,6 +347,14 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
             height:
               uploadedImage?.height ??
               requiredPositiveInteger(badge.height, `${field}.height`),
+            displayWidth: optionalPositiveInteger(
+              badge.displayWidth,
+              `${field}.displayWidth`,
+            ),
+            displayHeight: optionalPositiveInteger(
+              badge.displayHeight,
+              `${field}.displayHeight`,
+            ),
             variant:
               requiredMachineString(badge.variant, `${field}.variant`) ===
               "productHunt"

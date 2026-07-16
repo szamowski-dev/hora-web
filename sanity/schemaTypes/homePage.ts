@@ -222,6 +222,22 @@ export const homePage = defineType({
                     ),
                 }),
                 defineField({
+                  name: "displayWidth",
+                  title: "Display width",
+                  type: "number",
+                  description:
+                    "Optional rendered width in pixels. Leave empty to preserve the badge's natural proportions.",
+                  validation: (rule) => rule.integer().min(1).max(800),
+                }),
+                defineField({
+                  name: "displayHeight",
+                  title: "Display height",
+                  type: "number",
+                  description:
+                    "Optional rendered height in pixels. Leave empty to preserve the badge's natural proportions.",
+                  validation: (rule) => rule.integer().min(1).max(240),
+                }),
+                defineField({
                   name: "variant",
                   title: "Visual variant",
                   type: "string",

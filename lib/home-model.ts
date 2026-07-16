@@ -72,6 +72,8 @@ export type HomePageContent = {
       alt: string;
       width: number;
       height: number;
+      displayWidth?: number;
+      displayHeight?: number;
       variant: "productHunt" | "standard";
     }>;
   };
