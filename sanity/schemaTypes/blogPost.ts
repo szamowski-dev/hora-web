@@ -2,6 +2,7 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { ReadingMinutesInput } from "@/sanity/components/ReadingMinutesInput";
 
 type BlogPostDates = { publishedAt?: string };
+type BlogImageValue = { asset?: unknown };
 type TagReference = { _ref?: string };
 
 export const blogPost = defineType({
@@ -128,7 +129,14 @@ export const blogPost = defineType({
       name: "heroImage",
       title: "Hero image",
       type: "blogImage",
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule
+          .required()
+          .custom((value) =>
+            (value as BlogImageValue | undefined)?.asset
+              ? true
+              : "Choose or upload a hero image asset.",
+          ),
     }),
     defineField({
       name: "body",
