@@ -254,7 +254,7 @@ const nextConfig: NextConfig = {
           ...sharedSecurityHeaders,
           {
             key: "Content-Security-Policy",
-            value: "frame-ancestors 'self' https://*.sanity.io",
+            value: "frame-ancestors 'self' https://sanity.io https://*.sanity.io",
           },
         ],
       },
