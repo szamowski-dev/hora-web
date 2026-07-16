@@ -46,9 +46,9 @@ export const siteVideo = defineType({
     defineField({
       name: "poster",
       title: "Poster image",
-      type: "siteImage",
+      type: "videoPoster",
       description:
-        "Required for primary videos. Small muted loops may omit a poster.",
+        "Recommended for primary videos. Small muted loops may omit a poster.",
     }),
     defineField({
       name: "accessibilityLabel",

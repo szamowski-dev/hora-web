@@ -19,12 +19,14 @@ import { pageSeo } from "./pageSeo";
 import { seo } from "./seo";
 import { siteImage } from "./siteImage";
 import { siteVideo } from "./siteVideo";
+import { videoPoster } from "./videoPoster";
 
 export const schemaTypes = [
   externalLink,
   internalPostLink,
   internalPathLink,
   siteImage,
+  videoPoster,
   siteVideo,
   pageSeo,
   pageBody,
