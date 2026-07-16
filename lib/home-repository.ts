@@ -109,10 +109,10 @@ function requiredPositiveInteger(
 }
 
 function optionalPositiveInteger(
-  value: number | undefined,
+  value: number | null | undefined,
   field: string,
 ): number | undefined {
-  if (value === undefined) return undefined;
+  if (value == null) return undefined;
   return requiredPositiveInteger(value, field);
 }
 

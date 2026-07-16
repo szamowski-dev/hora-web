@@ -50,8 +50,8 @@ export type SanityHomePageDocument = {
       alt?: string;
       width?: number;
       height?: number;
-      displayWidth?: number;
-      displayHeight?: number;
+      displayWidth?: number | null;
+      displayHeight?: number | null;
       variant?: string;
     }>;
   };
