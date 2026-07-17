@@ -71,7 +71,6 @@ export type BlogPostSummary = {
   category: BlogCategory;
   tags: readonly BlogPostTag[];
   cover?: BlogImage;
-  featured: boolean;
   author: BlogAuthor;
   seo: BlogPostSeo;
 };

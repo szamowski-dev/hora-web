@@ -4,7 +4,7 @@ Project: `tbqxupiq` (`hora Calendar`)
 Dataset: `production`
 Embedded Studio: `/studio/`
 
-Sanity is the only source of truth for the homepage, features, about and legal pages, plus blog posts, categories, tags, authors, settings, and media. The repository contains the presentation layer, schemas, and a standalone MDX Zoom guide, but no duplicate Sanity content.
+Sanity is the only source of truth for the homepage, features, about and legal pages, plus blog posts, categories, tags, authors, and media. The repository contains the presentation layer, schemas, and a standalone MDX Zoom guide, but no duplicate Sanity content.
 
 ## Local environment
 
@@ -29,7 +29,7 @@ pnpm sanity:verify:blog
 pnpm sanity:verify:site
 ```
 
-The verifiers check the published dataset independently of any local content snapshot. The blog verifier validates required post fields, slugs, reading time, categories, the featured post, public document IDs, and every document and asset reference. The site verifier validates the singleton pages and their required content. They are safe to run after publishing content changes.
+The verifiers check the published dataset independently of any local content snapshot. The blog verifier validates required post fields, slugs, reading time, categories, latest-first ordering, public document IDs, and every document and asset reference. The site verifier validates the singleton pages and their required content. They are safe to run after publishing content changes.
 
 ## Legacy blog media
 
@@ -72,8 +72,7 @@ _type in [
   "blogPost",
   "blogCategory",
   "blogTag",
-  "author",
-  "blogSettings"
+  "author"
 ]
 ```
 

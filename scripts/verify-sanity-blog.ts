@@ -42,7 +42,6 @@ type Snapshot = {
   categories: Array<SlugDocument & { order?: number }>;
   tags: SlugDocument[];
   authors: Array<{ _id: string; name?: string; portrait?: ImageValue }>;
-  settings: { _id?: string; featuredPost?: Reference } | null;
 };
 
 type PublicCounts = {
@@ -50,7 +49,6 @@ type PublicCounts = {
   categories: number;
   tags: number;
   authors: number;
-  settings: number;
 };
 
 function fail(message: string): never {
@@ -109,8 +107,7 @@ async function publicCounts() {
     "posts": count(*[_type == "blogPost"]),
     "categories": count(*[_type == "blogCategory"]),
     "tags": count(*[_type == "blogTag"]),
-    "authors": count(*[_type == "author"]),
-    "settings": count(*[_type == "blogSettings"])
+    "authors": count(*[_type == "author"])
   }`;
   const url = new URL(
     `https://${projectId}.api.sanity.io/v${API_VERSION}/data/query/${dataset}`,
@@ -136,7 +133,7 @@ async function main() {
 
   const [snapshot, publicDocumentCounts] = await Promise.all([
     client.fetch<Snapshot>(`{
-      "posts": *[_type == "blogPost" && ${publishedFilter}] | order(publishedAt asc) {
+      "posts": *[_type == "blogPost" && ${publishedFilter}] | order(publishedAt desc) {
         _id,
         title,
         slug,
@@ -155,8 +152,7 @@ async function main() {
       },
       "categories": *[_type == "blogCategory" && ${publishedFilter}] {_id, title, slug, order},
       "tags": *[_type == "blogTag" && ${publishedFilter}] {_id, title, slug},
-      "authors": *[_type == "author" && ${publishedFilter}] {_id, name, portrait},
-      "settings": *[_id == "blogSettings"][0] {_id, featuredPost}
+      "authors": *[_type == "author" && ${publishedFilter}] {_id, name, portrait}
     }`),
     publicCounts(),
   ]);
@@ -168,20 +164,17 @@ async function main() {
   );
   expect(snapshot.tags.length > 0, "no published tags found");
   expect(snapshot.authors.length > 0, "no published authors found");
-  expect(snapshot.settings?._id === "blogSettings", "blogSettings singleton is missing");
 
   expect(publicDocumentCounts.posts === snapshot.posts.length, "anonymous post count differs from the published dataset");
   expect(publicDocumentCounts.categories === snapshot.categories.length, "anonymous category count differs from the published dataset");
   expect(publicDocumentCounts.tags === snapshot.tags.length, "anonymous tag count differs from the published dataset");
   expect(publicDocumentCounts.authors === snapshot.authors.length, "anonymous author count differs from the published dataset");
-  expect(publicDocumentCounts.settings === 1, "blogSettings is not publicly readable");
 
   const publicIds = [
     ...snapshot.posts.map((post) => post._id),
     ...snapshot.categories.map((category) => category._id),
     ...snapshot.tags.map((tag) => tag._id),
     ...snapshot.authors.map((author) => author._id),
-    snapshot.settings._id,
   ];
   expect(
     publicIds.every((id) => PUBLIC_ID_PATTERN.test(id)),
@@ -197,15 +190,12 @@ async function main() {
     JSON.stringify([...categorySlugs].sort()) === JSON.stringify(expectedCategorySlugs),
     "published categories differ from the supported blog navigation",
   );
-
-  const postIds = new Set(snapshot.posts.map((post) => post._id));
+  const publishedDates = snapshot.posts.map((post) => post.publishedAt ?? "");
   expect(
-    Boolean(snapshot.settings.featuredPost?._ref),
-    "blogSettings has no featured post",
-  );
-  expect(
-    postIds.has(snapshot.settings.featuredPost?._ref ?? ""),
-    "featured post reference does not resolve to a published post",
+    publishedDates.every(
+      (date, index) => index === 0 || publishedDates[index - 1] >= date,
+    ),
+    "published posts are not ordered latest first",
   );
 
   for (const post of snapshot.posts) {
@@ -272,7 +262,7 @@ async function main() {
     `${counts.get("blogImage") ?? 0} body images, ${counts.get("blogVideo") ?? 0} videos, ${counts.get("codeBlock") ?? 0} code blocks, ${counts.get("blogTable") ?? 0} tables, ${counts.get("blogFaq") ?? 0} FAQ blocks / ${faqItems} questions`,
   );
   console.log(`Resolved references: ${references.length}; missing: 0`);
-  console.log(`Featured: ${snapshot.settings.featuredPost?._ref}`);
+  console.log(`Latest: ${snapshot.posts[0]?.slug?.current ?? snapshot.posts[0]?._id}`);
 }
 
 main().catch((error) => {

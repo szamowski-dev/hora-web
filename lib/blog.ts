@@ -123,8 +123,7 @@ export function paginateEditorialPosts(
   page: number,
   pageSize = BLOG_PAGE_SIZE,
 ) {
-  const featured =
-    posts.find((post) => post.featured) ?? posts[0] ?? null;
+  const featured = posts[0] ?? null;
   const regularPosts = featured
     ? posts.filter((post) => post.slug !== featured.slug)
     : [...posts];

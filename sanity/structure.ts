@@ -9,7 +9,6 @@ const managedDocumentTypes = new Set([
   "blogCategory",
   "blogTag",
   "author",
-  "blogSettings",
 ]);
 
 const singletonDocumentTypes = new Set([
@@ -17,7 +16,6 @@ const singletonDocumentTypes = new Set([
   "featuresPage",
   "aboutPage",
   "legalPage",
-  "blogSettings",
 ]);
 
 const categories = [
@@ -43,7 +41,7 @@ export const structure: StructureResolver = (S) =>
           S.documentList()
             .title("Recently edited")
             .filter(
-              '_type in ["homePage", "featuresPage", "aboutPage", "legalPage", "blogPost", "blogCategory", "blogTag", "author", "blogSettings"]',
+              '_type in ["homePage", "featuresPage", "aboutPage", "legalPage", "blogPost", "blogCategory", "blogTag", "author"]',
             )
             .defaultOrdering([{ field: "_updatedAt", direction: "desc" }]),
         ),
@@ -129,15 +127,6 @@ export const structure: StructureResolver = (S) =>
         ),
       S.documentTypeListItem("blogTag").title("Tags"),
       S.documentTypeListItem("author").title("Authors"),
-      S.divider(),
-      S.listItem()
-        .title("Blog settings")
-        .child(
-          S.document()
-            .schemaType("blogSettings")
-            .documentId("blogSettings")
-            .title("Blog settings"),
-        ),
       ...S.documentTypeListItems().filter(
         (item) => !managedDocumentTypes.has(item.getId() ?? ""),
       ),

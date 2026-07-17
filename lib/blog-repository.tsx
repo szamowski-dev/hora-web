@@ -29,10 +29,6 @@ const BLOG_REVALIDATE_SECONDS = 600;
 
 export type BlogRepositoryOptions = SanityRepositoryOptions;
 
-function publishedDocumentId(value: string | undefined): string | undefined {
-  return value ? stegaClean(value).replace(/^drafts\./, "") : undefined;
-}
-
 function invalidPost(documentId: string | undefined, message: string): never {
   throw new Error(
     `Invalid published Sanity blog post ${documentId ?? "<unknown>"}: ${message}`,
@@ -117,10 +113,7 @@ function mapAuthor(
   };
 }
 
-function mapSummary(
-  document: SanityBlogPostSummaryDocument,
-  featuredPostId?: string,
-): BlogPostSummary {
+function mapSummary(document: SanityBlogPostSummaryDocument): BlogPostSummary {
   const documentId = document._id;
   const slug = requiredMachineString(document.slug, "slug", documentId);
   const title = requiredString(document.title, "title", documentId);
@@ -200,10 +193,6 @@ function mapSummary(
     },
     tags: uniqueTags,
     cover,
-    featured: Boolean(
-      publishedDocumentId(documentId) &&
-        publishedDocumentId(documentId) === publishedDocumentId(featuredPostId),
-    ),
     author: mapAuthor(document, documentId),
     seo: {
       title: document.seo?.metaTitle?.trim() || title,
@@ -216,11 +205,8 @@ function mapSummary(
   };
 }
 
-function mapDetail(
-  document: SanityBlogPostDocument,
-  featuredPostId?: string,
-): BlogPostDetail {
-  const summary = mapSummary(document, featuredPostId);
+function mapDetail(document: SanityBlogPostDocument): BlogPostDetail {
+  const summary = mapSummary(document);
   const documentId = document._id;
 
   if (!document.body?.length) {
@@ -266,14 +252,12 @@ const getAllBlogPostsCached = cache(
           {
             next: {
               revalidate: BLOG_REVALIDATE_SECONDS,
-              tags: ["blog-posts", "blog-settings"],
+              tags: ["blog-posts"],
             },
           },
         );
 
-    return (result.posts ?? []).map((post) =>
-      mapSummary(post, result.featuredPostId),
-    );
+    return (result.posts ?? []).map(mapSummary);
   },
 );
 
@@ -299,18 +283,12 @@ const getBlogPostBySlugCached = cache(
           {
             next: {
               revalidate: BLOG_REVALIDATE_SECONDS,
-              tags: [
-                "blog-posts",
-                "blog-settings",
-                `blog-post:${normalizedSlug}`,
-              ],
+              tags: ["blog-posts", `blog-post:${normalizedSlug}`],
             },
           },
         );
 
-    return result.post
-      ? mapDetail(result.post, result.featuredPostId)
-      : null;
+    return result.post ? mapDetail(result.post) : null;
   },
 );
 

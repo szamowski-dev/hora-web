@@ -22,10 +22,6 @@ const mainDocuments = defineDocuments([
     filter: `_type == "legalPage" && kind == "terms"`,
   },
   {
-    route: "/blog/",
-    type: "blogSettings",
-  },
-  {
     route: "/blog/category/:slug",
     filter: `_type == "blogCategory" && slug.current == $slug`,
     params: ({ params }) => ({ slug: params.slug }),
@@ -106,9 +102,6 @@ const locations = {
         { title: "Blog", href: "/blog/" },
       ],
     }),
-  }),
-  blogSettings: defineLocations({
-    locations: [{ title: "Blog", href: "/blog/" }],
   }),
 };
 

@@ -155,18 +155,15 @@ export type SanityBlogPostDocument = SanityBlogPostSummaryDocument & {
 };
 
 export type BlogPostsQueryResult = {
-  featuredPostId?: string;
   posts?: SanityBlogPostSummaryDocument[];
 };
 
 export type BlogPostQueryResult = {
-  featuredPostId?: string;
   post?: SanityBlogPostDocument | null;
 };
 
 export const BLOG_POSTS_QUERY = defineQuery(`
   {
-    "featuredPostId": *[_type == "blogSettings"][0].featuredPost._ref,
     "posts": *[
       _type == "blogPost" &&
       defined(slug.current) &&
@@ -235,7 +232,6 @@ export const BLOG_POSTS_QUERY = defineQuery(`
 
 export const BLOG_POST_QUERY = defineQuery(`
   {
-    "featuredPostId": *[_type == "blogSettings"][0].featuredPost._ref,
     "post": *[
       _type == "blogPost" &&
       slug.current == $slug &&

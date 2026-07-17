@@ -17,7 +17,6 @@ import { structure } from "./sanity/structure";
 import { StudioIcon } from "./sanity/StudioIcon";
 
 const singletonTypes = new Set([
-  "blogSettings",
   "homePage",
   "featuresPage",
   "aboutPage",

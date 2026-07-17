@@ -55,7 +55,6 @@ function collectRevalidation(body: SanityWebhookBody) {
     }
     case "blogPost":
       tags.add("blog-posts");
-      tags.add("blog-settings");
       tags.add("site-page:home");
       if (slug) tags.add(`blog-post:${slug}`);
       paths.add("/blog/");
@@ -69,10 +68,6 @@ function collectRevalidation(body: SanityWebhookBody) {
       paths.add("/blog/");
       paths.add("/blog/feed.xml");
       paths.add("/sitemap.xml");
-      break;
-    case "blogSettings":
-      tags.add("blog-settings");
-      paths.add("/blog/");
       break;
     case "author":
       tags.add("blog-posts");

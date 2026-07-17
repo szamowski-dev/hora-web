@@ -5,7 +5,6 @@ import { blogCategory } from "./blogCategory";
 import { blogFaq, blogFaqItem } from "./blogFaq";
 import { blogImage } from "./blogImage";
 import { blogPost } from "./blogPost";
-import { blogSettings } from "./blogSettings";
 import { blogTable, blogTableCell, blogTableRow } from "./blogTable";
 import { blogTag } from "./blogTag";
 import { blogVideo } from "./blogVideo";
@@ -46,7 +45,6 @@ export const schemaTypes = [
   blogCategory,
   blogTag,
   blogPost,
-  blogSettings,
   homePage,
   featuresPage,
   aboutPage,
