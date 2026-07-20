@@ -8,7 +8,7 @@ import { Footer } from "@/components/organisms/Footer";
 import { AmbientGlow } from "@/components/organisms/AmbientGlow";
 import { LayoutEnhancements } from "@/components/molecules/LayoutEnhancements";
 import { DraftModeTools } from "@/components/sanity/DraftModeTools";
-import { REDDIT_PIXEL_ID } from "@/lib/analytics";
+import { GA_MEASUREMENT_ID, REDDIT_PIXEL_ID } from "@/lib/analytics";
 import "./globals.css";
 
 const geist = Geist({
@@ -94,7 +94,6 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const GA_MEASUREMENT_ID = "G-WQZ32S81FX";
 const GOOGLE_ADS_ID = "AW-18070613857";
 
 export default async function RootLayout({
@@ -109,7 +108,6 @@ export default async function RootLayout({
       className={`${geist.variable} ${newsreader.variable} ${bumbbled.variable}`}
     >
       <head>
-        <link rel="dns-prefetch" href="https://plausible.io" />
         <link rel="dns-prefetch" href="https://consent.cookiebot.com" />
         <link rel="dns-prefetch" href="https://consentcdn.cookiebot.com" />
       </head>
@@ -175,27 +173,20 @@ export default async function RootLayout({
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="lazyOnload"
+          data-cookieconsent="ignore"
         />
-        <Script id="gads-init" strategy="lazyOnload">
+        <Script
+          id="gads-init"
+          strategy="lazyOnload"
+          data-cookieconsent="ignore"
+        >
           {`
             window.dataLayer = window.dataLayer || [];
             window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
             window.gtag('js', new Date());
-            window.gtag('config', '${GA_MEASUREMENT_ID}');
+            window.gtag('config', '${GA_MEASUREMENT_ID}', { send_page_view: false });
             window.gtag('config', '${GOOGLE_ADS_ID}');
           `}
-        </Script>
-
-        {/* Privacy-friendly analytics by Plausible. The init shim queues any
-            track() calls that fire before the async script finishes loading, so
-            early click events are never dropped. */}
-        <Script
-          id="plausible"
-          src="https://plausible.io/js/pa-wsB6_ypdQmpn7Lf06SUrR.js"
-          strategy="lazyOnload"
-        />
-        <Script id="plausible-init" strategy="afterInteractive">
-          {`window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()`}
         </Script>
 
         <Script id="reddit-pixel" strategy="lazyOnload">

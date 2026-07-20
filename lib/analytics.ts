@@ -2,29 +2,33 @@ import { isTestEmail, normalizeEmail } from "@/lib/identity";
 
 declare global {
   interface Window {
-    plausible?: (
-      event: string,
-      options?: { props?: Record<string, string | number | boolean> },
-    ) => void;
     gtag?: (...args: unknown[]) => void;
     rdt?: (...args: unknown[]) => void;
   }
 }
 
 export const REDDIT_PIXEL_ID = "a2_j1933bxzyyfr";
+export const GA_MEASUREMENT_ID = "G-WQZ32S81FX";
 
 export type EventProps = Record<string, string | number | boolean>;
 
 export function track(event: string, props?: EventProps) {
   if (typeof window === "undefined") return;
   // Guard with typeof, not optional chain: privacy extensions (Brave shields,
-  // uBlock, AdGuard) stub window.plausible / window.gtag as a non-callable
-  // object, which `?.()` does not protect against. SZA-236.
-  if (typeof window.plausible === "function") {
-    window.plausible(event, props ? { props } : undefined);
-  }
+  // uBlock, AdGuard) can stub window.gtag as a non-callable object.
   if (typeof window.gtag === "function") {
     window.gtag("event", event, props);
+  }
+}
+
+export function trackPageView(pagePath: string) {
+  if (typeof window === "undefined") return;
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "page_view", {
+      page_location: window.location.href,
+      page_path: pagePath,
+      page_title: document.title,
+    });
   }
 }
 
@@ -77,8 +81,8 @@ export function redditTrack(event: string, props?: EventProps) {
 
 // First-touch attribution — persisted across sessions in localStorage so that a
 // signup three days / two visits later still knows where the user originally
-// came from. Plausible is cookieless and keeps no cross-session person profile,
-// so we attach this data directly to conversion events for funnels/breakdowns.
+// came from. We attach it directly to conversion events for GA4 funnels and
+// breakdowns.
 
 const FIRST_TOUCH_KEY = "hora_first_touch_v1";
 
