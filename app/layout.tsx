@@ -162,7 +162,7 @@ export default async function RootLayout({
         <main
           id="main-content"
           tabIndex={-1}
-          className="flex-1 pt-[70px] max-md:[&>:first-child]:-mt-[70px] max-md:[&>:first-child]:pt-[134px] max-md:[&>[data-nav-underlay=flush]]:pt-[70px] md:pt-0"
+          className="flex-1 pt-[70px] max-md:[&>:first-child]:-mt-[70px] max-md:[&>:first-child]:pt-[134px] max-md:[&>[data-nav-underlay=flush]]:pt-[70px] max-md:[&>[data-nav-underlay=cover]]:pt-0 md:pt-0"
         >
           {children}
         </main>

@@ -23,7 +23,7 @@ export function BlogPostLayout({
 }) {
   return (
     <>
-      <article data-nav-underlay="flush" className="pb-16 md:pb-20">
+      <article data-nav-underlay="cover" className="pb-16 md:pb-20">
         <section className="home-section relative overflow-hidden border-y pb-10 pt-16 md:pb-12 md:pt-24">
           <SectionBackdrop direction="balanced" />
 
