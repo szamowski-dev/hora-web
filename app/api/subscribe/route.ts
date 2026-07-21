@@ -7,7 +7,15 @@ import { normalizeEmail } from "@/lib/identity";
 
 export const runtime = "nodejs";
 
-const bodySchema = z.object({ email: z.string().email().max(254) });
+const bodySchema = z.object({
+  email: z.string().email().max(254),
+  ga4MeasurementContext: z
+    .object({
+      clientId: z.string().min(1).max(200),
+      sessionId: z.string().regex(/^\d+$/).max(20).optional(),
+    })
+    .optional(),
+});
 const RESEND_WAITLIST_EVENT = "hora Calendar Waitlist";
 
 const ALLOWED_ORIGINS = new Set([
@@ -105,21 +113,28 @@ export async function POST(req: NextRequest) {
   }
 
   after(async () => {
-    const ga = process.env.GA_MEASUREMENT_ID;
+    const measurementId = process.env.GA_MEASUREMENT_ID;
     const secret = process.env.GA_API_SECRET;
-    if (ga && secret) {
+    const ga4MeasurementContext = parsed.data.ga4MeasurementContext;
+    if (measurementId && secret && ga4MeasurementContext) {
       try {
         await fetch(
-          `https://www.google-analytics.com/mp/collect?measurement_id=${ga}&api_secret=${secret}`,
+          `https://www.google-analytics.com/mp/collect?measurement_id=${measurementId}&api_secret=${secret}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              client_id: email,
+              client_id: ga4MeasurementContext.clientId,
               events: [
                 {
                   name: "newsletter_signup_completed",
-                  params: { method: "server_side" },
+                  params: {
+                    method: "server_side",
+                    engagement_time_msec: 100,
+                    ...(ga4MeasurementContext.sessionId
+                      ? { session_id: ga4MeasurementContext.sessionId }
+                      : {}),
+                  },
                 },
               ],
             }),

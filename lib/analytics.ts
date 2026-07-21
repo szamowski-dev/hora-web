@@ -12,6 +12,11 @@ export const GA_MEASUREMENT_ID = "G-WQZ32S81FX";
 
 export type EventProps = Record<string, string | number | boolean>;
 
+export type Ga4MeasurementContext = {
+  clientId: string;
+  sessionId?: string;
+};
+
 export function track(event: string, props?: EventProps) {
   if (typeof window === "undefined") return;
   // Guard with typeof, not optional chain: privacy extensions (Brave shields,
@@ -30,6 +35,45 @@ export function trackPageView(pagePath: string) {
       page_title: document.title,
     });
   }
+}
+
+function getGtagField(field: "client_id" | "session_id"): Promise<string | undefined> {
+  const gtag = typeof window === "undefined" ? undefined : window.gtag;
+  if (typeof gtag !== "function") {
+    return Promise.resolve(undefined);
+  }
+
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (value?: unknown) => {
+      if (settled) return;
+      settled = true;
+      resolve(typeof value === "string" && value.length > 0 ? value : undefined);
+    };
+
+    window.setTimeout(() => finish(), 750);
+    try {
+      gtag("get", GA_MEASUREMENT_ID, field, finish);
+    } catch {
+      finish();
+    }
+  });
+}
+
+// The Measurement Protocol event is sent from our server after a successful
+// subscription. Keep it joined to the browser session instead of substituting
+// an email address or another application identifier.
+export async function getGa4MeasurementContext(): Promise<Ga4MeasurementContext | null> {
+  const [clientId, sessionId] = await Promise.all([
+    getGtagField("client_id"),
+    getGtagField("session_id"),
+  ]);
+
+  if (!clientId) return null;
+  return {
+    clientId,
+    ...(sessionId && /^\d+$/.test(sessionId) ? { sessionId } : {}),
+  };
 }
 
 export const CONVERSION_TAGS = {

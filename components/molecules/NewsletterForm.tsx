@@ -8,6 +8,7 @@ import { site } from "@/content/site";
 import { home } from "@/content/home";
 import {
   CONVERSION_TAGS,
+  getGa4MeasurementContext,
   getAttribution,
   redditIdentify,
   redditTrack,
@@ -50,10 +51,16 @@ export function NewsletterForm({
     track("newsletter_submit", { method: "email", placement, ...attribution });
 
     try {
+      const ga4MeasurementContext = await getGa4MeasurementContext();
       const res = await fetch(site.newsletter.endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: normalizedEmail }),
+        body: JSON.stringify({
+          email: normalizedEmail,
+          ...(ga4MeasurementContext
+            ? { ga4MeasurementContext }
+            : {}),
+        }),
       });
       if (!res.ok) throw new Error("Request failed");
       setStatus("success");
