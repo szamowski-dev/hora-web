@@ -29,6 +29,30 @@ export const site = {
   },
   footer: {
     copyright: "© 2026 hora Calendar",
+    productLinks: [
+      { label: "Features", href: "/features/" },
+      { label: "Pricing", href: "/#pricing" },
+      { label: "Roadmap", href: "/#roadmap" },
+      { label: "Download", href: "/download/" },
+    ],
+    popularGuides: [
+      {
+        label: "Google Calendar for Mac",
+        href: "/blog/2026-07-09-google-calendar-desktop-app-mac/",
+      },
+      {
+        label: "Time blocking apps for Mac",
+        href: "/blog/2026-05-13-time-blocking-app-mac-2026/",
+      },
+      {
+        label: "Notion Calendar alternatives",
+        href: "/blog/notion-calendar-alternative/",
+      },
+      {
+        label: "Fantastical alternatives",
+        href: "/blog/2026-05-06-fantastical-alternative-google-calendar/",
+      },
+    ],
     links: [
       { label: "About", href: "/about/" },
       { label: "Support", href: "/support/" },

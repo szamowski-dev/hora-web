@@ -14,10 +14,12 @@ export function FooterSocialLink({
   href,
   label,
   icon,
+  showLabel = false,
 }: {
   href: string;
   label: string;
   icon: IconName;
+  showLabel?: boolean;
 }) {
   const external = href.startsWith("http");
   return (
@@ -29,9 +31,14 @@ export function FooterSocialLink({
       {...analyticsAttrs("social_click", {
         platform: platformFromHref(href),
       })}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-md text-muted transition-colors hover:bg-white/4.5 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+      className={
+        showLabel
+          ? "inline-flex min-h-11 items-center gap-2 text-sm text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:text-accent"
+          : "inline-flex h-11 w-11 items-center justify-center rounded-md text-muted transition-colors hover:bg-white/4.5 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+      }
     >
       <Icon name={icon} size={18} />
+      {showLabel ? <span>{label}</span> : null}
     </a>
   );
 }

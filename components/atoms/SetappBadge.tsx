@@ -16,6 +16,7 @@ export function SetappBadge() {
     badge.setAttribute("vendorId", "1584");
     badge.setAttribute("theme", "dark");
     badge.setAttribute("height", "44");
+    badge.style.display = "block";
     container.replaceChildren(badge);
 
     if (
@@ -32,5 +33,11 @@ export function SetappBadge() {
     return () => container.replaceChildren();
   }, []);
 
-  return <div ref={containerRef} aria-label="Available on Setapp" />;
+  return (
+    <div
+      ref={containerRef}
+      aria-label="Available on Setapp"
+      className="flex h-11 items-center leading-none"
+    />
+  );
 }

@@ -112,12 +112,6 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="https://consentcdn.cookiebot.com" />
       </head>
       <body className="min-h-dvh flex flex-col text-text">
-        <a
-          href="#main-content"
-          className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-md bg-text px-4 py-3 text-sm font-semibold text-bg shadow-xl transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg motion-reduce:transition-none"
-        >
-          Skip to content
-        </a>
         <Script
           id="gads-consent"
           strategy="beforeInteractive"
