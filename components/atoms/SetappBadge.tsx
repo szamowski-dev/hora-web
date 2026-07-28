@@ -15,6 +15,7 @@ export function SetappBadge() {
     badge.setAttribute("appId", "1977");
     badge.setAttribute("vendorId", "1584");
     badge.setAttribute("theme", "dark");
+    badge.setAttribute("height", "44");
     container.replaceChildren(badge);
 
     if (
