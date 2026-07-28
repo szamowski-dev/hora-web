@@ -894,6 +894,14 @@ export const homePage = defineType({
             "The attributed App Store URL remains controlled by the application.",
           validation: (rule) => rule.required().min(5).max(100).custom(trimmed),
         }),
+        defineField({
+          name: "showSetappBadge",
+          title: "Show Setapp badge",
+          type: "boolean",
+          initialValue: false,
+          description:
+            "Shows the Setapp badge beside the Mac App Store button. Keep disabled until the Setapp launch is ready.",
+        }),
       ],
       validation: (rule) => rule.required(),
     }),

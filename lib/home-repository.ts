@@ -571,6 +571,7 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
         pricing.appStoreLabel,
         "pricing.appStoreLabel",
       ),
+      showSetappBadge: pricing.showSetappBadge === true,
     },
     roadmap: {
       eyebrow: requiredString(roadmap.eyebrow, "roadmap.eyebrow"),

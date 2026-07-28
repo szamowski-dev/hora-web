@@ -157,6 +157,7 @@ export type HomePageContent = {
     comparisonCtaLabel: string;
     comparisonCtaHref: string;
     appStoreLabel: string;
+    showSetappBadge: boolean;
   };
   roadmap: {
     eyebrow: string;

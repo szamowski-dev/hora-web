@@ -56,7 +56,10 @@ function collectRevalidation(body: SanityWebhookBody) {
     case "blogPost":
       tags.add("blog-posts");
       tags.add("site-page:home");
-      if (slug) tags.add(`blog-post:${slug}`);
+      if (slug) {
+        tags.add(`blog-post:${slug}`);
+        paths.add(`/blog/${slug}/`);
+      }
       paths.add("/blog/");
       paths.add("/");
       paths.add("/blog/feed.xml");

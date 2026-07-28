@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
+import { SetappBadge } from "@/components/atoms/SetappBadge";
 import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
@@ -165,6 +166,7 @@ export function PricingSection({
                   className="h-11 w-auto"
                 />
               </AppStoreLink>
+              {content.showSetappBadge ? <SetappBadge /> : null}
             </div>
           </div>
         </div>

@@ -140,6 +140,7 @@ export type SanityHomePageDocument = {
     comparisonCtaLabel?: string;
     comparisonCtaSlug?: string;
     appStoreLabel?: string;
+    showSetappBadge?: boolean;
   };
   roadmap?: {
     eyebrow?: string;
@@ -293,7 +294,8 @@ export const HOME_PAGE_QUERY = defineQuery(`
       },
       comparisonCtaLabel,
       "comparisonCtaSlug": comparisonCtaPost->slug.current,
-      appStoreLabel
+      appStoreLabel,
+      showSetappBadge
     },
     roadmap{
       eyebrow,
