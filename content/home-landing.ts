@@ -84,6 +84,13 @@ export const defaultProductLanding = {
         description: "Keep your schedule visible across macOS.",
       },
       {
+        icon: "availability",
+        tone: "purple",
+        title: "Shared availability",
+        description:
+          "Share useful openings while protecting the privacy of your calendar.",
+      },
+      {
         icon: "timer",
         tone: "red",
         title: "Pomodoro",
@@ -211,11 +218,11 @@ export const defaultProductLanding = {
         description: "Join Meet, Zoom, and Teams in one click.",
       },
       {
-        icon: "availability",
+        icon: "offline",
         tone: "purple",
-        title: "Shared availability",
+        title: "Works offline",
         description:
-          "Works offline.\nShare useful openings while protecting your privacy.",
+          "View and manage your calendar without an internet connection.",
       },
     ],
   },

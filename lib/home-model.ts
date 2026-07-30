@@ -56,6 +56,7 @@ export type ProductLandingIcon =
   | "focus-time"
   | "availability"
   | "widgets"
+  | "offline"
   | "sync"
   | "key"
   | "storage"
