@@ -4,8 +4,8 @@ export const defaultProductLanding = {
   hero: {
     title: "The Mac Calendar Google never built.",
     description:
-      "A fast, native calendar for people who live in Google Calendar. Plan, join, and protect focus time without opening another browser tab.",
-    primaryCtaLabel: "Download free trial",
+      "A fast, native calendar for people who live in Google Calendar.\nPlan, join, and protect focus time without opening another browser tab.",
+    primaryCtaLabel: "Download",
     watchVideoLabel: "Watch video",
     homebrewCommand: "brew install --cask hora",
     requirement: "Requires macOS 26 or newer.",
@@ -55,63 +55,40 @@ export const defaultProductLanding = {
         tone: "purple",
         title: "Google Calendar search",
         description:
-          "Find events, people, and details instantly across your calendars.",
-      },
-      {
-        icon: "invitation",
-        tone: "red",
-        title: "Invitations",
-        description:
-          "Create, edit, and respond to invitations without leaving hora.",
+          "Search events, people, and details directly in Google Calendar, not only in hora's local database.",
       },
     ],
   },
   hora: {
     title: "Fast and natural event creation.",
     description:
-      "Create events the way you think, add the right meeting link, and keep the next action close.",
+      "Create events the way you think, create online meetings, and keep the next action close.",
     features: [
       {
         icon: "video-call",
         tone: "blue",
         title: "Zoom and Microsoft Teams",
-        description:
-          "Create and join meetings without hunting for the right link.",
+        description: "Create and join meetings without separate apps.",
       },
       {
         icon: "focus-time",
         tone: "yellow",
         title: "Focus-time scheduler",
         description:
-          "Protect deep-work blocks and move them when the day changes.",
+          "Easily create multiple Focus Time blocks across a busy week.",
       },
       {
-        icon: "availability",
+        icon: "widgets",
         tone: "green",
-        title: "Shared availability",
-        description:
-          "Share the times that work without exposing the rest of your calendar.",
-      },
-      {
-        icon: "menu-bar",
-        tone: "blue",
-        title: "Menu bar",
-        description:
-          "See the next event, join a call, and start a timer from anywhere.",
+        title: "Widgets",
+        description: "Keep your schedule visible across macOS.",
       },
       {
         icon: "timer",
         tone: "red",
         title: "Pomodoro",
         description:
-          "Turn calendar focus blocks into practical work sessions.",
-      },
-      {
-        icon: "auto-awesome",
-        tone: "purple",
-        title: "Apple Intelligence",
-        description:
-          "Create events and summarize long notes with on-device intelligence.",
+          "Track your focus sessions and breaks within your calendar.",
       },
     ],
   },
@@ -172,14 +149,15 @@ export const defaultProductLanding = {
       {
         icon: "dark-mode",
         tone: "purple",
-        title: "Dark mode",
+        title: "Themes & Dark mode",
         description: "Matches your system appearance automatically.",
       },
       {
-        icon: "keyboard",
-        tone: "blue",
-        title: "Keyboard shortcuts",
-        description: "Navigate and create without reaching for the mouse.",
+        icon: "auto-awesome",
+        tone: "purple",
+        title: "Apple Intelligence",
+        description:
+          "Create events and summarize long notes with on-device intelligence.",
       },
     ],
   },
@@ -192,19 +170,13 @@ export const defaultProductLanding = {
         icon: "view",
         tone: "blue",
         title: "Multiple views",
-        description: "Move between focused and long-range planning.",
-      },
-      {
-        icon: "drag",
-        tone: "red",
-        title: "Drag and drop",
-        description: "Reschedule events directly on the timeline.",
+        description: "Switch between 1-day, 5-day, 7-day, and month views.",
       },
       {
         icon: "quick-add",
         tone: "purple",
         title: "NLP event creation",
-        description: "Type the event the way you would say it.",
+        description: "Create events naturally in many supported languages.",
       },
       {
         icon: "time-zone",
@@ -213,22 +185,18 @@ export const defaultProductLanding = {
         description: "Plan with teammates wherever they work.",
       },
       {
-        icon: "repeat",
-        tone: "blue",
-        title: "Recurring events",
-        description: "Edit one occurrence or the whole series.",
-      },
-      {
         icon: "location",
         tone: "green",
         title: "Working location",
-        description: "Show where you will be working.",
+        description:
+          "Show where you will be working through Google Workspace integration.",
       },
       {
         icon: "out-of-office",
         tone: "red",
         title: "Out of office",
-        description: "Protect time away and decline meetings automatically.",
+        description:
+          "Protect time away and decline meetings automatically, just like in Google Calendar on the web.",
       },
       {
         icon: "focus-time",
@@ -239,14 +207,15 @@ export const defaultProductLanding = {
       {
         icon: "video-call",
         tone: "blue",
-        title: "Meeting links",
+        title: "Online Meetings",
         description: "Join Meet, Zoom, and Teams in one click.",
       },
       {
         icon: "availability",
         tone: "purple",
         title: "Shared availability",
-        description: "Send useful openings without a scheduling thread.",
+        description:
+          "Works offline.\nShare useful openings while protecting your privacy.",
       },
     ],
   },

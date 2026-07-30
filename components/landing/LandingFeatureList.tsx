@@ -1,23 +1,22 @@
 import type { IconType } from "react-icons";
 import {
   MdAccountCircle,
-  MdAddCircleOutline,
   MdApps,
   MdAutoAwesome,
   MdBeachAccess,
+  MdBrightness6,
   MdCalendarMonth,
   MdCenterFocusStrong,
   MdContacts,
-  MdDarkMode,
   MdDragIndicator,
   MdEvent,
   MdKey,
   MdKeyboard,
+  MdLanguage,
   MdLabelOutline,
-  MdLocationOn,
+  MdMapsHomeWork,
   MdMarkEmailUnread,
   MdMemory,
-  MdMoreHoriz,
   MdNotificationsNone,
   MdPublic,
   MdRepeat,
@@ -29,6 +28,8 @@ import {
   MdChecklist,
   MdVideoCall,
   MdViewWeek,
+  MdWebAsset,
+  MdWidgets,
   MdWindow,
 } from "react-icons/md";
 import type {
@@ -46,12 +47,13 @@ const icons: Record<ProductLandingIcon, IconType> = {
   accounts: MdAccountCircle,
   search: MdSearch,
   invitation: MdMarkEmailUnread,
-  "menu-bar": MdMoreHoriz,
+  "menu-bar": MdWebAsset,
   timer: MdTimer,
   "auto-awesome": MdAutoAwesome,
   tasks: MdChecklist,
   "focus-time": MdCenterFocusStrong,
   availability: MdCalendarMonth,
+  widgets: MdWidgets,
   sync: MdSync,
   key: MdKey,
   storage: MdStorage,
@@ -60,14 +62,14 @@ const icons: Record<ProductLandingIcon, IconType> = {
   dock: MdApps,
   keyboard: MdKeyboard,
   windows: MdWindow,
-  "dark-mode": MdDarkMode,
+  "dark-mode": MdBrightness6,
   "apple-silicon": MdMemory,
   view: MdViewWeek,
   drag: MdDragIndicator,
-  "quick-add": MdAddCircleOutline,
+  "quick-add": MdLanguage,
   "time-zone": MdPublic,
   repeat: MdRepeat,
-  location: MdLocationOn,
+  location: MdMapsHomeWork,
   "out-of-office": MdBeachAccess,
 };
 
@@ -143,7 +145,7 @@ export function LandingFeatureList({
                 className={cn(
                   "font-semibold tracking-tight text-text",
                   titleOnly
-                    ? "text-[1.35rem] sm:text-[1.4rem]"
+                    ? "flex min-h-9 items-center text-[1.35rem] leading-none sm:text-[1.4rem]"
                     : prominent
                       ? "text-base sm:text-[1.2rem]"
                       : "text-base",

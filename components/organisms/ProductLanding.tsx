@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MdDownload,
+  MdDownloadForOffline,
   MdOutlineSecurity,
 } from "react-icons/md";
 import { LandingFeatureList } from "@/components/landing/LandingFeatureList";
@@ -69,7 +69,7 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
           <h1 className="max-w-4xl text-balance text-5xl font-semibold tracking-[-0.055em] text-text sm:text-7xl md:text-[5.5rem] md:leading-[0.98]">
             {landing.hero.title}
           </h1>
-          <p className="mt-7 max-w-2xl text-balance text-lg leading-8 text-muted sm:text-xl">
+          <p className="mt-7 max-w-2xl whitespace-pre-line text-balance text-lg leading-8 text-muted sm:text-xl">
             {landing.hero.description}
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -81,7 +81,10 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
                   link_url: "/download/",
                 })}
               >
-                <MdDownload data-icon="inline-start" aria-hidden="true" />
+                <MdDownloadForOffline
+                  data-icon="inline-start"
+                  aria-hidden="true"
+                />
                 {landing.hero.primaryCtaLabel}
               </Link>
             </Button>
@@ -116,12 +119,12 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
 
       <section className="px-5 py-16 sm:px-10 sm:py-24">
         <Card className="mx-auto max-w-landing items-center gap-7 px-5 py-12 text-center sm:px-10 sm:py-16">
-          <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-white">
+          <div className="flex size-16 shrink-0 items-center justify-center">
             <Image
-              src="/assets/integrations/google-calendar.svg"
+              src="/assets/integrations/google-calendar-material.svg"
               alt=""
-              width={42}
-              height={42}
+              width={64}
+              height={64}
               aria-hidden="true"
             />
           </div>

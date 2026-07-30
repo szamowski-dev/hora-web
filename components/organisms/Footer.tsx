@@ -14,8 +14,8 @@ export function Footer() {
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.45fr_0.8fr_1.25fr_0.8fr] lg:gap-12">
           <div className="flex max-w-xs flex-col items-start gap-5">
             <Logo className="min-h-11" />
-            <p className="text-sm leading-6 text-muted">
-              A fast, native Google Calendar app built for the Mac.
+            <p className="whitespace-pre-line text-sm leading-6 text-muted">
+              {site.footer.description}
             </p>
             <p className="text-sm leading-6 text-muted">
               {site.footer.copyright}

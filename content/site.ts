@@ -13,7 +13,7 @@ export const site = {
   ],
   cta: {
     trial: {
-      label: "Download free trial",
+      label: "Download",
       href: "/download/",
     },
     primary: {
@@ -30,6 +30,8 @@ export const site = {
     },
   },
   footer: {
+    description:
+      "A fast, native Google Calendar app\nbuilt for the Mac.",
     copyright: "© 2026 hora Calendar",
     productLinks: [
       { label: "Features", href: "/#features" },

@@ -70,6 +70,7 @@ const productLandingIcons = new Set<ProductLandingIcon>([
   "tasks",
   "focus-time",
   "availability",
+  "widgets",
   "sync",
   "key",
   "storage",

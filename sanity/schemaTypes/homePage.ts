@@ -48,6 +48,7 @@ const productLandingIconOptions = [
   { title: "Tasks", value: "tasks" },
   { title: "Focus time", value: "focus-time" },
   { title: "Availability", value: "availability" },
+  { title: "Widgets", value: "widgets" },
   { title: "Sync", value: "sync" },
   { title: "Keychain", value: "key" },
   { title: "Storage", value: "storage" },
