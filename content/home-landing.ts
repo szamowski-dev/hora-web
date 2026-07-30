@@ -7,6 +7,7 @@ export const defaultProductLanding = {
       "A fast, native calendar for people who live in Google Calendar. Plan, join, and protect focus time without opening another browser tab.",
     primaryCtaLabel: "Download free trial",
     watchVideoLabel: "Watch video",
+    homebrewCommand: "brew install --cask hora",
     requirement: "Requires macOS 26 or newer.",
   },
   api: {
@@ -64,6 +65,10 @@ export const defaultProductLanding = {
           "Create, edit, and respond to invitations without leaving hora.",
       },
     ],
+  },
+  eventCreation: {
+    title: "Fast and natural event creation",
+    imagePlaceholderLabel: "Event creation product image placeholder",
   },
   hora: {
     title: "More than a calendar window.",

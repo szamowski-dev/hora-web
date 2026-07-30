@@ -304,6 +304,10 @@ function mapProductLanding(
         value?.hero?.watchVideoLabel,
         fallback.hero.watchVideoLabel,
       ),
+      homebrewCommand: landingString(
+        value?.hero?.homebrewCommand,
+        fallback.hero.homebrewCommand,
+      ),
       requirement: landingString(
         value?.hero?.requirement,
         fallback.hero.requirement,
@@ -334,6 +338,16 @@ function mapProductLanding(
         value?.googleCalendar?.secondaryFeatures,
         fallback.googleCalendar.secondaryFeatures,
         "productLanding.googleCalendar.secondaryFeatures",
+      ),
+    },
+    eventCreation: {
+      title: landingString(
+        value?.eventCreation?.title,
+        fallback.eventCreation.title,
+      ),
+      imagePlaceholderLabel: landingString(
+        value?.eventCreation?.imagePlaceholderLabel,
+        fallback.eventCreation.imagePlaceholderLabel,
       ),
     },
     hora: {

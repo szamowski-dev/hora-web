@@ -11,6 +11,10 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-text text-bg shadow-[0_12px_30px_-18px_var(--ui-shadow-neutral)] hover:-translate-y-px hover:bg-white/90",
+        accent:
+          "bg-accent text-text shadow-[0_14px_34px_-18px_var(--color-accent)] hover:-translate-y-px hover:bg-accent-hover",
+        "accent-outline":
+          "border border-accent/55 bg-accent/8 text-accent shadow-[inset_0_1px_0_var(--ui-highlight)] hover:border-accent/75 hover:bg-accent/14 hover:text-text",
         destructive: "bg-accent text-text hover:bg-accent-hover",
         outline:
           "border border-line-strong bg-overlay text-text shadow-[inset_0_1px_0_var(--ui-highlight)] hover:border-white/20 hover:bg-overlay-strong",

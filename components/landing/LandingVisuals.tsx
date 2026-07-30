@@ -28,6 +28,15 @@ function ProductImagePlaceholder({
   );
 }
 
+export function EventCreationVisual({ label }: { label: string }) {
+  return (
+    <ProductImagePlaceholder
+      label={label}
+      className="max-w-5xl rounded-b-none border-b-0 bg-feature-visual"
+    />
+  );
+}
+
 export function HoraWorkflowVisual() {
   return (
     <ProductImagePlaceholder

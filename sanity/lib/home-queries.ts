@@ -183,6 +183,7 @@ export type SanityHomePageDocument = {
       description?: string;
       primaryCtaLabel?: string;
       watchVideoLabel?: string;
+      homebrewCommand?: string;
       requirement?: string;
     };
     api?: {
@@ -194,6 +195,10 @@ export type SanityHomePageDocument = {
       description?: string;
       primaryFeatures?: SanityProductLandingFeatureValue[];
       secondaryFeatures?: SanityProductLandingFeatureValue[];
+    };
+    eventCreation?: {
+      title?: string;
+      imagePlaceholderLabel?: string;
     };
     hora?: {
       title?: string;
@@ -373,6 +378,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
         description,
         primaryCtaLabel,
         watchVideoLabel,
+        homebrewCommand,
         requirement
       },
       api{
@@ -384,6 +390,10 @@ export const HOME_PAGE_QUERY = defineQuery(`
         description,
         primaryFeatures[]{_key, icon, tone, title, description},
         secondaryFeatures[]{_key, icon, tone, title, description}
+      },
+      eventCreation{
+        title,
+        imagePlaceholderLabel
       },
       hora{
         title,

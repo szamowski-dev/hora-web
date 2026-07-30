@@ -11,12 +11,25 @@ export function Footer() {
   return (
     <footer className="border-t border-line bg-panel-deep px-5 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-6xl">
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_1.35fr_0.8fr] lg:gap-10">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.45fr_0.8fr_1.25fr_0.8fr] lg:gap-12">
           <div className="flex max-w-xs flex-col items-start gap-5">
             <Logo className="min-h-11" />
             <p className="text-sm leading-6 text-muted">
               A fast, native Google Calendar app built for the Mac.
             </p>
+            <p className="text-sm leading-6 text-muted">
+              {site.footer.copyright}
+            </p>
+            <div className="-ml-3 flex flex-wrap items-center gap-0">
+              {site.footer.socials.map((social) => (
+                <FooterSocialLink
+                  key={social.href}
+                  href={social.href}
+                  label={social.label}
+                  icon={social.icon as IconName}
+                />
+              ))}
+            </div>
           </div>
 
           <nav aria-label="Product links">
@@ -63,20 +76,6 @@ export function Footer() {
               ))}
             </div>
           </nav>
-        </div>
-
-        <div className="mt-12 flex flex-col gap-6 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted">{site.footer.copyright}</p>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            {site.footer.socials.map((social) => (
-              <FooterSocialLink
-                key={social.href}
-                href={social.href}
-                label={social.label}
-                icon={social.icon as IconName}
-              />
-            ))}
-          </div>
         </div>
       </div>
     </footer>

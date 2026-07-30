@@ -4,9 +4,11 @@ import {
   MdDownload,
   MdOutlineSecurity,
   MdPlayCircleOutline,
+  MdTerminal,
 } from "react-icons/md";
 import { LandingFeatureList } from "@/components/landing/LandingFeatureList";
 import {
+  EventCreationVisual,
   HoraWorkflowVisual,
 } from "@/components/landing/LandingVisuals";
 import { LandingFeatureCards } from "@/components/landing/LandingFeatureCards";
@@ -75,7 +77,7 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
             {landing.hero.description}
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button asChild size="lg">
+            <Button asChild size="lg" variant="accent">
               <Link
                 href="/download/"
                 {...analyticsAttrs("nav_click", {
@@ -87,7 +89,7 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
                 {landing.hero.primaryCtaLabel}
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="lg" variant="accent-outline">
               <a
                 href={videoUrl}
                 target="_blank"
@@ -105,7 +107,19 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
               </a>
             </Button>
           </div>
-          <p className="mt-4 text-xs text-muted">{landing.hero.requirement}</p>
+          <div
+            aria-label="Homebrew installation command placeholder"
+            className="mt-5 inline-flex max-w-full items-center gap-3 rounded-full border border-line-strong bg-panel-deep/80 px-4 py-3 text-left shadow-[inset_0_1px_0_var(--ui-highlight)]"
+          >
+            <MdTerminal aria-hidden="true" className="size-5 shrink-0 text-accent" />
+            <code className="truncate text-xs text-text sm:text-sm">
+              <span aria-hidden="true" className="text-muted">
+                ${" "}
+              </span>
+              {landing.hero.homebrewCommand}
+            </code>
+          </div>
+          <p className="mt-3 text-xs text-muted">{landing.hero.requirement}</p>
         </div>
 
         <div className="relative mx-auto mt-20 max-w-7xl sm:mt-24">
@@ -169,7 +183,19 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         </div>
       </section>
 
-      <Separator className="mx-auto max-w-24" />
+      <section
+        id="event-creation"
+        className="scroll-mt-28 bg-feature-panel px-5 pt-24 sm:px-8 sm:pt-32"
+      >
+        <h2 className="text-center text-balance text-4xl font-semibold tracking-[-0.045em] text-text sm:text-5xl md:text-6xl">
+          {landing.eventCreation.title}
+        </h2>
+        <div className="mx-auto mt-16 max-w-6xl sm:mt-20">
+          <EventCreationVisual
+            label={landing.eventCreation.imagePlaceholderLabel}
+          />
+        </div>
+      </section>
 
       <section className="px-5 py-28 sm:px-8 sm:py-40">
         <SectionHeading

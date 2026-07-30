@@ -259,6 +259,15 @@ export const homePage = defineType({
                 rule.required().min(3).max(60).custom(trimmed),
             }),
             defineField({
+              name: "homebrewCommand",
+              title: "Homebrew command",
+              type: "string",
+              description:
+                "Placeholder for now. Replace it when the Homebrew cask is available.",
+              validation: (rule) =>
+                rule.required().min(8).max(160).custom(trimmed),
+            }),
+            defineField({
               name: "requirement",
               title: "System requirement",
               type: "string",
@@ -324,6 +333,29 @@ export const homePage = defineType({
                 "Keep this list editable as the product story is tuned.",
               of: [productLandingFeature("productLandingGoogleSecondaryFeature")],
               validation: (rule) => rule.required().min(1).max(6),
+            }),
+          ],
+        }),
+        defineField({
+          name: "eventCreation",
+          title: "Event creation",
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (rule) =>
+                rule.required().min(5).max(120).custom(trimmed),
+            }),
+            defineField({
+              name: "imagePlaceholderLabel",
+              title: "Image placeholder label",
+              type: "string",
+              description:
+                "Temporary accessible label until the final product image is connected.",
+              validation: (rule) =>
+                rule.required().min(5).max(160).custom(trimmed),
             }),
           ],
         }),

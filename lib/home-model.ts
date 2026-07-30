@@ -94,6 +94,7 @@ export type ProductLandingContent = {
     description: string;
     primaryCtaLabel: string;
     watchVideoLabel: string;
+    homebrewCommand: string;
     requirement: string;
   };
   api: {
@@ -105,6 +106,10 @@ export type ProductLandingContent = {
     description: string;
     primaryFeatures: ProductLandingFeature[];
     secondaryFeatures: ProductLandingFeature[];
+  };
+  eventCreation: {
+    title: string;
+    imagePlaceholderLabel: string;
   };
   hora: {
     title: string;
