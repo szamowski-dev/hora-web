@@ -1,7 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   MdCheck,
   MdDevices,
+  MdDownloadForOffline,
   MdFamilyRestroom,
   MdOpenInNew,
 } from "react-icons/md";
@@ -48,7 +50,6 @@ export function PricingSection({
           <PriceCard
             label={content.oneTime.label}
             price={content.oneTime.price}
-            badge={content.oneTime.badge}
             description={content.description}
             featured
           />
@@ -105,20 +106,37 @@ export function PricingSection({
           </div>
         </details>
 
-        <div className="mt-8 flex flex-col items-center justify-center gap-4">
-          <Button asChild variant="accent" size="lg">
-            <AppStoreLink
-              href={site.cta.primary.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              {...analyticsAttrs("app_store_cta_click", {
+        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <AppStoreLink
+            href={site.cta.primary.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={site.cta.primary.label}
+            className="inline-flex h-12 items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            {...analyticsAttrs("app_store_cta_click", {
+              placement: ANALYTICS_PLACEMENTS.pricing,
+              destination: "mac_app_store",
+            })}
+          >
+            <Image
+              src={site.macAppStoreBadgeSrc}
+              alt={site.cta.primary.label}
+              width={162}
+              height={50}
+              className="h-12 w-auto"
+            />
+          </AppStoreLink>
+          <Button asChild variant="outline" size="lg">
+            <a
+              href={site.cta.direct.href}
+              {...analyticsAttrs("download_click", {
                 placement: ANALYTICS_PLACEMENTS.pricing,
-                destination: "mac_app_store",
+                destination: "r2_direct_download",
               })}
             >
-              {content.appStoreLabel}
-              <MdOpenInNew data-icon="inline-end" />
-            </AppStoreLink>
+              <MdDownloadForOffline data-icon="inline-start" />
+              {site.cta.direct.label}
+            </a>
           </Button>
           {content.showSetappBadge ? <SetappBadge /> : null}
         </div>
@@ -130,29 +148,20 @@ export function PricingSection({
 function PriceCard({
   label,
   price,
-  badge,
   description,
   featured = false,
 }: {
   label: string;
   price: string;
-  badge?: string;
   description: string;
   featured?: boolean;
 }) {
   return (
     <Card className={featured ? "border-blue-300/25 bg-blue-400/[0.06]" : ""}>
       <CardHeader>
-        <div className="flex items-center justify-between gap-4">
-          <CardDescription className="font-semibold uppercase tracking-[0.14em]">
-            {label}
-          </CardDescription>
-          {badge ? (
-            <span className="rounded-full bg-blue-400/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-blue-300">
-              {badge}
-            </span>
-          ) : null}
-        </div>
+        <CardDescription className="font-semibold uppercase tracking-[0.14em]">
+          {label}
+        </CardDescription>
         <CardTitle className="mt-3 text-4xl tracking-[-0.04em]">
           {price}
         </CardTitle>
