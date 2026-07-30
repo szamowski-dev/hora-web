@@ -97,6 +97,12 @@ export const defaultProductLanding = {
         description:
           "Track your focus sessions and breaks within your calendar.",
       },
+      {
+        icon: "keyboard",
+        tone: "green",
+        title: "Keyboard shortcuts",
+        description: "Create and edit events without reaching for the mouse.",
+      },
     ],
   },
   privacy: {
