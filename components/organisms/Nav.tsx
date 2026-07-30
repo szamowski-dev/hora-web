@@ -15,7 +15,7 @@ export function Nav({ activePath }: { activePath?: string }) {
         />
         <div className="relative flex h-14 items-center justify-between px-4 md:h-16 md:px-6">
           <Logo className="min-h-10 shrink-0 md:min-h-12" />
-          <div className="hidden items-center gap-7 lg:flex">
+          <div className="hidden items-center gap-5 md:flex lg:gap-7">
             {site.nav.map((item) => (
               <Link
                 key={item.href}

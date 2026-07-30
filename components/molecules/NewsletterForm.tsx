@@ -157,10 +157,10 @@ export function NewsletterForm({
           />
           <Button
             type="submit"
-            variant="outline"
+            variant="primary"
             size="lg"
             disabled={status === "submitting"}
-            className="h-12 w-full shrink-0 rounded-md border-accent/50 bg-accent px-6 text-sm font-semibold text-text shadow-[0_14px_32px_-22px_oklch(0_0_0/0.94),inset_0_1px_0_oklch(0.9851_0_0/0.16)] transition-[background-color,filter] hover:bg-accent-hover hover:brightness-105 hover:saturate-110 hover:text-text sm:w-auto sm:min-w-[13.5rem]"
+            className="h-12 w-full shrink-0 rounded-md px-6 text-sm font-semibold sm:w-auto sm:min-w-[13.5rem]"
           >
             {status === "submitting" ? (
               "Sending…"

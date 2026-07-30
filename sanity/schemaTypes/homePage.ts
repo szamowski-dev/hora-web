@@ -337,29 +337,6 @@ export const homePage = defineType({
           ],
         }),
         defineField({
-          name: "eventCreation",
-          title: "Event creation",
-          type: "object",
-          fields: [
-            defineField({
-              name: "title",
-              title: "Title",
-              type: "string",
-              validation: (rule) =>
-                rule.required().min(5).max(120).custom(trimmed),
-            }),
-            defineField({
-              name: "imagePlaceholderLabel",
-              title: "Image placeholder label",
-              type: "string",
-              description:
-                "Temporary accessible label until the final product image is connected.",
-              validation: (rule) =>
-                rule.required().min(5).max(160).custom(trimmed),
-            }),
-          ],
-        }),
-        defineField({
           name: "hora",
           title: "hora-specific features",
           type: "object",

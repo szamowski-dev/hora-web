@@ -7,12 +7,10 @@ import {
   MdTerminal,
 } from "react-icons/md";
 import { LandingFeatureList } from "@/components/landing/LandingFeatureList";
-import {
-  EventCreationVisual,
-  HoraWorkflowVisual,
-} from "@/components/landing/LandingVisuals";
+import { HoraWorkflowVisual } from "@/components/landing/LandingVisuals";
 import { LandingFeatureCards } from "@/components/landing/LandingFeatureCards";
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
+import { FeaturedOn } from "@/components/organisms/FeaturedOn";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -68,7 +66,7 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         className="pointer-events-none absolute inset-x-0 top-0 h-[52rem] bg-[radial-gradient(circle_at_50%_-20%,var(--ui-glow-cool-medium),transparent_48%)] opacity-60"
       />
 
-      <section className="relative px-5 pb-24 pt-28 sm:px-8 sm:pb-32 sm:pt-40 md:pt-48">
+      <section className="relative px-5 pb-24 pt-28 sm:px-10 sm:pb-32 sm:pt-40 md:pt-48">
         <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
           <h1 className="max-w-4xl text-balance text-5xl font-semibold tracking-[-0.055em] text-text sm:text-7xl md:text-[5.5rem] md:leading-[0.98]">
             {landing.hero.title}
@@ -122,7 +120,7 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
           <p className="mt-3 text-xs text-muted">{landing.hero.requirement}</p>
         </div>
 
-        <div className="relative mx-auto mt-20 max-w-7xl sm:mt-24">
+        <div className="relative mx-auto mt-20 max-w-landing sm:mt-24">
           <div
             aria-hidden="true"
             className="absolute inset-x-[12%] bottom-0 top-[25%] bg-[radial-gradient(ellipse_at_center,var(--ui-glow-accent-soft),transparent_68%)] blur-3xl"
@@ -145,8 +143,8 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         </div>
       </section>
 
-      <section className="px-5 py-16 sm:px-8 sm:py-24">
-        <Card className="mx-auto max-w-6xl items-center gap-7 px-5 py-12 text-center sm:px-10 sm:py-16">
+      <section className="px-5 py-16 sm:px-10 sm:py-24">
+        <Card className="mx-auto max-w-landing items-center gap-7 px-5 py-12 text-center sm:px-10 sm:py-16">
           <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-white">
             <Image
               src="/assets/integrations/google-calendar.svg"
@@ -169,35 +167,21 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
 
       <section
         id="features"
-        className="scroll-mt-28 px-5 py-28 sm:px-8 sm:py-40"
+        className="scroll-mt-28 px-5 py-28 sm:px-10 sm:py-40"
       >
         <SectionHeading
           title={landing.googleCalendar.title}
           description={landing.googleCalendar.description}
         />
-        <div className="mx-auto mt-20 max-w-6xl sm:mt-24">
+        <div className="mx-auto mt-20 max-w-landing sm:mt-24">
           <LandingFeatureCards features={googleMainFeatures} />
         </div>
-        <div className="mx-auto mt-20 max-w-6xl sm:mt-28">
+        <div className="mx-auto mt-20 max-w-landing sm:mt-28">
           <LandingFeatureList features={googleFeatures} prominent />
         </div>
       </section>
 
-      <section
-        id="event-creation"
-        className="scroll-mt-28 bg-feature-panel px-5 pt-24 sm:px-8 sm:pt-32"
-      >
-        <h2 className="text-center text-balance text-4xl font-semibold tracking-[-0.045em] text-text sm:text-5xl md:text-6xl">
-          {landing.eventCreation.title}
-        </h2>
-        <div className="mx-auto mt-16 max-w-6xl sm:mt-20">
-          <EventCreationVisual
-            label={landing.eventCreation.imagePlaceholderLabel}
-          />
-        </div>
-      </section>
-
-      <section className="px-5 py-28 sm:px-8 sm:py-40">
+      <section className="px-5 py-28 sm:px-10 sm:py-40">
         <SectionHeading
           title={landing.hora.title}
           description={landing.hora.description}
@@ -205,18 +189,18 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         <div className="mt-20 sm:mt-24">
           <HoraWorkflowVisual />
         </div>
-        <div className="mx-auto mt-20 max-w-6xl sm:mt-28">
-          <LandingFeatureList features={landing.hora.features} />
+        <div className="mx-auto mt-20 max-w-landing sm:mt-28">
+          <LandingFeatureList features={landing.hora.features} prominent />
         </div>
       </section>
 
       <section
         id="privacy"
-        className="scroll-mt-28 px-5 py-20 sm:px-8 sm:py-32"
+        className="scroll-mt-28 px-5 py-20 sm:px-10 sm:py-32"
       >
         <Card
           variant="privacy"
-          className="mx-auto min-h-[19rem] max-w-7xl items-center justify-center px-6 py-[4.6875rem] sm:px-12"
+          className="mx-auto min-h-[19rem] max-w-landing items-center justify-center px-6 py-[4.6875rem] sm:px-12"
         >
           <CardHeader className="w-full max-w-3xl justify-items-center gap-4 px-0">
             <MdOutlineSecurity
@@ -237,13 +221,13 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
 
       <section
         id="macos"
-        className="scroll-mt-28 px-5 py-28 sm:px-8 sm:py-40"
+        className="scroll-mt-28 px-5 py-28 sm:px-10 sm:py-40"
       >
         <SectionHeading
           title={landing.macos.title}
           description={landing.macos.description}
         />
-        <div className="mx-auto mt-20 max-w-7xl sm:mt-28">
+        <div className="mx-auto mt-20 max-w-landing sm:mt-28">
           <LandingFeatureList
             features={landing.macos.features}
             showDescriptions={false}
@@ -252,9 +236,11 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         </div>
       </section>
 
+      <FeaturedOn content={content.featuredOn} />
+
       <Separator className="mx-auto max-w-24" />
 
-      <section className="px-5 pb-32 pt-20 sm:px-8 sm:pb-44 sm:pt-28">
+      <section className="px-5 pb-32 pt-20 sm:px-10 sm:pb-44 sm:pt-28">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center">
           <div className="flex flex-col items-center gap-4">
             <h2 className="text-balance text-4xl font-semibold tracking-[-0.045em] text-text sm:text-5xl">

@@ -62,9 +62,7 @@ export const site = {
       { label: "Terms", href: "/terms/" },
     ],
     socials: [
-      { label: "Email", href: "mailto:hello@horacal.app", icon: "mail" },
       { label: "Discord", href: "https://discord.gg/8JFz4FfBGQ", icon: "discord" },
-      { label: "GitHub", href: "https://github.com/szamowski-dev/hora-web", icon: "github" },
       { label: "X / Twitter", href: "https://x.com/moto_szama", icon: "x" },
       { label: "Bluesky", href: "https://bsky.app/profile/szamski.bsky.social", icon: "bluesky" },
     ],

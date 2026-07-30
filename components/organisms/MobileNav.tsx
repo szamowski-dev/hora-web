@@ -25,7 +25,7 @@ export function MobileNav({ activePath }: { activePath?: string }) {
   }
 
   return (
-    <div className="lg:hidden">
+    <div className="md:hidden">
       <input
         ref={toggleRef}
         id={toggleId}

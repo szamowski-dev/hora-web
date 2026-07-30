@@ -196,10 +196,6 @@ export type SanityHomePageDocument = {
       primaryFeatures?: SanityProductLandingFeatureValue[];
       secondaryFeatures?: SanityProductLandingFeatureValue[];
     };
-    eventCreation?: {
-      title?: string;
-      imagePlaceholderLabel?: string;
-    };
     hora?: {
       title?: string;
       description?: string;
@@ -390,10 +386,6 @@ export const HOME_PAGE_QUERY = defineQuery(`
         description,
         primaryFeatures[]{_key, icon, tone, title, description},
         secondaryFeatures[]{_key, icon, tone, title, description}
-      },
-      eventCreation{
-        title,
-        imagePlaceholderLabel
       },
       hora{
         title,

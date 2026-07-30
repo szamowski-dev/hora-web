@@ -107,10 +107,6 @@ export type ProductLandingContent = {
     primaryFeatures: ProductLandingFeature[];
     secondaryFeatures: ProductLandingFeature[];
   };
-  eventCreation: {
-    title: string;
-    imagePlaceholderLabel: string;
-  };
   hora: {
     title: string;
     description: string;

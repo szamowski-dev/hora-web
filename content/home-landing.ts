@@ -53,28 +53,45 @@ export const defaultProductLanding = {
       {
         icon: "search",
         tone: "purple",
-        title: "Fast search",
+        title: "Google Calendar search",
         description:
           "Find events, people, and details instantly across your calendars.",
       },
       {
         icon: "invitation",
         tone: "red",
-        title: "Native invitations",
+        title: "Invitations",
         description:
           "Create, edit, and respond to invitations without leaving hora.",
       },
     ],
   },
-  eventCreation: {
-    title: "Fast and natural event creation",
-    imagePlaceholderLabel: "Event creation product image placeholder",
-  },
   hora: {
-    title: "More than a calendar window.",
+    title: "Fast and natural event creation.",
     description:
-      "hora keeps the next action close, even when the calendar is not.",
+      "Create events the way you think, add the right meeting link, and keep the next action close.",
     features: [
+      {
+        icon: "video-call",
+        tone: "blue",
+        title: "Zoom and Microsoft Teams",
+        description:
+          "Create and join meetings without hunting for the right link.",
+      },
+      {
+        icon: "focus-time",
+        tone: "yellow",
+        title: "Focus-time scheduler",
+        description:
+          "Protect deep-work blocks and move them when the day changes.",
+      },
+      {
+        icon: "availability",
+        tone: "green",
+        title: "Shared availability",
+        description:
+          "Share the times that work without exposing the rest of your calendar.",
+      },
       {
         icon: "menu-bar",
         tone: "blue",
@@ -95,34 +112,6 @@ export const defaultProductLanding = {
         title: "Apple Intelligence",
         description:
           "Create events and summarize long notes with on-device intelligence.",
-      },
-      {
-        icon: "video-call",
-        tone: "blue",
-        title: "Zoom and Microsoft Teams",
-        description:
-          "Create and join meetings without hunting for the right link.",
-      },
-      {
-        icon: "tasks",
-        tone: "red",
-        title: "Todoist",
-        description:
-          "Keep tasks beside the calendar context that gives them meaning.",
-      },
-      {
-        icon: "focus-time",
-        tone: "yellow",
-        title: "Focus-time scheduler",
-        description:
-          "Protect deep-work blocks and move them when the day changes.",
-      },
-      {
-        icon: "availability",
-        tone: "green",
-        title: "Shared availability",
-        description:
-          "Share the times that work without exposing the rest of your calendar.",
       },
     ],
   },
@@ -163,16 +152,16 @@ export const defaultProductLanding = {
         description: "Native SwiftUI, with no bundled browser.",
       },
       {
-        icon: "keyboard",
-        tone: "blue",
-        title: "Keyboard shortcuts",
-        description: "Navigate and create without reaching for the mouse.",
+        icon: "apple-silicon",
+        tone: "green",
+        title: "Built for Apple Silicon",
+        description: "Designed for modern Mac hardware.",
       },
       {
-        icon: "dark-mode",
-        tone: "purple",
-        title: "Dark mode",
-        description: "Matches your system appearance automatically.",
+        icon: "menu-bar",
+        tone: "cyan",
+        title: "Menu bar",
+        description: "Your next event is always one click away.",
       },
       {
         icon: "notifications",
@@ -181,28 +170,16 @@ export const defaultProductLanding = {
         description: "Timely alerts with native macOS controls.",
       },
       {
-        icon: "apple-silicon",
-        tone: "green",
-        title: "Built for Apple Silicon",
-        description: "Designed for modern Mac hardware.",
+        icon: "dark-mode",
+        tone: "purple",
+        title: "Dark mode",
+        description: "Matches your system appearance automatically.",
       },
       {
-        icon: "dock",
-        tone: "green",
-        title: "In your Dock",
-        description: "A real app with a real place on your Mac.",
-      },
-      {
-        icon: "windows",
-        tone: "red",
-        title: "Multiple windows",
-        description: "Keep different dates and accounts open side by side.",
-      },
-      {
-        icon: "menu-bar",
-        tone: "cyan",
-        title: "Menu bar extra",
-        description: "Your next event is always one click away.",
+        icon: "keyboard",
+        tone: "blue",
+        title: "Keyboard shortcuts",
+        description: "Navigate and create without reaching for the mouse.",
       },
     ],
   },
@@ -214,7 +191,7 @@ export const defaultProductLanding = {
       {
         icon: "view",
         tone: "blue",
-        title: "Day, week, and month views",
+        title: "Multiple views",
         description: "Move between focused and long-range planning.",
       },
       {
@@ -226,7 +203,7 @@ export const defaultProductLanding = {
       {
         icon: "quick-add",
         tone: "purple",
-        title: "Natural Language Support",
+        title: "NLP event creation",
         description: "Type the event the way you would say it.",
       },
       {

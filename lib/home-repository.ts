@@ -340,16 +340,6 @@ function mapProductLanding(
         "productLanding.googleCalendar.secondaryFeatures",
       ),
     },
-    eventCreation: {
-      title: landingString(
-        value?.eventCreation?.title,
-        fallback.eventCreation.title,
-      ),
-      imagePlaceholderLabel: landingString(
-        value?.eventCreation?.imagePlaceholderLabel,
-        fallback.eventCreation.imagePlaceholderLabel,
-      ),
-    },
     hora: {
       title: landingString(value?.hora?.title, fallback.hora.title),
       description: landingString(
