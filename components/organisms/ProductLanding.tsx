@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MdArrowForward,
   MdDownload,
-  MdLockOutline,
+  MdOutlineSecurity,
   MdPlayCircleOutline,
 } from "react-icons/md";
 import { LandingFeatureList } from "@/components/landing/LandingFeatureList";
@@ -15,7 +14,6 @@ import { NewsletterForm } from "@/components/molecules/NewsletterForm";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -185,35 +183,24 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         id="privacy"
         className="scroll-mt-28 px-5 py-20 sm:px-8 sm:py-32"
       >
-        <Card className="mx-auto max-w-6xl overflow-hidden px-1 py-1">
-          <div className="grid gap-16 rounded-[26px] bg-[radial-gradient(circle_at_18%_15%,var(--ui-glow-cool-soft),transparent_40%),var(--color-panel-deep)] px-6 py-12 sm:px-10 sm:py-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:px-16 lg:py-20">
-            <CardHeader className="content-start gap-5 px-0">
-              <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-label-green/12 text-label-green">
-                <MdLockOutline aria-hidden="true" className="size-6" />
-              </span>
-              <CardTitle>
-                <h2 className="max-w-xl text-4xl tracking-[-0.04em] sm:text-5xl">
-                  {landing.privacy.title}
-                </h2>
-              </CardTitle>
-              <CardDescription className="max-w-xl text-base sm:text-lg">
-                {landing.privacy.description}
-              </CardDescription>
-              <Button asChild variant="link" className="w-fit px-0">
-                <Link href="/privacy/">
-                  Read our privacy policy
-                  <MdArrowForward data-icon="inline-end" aria-hidden="true" />
-                </Link>
-              </Button>
-            </CardHeader>
-            <CardContent className="px-0">
-              <LandingFeatureList
-                features={landing.privacy.features}
-                compact
-                className="grid-cols-1"
-              />
-            </CardContent>
-          </div>
+        <Card
+          variant="privacy"
+          className="mx-auto min-h-[19rem] max-w-7xl items-center justify-center px-6 py-[4.6875rem] sm:px-12"
+        >
+          <CardHeader className="w-full max-w-3xl justify-items-center gap-4 px-0">
+            <MdOutlineSecurity
+              aria-hidden="true"
+              className="size-14 text-label-blue"
+            />
+            <CardTitle>
+              <h2 className="text-3xl tracking-[-0.035em]">
+                {landing.privacy.title}
+              </h2>
+            </CardTitle>
+            <CardDescription className="max-w-3xl text-base sm:text-lg">
+              {landing.privacy.description}
+            </CardDescription>
+          </CardHeader>
         </Card>
       </section>
 

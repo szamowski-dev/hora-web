@@ -2,12 +2,19 @@ import * as React from "react";
 
 import { cn } from "@/lib/cn";
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+function Card({
+  className,
+  variant = "default",
+  ...props
+}: React.ComponentProps<"div"> & {
+  variant?: "default" | "privacy";
+}) {
   return (
     <div
       data-slot="card"
+      data-variant={variant}
       className={cn(
-        "flex flex-col gap-6 rounded-[28px] border border-line bg-panel/78 py-6 text-text shadow-[inset_0_1px_0_var(--ui-highlight),0_32px_80px_-52px_var(--ui-shadow-neutral)] backdrop-blur-xl",
+        "flex flex-col gap-6 rounded-[28px] border border-line bg-panel/78 py-6 text-text shadow-[inset_0_1px_0_var(--ui-highlight),0_32px_80px_-52px_var(--ui-shadow-neutral)] backdrop-blur-xl data-[variant=privacy]:rounded-[30px] data-[variant=privacy]:border-transparent data-[variant=privacy]:bg-privacy-panel data-[variant=privacy]:text-center data-[variant=privacy]:shadow-none data-[variant=privacy]:backdrop-blur-none data-[variant=privacy]:[&_[data-slot=card-description]]:text-text/85",
         className,
       )}
       {...props}

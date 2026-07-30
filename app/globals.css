@@ -32,6 +32,7 @@
   --color-label-yellow: oklch(0.825 0.16 84.8);
   --color-label-purple: oklch(0.722 0.163 306.5);
   --color-label-cyan: oklch(0.786 0.128 201.7);
+  --color-privacy-panel: oklch(0.28 0 0);
 
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-brand: var(--font-bumbbled), var(--font-geist), sans-serif;
