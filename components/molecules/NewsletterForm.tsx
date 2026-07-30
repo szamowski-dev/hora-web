@@ -160,7 +160,7 @@ export function NewsletterForm({
             variant="primary"
             size="lg"
             disabled={status === "submitting"}
-            className="h-12 w-full shrink-0 rounded-md px-6 text-sm font-semibold sm:w-auto sm:min-w-[13.5rem]"
+            className="h-12 w-full shrink-0 px-6 text-sm font-semibold sm:w-auto sm:min-w-[13.5rem]"
           >
             {status === "submitting" ? (
               "Sending…"

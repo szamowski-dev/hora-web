@@ -3,13 +3,13 @@ import Link from "next/link";
 import {
   MdDownload,
   MdOutlineSecurity,
-  MdPlayCircleOutline,
-  MdTerminal,
 } from "react-icons/md";
 import { LandingFeatureList } from "@/components/landing/LandingFeatureList";
 import { HoraWorkflowVisual } from "@/components/landing/LandingVisuals";
 import { LandingFeatureCards } from "@/components/landing/LandingFeatureCards";
+import { HomebrewCommand } from "@/components/molecules/HomebrewCommand";
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
+import { ProductVideoDialog } from "@/components/molecules/ProductVideoDialog";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,8 +22,6 @@ import { Separator } from "@/components/ui/separator";
 import type { HomePageContent } from "@/lib/home-model";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
-
-const videoUrl = "https://www.youtube.com/watch?v=ahVV5J25cYM";
 
 function SectionHeading({
   title,
@@ -87,36 +85,9 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
                 {landing.hero.primaryCtaLabel}
               </Link>
             </Button>
-            <Button asChild size="lg" variant="accent-outline">
-              <a
-                href={videoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                {...analyticsAttrs("nav_click", {
-                  link_text: landing.hero.watchVideoLabel,
-                  link_url: videoUrl,
-                })}
-              >
-                <MdPlayCircleOutline
-                  data-icon="inline-start"
-                  aria-hidden="true"
-                />
-                {landing.hero.watchVideoLabel}
-              </a>
-            </Button>
+            <ProductVideoDialog label={landing.hero.watchVideoLabel} />
           </div>
-          <div
-            aria-label="Homebrew installation command placeholder"
-            className="mt-5 inline-flex max-w-full items-center gap-3 rounded-full border border-line-strong bg-panel-deep/80 px-4 py-3 text-left shadow-[inset_0_1px_0_var(--ui-highlight)]"
-          >
-            <MdTerminal aria-hidden="true" className="size-5 shrink-0 text-accent" />
-            <code className="truncate text-xs text-text sm:text-sm">
-              <span aria-hidden="true" className="text-muted">
-                ${" "}
-              </span>
-              {landing.hero.homebrewCommand}
-            </code>
-          </div>
+          <HomebrewCommand command={landing.hero.homebrewCommand} />
           <p className="mt-3 text-xs text-muted">{landing.hero.requirement}</p>
         </div>
 
