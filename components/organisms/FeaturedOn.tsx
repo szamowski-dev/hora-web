@@ -15,10 +15,10 @@ export function FeaturedOn({
   return (
     <section
       aria-label={content.label}
-      className="px-5 py-20 sm:px-10 sm:py-28"
+      className="px-5 py-12 sm:px-10 sm:py-16"
     >
       <Card
-        className="mx-auto max-w-landing gap-10 px-6 py-12 sm:px-10 sm:py-16"
+        className="mx-auto max-w-landing gap-6 px-6 py-8 sm:px-10 sm:py-10"
       >
         <CardHeader className="justify-items-center px-0 text-center">
           <CardTitle>
@@ -28,7 +28,7 @@ export function FeaturedOn({
           </CardTitle>
         </CardHeader>
         <CardContent className="px-0">
-          <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-8 sm:gap-x-10 sm:gap-y-10">
+          <ul className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-6 gap-y-4 sm:gap-x-8 sm:gap-y-5">
             {content.badges.map((badge) => (
               <li
                 key={badge.name}
@@ -39,7 +39,7 @@ export function FeaturedOn({
                   href={badge.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-16 w-full items-center justify-center rounded-lg px-2 opacity-80 grayscale transition-[opacity,filter] hover:opacity-100 hover:grayscale-0 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                  className="flex min-h-14 w-full items-center justify-center rounded-lg px-2 opacity-80 grayscale transition-[opacity,filter] hover:opacity-100 hover:grayscale-0 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img

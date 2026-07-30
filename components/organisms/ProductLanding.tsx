@@ -233,7 +233,7 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
 
       <SectionDivider />
 
-      <section className="px-5 pb-32 pt-20 sm:px-10 sm:pb-44 sm:pt-28">
+      <section className="px-5 pb-24 pt-12 sm:px-10 sm:pb-32 sm:pt-16">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center">
           <div className="flex flex-col items-center gap-4">
             <h2 className="text-balance text-4xl font-semibold tracking-[-0.045em] text-text sm:text-5xl">
