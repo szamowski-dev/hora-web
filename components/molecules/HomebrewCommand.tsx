@@ -3,6 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { MdCheck, MdContentCopy, MdTerminal } from "react-icons/md";
 import { Button } from "@/components/ui/button";
+import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import {
+  ANALYTICS_EVENTS,
+  ANALYTICS_PLACEMENTS,
+} from "@/lib/analyticsSchema";
 
 export function HomebrewCommand({ command }: { command: string }) {
   const [copied, setCopied] = useState(false);
@@ -64,6 +69,10 @@ export function HomebrewCommand({ command }: { command: string }) {
         variant="ghost"
         size="xs"
         onClick={copyCommand}
+        {...analyticsAttrs(ANALYTICS_EVENTS.brewCopyClick, {
+          command_type: "homebrew",
+          placement: ANALYTICS_PLACEMENTS.hero,
+        })}
         aria-label={copied ? "Homebrew command copied" : "Copy Homebrew command"}
         className="shrink-0"
       >

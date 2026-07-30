@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { track, type EventProps } from "@/lib/analytics";
+import { ANALYTICS_EVENTS } from "@/lib/analyticsSchema";
 
 function parseProps(raw?: string): EventProps | undefined {
   if (!raw) return undefined;
@@ -18,8 +19,33 @@ export function AnalyticsDelegates() {
       const target = event.target as HTMLElement | null;
       const el = target?.closest?.<HTMLElement>("[data-analytics-event]");
       const eventName = el?.dataset.analyticsEvent;
-      if (!el || !eventName) return;
-      track(eventName, parseProps(el.dataset.analyticsProps));
+      const props = parseProps(el?.dataset.analyticsProps);
+
+      if (el && eventName) {
+        track(eventName, props);
+      }
+
+      const anchor = target?.closest?.<HTMLAnchorElement>("a[href]");
+      if (!anchor) return;
+
+      const url = new URL(anchor.href, window.location.href);
+      const normalizedPath = url.pathname.replace(/\/+$/, "");
+      if (
+        url.origin !== window.location.origin ||
+        normalizedPath !== "/download" ||
+        eventName === ANALYTICS_EVENTS.downloadClick
+      ) {
+        return;
+      }
+
+      track(ANALYTICS_EVENTS.downloadClick, {
+        ...props,
+        link_text:
+          props?.link_text ||
+          anchor.textContent?.replace(/\s+/g, " ").trim() ||
+          "Download",
+        link_url: `${url.pathname}${url.search}${url.hash}`,
+      });
     }
 
     document.addEventListener("click", onClick, { capture: true });
