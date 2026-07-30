@@ -2,7 +2,7 @@ import type { ProductLandingContent } from "@/lib/home-model";
 
 export const defaultProductLanding = {
   hero: {
-    title: "Google Calendar, finally at home on your Mac.",
+    title: "The Mac Calendar Google never built.",
     description:
       "A fast, native calendar for people who live in Google Calendar. Plan, join, and protect focus time without opening another browser tab.",
     primaryCtaLabel: "Download free trial",
