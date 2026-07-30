@@ -84,16 +84,28 @@ export function LandingFeatureList({
   features,
   className,
   compact = false,
+  prominent = false,
+  showDescriptions = true,
+  titleOnly = false,
 }: {
   features: ProductLandingFeature[];
   className?: string;
   compact?: boolean;
+  prominent?: boolean;
+  showDescriptions?: boolean;
+  titleOnly?: boolean;
 }) {
   return (
     <div
       className={cn(
         "grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3",
-        compact ? "gap-y-9" : "md:gap-y-16",
+        titleOnly
+          ? "gap-x-14 gap-y-12 sm:gap-y-14 lg:gap-x-20"
+          : prominent
+            ? "gap-x-14 gap-y-16 md:gap-y-20 lg:gap-x-16"
+          : compact
+            ? "gap-y-9"
+            : "md:gap-y-16",
         className,
       )}
     >
@@ -103,23 +115,54 @@ export function LandingFeatureList({
         return (
           <article
             key={`${feature.icon}-${feature.title}`}
-            className="flex max-w-sm flex-col items-start gap-3"
+            className={cn(
+              "flex flex-col items-start",
+              prominent ? "max-w-none gap-5" : "max-w-sm gap-3",
+            )}
           >
-            <FeatureIcon
-              aria-hidden="true"
+            <div
               className={cn(
-                compact ? "size-6" : "size-7",
-                toneClasses[feature.tone],
+                "flex",
+                titleOnly || prominent
+                  ? "flex-row items-center gap-5"
+                  : "flex-col items-start gap-3",
               )}
-            />
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-semibold tracking-tight text-text">
+            >
+              <FeatureIcon
+                aria-hidden="true"
+                className={cn(
+                  titleOnly || prominent
+                    ? "size-11 shrink-0"
+                    : compact
+                      ? "size-6"
+                      : "size-7",
+                  toneClasses[feature.tone],
+                )}
+              />
+              <h3
+                className={cn(
+                  "font-semibold tracking-tight text-text",
+                  titleOnly
+                    ? "text-[1.7rem] sm:text-[1.75rem]"
+                    : prominent
+                      ? "text-xl sm:text-2xl"
+                      : "text-base",
+                )}
+              >
                 {feature.title}
               </h3>
-              <p className="text-sm leading-6 text-muted">
+            </div>
+            {showDescriptions ? (
+              <p
+                className={cn(
+                  prominent
+                    ? "text-lg leading-7 text-text/90"
+                    : "text-sm leading-6 text-muted",
+                )}
+              >
                 {feature.description}
               </p>
-            </div>
+            ) : null}
           </article>
         );
       })}

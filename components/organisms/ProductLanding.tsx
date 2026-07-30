@@ -7,9 +7,9 @@ import {
 } from "react-icons/md";
 import { LandingFeatureList } from "@/components/landing/LandingFeatureList";
 import {
-  GoogleCalendarVisual,
   HoraWorkflowVisual,
 } from "@/components/landing/LandingVisuals";
+import { LandingFeatureCards } from "@/components/landing/LandingFeatureCards";
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,9 +46,14 @@ function SectionHeading({
 
 export function ProductLanding({ content }: { content: HomePageContent }) {
   const landing = content.productLanding;
-  const googleFeatures = [
+  const googleFeatureCandidates = [
     ...landing.googleCalendar.primaryFeatures,
     ...landing.googleCalendar.secondaryFeatures,
+  ];
+  const googleMainFeatures = googleFeatureCandidates.slice(0, 4);
+  const googleFeatures = [
+    ...googleFeatureCandidates.slice(4),
+    ...landing.featureGrid.features,
   ];
 
   return (
@@ -108,7 +113,7 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
             aria-hidden="true"
             className="absolute inset-x-[12%] bottom-0 top-[25%] bg-[radial-gradient(ellipse_at_center,var(--ui-glow-accent-soft),transparent_68%)] blur-3xl"
           />
-          <div className="relative overflow-hidden rounded-[22px] border border-line bg-panel-deep p-1.5 shadow-[0_50px_140px_-64px_var(--ui-shadow-neutral)] sm:rounded-[30px] sm:p-2.5">
+          <div className="relative">
             <Image
               src={content.hero.screenshot.src}
               alt={content.hero.screenshot.alt}
@@ -120,7 +125,7 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
                 content.hero.screenshot.blurDataURL ? "blur" : "empty"
               }
               blurDataURL={content.hero.screenshot.blurDataURL}
-              className="h-auto w-full rounded-[16px] sm:rounded-[22px]"
+              className="h-auto w-full"
             />
           </div>
         </div>
@@ -156,11 +161,11 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
           title={landing.googleCalendar.title}
           description={landing.googleCalendar.description}
         />
-        <div className="mt-20 sm:mt-24">
-          <GoogleCalendarVisual />
+        <div className="mx-auto mt-20 max-w-6xl sm:mt-24">
+          <LandingFeatureCards features={googleMainFeatures} />
         </div>
         <div className="mx-auto mt-20 max-w-6xl sm:mt-28">
-          <LandingFeatureList features={googleFeatures} />
+          <LandingFeatureList features={googleFeatures} prominent />
         </div>
       </section>
 
@@ -212,28 +217,16 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
           title={landing.macos.title}
           description={landing.macos.description}
         />
-        <div className="mx-auto mt-20 max-w-6xl sm:mt-28">
+        <div className="mx-auto mt-20 max-w-7xl sm:mt-28">
           <LandingFeatureList
             features={landing.macos.features}
-            className="lg:grid-cols-4"
+            showDescriptions={false}
+            titleOnly
           />
         </div>
       </section>
 
       <Separator className="mx-auto max-w-24" />
-
-      <section className="px-5 py-28 sm:px-8 sm:py-40">
-        <SectionHeading
-          title={landing.featureGrid.title}
-          description={landing.featureGrid.description}
-        />
-        <div className="mx-auto mt-20 max-w-6xl sm:mt-28">
-          <LandingFeatureList
-            features={landing.featureGrid.features}
-            compact
-          />
-        </div>
-      </section>
 
       <section className="px-5 pb-32 pt-20 sm:px-8 sm:pb-44 sm:pt-28">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center">

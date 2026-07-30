@@ -10,6 +10,8 @@
   --color-surface: oklch(0.1779 0.0064 271);
   --color-panel: oklch(0.164 0.0065 271);
   --color-panel-deep: oklch(0.1438 0.0075 256.9);
+  --color-feature-panel: oklch(0.225 0.042 256);
+  --color-feature-visual: oklch(0.19 0.027 256);
   --color-border: oklch(0.2814 0.0114 271);
   --color-text: oklch(0.9851 0 0);
   --color-muted: oklch(0.7397 0.0203 263);
