@@ -100,9 +100,9 @@ export function LandingFeatureList({
       className={cn(
         "grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3",
         titleOnly
-          ? "gap-x-14 gap-y-12 sm:gap-y-14 lg:gap-x-20"
+          ? "gap-x-11 gap-y-10 sm:gap-y-11 lg:gap-x-16"
           : prominent
-            ? "gap-x-14 gap-y-16 md:gap-y-20 lg:gap-x-16"
+            ? "gap-x-11 gap-y-13 md:gap-y-16 lg:gap-x-13"
           : compact
             ? "gap-y-9"
             : "md:gap-y-16",
@@ -117,14 +117,14 @@ export function LandingFeatureList({
             key={`${feature.icon}-${feature.title}`}
             className={cn(
               "flex flex-col items-start",
-              prominent ? "max-w-none gap-5" : "max-w-sm gap-3",
+              prominent ? "max-w-none gap-4" : "max-w-sm gap-3",
             )}
           >
             <div
               className={cn(
                 "flex",
                 titleOnly || prominent
-                  ? "flex-row items-center gap-5"
+                  ? "flex-row items-center gap-4"
                   : "flex-col items-start gap-3",
               )}
             >
@@ -132,7 +132,7 @@ export function LandingFeatureList({
                 aria-hidden="true"
                 className={cn(
                   titleOnly || prominent
-                    ? "size-11 shrink-0"
+                    ? "size-9 shrink-0"
                     : compact
                       ? "size-6"
                       : "size-7",
@@ -143,9 +143,9 @@ export function LandingFeatureList({
                 className={cn(
                   "font-semibold tracking-tight text-text",
                   titleOnly
-                    ? "text-[1.7rem] sm:text-[1.75rem]"
+                    ? "text-[1.35rem] sm:text-[1.4rem]"
                     : prominent
-                      ? "text-xl sm:text-2xl"
+                      ? "text-base sm:text-[1.2rem]"
                       : "text-base",
                 )}
               >
@@ -156,7 +156,7 @@ export function LandingFeatureList({
               <p
                 className={cn(
                   prominent
-                    ? "text-lg leading-7 text-text/90"
+                    ? "text-[0.9rem] leading-[1.4rem] text-text/90"
                     : "text-sm leading-6 text-muted",
                 )}
               >
