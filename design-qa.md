@@ -16,12 +16,14 @@ The implementation was checked against the supplied product screenshots:
 - `/Users/szamski/Desktop/event-types.png`
 - `/Users/szamski/Desktop/meet-and-contacts.png`
 - `/Users/szamski/Desktop/accounts-multiple.png`
+- `/Users/szamski/Desktop/04 — Multiple Accounts · Wide.png`
 - `/Users/szamski/Desktop/calendar-add-event.png`
 - `/var/folders/4k/bhh2f8g909524zydqrqk82zr0000gn/T/TemporaryItems/NSIRD_screencaptureui_HwqOGV/Screenshot 2026-07-30 at 21.56.11.png`
 
-The feature-card product images are lossless copies of the supplied PNGs. The
-editable Sketch recreations remain in the `Website — Feature Cards` page and
-were intentionally not exported, per the user's request.
+The feature-card product images are lossless copies of the supplied PNGs.
+The final `04 — Multiple Accounts · Wide` artwork is integrated at its native
+1334 × 512 resolution. The remaining editable Sketch recreations stay in the
+`Website — Feature Cards` page until their final exports are supplied.
 
 ## Evidence
 
@@ -36,6 +38,8 @@ were intentionally not exported, per the user's request.
 
 - Product image source versus implementation:
   `/tmp/hora-feature-assets-comparison.png`
+- Final Multiple Accounts artwork versus implementation:
+  `/tmp/hora-multiple-accounts-comparison.png`
 - Support FAQ reference versus implementation:
   `/tmp/hora-support-comparison-small.png`
 
@@ -65,10 +69,13 @@ were intentionally not exported, per the user's request.
 
 - Hero: 3090 × 2052.
 - Event creation: 1024 × 576.
-- Wide feature images: 667 × 256.
+- Wide feature images: 667 × 256, except the final Multiple Accounts artwork at
+  1334 × 512.
 - Narrow feature images: 296 × 256.
 - All local product images loaded successfully with non-zero natural
   dimensions in the browser.
+- The final Multiple Accounts source is preserved at 1334 × 512 and renders at
+  the intended 667 × 256 card ratio without page-level horizontal overflow.
 
 ### Interaction and accessibility
 
@@ -84,12 +91,13 @@ were intentionally not exported, per the user's request.
 2. Removed the event-creation screenshot wrapper to match the hero treatment.
 3. Reduced FAQ row density and widened the integrated panel.
 4. Fixed the Next.js image aspect-ratio warning by preserving automatic height.
+5. Replaced the temporary Multiple Accounts screenshot with the final
+   high-resolution SwiftUI-style artwork.
 
 ## Open items
 
-- P3: The four high-resolution SwiftUI-style Sketch artboards are intentionally
-  not exported. The user will refine them in Sketch before replacing the
-  temporary supplied PNGs.
+- P3: Three remaining high-resolution SwiftUI-style Sketch artboards are still
+  intentionally unexported while the user refines them.
 
 ## Result
 

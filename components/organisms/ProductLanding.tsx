@@ -44,10 +44,10 @@ const GOOGLE_FEATURE_IMAGES = [
     height: 256,
   },
   {
-    src: "/assets/product/accounts-multiple.png",
+    src: "/assets/product/accounts-multiple-swiftui.png",
     alt: "hora Google Accounts settings with multiple connected accounts",
-    width: 667,
-    height: 256,
+    width: 1334,
+    height: 512,
   },
 ];
 
