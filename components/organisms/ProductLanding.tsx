@@ -24,6 +24,33 @@ import type { HomePageContent } from "@/lib/home-model";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 
+const GOOGLE_FEATURE_IMAGES = [
+  {
+    src: "/assets/product/event-color-labels.png",
+    alt: "hora calendar showing Google Calendar event color labels",
+    width: 667,
+    height: 256,
+  },
+  {
+    src: "/assets/product/event-types.png",
+    alt: "hora focus-time event settings",
+    width: 296,
+    height: 256,
+  },
+  {
+    src: "/assets/product/meet-and-contacts.png",
+    alt: "hora event details with Google Meet and Google Contacts guests",
+    width: 296,
+    height: 256,
+  },
+  {
+    src: "/assets/product/accounts-multiple.png",
+    alt: "hora Google Accounts settings with multiple connected accounts",
+    width: 667,
+    height: 256,
+  },
+];
+
 function SectionHeading({
   title,
   description,
@@ -108,16 +135,12 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
           />
           <div className="relative">
             <Image
-              src={content.hero.screenshot.src}
-              alt={content.hero.screenshot.alt}
-              width={content.hero.screenshot.width}
-              height={content.hero.screenshot.height}
+              src="/assets/product/hero.png"
+              alt="hora Calendar week view with event details, Google Meet, and focus timer"
+              width={3090}
+              height={2052}
               priority
               sizes="(max-width: 1280px) 94vw, 1216px"
-              placeholder={
-                content.hero.screenshot.blurDataURL ? "blur" : "empty"
-              }
-              blurDataURL={content.hero.screenshot.blurDataURL}
               className="h-auto w-full"
             />
           </div>
@@ -159,7 +182,10 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
           description={landing.googleCalendar.description}
         />
         <div className="mx-auto mt-20 max-w-landing sm:mt-24">
-          <LandingFeatureCards features={googleMainFeatures} />
+          <LandingFeatureCards
+            features={googleMainFeatures}
+            images={GOOGLE_FEATURE_IMAGES}
+          />
         </div>
         <div className="mx-auto mt-20 max-w-landing sm:mt-28">
           <LandingFeatureList features={googleFeatures} prominent />

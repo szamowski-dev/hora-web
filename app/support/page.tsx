@@ -133,7 +133,7 @@ export default function SupportPage() {
             </p>
           </div>
 
-          <Card className="mx-auto mt-12 max-w-4xl gap-0 overflow-hidden px-0 py-0 sm:mt-16">
+          <Card className="mx-auto mt-10 max-w-5xl gap-0 overflow-hidden rounded-[20px] border-line/80 bg-feature-panel/45 px-0 py-0 shadow-[0_24px_80px_-56px_oklch(0_0_0/0.95)] sm:mt-14">
             {faqItems.map((item, index) => (
               <div
                 key={item.q}
@@ -148,6 +148,7 @@ export default function SupportPage() {
                   answer={item.a}
                   index={index}
                   variant="integrated"
+                  density="compact"
                 />
               </div>
             ))}

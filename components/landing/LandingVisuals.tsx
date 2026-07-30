@@ -1,38 +1,14 @@
-import { MdOutlineImage } from "react-icons/md";
-import { cn } from "@/lib/cn";
-
-function ProductImagePlaceholder({
-  label,
-  className,
-}: {
-  label: string;
-  className?: string;
-}) {
-  return (
-    <div
-      aria-label={label}
-      role="img"
-      className={cn(
-        "relative mx-auto flex aspect-video w-full items-center justify-center overflow-hidden rounded-[30px] border border-dashed border-line-strong bg-panel-deep/55",
-        className,
-      )}
-    >
-      <div
-        aria-hidden="true"
-        className="flex flex-col items-center gap-3 text-muted"
-      >
-        <MdOutlineImage className="size-10" />
-        <span className="text-sm font-medium">Product image placeholder</span>
-      </div>
-    </div>
-  );
-}
+import Image from "next/image";
 
 export function HoraWorkflowVisual() {
   return (
-    <ProductImagePlaceholder
-      label="Hora workflow screenshot placeholder"
-      className="max-w-5xl"
+    <Image
+      src="/assets/product/calendar-add-event.png"
+      alt="hora event editor with natural-language event creation"
+      width={1024}
+      height={576}
+      sizes="(min-width: 1024px) 1024px, calc(100vw - 2.5rem)"
+      className="mx-auto h-auto w-full max-w-5xl"
     />
   );
 }

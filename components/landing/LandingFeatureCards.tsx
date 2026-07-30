@@ -1,4 +1,4 @@
-import { MdOutlineImage } from "react-icons/md";
+import Image from "next/image";
 import {
   Card,
   CardContent,
@@ -30,8 +30,15 @@ const cardSpanClasses = [
 
 export function LandingFeatureCards({
   features,
+  images,
 }: {
   features: ProductLandingFeature[];
+  images: Array<{
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  }>;
 }) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -57,21 +64,18 @@ export function LandingFeatureCards({
             </CardDescription>
           </CardHeader>
           <CardContent className="mt-auto flex flex-1 items-end px-5 pb-0 sm:px-6">
-            <div
-              aria-label={`${feature.title} product image placeholder`}
-              role="img"
-              className="flex min-h-64 w-full items-center justify-center rounded-t-[18px] border border-b-0 border-dashed border-line-strong bg-feature-visual"
-            >
-              <div
-                aria-hidden="true"
-                className="flex flex-col items-center gap-3 text-muted"
-              >
-                <MdOutlineImage className="size-9" />
-                <span className="text-sm font-medium">
-                  Product image placeholder
-                </span>
-              </div>
-            </div>
+            <Image
+              src={images[index].src}
+              alt={images[index].alt}
+              width={images[index].width}
+              height={images[index].height}
+              sizes={
+                index === 0 || index === 3
+                  ? "(min-width: 1024px) 760px, calc(100vw - 5rem)"
+                  : "(min-width: 1024px) 360px, calc(100vw - 5rem)"
+              }
+              className="h-auto w-full rounded-t-[18px] object-cover object-bottom"
+            />
           </CardContent>
         </Card>
       ))}
