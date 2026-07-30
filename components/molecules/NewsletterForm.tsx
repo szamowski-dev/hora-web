@@ -153,7 +153,7 @@ export function NewsletterForm({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={status === "submitting"}
-            className="h-12 rounded-md border-line bg-bg/85 text-sm shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] focus-visible:border-accent/45 focus-visible:ring-accent/25"
+            className="h-12 rounded-md border-line bg-bg/85 text-sm shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)]"
           />
           <Button
             type="submit"
