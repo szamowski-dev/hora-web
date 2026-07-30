@@ -11,6 +11,7 @@ import { HomebrewCommand } from "@/components/molecules/HomebrewCommand";
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
 import { ProductVideoDialog } from "@/components/molecules/ProductVideoDialog";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
+import { ProductHeroShader } from "@/components/organisms/ProductHeroShader";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -68,13 +69,10 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
       data-nav-underlay="flush"
       className="relative isolate overflow-hidden bg-bg"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[52rem] bg-[radial-gradient(circle_at_50%_-20%,var(--ui-glow-cool-medium),transparent_48%)] opacity-60"
-      />
-
       <section className="relative px-5 pb-24 pt-28 sm:px-10 sm:pb-32 sm:pt-40 md:pt-48">
-        <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
+        <ProductHeroShader />
+
+        <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center text-center">
           <h1 className="max-w-4xl text-balance text-5xl font-semibold tracking-[-0.055em] text-text sm:text-7xl md:text-[5.5rem] md:leading-[0.98]">
             {landing.hero.title}
           </h1>
@@ -103,7 +101,7 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
           <p className="mt-3 text-xs text-muted">{landing.hero.requirement}</p>
         </div>
 
-        <div className="relative mx-auto mt-20 max-w-landing sm:mt-24">
+        <div className="relative z-10 mx-auto mt-20 max-w-landing sm:mt-24">
           <div
             aria-hidden="true"
             className="absolute inset-x-[12%] bottom-0 top-[25%] bg-[radial-gradient(ellipse_at_center,var(--ui-glow-accent-soft),transparent_68%)] blur-3xl"
