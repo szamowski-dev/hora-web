@@ -42,6 +42,15 @@ function SectionHeading({
   );
 }
 
+function SectionDivider() {
+  return (
+    <Separator
+      aria-hidden="true"
+      className="mx-auto max-w-16 bg-text/15 sm:max-w-24"
+    />
+  );
+}
+
 export function ProductLanding({ content }: { content: HomePageContent }) {
   const landing = content.productLanding;
   const googleFeatureCandidates = [
@@ -117,6 +126,8 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         </div>
       </section>
 
+      <SectionDivider />
+
       <section className="px-5 py-16 sm:px-10 sm:py-24">
         <Card className="mx-auto max-w-landing items-center gap-7 px-5 py-12 text-center sm:px-10 sm:py-16">
           <div className="flex size-16 shrink-0 items-center justify-center">
@@ -139,6 +150,8 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         </Card>
       </section>
 
+      <SectionDivider />
+
       <section
         id="features"
         className="scroll-mt-28 px-5 py-28 sm:px-10 sm:py-40"
@@ -155,6 +168,8 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         </div>
       </section>
 
+      <SectionDivider />
+
       <section className="px-5 py-28 sm:px-10 sm:py-40">
         <SectionHeading
           title={landing.hora.title}
@@ -167,6 +182,8 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
           <LandingFeatureList features={landing.hora.features} prominent />
         </div>
       </section>
+
+      <SectionDivider />
 
       <section
         id="privacy"
@@ -193,6 +210,8 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         </Card>
       </section>
 
+      <SectionDivider />
+
       <section
         id="macos"
         className="scroll-mt-28 px-5 py-28 sm:px-10 sm:py-40"
@@ -210,9 +229,11 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         </div>
       </section>
 
+      <SectionDivider />
+
       <FeaturedOn content={content.featuredOn} />
 
-      <Separator className="mx-auto max-w-24" />
+      <SectionDivider />
 
       <section className="px-5 pb-32 pt-20 sm:px-10 sm:pb-44 sm:pt-28">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center">
