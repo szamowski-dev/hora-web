@@ -9,6 +9,7 @@ export const site = {
     { label: "Features", href: "/#features" },
     { label: "Privacy", href: "/#privacy" },
     { label: "macOS", href: "/#macos" },
+    { label: "Pricing", href: "/pricing/" },
     { label: "Blog", href: "/blog/" },
   ],
   cta: {
@@ -37,6 +38,7 @@ export const site = {
       { label: "Features", href: "/#features" },
       { label: "Privacy", href: "/#privacy" },
       { label: "macOS integration", href: "/#macos" },
+      { label: "Pricing", href: "/pricing/" },
       { label: "Download", href: "/download/" },
     ],
     popularGuides: [

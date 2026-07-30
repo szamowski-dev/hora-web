@@ -98,7 +98,8 @@ const GOOGLE_ADS_ID = "AW-18070613857";
 
 export default async function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+  modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   const { isEnabled: isDraftMode } = await draftMode();
 
   return (
@@ -137,6 +138,7 @@ export default async function RootLayout({
           {children}
         </main>
         <Footer />
+        {modal}
 
         {isDraftMode ? <DraftModeTools /> : null}
 

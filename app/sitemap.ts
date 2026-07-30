@@ -95,6 +95,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.7,
     },
+    {
+      url: `${base}/pricing/`,
+      lastModified: pageMetadata.home.lastModified,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
     ...includeIndexedPage(pageMetadata.about.noIndex, {
       url: `${base}/about/`,
       lastModified: pageMetadata.about.lastModified,

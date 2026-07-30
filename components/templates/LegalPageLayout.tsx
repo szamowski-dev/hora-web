@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { Icon } from "@/components/atoms/Icon";
+import { MdArrowForward, MdHelpOutline } from "react-icons/md";
 import { Prose } from "@/components/atoms/Prose";
-import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
+import { Card, CardContent } from "@/components/ui/card";
+import { SitePageHero } from "@/components/templates/SitePageHero";
 import type { LegalPageKind, SplitHeading } from "@/lib/site-page-model";
+import { cn } from "@/lib/cn";
 
 type LegalPageLayoutProps =
   | {
@@ -34,87 +36,106 @@ export function LegalPageLayout({
   lastUpdated,
   children,
 }: LegalPageLayoutProps) {
-  const titleParts = typeof title === "string" ? title.split(" ") : [];
-  const accentWord =
-    typeof title === "string" ? titleParts.pop() : title.accent;
-  const titlePrefix =
-    typeof title === "string" ? titleParts.join(" ") : title.prefix;
-  const isPrivacy =
-    kind === "privacy" ||
-    (kind === undefined &&
-      typeof title === "string" &&
-      title.toLowerCase().includes("privacy"));
+  const isGuide = kind === undefined;
+  const isPrivacy = kind === "privacy";
+  const displayTitle =
+    typeof title === "string" ? title : `${title.prefix} ${title.accent}`;
 
   return (
-    <article className="home-section relative overflow-hidden border-y py-16 md:py-24">
-      <SectionBackdrop direction={isPrivacy ? "left" : "right"} />
+    <>
+      <SitePageHero
+        title={displayTitle}
+        description={
+          isGuide
+            ? "A practical setup guide for using Zoom meetings with hora Calendar."
+            : "Clear terms, plain language, and no surprises hidden behind legal shorthand."
+        }
+        meta={`Last updated: ${displayDate(lastUpdated)}`}
+      />
 
-      <div className="relative mx-auto max-w-295 px-6">
-        <header className="border-b border-line-strong pb-8 md:pb-10">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-dim">
-            Legal document
-          </p>
-          <h1 className="mt-3 text-5xl font-semibold leading-[1.04] tracking-tight text-text md:text-[64px]">
-            {titlePrefix}{" "}
-            <span className="text-accent">{accentWord}</span>
-          </h1>
-          <p className="mt-5 text-sm text-muted">
-            Last updated: {displayDate(lastUpdated)}
-          </p>
-        </header>
-
-        <div className="mt-10 grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start md:mt-12">
-          <aside className="ui-panel-soft rounded-xl p-5 lg:sticky lg:top-24">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-dim">
-              Documents
+      <section className="bg-bg px-5 py-20 sm:px-10 sm:py-28">
+        <div className="mx-auto grid min-w-0 max-w-landing gap-10 lg:grid-cols-[13rem_minmax(0,1fr)] lg:items-start lg:gap-16">
+          <aside className="min-w-0 lg:sticky lg:top-28">
+            <p className="text-sm font-semibold text-text">
+              {isGuide ? "Need a hand?" : "Documents"}
             </p>
-            <nav className="mt-4 flex flex-col gap-2" aria-label="Legal pages">
-              <Link
-                href="/privacy/"
-                className={`rounded-md border px-3 py-2.5 text-sm font-medium transition-colors ${
-                  isPrivacy
-                    ? "border-accent/40 bg-accent/10 text-text"
-                    : "border-line bg-overlay text-muted hover:border-line-strong hover:bg-overlay-strong hover:text-text"
-                }`}
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms/"
-                className={`rounded-md border px-3 py-2.5 text-sm font-medium transition-colors ${
-                  !isPrivacy
-                    ? "border-accent/40 bg-accent/10 text-text"
-                    : "border-line bg-overlay text-muted hover:border-line-strong hover:bg-overlay-strong hover:text-text"
-                }`}
-              >
-                Terms of Service
-              </Link>
-            </nav>
-            <div className="mt-5 border-t border-line pt-5">
-              <p className="text-xs leading-5 text-muted">
-                Questions about these documents?
-              </p>
-              <Link
-                href="/support/"
-                className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-accent transition-colors hover:text-text"
-              >
-                Contact Support
-                <Icon name="arrow-right" size={13} />
-              </Link>
-            </div>
+            {isGuide ? (
+              <div className="mt-4 flex flex-col gap-4">
+                <p className="text-sm leading-6 text-muted">
+                  If Zoom still does not connect after following the guide,
+                  send the details directly to the developer.
+                </p>
+                <Link
+                  href="/support/"
+                  className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-text transition-colors hover:text-accent focus-visible:outline-none focus-visible:text-accent"
+                >
+                  <MdHelpOutline aria-hidden="true" className="size-5" />
+                  Contact Support
+                </Link>
+              </div>
+            ) : (
+              <>
+                <nav
+                  className="mt-4 flex flex-col gap-1"
+                  aria-label="Legal pages"
+                >
+                  <LegalLink href="/privacy/" active={isPrivacy}>
+                    Privacy Policy
+                  </LegalLink>
+                  <LegalLink href="/terms/" active={!isPrivacy}>
+                    Terms of Service
+                  </LegalLink>
+                </nav>
+                <div className="mt-6 border-t border-line pt-6">
+                  <p className="text-sm leading-6 text-muted">
+                    Questions about these documents?
+                  </p>
+                  <Link
+                    href="/support/"
+                    className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-text transition-colors hover:text-accent focus-visible:outline-none focus-visible:text-accent"
+                  >
+                    Contact Support
+                    <MdArrowForward aria-hidden="true" className="size-4" />
+                  </Link>
+                </div>
+              </>
+            )}
           </aside>
 
-          <div className="shader-panel ui-panel-deep relative overflow-hidden rounded-xl p-6 md:p-9 lg:p-12">
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-accent/65 to-accent-cool/40"
-            />
-            <Prose className="relative mx-auto max-w-3xl prose-h2:border-t prose-h2:border-line prose-h2:pt-8 first:prose-h2:border-t-0 first:prose-h2:pt-0">
-              {children}
-            </Prose>
-          </div>
+          <Card className="min-w-0 gap-0 overflow-hidden px-0 py-0">
+            <CardContent className="px-6 py-8 sm:px-10 sm:py-12">
+              <Prose className="mx-auto max-w-3xl break-words prose-a:break-all prose-h2:border-t prose-h2:border-line prose-h2:pt-8 first:prose-h2:border-t-0 first:prose-h2:pt-0">
+                {children}
+              </Prose>
+            </CardContent>
+          </Card>
         </div>
-      </div>
-    </article>
+      </section>
+    </>
+  );
+}
+
+function LegalLink({
+  href,
+  active,
+  children,
+}: {
+  href: string;
+  active: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
+        active
+          ? "bg-overlay-strong text-text"
+          : "text-muted hover:bg-overlay hover:text-text",
+      )}
+    >
+      {children}
+    </Link>
   );
 }

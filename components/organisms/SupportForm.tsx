@@ -15,7 +15,7 @@ const categories = [
 ] as const;
 
 const fieldClassName =
-  "rounded-md border-line bg-bg/80 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] hover:border-line-strong focus-visible:border-accent/45 focus-visible:ring-accent/20";
+  "rounded-xl border-line bg-bg/70 shadow-none hover:border-line-strong focus-visible:border-white/20 focus-visible:ring-0";
 
 type Status =
   | { type: "idle" }
@@ -108,28 +108,19 @@ export function SupportForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="shader-panel ui-panel-deep relative overflow-hidden rounded-xl p-5 md:p-7 lg:p-8"
+      className="relative overflow-hidden rounded-[28px] border border-line bg-panel/78 p-5 shadow-[inset_0_1px_0_var(--ui-highlight),0_32px_80px_-52px_var(--ui-shadow-neutral)] backdrop-blur-xl md:p-8 lg:p-10"
     >
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-accent/60 to-accent-cool/40"
-      />
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -right-32 -top-32 h-72 w-72 rounded-full bg-[radial-gradient(circle,var(--ui-glow-cool-soft),transparent_72%)] blur-3xl"
-      />
-
-      <div className="relative mb-6 flex items-center justify-between gap-4 border-b border-line pb-5">
+      <div className="relative mb-8 flex items-center justify-between gap-4 border-b border-line pb-6">
         <div>
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-accent">
-            Support request
-          </p>
-          <p className="mt-1 text-sm text-muted">
+          <h2 className="text-2xl font-semibold tracking-[-0.03em] text-text sm:text-3xl">
+            Send a support request
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-muted">
             The details below go directly to the developer.
           </p>
         </div>
-        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-accent/20 bg-accent/8 text-accent">
-          <Icon name="mail" size={17} />
+        <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-line bg-overlay text-label-blue">
+          <Icon name="mail" size={19} />
         </span>
       </div>
 
@@ -167,7 +158,7 @@ export function SupportForm() {
                   name="category"
                   required
                   defaultValue="bug"
-                  className="h-12 w-full appearance-none rounded-md border border-line bg-bg/80 px-5 pr-14 text-sm text-text shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] outline-none transition-colors hover:border-line-strong focus-visible:border-accent/45 focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                  className="h-12 w-full appearance-none rounded-xl border border-line bg-bg/70 px-5 pr-14 text-sm text-text outline-none transition-colors hover:border-line-strong focus-visible:border-white/20"
                 >
                   {categories.map((category) => (
                     <option key={category.value} value={category.value}>
@@ -232,13 +223,13 @@ export function SupportForm() {
             minLength={20}
             maxLength={4000}
             rows={5}
-            className="w-full resize-y rounded-md border border-line bg-bg/80 px-5 py-4 text-sm leading-6 text-text shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] placeholder:text-muted focus-visible:border-accent/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            className="w-full resize-y rounded-xl border border-line bg-bg/70 px-5 py-4 text-sm leading-6 text-text placeholder:text-muted focus-visible:border-white/20 focus-visible:outline-none"
             placeholder="Tell us what you expected, what happened instead, and whether it blocks your calendar work."
           />
         </Field>
       </div>
 
-      <details className="group relative mt-4 overflow-hidden rounded-md border border-line bg-overlay">
+      <details className="group relative mt-4 overflow-hidden rounded-xl border border-line bg-overlay">
         <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-sm font-medium text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent [&::-webkit-details-marker]:hidden">
           <span>
             Add steps tried or reproduction
@@ -260,7 +251,7 @@ export function SupportForm() {
             name="steps"
             maxLength={2000}
             rows={4}
-            className="w-full resize-y rounded-md border border-line bg-bg/80 px-5 py-4 text-sm leading-6 text-text shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)] placeholder:text-muted focus-visible:border-accent/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            className="w-full resize-y rounded-xl border border-line bg-bg/70 px-5 py-4 text-sm leading-6 text-text placeholder:text-muted focus-visible:border-white/20 focus-visible:outline-none"
             placeholder={"1. Opened hora\n2. Changed calendar view\n3. Saw..."}
           />
           <p className="mt-2 text-xs leading-5 text-muted">
@@ -274,7 +265,7 @@ export function SupportForm() {
         <input name="honey" tabIndex={-1} autoComplete="off" />
       </label>
 
-      <div className="relative mt-5 rounded-md border border-line bg-overlay p-4 text-sm leading-6 text-muted">
+      <div className="relative mt-5 rounded-xl border border-line bg-overlay p-4 text-sm leading-6 text-muted">
         Please do not include passwords, API tokens, OAuth codes, or private calendar
         event details. Your email is included so we can follow up.
       </div>
@@ -313,7 +304,7 @@ export function SupportForm() {
           type="submit"
           variant="outline"
           size="lg"
-          className="rounded-md border-accent/50 bg-accent px-6 text-sm font-semibold text-text shadow-[0_14px_32px_-22px_oklch(0_0_0/0.94),inset_0_1px_0_oklch(0.9851_0_0/0.16)] transition-[background-color,filter] hover:bg-accent-hover hover:brightness-105 hover:saturate-110 hover:text-text"
+          className="border-accent/50 bg-accent px-6 text-sm font-semibold text-text shadow-[0_14px_32px_-22px_oklch(0_0_0/0.94),inset_0_1px_0_oklch(0.9851_0_0/0.16)] transition-[background-color,filter] hover:bg-accent-hover hover:brightness-105 hover:saturate-110 hover:text-text"
           disabled={submitting}
         >
           <Icon name="mail" size={18} />
@@ -323,7 +314,7 @@ export function SupportForm() {
           href={discordUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="discord-cta-button inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-md px-4 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-discord-hover focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+          className="discord-cta-button inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full [corner-shape:superellipse(1.6)] px-5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-discord-hover focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
         >
           <Icon name="discord" size={17} />
           Join hora Discord

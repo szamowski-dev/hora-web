@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Prose } from "@/components/atoms/Prose";
-import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { CopyLinkButton } from "@/components/molecules/CopyLinkButton";
 import { PostCard } from "@/components/molecules/PostCard";
 import { ShareButton } from "@/components/molecules/ShareButton";
 import { BetaCta } from "@/components/organisms/BetaCta";
+import { Separator } from "@/components/ui/separator";
 import { site } from "@/content/site";
 import { formatBlogDate } from "@/lib/blog";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
@@ -23,12 +23,10 @@ export function BlogPostLayout({
 }) {
   return (
     <>
-      <article data-nav-underlay="cover" className="pb-16 md:pb-20">
-        <section className="home-section relative overflow-hidden border-y pb-10 pt-16 md:pb-12 md:pt-24">
-          <SectionBackdrop direction="balanced" />
-
-          <header className="relative mx-auto max-w-295 px-6">
-            <div className="pb-8 md:pb-10">
+      <article data-nav-underlay="cover" className="pb-20 md:pb-28">
+        <section className="relative bg-bg px-5 pb-16 pt-32 sm:px-10 sm:pb-20 sm:pt-44">
+          <header className="mx-auto max-w-landing">
+            <div>
               <nav
                 aria-label="Breadcrumb"
                 className="flex flex-wrap items-center gap-2 text-xs text-muted"
@@ -48,10 +46,10 @@ export function BlogPostLayout({
                 </Link>
               </nav>
 
-              <h1 className="mt-3 max-w-[960px] text-5xl font-semibold leading-[1.04] tracking-[-0.045em] text-text md:text-[64px]">
+              <h1 className="mt-5 max-w-5xl text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.055em] text-text sm:text-7xl">
                 {post.title}
               </h1>
-              <p className="mt-5 max-w-[820px] text-base leading-7 text-muted md:text-lg md:leading-8">
+              <p className="mt-7 max-w-3xl text-lg leading-8 text-muted sm:text-xl">
                 {post.excerpt}
               </p>
 
@@ -95,8 +93,9 @@ export function BlogPostLayout({
             </div>
           </header>
         </section>
+        <Separator aria-hidden className="mx-auto max-w-24 bg-text/15" />
 
-        <div className="px-6">
+        <div className="px-5 sm:px-10">
           {post.heroImage ? (
             <Image
               src={post.heroImage.src}
@@ -105,11 +104,11 @@ export function BlogPostLayout({
               height={post.heroImage.height ?? 900}
               priority
               sizes="(min-width: 1200px) 1120px, calc(100vw - 3rem)"
-              className="mx-auto mt-8 h-auto w-full max-w-[var(--container-blog-media)] rounded-lg border border-line bg-panel-deep md:mt-10"
+              className="mx-auto mt-16 h-auto w-full max-w-[var(--container-blog-media)] rounded-[28px] [corner-shape:superellipse(1.35)] bg-panel-deep md:mt-20"
             />
           ) : null}
 
-          <Prose className="mx-auto mt-10 md:mt-12">{post.body}</Prose>
+          <Prose className="mx-auto mt-12 md:mt-16">{post.body}</Prose>
 
           <footer className="mx-auto mt-14 max-w-[var(--container-blog-media)] border-t border-line pt-7">
             {post.tags.length > 0 ? (

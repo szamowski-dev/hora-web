@@ -15,7 +15,7 @@ export function FeaturedOn({
   return (
     <section
       aria-label={content.label}
-      className="px-5 py-12 sm:px-10 sm:py-16"
+      className="px-5 py-20 sm:px-10 sm:py-28"
     >
       <Card
         className="mx-auto max-w-landing gap-6 px-6 py-8 sm:px-10 sm:py-10"

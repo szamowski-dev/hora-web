@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BetaCta } from "@/components/organisms/BetaCta";
+import { SitePageHero } from "@/components/templates/SitePageHero";
 import { ChevronRightIcon } from "@/components/ui/blog-icons";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { getMonthlyArchives } from "@/lib/blog";
@@ -35,24 +36,17 @@ export default async function BlogArchiveIndexPage() {
 
   return (
     <>
-      <section className="mx-auto max-w-295 px-6 pt-28 md:pt-32">
-        <div>
-          <p className="text-xs text-muted">
-            <Link href="/blog/" className="text-accent hover:text-accent-hover">
-              Blog
-            </Link>{" "}
-            / Archive
-          </p>
-          <h1 className="mt-7 text-4xl font-semibold leading-none tracking-[-0.04em] text-text md:text-5xl">
-            Archive
-          </h1>
-          <p className="mt-3 max-w-2xl font-editorial text-[17px] leading-7 text-muted md:text-lg">
-            Every story from building hora Calendar, organized by month.
-          </p>
-        </div>
-      </section>
+      <SitePageHero
+        title="Archive"
+        description="Every story from building hora Calendar, organized by month."
+        meta={
+          <Link href="/blog/" className="text-muted hover:text-text">
+            Back to Blog
+          </Link>
+        }
+      />
 
-      <section className="mx-auto max-w-295 px-6 pb-16 pt-10 md:pb-20 md:pt-12">
+      <section className="mx-auto max-w-landing px-5 pb-20 pt-14 sm:px-10 sm:pb-28 sm:pt-20">
         <div className="border-t border-line">
           {archives.map((archive) => (
             <Link

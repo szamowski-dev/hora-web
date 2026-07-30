@@ -1,8 +1,21 @@
 import Link from "next/link";
-import Image from "next/image";
+import {
+  MdCheck,
+  MdDevices,
+  MdFamilyRestroom,
+  MdOpenInNew,
+} from "react-icons/md";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { SetappBadge } from "@/components/atoms/SetappBadge";
-import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
@@ -10,167 +23,169 @@ import type { HomePageContent } from "@/lib/home-model";
 
 export function PricingSection({
   content,
+  compact = false,
 }: {
   content: HomePageContent["pricing"];
+  compact?: boolean;
 }) {
   return (
     <section
       id="pricing"
-      className="home-section relative overflow-hidden border-y py-20 md:py-24"
+      className={compact ? "px-1 pb-2 pt-1" : "px-5 pb-28 sm:px-10 sm:pb-40"}
     >
-      <SectionBackdrop direction="right" />
-
-      <div className="relative mx-auto max-w-295 px-6">
-        <div className="shader-panel ui-panel rounded-xl p-6 md:p-8">
-          <div className="grid gap-5 border-b border-line pb-7 md:grid-cols-[0.82fr_1.18fr] md:items-end md:gap-10">
-            <h2
-              data-anim="pricing-title"
-              className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl"
-            >
-              {content.titlePrefix}{" "}
-              <span className="text-accent">{content.titleAccent}</span>
-            </h2>
-            <div>
-              <p
-                data-anim="pricing-copy"
-                className="max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8"
-              >
-                {content.description}
-              </p>
-              <p className="mt-1 text-base font-medium leading-7 text-text/90 md:text-lg md:leading-8">
-                {content.familySharing}
-              </p>
-              <p className="mt-3 text-sm font-medium text-muted">
-                {content.crossPlatform}
-              </p>
-            </div>
+      <div className="mx-auto max-w-landing">
+        {compact ? null : (
+          <div className="mx-auto mb-12 grid max-w-4xl gap-5 text-center sm:grid-cols-2 sm:text-left">
+            <PricingBenefit
+              icon={MdFamilyRestroom}
+              title={content.familySharing}
+            />
+            <PricingBenefit icon={MdDevices} title={content.crossPlatform} />
           </div>
+        )}
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div
-              data-anim="pricing-card"
-              className="ui-panel-soft relative overflow-hidden rounded-lg border-accent/40 bg-accent/8 p-5 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.12),0_18px_44px_-30px_oklch(0_0_0/0.82)] md:p-6"
+        <div className="grid gap-5 md:grid-cols-2">
+          <PriceCard
+            label={content.oneTime.label}
+            price={content.oneTime.price}
+            badge={content.oneTime.badge}
+            description={content.description}
+            featured
+          />
+          <PriceCard
+            label={content.subscription.label}
+            price={content.subscription.price}
+            description={content.crossPlatform}
+          />
+        </div>
+
+        <details className="group mt-5 overflow-hidden rounded-[28px] [corner-shape:superellipse(1.35)] border border-line bg-panel/55">
+          <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-6 py-4 text-sm font-semibold text-text transition-colors hover:bg-overlay focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text/30 [&::-webkit-details-marker]:hidden">
+            <span>
+              {content.comparisonLabel}
+              <span className="ml-2 font-normal text-muted">
+                {content.comparisonDescription}
+              </span>
+            </span>
+            <span
+              aria-hidden
+              className="text-2xl font-light text-muted transition-transform group-open:rotate-45"
             >
-              <span
-                aria-hidden
-                className="pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-accent/80 to-transparent"
-              />
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
-                  {content.oneTime.label}
+              +
+            </span>
+          </summary>
+          <div className="border-t border-line px-6 pb-6">
+            {content.comparisonItems.map((item) => (
+              <div
+                key={item.name}
+                className="grid gap-1 border-b border-line py-4 last:border-b-0 sm:grid-cols-[1fr_auto]"
+              >
+                <p className="flex flex-wrap items-center gap-2 font-semibold text-text">
+                  {item.name}
+                  {item.recommendedLabel ? (
+                    <span className="rounded-full bg-blue-400/12 px-2 py-1 text-[10px] uppercase tracking-wider text-blue-300">
+                      {item.recommendedLabel}
+                    </span>
+                  ) : null}
                 </p>
-                <span className="inline-flex rounded-full border border-accent/35 bg-accent/12 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
-                  {content.oneTime.badge}
-                </span>
+                <p className="font-medium text-text sm:text-right">
+                  {item.price}
+                </p>
+                <p className="text-sm leading-6 text-muted sm:col-span-2">
+                  {item.description}
+                </p>
               </div>
-              <p className="mt-3 text-3xl font-semibold tracking-tight text-text">
-                {content.oneTime.price}
-              </p>
-            </div>
-            <div
-              data-anim="pricing-card"
-              className="ui-panel-soft rounded-lg p-5 md:p-6"
-            >
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
-                {content.subscription.label}
-              </p>
-              <p className="mt-3 text-3xl font-semibold tracking-tight text-text">
-                {content.subscription.price}
-              </p>
-            </div>
-          </div>
-
-          <details className="group ui-panel-deep mt-5 overflow-hidden rounded-lg">
-            <summary className="flex min-h-13 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-sm font-semibold text-text transition-colors hover:bg-overlay focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent [&::-webkit-details-marker]:hidden">
-              <span>
-                {content.comparisonLabel}
-                <span className="ml-2 font-normal text-muted">
-                  {content.comparisonDescription}
-                </span>
-              </span>
-              <span
-                aria-hidden
-                className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line-strong bg-overlay text-lg font-light text-accent transition-transform group-open:rotate-45"
-              >
-                +
-              </span>
-            </summary>
-
-            <div className="border-t border-line p-4 md:p-5">
-              <div className="mb-3 grid grid-cols-[1fr_auto] border-b border-line pb-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
-                <p>{content.comparisonNameLabel}</p>
-                <p>{content.comparisonPriceLabel}</p>
-              </div>
-              {content.comparisonItems.map((item) => {
-                const isRecommended = Boolean(item.recommendedLabel);
-                return (
-                  <div
-                    key={item.name}
-                    data-anim={isRecommended ? "pricing-hora" : "pricing-row"}
-                    className={`grid grid-cols-1 gap-x-3 gap-y-1 border-b py-3 last:border-b-0 sm:grid-cols-[1.2fr_auto] ${
-                      isRecommended
-                        ? "rounded-sm border-accent/30 bg-accent/8"
-                        : "border-line"
-                    }`}
-                  >
-                    <p className="flex flex-wrap items-center gap-2 text-sm font-semibold text-text">
-                      <span>{item.name}</span>
-                      {item.recommendedLabel ? (
-                        <span className="inline-flex rounded-sm border border-accent/35 bg-accent/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
-                          {item.recommendedLabel}
-                        </span>
-                      ) : null}
-                    </p>
-                    <p
-                      className={`text-sm font-medium sm:text-right ${isRecommended ? "text-accent" : "text-text"}`}
-                    >
-                      {item.price}
-                    </p>
-                    <p
-                      className={`text-xs sm:col-span-2 ${isRecommended ? "text-text/90" : "text-muted"}`}
-                    >
-                      {item.description}
-                    </p>
-                  </div>
-                );
-              })}
-
-              <Link
-                href={content.comparisonCtaHref}
-                className="ui-interactive mt-4 inline-flex h-10 w-fit items-center rounded-md border border-line bg-overlay px-4 text-sm text-muted hover:text-text"
-              >
+            ))}
+            <Button asChild variant="ghost" className="mt-3 px-0">
+              <Link href={content.comparisonCtaHref}>
                 {content.comparisonCtaLabel}
+                <MdOpenInNew data-icon="inline-end" />
               </Link>
-            </div>
-          </details>
-
-          <div className="mt-5 flex flex-col gap-4 border-t border-line pt-5 md:flex-row md:items-center md:justify-end">
-
-            <div className="flex flex-wrap items-center gap-3">
-              <AppStoreLink
-                href={site.cta.primary.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={content.appStoreLabel}
-                {...analyticsAttrs("app_store_cta_click", {
-                  placement: ANALYTICS_PLACEMENTS.pricing,
-                  destination: "mac_app_store",
-                })}
-                className="app-store-interactive inline-flex h-11 items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-              >
-                <Image
-                  src={site.macAppStoreBadgeSrc}
-                  alt={content.appStoreLabel}
-                  width={162}
-                  height={50}
-                  className="h-11 w-auto"
-                />
-              </AppStoreLink>
-              {content.showSetappBadge ? <SetappBadge /> : null}
-            </div>
+            </Button>
           </div>
+        </details>
+
+        <div className="mt-8 flex flex-col items-center justify-center gap-4">
+          <Button asChild variant="accent" size="lg">
+            <AppStoreLink
+              href={site.cta.primary.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              {...analyticsAttrs("app_store_cta_click", {
+                placement: ANALYTICS_PLACEMENTS.pricing,
+                destination: "mac_app_store",
+              })}
+            >
+              {content.appStoreLabel}
+              <MdOpenInNew data-icon="inline-end" />
+            </AppStoreLink>
+          </Button>
+          {content.showSetappBadge ? <SetappBadge /> : null}
         </div>
       </div>
     </section>
+  );
+}
+
+function PriceCard({
+  label,
+  price,
+  badge,
+  description,
+  featured = false,
+}: {
+  label: string;
+  price: string;
+  badge?: string;
+  description: string;
+  featured?: boolean;
+}) {
+  return (
+    <Card className={featured ? "border-blue-300/25 bg-blue-400/[0.06]" : ""}>
+      <CardHeader>
+        <div className="flex items-center justify-between gap-4">
+          <CardDescription className="font-semibold uppercase tracking-[0.14em]">
+            {label}
+          </CardDescription>
+          {badge ? (
+            <span className="rounded-full bg-blue-400/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-blue-300">
+              {badge}
+            </span>
+          ) : null}
+        </div>
+        <CardTitle className="mt-3 text-4xl tracking-[-0.04em]">
+          {price}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm leading-6 text-muted">{description}</p>
+        <ul className="mt-6 space-y-3 text-sm text-text">
+          <li className="flex items-center gap-2">
+            <MdCheck className="size-5 text-green-400" aria-hidden />
+            Native apps, no bundled browser
+          </li>
+          <li className="flex items-center gap-2">
+            <MdCheck className="size-5 text-green-400" aria-hidden />
+            Direct Google Calendar integration
+          </li>
+        </ul>
+      </CardContent>
+      <CardFooter className="sr-only">hora Calendar pricing option</CardFooter>
+    </Card>
+  );
+}
+
+function PricingBenefit({
+  icon: Icon,
+  title,
+}: {
+  icon: typeof MdDevices;
+  title: string;
+}) {
+  return (
+    <div className="flex items-center justify-center gap-3 text-base font-medium text-text sm:justify-start">
+      <Icon className="size-6 text-blue-300" aria-hidden />
+      <span>{title}</span>
+    </div>
   );
 }
