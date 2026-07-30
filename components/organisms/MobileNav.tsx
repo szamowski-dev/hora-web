@@ -2,14 +2,12 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { AppStoreLink } from "@/components/atoms/AppStoreLink";
-import { Icon } from "@/components/atoms/Icon";
+import { MdClose, MdMenu } from "react-icons/md";
 import { Logo } from "@/components/atoms/Logo";
+import { Button } from "@/components/ui/button";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
-import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 
 const toggleId = "mobile-navigation-toggle";
 
@@ -44,9 +42,9 @@ export function MobileNav({ activePath }: { activePath?: string }) {
         aria-label="Open menu"
         aria-controls="mobile-navigation"
         onKeyDown={toggleFromKeyboard}
-        className="absolute right-4 top-1.5 z-20 inline-flex h-11 w-11 cursor-pointer touch-manipulation items-center justify-center rounded-md text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent md:top-2.5 md:right-6"
+        className="absolute right-2 top-1.5 z-20 inline-flex size-11 cursor-pointer touch-manipulation items-center justify-center rounded-full text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent md:right-4 md:top-2.5"
       >
-        <Icon name="menu" size={24} className="pointer-events-none" />
+        <MdMenu aria-hidden="true" className="size-6" />
       </label>
 
       <div
@@ -56,7 +54,7 @@ export function MobileNav({ activePath }: { activePath?: string }) {
         aria-modal="true"
         aria-label="Menu"
       >
-        <div className="ui-panel mx-3 mt-3 flex h-14 shrink-0 items-center justify-between rounded-[20px] px-4 shadow-[0_16px_42px_-24px_oklch(0_0_0/0.9)] md:mx-6 md:h-16 md:rounded-[22px] md:px-6">
+        <div className="landing-glass mx-3 mt-3 flex h-14 shrink-0 items-center justify-between rounded-[18px] px-4 md:mx-6 md:h-16 md:px-6">
           <Logo className="min-h-10" />
           <label
             htmlFor={toggleId}
@@ -64,13 +62,13 @@ export function MobileNav({ activePath }: { activePath?: string }) {
             tabIndex={0}
             aria-label="Close menu"
             onKeyDown={toggleFromKeyboard}
-            className="inline-flex h-11 w-11 cursor-pointer touch-manipulation items-center justify-center rounded-md text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent md:-mr-px"
+            className="inline-flex size-11 cursor-pointer touch-manipulation items-center justify-center rounded-full text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
-            <Icon name="close" size={24} className="pointer-events-none" />
+            <MdClose aria-hidden="true" className="size-6" />
           </label>
         </div>
 
-        <div className="flex flex-col gap-2 px-6 pb-8 pt-4">
+        <div className="flex flex-1 flex-col gap-1 px-6 pb-10 pt-8">
           {site.nav.map((item) => (
             <Link
               key={item.href}
@@ -81,37 +79,30 @@ export function MobileNav({ activePath }: { activePath?: string }) {
                 link_url: item.href,
               })}
               className={cn(
-                "border-b border-border py-3 text-lg transition-colors focus-visible:outline-none focus-visible:text-accent",
+                "border-b border-line py-4 text-2xl font-medium tracking-tight focus-visible:outline-none focus-visible:text-accent",
                 activePath === item.href
                   ? "text-text"
-                  : "text-muted hover:text-text",
+                  : "text-muted transition-colors hover:text-text",
               )}
             >
               {item.label}
             </Link>
           ))}
-          <div className="mt-2 flex items-center">
-            <AppStoreLink
-              href={site.cta.primary.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={site.cta.primary.label}
+          <Button asChild size="lg" className="mt-7 w-full">
+            <Link
+              href={site.cta.trial.href}
               onClick={closeMenu}
-              {...analyticsAttrs("app_store_cta_click", {
-                placement: ANALYTICS_PLACEMENTS.nav,
-                destination: "mac_app_store",
+              {...analyticsAttrs("nav_click", {
+                link_text: site.cta.trial.label,
+                link_url: site.cta.trial.href,
               })}
-              className="app-store-interactive inline-flex h-12 shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
-              <Image
-                src={site.macAppStoreBadgeSrc}
-                alt={site.cta.primary.label}
-                width={162}
-                height={50}
-                className="h-12 w-auto"
-              />
-            </AppStoreLink>
-          </div>
+              {site.cta.trial.label}
+            </Link>
+          </Button>
+          <p className="mt-3 text-center text-xs text-muted">
+            Requires macOS 26 or newer
+          </p>
         </div>
       </div>
     </div>

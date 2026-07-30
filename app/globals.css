@@ -26,6 +26,12 @@
   --color-overlay: oklch(0.9851 0 0 / 0.04);
   --color-overlay-strong: oklch(0.9851 0 0 / 0.07);
   --color-dim: oklch(0.9851 0 0 / 0.32);
+  --color-label-red: oklch(0.704 0.191 22.2);
+  --color-label-blue: oklch(0.713 0.15 244.8);
+  --color-label-green: oklch(0.765 0.174 147.2);
+  --color-label-yellow: oklch(0.825 0.16 84.8);
+  --color-label-purple: oklch(0.722 0.163 306.5);
+  --color-label-cyan: oklch(0.786 0.128 201.7);
 
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-brand: var(--font-bumbbled), var(--font-geist), sans-serif;
@@ -68,6 +74,27 @@ body {
   background: var(--color-bg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: oklch(0.704 0.191 22.2 / 0.32);
+  color: var(--color-text);
+}
+
+.landing-calendar-grid {
+  background-image:
+    linear-gradient(var(--ui-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ui-line) 1px, transparent 1px);
+  background-size: 100% 3.5rem, calc(100% / 7) 100%;
+}
+
+.landing-glass {
+  border: 1px solid var(--ui-line);
+  background: oklch(0.1779 0.0064 271 / 0.72);
+  box-shadow:
+    inset 0 1px 0 var(--ui-highlight),
+    0 36px 96px -56px var(--ui-shadow-neutral);
+  backdrop-filter: blur(28px) saturate(135%);
 }
 
 body:has(#mobile-navigation-toggle:checked) {

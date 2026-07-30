@@ -2,12 +2,17 @@ import "server-only";
 
 import { cache } from "react";
 import { stegaClean } from "next-sanity";
+import { defaultProductLanding } from "@/content/home-landing";
 import type {
   HomeFeatureIcon,
   HomeIntegrationProvider,
   HomePageContent,
   HomeRoadmapStatus,
   HomeTestimonialPlatform,
+  ProductLandingContent,
+  ProductLandingFeature,
+  ProductLandingIcon,
+  ProductLandingTone,
   SiteImage,
   SiteVideo,
 } from "@/lib/home-model";
@@ -22,6 +27,7 @@ import {
 import {
   HOME_PAGE_QUERY,
   type SanityHomePageDocument,
+  type SanityProductLandingFeatureValue,
   type SanitySiteImageValue,
 } from "@/sanity/lib/home-queries";
 
@@ -48,6 +54,48 @@ const testimonialPlatforms = new Set<HomeTestimonialPlatform>([
   "x",
   "reddit",
   "discord",
+]);
+
+const productLandingIcons = new Set<ProductLandingIcon>([
+  "label",
+  "event",
+  "video-call",
+  "contacts",
+  "accounts",
+  "search",
+  "invitation",
+  "menu-bar",
+  "timer",
+  "auto-awesome",
+  "tasks",
+  "focus-time",
+  "availability",
+  "sync",
+  "key",
+  "storage",
+  "speed",
+  "notifications",
+  "dock",
+  "keyboard",
+  "windows",
+  "dark-mode",
+  "apple-silicon",
+  "view",
+  "drag",
+  "quick-add",
+  "time-zone",
+  "repeat",
+  "location",
+  "out-of-office",
+]);
+
+const productLandingTones = new Set<ProductLandingTone>([
+  "red",
+  "blue",
+  "green",
+  "yellow",
+  "purple",
+  "cyan",
 ]);
 
 const roadmapStatuses: Record<string, HomeRoadmapStatus> = {
@@ -193,6 +241,170 @@ function mapVideo(
     ),
     sources,
     poster: value.poster ? mapImage(value.poster, `${field}.poster`) : undefined,
+  };
+}
+
+function landingString(value: string | undefined, fallback: string): string {
+  return optionalString(value) ?? fallback;
+}
+
+function mapLandingFeatures(
+  value: SanityProductLandingFeatureValue[] | undefined,
+  fallback: ProductLandingFeature[],
+  field: string,
+): ProductLandingFeature[] {
+  if (!value?.length) return fallback;
+
+  return value.map((feature, index) => {
+    const icon = requiredMachineString(
+      feature.icon,
+      `${field}[${index}].icon`,
+    );
+    const tone = requiredMachineString(
+      feature.tone,
+      `${field}[${index}].tone`,
+    );
+
+    if (!productLandingIcons.has(icon as ProductLandingIcon)) {
+      invalidHome(`${field}[${index}].icon is unsupported: ${icon}`);
+    }
+    if (!productLandingTones.has(tone as ProductLandingTone)) {
+      invalidHome(`${field}[${index}].tone is unsupported: ${tone}`);
+    }
+
+    return {
+      icon: icon as ProductLandingIcon,
+      tone: tone as ProductLandingTone,
+      title: requiredString(feature.title, `${field}[${index}].title`),
+      description: requiredString(
+        feature.description,
+        `${field}[${index}].description`,
+      ),
+    };
+  });
+}
+
+function mapProductLanding(
+  value: SanityHomePageDocument["productLanding"],
+): ProductLandingContent {
+  const fallback = defaultProductLanding;
+
+  return {
+    hero: {
+      title: landingString(value?.hero?.title, fallback.hero.title),
+      description: landingString(
+        value?.hero?.description,
+        fallback.hero.description,
+      ),
+      primaryCtaLabel: landingString(
+        value?.hero?.primaryCtaLabel,
+        fallback.hero.primaryCtaLabel,
+      ),
+      watchVideoLabel: landingString(
+        value?.hero?.watchVideoLabel,
+        fallback.hero.watchVideoLabel,
+      ),
+      requirement: landingString(
+        value?.hero?.requirement,
+        fallback.hero.requirement,
+      ),
+    },
+    api: {
+      title: landingString(value?.api?.title, fallback.api.title),
+      description: landingString(
+        value?.api?.description,
+        fallback.api.description,
+      ),
+    },
+    googleCalendar: {
+      title: landingString(
+        value?.googleCalendar?.title,
+        fallback.googleCalendar.title,
+      ),
+      description: landingString(
+        value?.googleCalendar?.description,
+        fallback.googleCalendar.description,
+      ),
+      primaryFeatures: mapLandingFeatures(
+        value?.googleCalendar?.primaryFeatures,
+        fallback.googleCalendar.primaryFeatures,
+        "productLanding.googleCalendar.primaryFeatures",
+      ),
+      secondaryFeatures: mapLandingFeatures(
+        value?.googleCalendar?.secondaryFeatures,
+        fallback.googleCalendar.secondaryFeatures,
+        "productLanding.googleCalendar.secondaryFeatures",
+      ),
+    },
+    hora: {
+      title: landingString(value?.hora?.title, fallback.hora.title),
+      description: landingString(
+        value?.hora?.description,
+        fallback.hora.description,
+      ),
+      features: mapLandingFeatures(
+        value?.hora?.features,
+        fallback.hora.features,
+        "productLanding.hora.features",
+      ),
+    },
+    privacy: {
+      title: landingString(value?.privacy?.title, fallback.privacy.title),
+      description: landingString(
+        value?.privacy?.description,
+        fallback.privacy.description,
+      ),
+      features: mapLandingFeatures(
+        value?.privacy?.features,
+        fallback.privacy.features,
+        "productLanding.privacy.features",
+      ),
+    },
+    macos: {
+      title: landingString(value?.macos?.title, fallback.macos.title),
+      description: landingString(
+        value?.macos?.description,
+        fallback.macos.description,
+      ),
+      features: mapLandingFeatures(
+        value?.macos?.features,
+        fallback.macos.features,
+        "productLanding.macos.features",
+      ),
+    },
+    featureGrid: {
+      title: landingString(
+        value?.featureGrid?.title,
+        fallback.featureGrid.title,
+      ),
+      description: landingString(
+        value?.featureGrid?.description,
+        fallback.featureGrid.description,
+      ),
+      features: mapLandingFeatures(
+        value?.featureGrid?.features,
+        fallback.featureGrid.features,
+        "productLanding.featureGrid.features",
+      ),
+    },
+    newsletter: {
+      title: landingString(
+        value?.newsletter?.title,
+        fallback.newsletter.title,
+      ),
+      description: landingString(
+        value?.newsletter?.description,
+        fallback.newsletter.description,
+      ),
+      placeholder: landingString(
+        value?.newsletter?.placeholder,
+        fallback.newsletter.placeholder,
+      ),
+      buttonLabel: landingString(
+        value?.newsletter?.buttonLabel,
+        fallback.newsletter.buttonLabel,
+      ),
+    },
   };
 }
 
@@ -622,6 +834,7 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
         "faq.footerLinkLabel",
       ),
     },
+    productLanding: mapProductLanding(document.productLanding),
   };
 }
 

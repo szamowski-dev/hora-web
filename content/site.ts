@@ -7,13 +7,15 @@ export const site = {
   url: "https://horacal.app",
   nav: [
     { label: "Features", href: "/#features" },
-    { label: "Pricing", href: "/#pricing" },
-    { label: "Roadmap", href: "/#roadmap" },
+    { label: "Privacy", href: "/#privacy" },
+    { label: "macOS", href: "/#macos" },
     { label: "Blog", href: "/blog/" },
-    { label: "FAQ", href: "/#faq" },
-    { label: "Support", href: "/support/" },
   ],
   cta: {
+    trial: {
+      label: "Download free trial",
+      href: "/download/",
+    },
     primary: {
       label: "Download on the Mac App Store",
       href: "https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_website&mt=8",
@@ -30,9 +32,9 @@ export const site = {
   footer: {
     copyright: "© 2026 hora Calendar",
     productLinks: [
-      { label: "Features", href: "/features/" },
-      { label: "Pricing", href: "/#pricing" },
-      { label: "Roadmap", href: "/#roadmap" },
+      { label: "Features", href: "/#features" },
+      { label: "Privacy", href: "/#privacy" },
+      { label: "macOS integration", href: "/#macos" },
       { label: "Download", href: "/download/" },
     ],
     popularGuides: [

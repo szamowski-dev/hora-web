@@ -41,6 +41,99 @@ export type HomeRoadmapStatus =
   | "Planned"
   | "On the horizon";
 
+export type ProductLandingIcon =
+  | "label"
+  | "event"
+  | "video-call"
+  | "contacts"
+  | "accounts"
+  | "search"
+  | "invitation"
+  | "menu-bar"
+  | "timer"
+  | "auto-awesome"
+  | "tasks"
+  | "focus-time"
+  | "availability"
+  | "sync"
+  | "key"
+  | "storage"
+  | "speed"
+  | "notifications"
+  | "dock"
+  | "keyboard"
+  | "windows"
+  | "dark-mode"
+  | "apple-silicon"
+  | "view"
+  | "drag"
+  | "quick-add"
+  | "time-zone"
+  | "repeat"
+  | "location"
+  | "out-of-office";
+
+export type ProductLandingTone =
+  | "red"
+  | "blue"
+  | "green"
+  | "yellow"
+  | "purple"
+  | "cyan";
+
+export type ProductLandingFeature = {
+  icon: ProductLandingIcon;
+  tone: ProductLandingTone;
+  title: string;
+  description: string;
+};
+
+export type ProductLandingContent = {
+  hero: {
+    title: string;
+    description: string;
+    primaryCtaLabel: string;
+    watchVideoLabel: string;
+    requirement: string;
+  };
+  api: {
+    title: string;
+    description: string;
+  };
+  googleCalendar: {
+    title: string;
+    description: string;
+    primaryFeatures: ProductLandingFeature[];
+    secondaryFeatures: ProductLandingFeature[];
+  };
+  hora: {
+    title: string;
+    description: string;
+    features: ProductLandingFeature[];
+  };
+  privacy: {
+    title: string;
+    description: string;
+    features: ProductLandingFeature[];
+  };
+  macos: {
+    title: string;
+    description: string;
+    features: ProductLandingFeature[];
+  };
+  featureGrid: {
+    title: string;
+    description: string;
+    features: ProductLandingFeature[];
+  };
+  newsletter: {
+    title: string;
+    description: string;
+    placeholder: string;
+    buttonLabel: string;
+  };
+};
+
 export type HomePageContent = {
   updatedAt: string;
   seo: {
@@ -181,4 +274,5 @@ export type HomePageContent = {
     footerDescription: string;
     footerLinkLabel: string;
   };
+  productLanding: ProductLandingContent;
 };

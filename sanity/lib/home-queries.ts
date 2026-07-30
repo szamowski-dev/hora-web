@@ -16,6 +16,14 @@ type SanitySiteVideoValue = {
   accessibilityLabel?: string;
 };
 
+export type SanityProductLandingFeatureValue = {
+  _key?: string;
+  icon?: string;
+  tone?: string;
+  title?: string;
+  description?: string;
+};
+
 export type SanityHomePageDocument = {
   _id?: string;
   _updatedAt?: string;
@@ -169,6 +177,51 @@ export type SanityHomePageDocument = {
     footerDescription?: string;
     footerLinkLabel?: string;
   };
+  productLanding?: {
+    hero?: {
+      title?: string;
+      description?: string;
+      primaryCtaLabel?: string;
+      watchVideoLabel?: string;
+      requirement?: string;
+    };
+    api?: {
+      title?: string;
+      description?: string;
+    };
+    googleCalendar?: {
+      title?: string;
+      description?: string;
+      primaryFeatures?: SanityProductLandingFeatureValue[];
+      secondaryFeatures?: SanityProductLandingFeatureValue[];
+    };
+    hora?: {
+      title?: string;
+      description?: string;
+      features?: SanityProductLandingFeatureValue[];
+    };
+    privacy?: {
+      title?: string;
+      description?: string;
+      features?: SanityProductLandingFeatureValue[];
+    };
+    macos?: {
+      title?: string;
+      description?: string;
+      features?: SanityProductLandingFeatureValue[];
+    };
+    featureGrid?: {
+      title?: string;
+      description?: string;
+      features?: SanityProductLandingFeatureValue[];
+    };
+    newsletter?: {
+      title?: string;
+      description?: string;
+      placeholder?: string;
+      buttonLabel?: string;
+    };
+  };
 };
 
 const siteImageProjection = `{
@@ -313,6 +366,51 @@ export const HOME_PAGE_QUERY = defineQuery(`
       footerTitle,
       footerDescription,
       footerLinkLabel
+    },
+    productLanding{
+      hero{
+        title,
+        description,
+        primaryCtaLabel,
+        watchVideoLabel,
+        requirement
+      },
+      api{
+        title,
+        description
+      },
+      googleCalendar{
+        title,
+        description,
+        primaryFeatures[]{_key, icon, tone, title, description},
+        secondaryFeatures[]{_key, icon, tone, title, description}
+      },
+      hora{
+        title,
+        description,
+        features[]{_key, icon, tone, title, description}
+      },
+      privacy{
+        title,
+        description,
+        features[]{_key, icon, tone, title, description}
+      },
+      macos{
+        title,
+        description,
+        features[]{_key, icon, tone, title, description}
+      },
+      featureGrid{
+        title,
+        description,
+        features[]{_key, icon, tone, title, description}
+      },
+      newsletter{
+        title,
+        description,
+        placeholder,
+        buttonLabel
+      }
     }
   }
 `);
