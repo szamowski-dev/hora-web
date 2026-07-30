@@ -328,7 +328,7 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
         (badge, index) => {
           const field = `featuredOn.badges[${index}]`;
           const alt = requiredString(badge.alt, `${field}.alt`);
-          const uploadedImage = badge.image
+          const uploadedImage = badge.image?.asset
             ? mapImage(badge.image, `${field}.image`, alt)
             : undefined;
 
