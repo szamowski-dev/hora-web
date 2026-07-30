@@ -15,7 +15,7 @@ export const site = {
   cta: {
     trial: {
       label: "Download",
-      href: "/download/",
+      href: "/pricing/",
     },
     primary: {
       label: "Download on the Mac App Store",
@@ -44,7 +44,7 @@ export const site = {
       { label: "Privacy", href: "/#privacy" },
       { label: "macOS integration", href: "/#macos" },
       { label: "Pricing", href: "/pricing/" },
-      { label: "Download", href: "/download/" },
+      { label: "Download", href: "/pricing/" },
     ],
     popularGuides: [
       {

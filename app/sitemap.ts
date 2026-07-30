@@ -90,12 +90,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     }),
     {
-      url: `${base}/download/`,
-      lastModified: today,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
-    {
       url: `${base}/pricing/`,
       lastModified: pageMetadata.home.lastModified,
       changeFrequency: "monthly",

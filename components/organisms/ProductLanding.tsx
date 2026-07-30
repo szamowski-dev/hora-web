@@ -109,10 +109,10 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button asChild size="lg" variant="accent">
               <Link
-                href="/download/"
+                href="/pricing/"
                 {...analyticsAttrs("nav_click", {
                   link_text: landing.hero.primaryCtaLabel,
-                  link_url: "/download/",
+                  link_url: "/pricing/",
                 })}
               >
                 <MdDownloadForOffline
