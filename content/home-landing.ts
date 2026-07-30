@@ -78,10 +78,10 @@ export const defaultProductLanding = {
           "Easily create multiple Focus Time blocks across a busy week.",
       },
       {
-        icon: "widgets",
-        tone: "green",
-        title: "Widgets",
-        description: "Keep your schedule visible across macOS.",
+        icon: "menu-bar",
+        tone: "cyan",
+        title: "Menu bar",
+        description: "Your next event is always one click away.",
       },
       {
         icon: "availability",
@@ -142,10 +142,10 @@ export const defaultProductLanding = {
         description: "Designed for modern Mac hardware.",
       },
       {
-        icon: "menu-bar",
-        tone: "cyan",
-        title: "Menu bar",
-        description: "Your next event is always one click away.",
+        icon: "widgets",
+        tone: "green",
+        title: "Widgets & Themes",
+        description: "Keep your schedule visible across macOS.",
       },
       {
         icon: "notifications",
@@ -156,7 +156,7 @@ export const defaultProductLanding = {
       {
         icon: "dark-mode",
         tone: "purple",
-        title: "Themes & Dark mode",
+        title: "Dark/Light mode",
         description: "Matches your system appearance automatically.",
       },
       {
