@@ -112,34 +112,10 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="https://consentcdn.cookiebot.com" />
       </head>
       <body className="min-h-dvh flex flex-col text-text">
-        <Script
-          id="gads-consent"
-          strategy="beforeInteractive"
-          data-cookieconsent="ignore"
-        >
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            window.gtag = gtag;
-            gtag('consent', 'default', {
-              ad_storage: 'denied',
-              ad_user_data: 'denied',
-              ad_personalization: 'denied',
-              analytics_storage: 'denied',
-              functionality_storage: 'denied',
-              personalization_storage: 'denied',
-              security_storage: 'granted',
-              wait_for_update: 500
-            });
-            gtag('set', 'ads_data_redaction', true);
-            gtag('set', 'url_passthrough', true);
-          `}
-        </Script>
-
         {/* Cookiebot is moved to lazyOnload because its dialog markup was
             being picked as the LCP element (2.4s render delay on mobile).
-            The default-denied gtag consent above keeps us compliant until
-            the banner finishes loading post window.load. */}
+            The default-denied consent initialized in instrumentation-client.ts
+            keeps us compliant until the banner finishes loading post window.load. */}
         <Script
           id="Cookiebot"
           src="https://consent.cookiebot.com/uc.js"

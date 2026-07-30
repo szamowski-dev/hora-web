@@ -202,6 +202,12 @@ function mapImage(
   };
 }
 
+function hasImageAsset(
+  value: SanitySiteImageValue | null | undefined,
+): value is SanitySiteImageValue {
+  return Boolean(value?.asset?._id || value?.asset?.url);
+}
+
 function mapVideo(
   value:
     | {
@@ -546,7 +552,7 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
         (badge, index) => {
           const field = `featuredOn.badges[${index}]`;
           const alt = requiredString(badge.alt, `${field}.alt`);
-          const uploadedImage = badge.image
+          const uploadedImage = hasImageAsset(badge.image)
             ? mapImage(badge.image, `${field}.image`, alt)
             : undefined;
 

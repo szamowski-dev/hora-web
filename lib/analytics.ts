@@ -2,6 +2,7 @@ import { isTestEmail, normalizeEmail } from "@/lib/identity";
 
 declare global {
   interface Window {
+    dataLayer: unknown[][];
     gtag?: (...args: unknown[]) => void;
     rdt?: (...args: unknown[]) => void;
   }
