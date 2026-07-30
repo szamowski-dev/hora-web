@@ -96,7 +96,7 @@ export function ProductHeroShaderMotion() {
   return (
     <div
       ref={hostRef}
-      className="absolute inset-0 hidden opacity-30 md:block"
+      className="absolute inset-y-0 -inset-x-[20%] hidden opacity-30 md:block"
     >
       {Canvas ? <Canvas /> : null}
     </div>
