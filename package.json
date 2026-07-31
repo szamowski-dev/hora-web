@@ -15,10 +15,13 @@
     "sanity:verify:site": "sanity exec scripts/verify-sanity-site.ts --with-user-token"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "@portabletext/types": "4.0.2",
+    "@revenuecat/purchases-js": "^1.49.1",
     "@sanity/image-url": "2.1.1",
     "@sanity/vision": "6.4.0",
     "class-variance-authority": "^0.7.1",
+    "jose": "^6.2.5",
     "next": "16.2.4",
     "next-mdx-remote": "^6.0.0",
     "next-sanity": "13.1.1",

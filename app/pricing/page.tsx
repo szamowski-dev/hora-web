@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import {
-  PRICING_SUMMARY,
-  PricingSection,
-} from "@/components/organisms/PricingSection";
+import { BillingExperience } from "@/components/billing/BillingExperience";
 import { SitePageHero } from "@/components/templates/SitePageHero";
-import { getHomePage } from "@/lib/home-repository";
 import { defaultOg } from "@/lib/og";
+
+const PRICING_SUMMARY = "Secure sandbox checkout for hora Calendar Direct.";
 
 export const revalidate = 600;
 
@@ -20,17 +18,15 @@ export const metadata: Metadata = {
   }),
 };
 
-export default async function PricingPage() {
-  const { pricing } = await getHomePage();
-
+export default function PricingPage() {
   return (
     <>
       <SitePageHero
         align="center"
-        title={`${pricing.titlePrefix} ${pricing.titleAccent}`}
-        description={PRICING_SUMMARY}
+        title="Choose your Direct plan"
+        description="Sign in with Google to see the sandbox Annual and Lifetime options. Your 14-day Direct app trial remains in the native app."
       />
-      <PricingSection content={pricing} />
+      <BillingExperience mode="pricing" />
     </>
   );
 }
