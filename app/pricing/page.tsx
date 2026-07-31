@@ -24,7 +24,7 @@ export default function PricingPage() {
       <SitePageHero
         align="center"
         title="Choose your Direct plan"
-        description="Sign in with Google to see the sandbox Annual and Lifetime options. Your 14-day Direct app trial remains in the native app."
+        description="Choose Annual or Lifetime first. Google sign-in is only required before secure checkout. Your 14-day Direct app trial remains in the native app."
       />
       <BillingExperience mode="pricing" />
     </>

@@ -1,7 +1,7 @@
 "use client";
 
-import { Purchases, type CustomerInfo, type Package } from "@revenuecat/purchases-js";
-import { useCallback, useState } from "react";
+import { Purchases, type CustomerInfo } from "@revenuecat/purchases-js";
+import { useCallback, useEffect, useState } from "react";
 import { GoogleSignInButton } from "@/components/billing/GoogleSignInButton";
 import { Button } from "@/components/ui/button";
 
@@ -11,6 +11,7 @@ type PublicBillingConfig = {
 };
 
 type IdentityResponse = { app_user_id: string };
+type PricingPlan = { identifier: "$rc_annual" | "$rc_lifetime"; amount: number; currency: string };
 
 function activeEntitlements(customerInfo: CustomerInfo | null): string[] {
   return customerInfo ? Object.keys(customerInfo.entitlements.active).sort() : [];
@@ -24,10 +25,10 @@ export function BillingExperience({ mode }: { mode: "pricing" | "account" }) {
   const [config, setConfig] = useState<PublicBillingConfig | null>(null);
   const [appUserId, setAppUserId] = useState<string | null>(null);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null);
-  const [packages, setPackages] = useState<Package[]>([]);
-  const [status, setStatus] = useState("Preparing secure sign-in…");
+  const [plans, setPlans] = useState<PricingPlan[]>([]);
+  const [pendingPackage, setPendingPackage] = useState<PricingPlan["identifier"] | null>(null);
+  const [status, setStatus] = useState(mode === "pricing" ? "Loading plans…" : "Preparing secure sign-in…");
   const [error, setError] = useState<string | null>(null);
-  const [purchasing, setPurchasing] = useState<string | null>(null);
 
   const loadConfig = useCallback(async (): Promise<PublicBillingConfig> => {
     if (config) return config;
@@ -37,6 +38,23 @@ export function BillingExperience({ mode }: { mode: "pricing" | "account" }) {
     setConfig(body);
     return body;
   }, [config]);
+
+  const loadPlans = useCallback(async () => {
+    const response = await fetch("/api/billing/plans", { cache: "no-store" });
+    const body = (await response.json()) as { plans?: PricingPlan[]; error?: string };
+    if (!response.ok || !body.plans) throw new Error(body.error ?? "Sandbox plans are unavailable.");
+    if (body.plans.length !== 2) throw new Error("The sandbox offering must contain exactly Annual and Lifetime.");
+    setPlans(body.plans.sort((a, b) => a.identifier.localeCompare(b.identifier)));
+    setStatus("Choose a plan. Google sign-in is only needed before checkout.");
+  }, []);
+
+  useEffect(() => {
+    if (mode !== "pricing") return;
+    void loadPlans().catch((caughtError) => {
+      setError(errorMessage(caughtError));
+      setStatus("Sandbox billing is unavailable.");
+    });
+  }, [loadPlans, mode]);
 
   const handleCredential = useCallback(
     async (idToken: string) => {
@@ -80,7 +98,7 @@ export function BillingExperience({ mode }: { mode: "pricing" | "account" }) {
         if (mode === "pricing") {
           const offerings = await purchases.getOfferings();
           if (offerings.current?.identifier !== "pro") {
-            throw new Error("The sandbox offering is unavailable. Check the RevenueCat web configuration.");
+            throw new Error("RevenueCat is not returning purchasable Paddle products for the sandbox pro offering. Re-import the Annual and Lifetime Paddle Sandbox prices in RevenueCat, then try again.");
           }
           const expectedPackages = offerings.current.availablePackages.filter(
             (pkg) => pkg.identifier === "$rc_annual" || pkg.identifier === "$rc_lifetime",
@@ -88,7 +106,20 @@ export function BillingExperience({ mode }: { mode: "pricing" | "account" }) {
           if (expectedPackages.length !== 2) {
             throw new Error("The sandbox offering must contain exactly Annual and Lifetime.");
           }
-          setPackages(expectedPackages.sort((a, b) => a.identifier.localeCompare(b.identifier)));
+          expectedPackages.sort((a, b) => a.identifier.localeCompare(b.identifier));
+          const selectedPackage = expectedPackages.find((pkg) => pkg.identifier === pendingPackage);
+          if (selectedPackage) {
+            setStatus("Opening secure checkout…");
+            const result = await purchases.purchase({ rcPackage: selectedPackage });
+            setCustomerInfo(await purchases.getCustomerInfo());
+            setPendingPackage(null);
+            setStatus(
+              Object.keys(result.customerInfo.entitlements.active).length
+                ? "Purchase complete. Your entitlement is active."
+                : "Purchase completed. Refreshing entitlement status…",
+            );
+            return;
+          }
         }
         setStatus("Signed in securely.");
       } catch (caughtError) {
@@ -96,7 +127,7 @@ export function BillingExperience({ mode }: { mode: "pricing" | "account" }) {
         setStatus("Sign-in could not be completed.");
       }
     },
-    [loadConfig, mode],
+    [loadConfig, mode, pendingPackage],
   );
 
   const start = useCallback(async () => {
@@ -110,24 +141,18 @@ export function BillingExperience({ mode }: { mode: "pricing" | "account" }) {
     }
   }, [loadConfig]);
 
-  const purchase = useCallback(async (pkg: Package) => {
-    setPurchasing(pkg.identifier);
+  const beginPurchase = useCallback(async (plan: PricingPlan) => {
     setError(null);
+    setPendingPackage(plan.identifier);
+    setStatus("Sign in with Google to continue to checkout.");
     try {
-      const purchases = Purchases.getSharedInstance();
-      const result = await purchases.purchase({ rcPackage: pkg });
-      setCustomerInfo(await purchases.getCustomerInfo());
-      setStatus(
-        Object.keys(result.customerInfo.entitlements.active).length
-          ? "Purchase complete. Your entitlement is active."
-          : "Purchase completed. Refreshing entitlement status…",
-      );
+      await loadConfig();
     } catch (caughtError) {
+      setPendingPackage(null);
       setError(errorMessage(caughtError));
-    } finally {
-      setPurchasing(null);
+      setStatus("Sandbox billing is unavailable.");
     }
-  }, []);
+  }, [loadConfig]);
 
   const entitlementNames = activeEntitlements(customerInfo);
 
@@ -137,20 +162,21 @@ export function BillingExperience({ mode }: { mode: "pricing" | "account" }) {
         <p className="text-sm leading-6 text-muted">{status}</p>
         {error ? <p role="alert" className="mt-4 rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-100">{error}</p> : null}
 
-        {!config ? <Button className="mt-6" onClick={() => void start()}>Continue with Google</Button> : null}
-        {config && !appUserId ? <div className="mt-6"><GoogleSignInButton clientId={config.googleClientId} onCredential={(credential) => void handleCredential(credential)} /></div> : null}
+        {mode === "account" && !config ? <Button className="mt-6" onClick={() => void start()}>Continue with Google</Button> : null}
+        {config && !appUserId && (mode === "account" || pendingPackage) ? <div className="mt-6"><GoogleSignInButton clientId={config.googleClientId} onCredential={(credential) => void handleCredential(credential)} /></div> : null}
 
-        {appUserId && mode === "pricing" ? (
+        {mode === "pricing" ? (
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            {packages.map((pkg) => {
-              const annual = pkg.identifier === "$rc_annual";
+            {plans.map((plan) => {
+              const annual = plan.identifier === "$rc_annual";
+              const price = new Intl.NumberFormat("en-US", { style: "currency", currency: plan.currency }).format(plan.amount / 100);
               return (
-                <article key={pkg.identifier} className="rounded-2xl border border-line bg-overlay p-5">
+                <article key={plan.identifier} className="rounded-2xl border border-line bg-overlay p-5">
                   <p className="text-sm font-semibold uppercase tracking-[0.14em] text-muted">{annual ? "Annual" : "Lifetime"}</p>
-                  <p className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-text">{annual ? "$29.99/year" : "$49"}</p>
+                  <p className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-text">{annual ? `${price}/year` : price}</p>
                   <p className="mt-3 text-sm leading-6 text-muted">{annual ? "Renews yearly. No web trial." : "Pay once and keep access."}</p>
-                  <Button className="mt-6 w-full" variant={annual ? "outline" : "accent"} disabled={purchasing !== null} onClick={() => void purchase(pkg)}>
-                    {purchasing === pkg.identifier ? "Opening checkout…" : `Choose ${annual ? "Annual" : "Lifetime"}`}
+                  <Button className="mt-6 w-full" variant={annual ? "outline" : "accent"} disabled={pendingPackage !== null} onClick={() => void beginPurchase(plan)}>
+                    {pendingPackage === plan.identifier ? "Continue with Google…" : `Choose ${annual ? "Annual" : "Lifetime"}`}
                   </Button>
                 </article>
               );

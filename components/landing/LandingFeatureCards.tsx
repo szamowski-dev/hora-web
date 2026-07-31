@@ -46,7 +46,8 @@ export function LandingFeatureCards({
         <Card
           key={`${feature.icon}-${feature.title}`}
           className={cn(
-            "min-h-[30rem] overflow-hidden rounded-[20px] border-transparent bg-feature-panel py-0 shadow-none backdrop-blur-none",
+            "relative overflow-hidden rounded-[20px] border-transparent bg-feature-panel !py-0 shadow-none backdrop-blur-none",
+            index === 0 || index === 3 ? "min-h-[26rem]" : "min-h-[28rem]",
             cardSpanClasses[index % cardSpanClasses.length],
           )}
         >
@@ -63,7 +64,7 @@ export function LandingFeatureCards({
               {feature.description}
             </CardDescription>
           </CardHeader>
-          <CardContent className="mt-auto flex flex-1 items-end max-sm:!px-0 sm:!px-6 pb-0">
+          <CardContent className="mt-auto flex flex-1 items-end !p-0">
             <Image
               src={images[index].src}
               alt={images[index].alt}
@@ -74,7 +75,7 @@ export function LandingFeatureCards({
                   ? "(min-width: 1024px) 760px, calc(100vw - 5rem)"
                   : "(min-width: 1024px) 360px, calc(100vw - 5rem)"
               }
-              className="h-auto w-full rounded-t-[18px] object-cover object-bottom"
+              className="h-auto w-full rounded-t-[18px]"
             />
           </CardContent>
         </Card>

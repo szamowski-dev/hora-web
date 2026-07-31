@@ -17,7 +17,7 @@
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
     "@portabletext/types": "4.0.2",
-    "@revenuecat/purchases-js": "^1.49.1",
+    "@revenuecat/purchases-js": "^1.51.0",
     "@sanity/image-url": "2.1.1",
     "@sanity/vision": "6.4.0",
     "class-variance-authority": "^0.7.1",
