@@ -1,7 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { PricingSection } from "@/components/organisms/PricingSection";
+import {
+  PRICING_SUMMARY,
+  PricingSection,
+} from "@/components/organisms/PricingSection";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +29,7 @@ export function PricingRouteDialog({
             {content.titlePrefix} {content.titleAccent}
           </DialogTitle>
           <DialogDescription className="max-w-2xl text-base leading-7 text-muted">
-            {content.description}
+            {PRICING_SUMMARY}
           </DialogDescription>
         </DialogHeader>
         <PricingSection content={content} compact />

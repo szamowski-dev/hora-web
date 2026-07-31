@@ -63,7 +63,7 @@ export function LandingFeatureCards({
               {feature.description}
             </CardDescription>
           </CardHeader>
-          <CardContent className="mt-auto flex flex-1 items-end px-5 pb-0 sm:px-6">
+          <CardContent className="mt-auto flex flex-1 items-end max-sm:!px-0 sm:!px-6 pb-0">
             <Image
               src={images[index].src}
               alt={images[index].alt}

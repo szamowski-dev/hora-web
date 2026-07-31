@@ -93,7 +93,7 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
 
   return (
     <div
-      data-nav-underlay="flush"
+      data-nav-underlay="cover"
       className="relative isolate overflow-hidden bg-bg"
     >
       <section className="relative px-5 pb-24 pt-28 sm:px-10 sm:pb-32 sm:pt-40 md:pt-48">

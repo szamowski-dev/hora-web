@@ -11,8 +11,8 @@ export function Footer() {
   return (
     <footer className="border-t border-line bg-panel-deep px-5 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-6xl">
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.45fr_0.8fr_1.25fr_0.8fr] lg:gap-12">
-          <div className="flex max-w-xs flex-col items-start gap-5">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-12 lg:grid-cols-[1.45fr_0.8fr_1.25fr_0.8fr] lg:gap-12">
+          <div className="order-4 col-span-2 flex max-w-xs flex-col items-start gap-5 border-t border-line pt-10 sm:order-none sm:col-span-1 sm:border-t-0 sm:pt-0">
             <Logo className="min-h-11" />
             <p className="whitespace-pre-line text-sm leading-6 text-muted">
               {site.footer.description}
@@ -32,12 +32,12 @@ export function Footer() {
             </div>
           </div>
 
-          <nav aria-label="Product links">
+          <nav aria-label="Product links" className="order-1 sm:order-none">
             <p className="text-sm font-semibold text-text">Product</p>
             <div className="mt-3 flex flex-col items-start">
               {site.footer.productLinks.map((link) => (
                 <Link
-                  key={link.href}
+                  key={`${link.label}-${link.href}`}
                   href={link.href}
                   className={linkClassName}
                 >
@@ -47,7 +47,10 @@ export function Footer() {
             </div>
           </nav>
 
-          <nav aria-label="Popular calendar guides">
+          <nav
+            aria-label="Popular calendar guides"
+            className="order-2 sm:order-none"
+          >
             <p className="text-sm font-semibold text-text">Popular guides</p>
             <div className="mt-3 flex flex-col items-start">
               {site.footer.popularGuides.map((guide) => (
@@ -62,9 +65,12 @@ export function Footer() {
             </div>
           </nav>
 
-          <nav aria-label="Company links">
+          <nav
+            aria-label="Company links"
+            className="order-3 col-span-2 sm:order-none sm:col-span-1"
+          >
             <p className="text-sm font-semibold text-text">Company</p>
-            <div className="mt-3 flex flex-col items-start">
+            <div className="mt-3 grid grid-cols-2 justify-items-start sm:flex sm:flex-col sm:items-start">
               {site.footer.links.map((link) => (
                 <Link
                   key={link.href}

@@ -3,10 +3,10 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import {
   MdCheck,
-  MdDevices,
   MdDownloadForOffline,
-  MdFamilyRestroom,
   MdOpenInNew,
+  MdPayments,
+  MdTimer,
 } from "react-icons/md";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { SetappBadge } from "@/components/atoms/SetappBadge";
@@ -24,6 +24,9 @@ import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import type { HomePageContent } from "@/lib/home-model";
 
+export const PRICING_SUMMARY =
+  "Try hora free for 14 days. Then choose a one-time purchase or annual license. Family Sharing is available through the Mac App Store; Setapp includes the Mac app only.";
+
 export function PricingSection({
   content,
   compact = false,
@@ -40,24 +43,27 @@ export function PricingSection({
         {compact ? null : (
           <div className="mx-auto mb-12 grid max-w-4xl gap-5 text-center sm:grid-cols-2 sm:text-left">
             <PricingBenefit
-              icon={MdFamilyRestroom}
-              title={content.familySharing}
+              icon={MdTimer}
+              title="14-day trial with direct and Mac App Store downloads"
             />
-            <PricingBenefit icon={MdDevices} title={content.crossPlatform} />
+            <PricingBenefit
+              icon={MdPayments}
+              title="Choose a one-time purchase or annual license"
+            />
           </div>
         )}
 
         <div className="grid gap-5 md:grid-cols-2">
           <PriceCard
-            label={content.oneTime.label}
+            label="One-time purchase"
             price={content.oneTime.price}
-            description={content.description}
+            description="Pay once and keep your license."
             featured
           />
           <PriceCard
-            label={content.subscription.label}
+            label="Annual license"
             price={content.subscription.price}
-            description={content.crossPlatform}
+            description="Lower upfront price, renewed yearly."
           />
         </div>
 
@@ -94,7 +100,9 @@ export function PricingSection({
                   {item.price}
                 </p>
                 <p className="text-sm leading-6 text-muted sm:col-span-2">
-                  {item.description}
+                  {item.name === "hora Calendar"
+                    ? "Native and Google-focused. Family Sharing is available through the Mac App Store."
+                    : item.description}
                 </p>
               </div>
             ))}
@@ -110,7 +118,7 @@ export function PricingSection({
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           <PurchaseOption
             title="Buy directly"
-            description="14-day trial. One-time purchase or yearly license. Download immediately."
+            description="14-day trial. Choose a one-time purchase or annual Mac license. Family Sharing is not included."
           >
             <Button asChild variant="outline" size="lg">
               <a
@@ -128,7 +136,7 @@ export function PricingSection({
 
           <PurchaseOption
             title="Mac App Store"
-            description="Purchase using your Apple Account."
+            description="14-day trial. Choose a one-time purchase or annual license with Family Sharing across Mac, iPhone, and iPad."
           >
             <AppStoreLink
               href={site.cta.primary.href}
@@ -154,7 +162,7 @@ export function PricingSection({
           {content.showSetappBadge ? (
             <PurchaseOption
               title="Available on Setapp"
-              description="Included with your Setapp subscription."
+              description="Included with your Setapp subscription on Mac. iPhone and iPad apps are not included."
             >
               <SetappBadge />
             </PurchaseOption>
@@ -228,7 +236,7 @@ function PricingBenefit({
   icon: Icon,
   title,
 }: {
-  icon: typeof MdDevices;
+  icon: typeof MdTimer;
   title: string;
 }) {
   return (

@@ -102,7 +102,7 @@ export function LandingFeatureList({
   return (
     <div
       className={cn(
-        "grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3",
+        "grid grid-cols-1 gap-x-10 gap-y-12 px-5 sm:grid-cols-2 sm:px-0 lg:grid-cols-3",
         titleOnly
           ? "gap-x-11 gap-y-10 sm:gap-y-11 lg:gap-x-16"
           : prominent
