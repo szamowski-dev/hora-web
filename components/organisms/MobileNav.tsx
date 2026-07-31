@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import { MdClose, MdMenu } from "react-icons/md";
 import { Logo } from "@/components/atoms/Logo";
+import { ThemeToggle } from "@/components/molecules/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
@@ -56,16 +57,19 @@ export function MobileNav({ activePath }: { activePath?: string }) {
       >
         <div className="landing-glass mx-3 mt-3 flex h-14 shrink-0 items-center justify-between rounded-[18px] px-4 md:mx-6 md:h-16 md:px-6">
           <Logo className="min-h-10" />
-          <label
-            htmlFor={toggleId}
-            role="button"
-            tabIndex={0}
-            aria-label="Close menu"
-            onKeyDown={toggleFromKeyboard}
-            className="inline-flex size-11 cursor-pointer touch-manipulation items-center justify-center rounded-full text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-          >
-            <MdClose aria-hidden="true" className="size-6" />
-          </label>
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <label
+              htmlFor={toggleId}
+              role="button"
+              tabIndex={0}
+              aria-label="Close menu"
+              onKeyDown={toggleFromKeyboard}
+              className="inline-flex size-11 cursor-pointer touch-manipulation items-center justify-center rounded-full text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              <MdClose aria-hidden="true" className="size-6" />
+            </label>
+          </div>
         </div>
 
         <div className="flex flex-1 flex-col gap-1 px-6 pb-10 pt-8">

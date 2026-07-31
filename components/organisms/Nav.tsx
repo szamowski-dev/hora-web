@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/atoms/Logo";
+import { ThemeToggle } from "@/components/molecules/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
@@ -33,6 +34,7 @@ export function Nav({ activePath }: { activePath?: string }) {
                 {item.label}
               </Link>
             ))}
+            <ThemeToggle />
             <Button asChild size="sm">
               <Link
                 href={site.cta.trial.href}
@@ -45,6 +47,7 @@ export function Nav({ activePath }: { activePath?: string }) {
               </Link>
             </Button>
           </div>
+          <ThemeToggle className="mr-10 md:hidden" />
         </div>
       </nav>
       <MobileNav activePath={activePath} />

@@ -105,10 +105,17 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="light"
       data-scroll-behavior="smooth"
+      suppressHydrationWarning
       className={`${geist.variable} ${newsreader.variable} ${bumbbled.variable}`}
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try { const theme = localStorage.getItem('hora-theme'); if (theme === 'dark') { document.documentElement.dataset.theme = theme; document.documentElement.style.colorScheme = theme; } } catch {}`,
+          }}
+        />
         <link rel="dns-prefetch" href="https://consent.cookiebot.com" />
         <link rel="dns-prefetch" href="https://consentcdn.cookiebot.com" />
       </head>

@@ -18,16 +18,16 @@ export function ProductHeroShaderCanvas() {
       <Circle
         id="product-hero-mask"
         center={{ x: 0.5, y: 0.42 }}
-        color="#ffffff"
+        color="oklch(1 0 0)"
         radius={1.35}
         softness={1}
         visible={false}
       />
       <FlowingGradient
-        colorA="#070a10"
-        colorB="#174ea6"
-        colorC="#70c6ff"
-        colorD="#8f78bd"
+        colorA="oklch(0.144273 0.014268 262.103)"
+        colorB="oklch(0.443226 0.153078 259.855)"
+        colorC="oklch(0.794642 0.116521 239.522)"
+        colorD="oklch(0.621492 0.104494 298.662)"
         colorSpace="oklab"
         distortion={0.28}
         maskSource="product-hero-mask"

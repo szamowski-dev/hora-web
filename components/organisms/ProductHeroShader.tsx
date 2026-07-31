@@ -10,7 +10,7 @@ export function ProductHeroShader() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute left-1/2 top-10 h-[36rem] w-[min(72rem,calc(100%-2.5rem))] -translate-x-1/2 sm:top-16 sm:h-[42rem]"
+      className="pointer-events-none absolute left-1/2 -top-24 h-[42rem] w-[min(72rem,calc(100%-2.5rem))] -translate-x-1/2 sm:-top-28 sm:h-[49rem]"
     >
       <div
         className="absolute inset-y-0 -inset-x-[20%]"

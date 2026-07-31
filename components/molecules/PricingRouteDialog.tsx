@@ -23,16 +23,18 @@ export function PricingRouteDialog({
 
   return (
     <Dialog open onOpenChange={(open) => (open ? undefined : router.back())}>
-      <DialogContent className="max-h-[92dvh] overflow-y-auto p-5 sm:!max-w-5xl sm:p-8">
-        <DialogHeader className="pr-12 text-left">
-          <DialogTitle className="text-3xl tracking-[-0.04em] sm:text-4xl">
+      <DialogContent className="p-5 sm:!max-w-4xl sm:p-6 sm:has-[details[open]]:max-h-[92dvh] sm:has-[details[open]]:overflow-y-auto">
+        <DialogHeader className="pr-12 text-left sm:[zoom:0.9]">
+          <DialogTitle className="text-3xl tracking-[-0.04em] sm:text-[2rem]">
             {content.titlePrefix} {content.titleAccent}
           </DialogTitle>
           <DialogDescription className="max-w-2xl text-base leading-7 text-muted">
             {PRICING_SUMMARY}
           </DialogDescription>
         </DialogHeader>
-        <PricingSection content={content} compact />
+        <div className="sm:[zoom:0.78]">
+          <PricingSection content={content} compact />
+        </div>
       </DialogContent>
     </Dialog>
   );
