@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { ReactNode } from "react";
 import {
   MdCheck,
   MdDevices,
@@ -106,42 +107,81 @@ export function PricingSection({
           </div>
         </details>
 
-        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <AppStoreLink
-            href={site.cta.primary.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={site.cta.primary.label}
-            className="inline-flex h-12 items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-            {...analyticsAttrs("app_store_cta_click", {
-              placement: ANALYTICS_PLACEMENTS.pricing,
-              destination: "mac_app_store",
-            })}
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <PurchaseOption
+            title="Buy directly"
+            description="14-day trial. One-time purchase or yearly license. Download immediately."
           >
-            <Image
-              src={site.macAppStoreBadgeSrc}
-              alt={site.cta.primary.label}
-              width={162}
-              height={50}
-              className="h-12 w-auto"
-            />
-          </AppStoreLink>
-          <Button asChild variant="outline" size="lg">
-            <a
-              href={site.cta.direct.href}
-              {...analyticsAttrs("download_click", {
+            <Button asChild variant="outline" size="lg">
+              <a
+                href={site.cta.direct.href}
+                {...analyticsAttrs("download_click", {
+                  placement: ANALYTICS_PLACEMENTS.pricing,
+                  destination: "r2_direct_download",
+                })}
+              >
+                <MdDownloadForOffline data-icon="inline-start" />
+                {site.cta.direct.label}
+              </a>
+            </Button>
+          </PurchaseOption>
+
+          <PurchaseOption
+            title="Mac App Store"
+            description="Purchase using your Apple Account."
+          >
+            <AppStoreLink
+              href={site.cta.primary.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={site.cta.primary.label}
+              className="inline-flex h-12 items-center rounded-xl transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              {...analyticsAttrs("app_store_cta_click", {
                 placement: ANALYTICS_PLACEMENTS.pricing,
-                destination: "r2_direct_download",
+                destination: "mac_app_store",
               })}
             >
-              <MdDownloadForOffline data-icon="inline-start" />
-              {site.cta.direct.label}
-            </a>
-          </Button>
-          {content.showSetappBadge ? <SetappBadge /> : null}
+              <Image
+                src={site.macAppStoreBadgeSrc}
+                alt={site.cta.primary.label}
+                width={162}
+                height={50}
+                className="h-12 w-auto"
+              />
+            </AppStoreLink>
+          </PurchaseOption>
+
+          {content.showSetappBadge ? (
+            <PurchaseOption
+              title="Available on Setapp"
+              description="Included with your Setapp subscription."
+            >
+              <SetappBadge />
+            </PurchaseOption>
+          ) : null}
         </div>
       </div>
     </section>
+  );
+}
+
+function PurchaseOption({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex min-h-48 flex-col rounded-[24px] [corner-shape:superellipse(1.35)] border border-line bg-panel/55 p-5">
+      <h3 className="text-lg font-semibold tracking-[-0.02em] text-text">
+        {title}
+      </h3>
+      <p className="mt-2 text-sm leading-6 text-muted">{description}</p>
+      <div className="mt-auto flex min-h-14 items-end pt-5">{children}</div>
+    </div>
   );
 }
 
