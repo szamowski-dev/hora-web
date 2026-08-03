@@ -9,6 +9,7 @@ import { AmbientGlow } from "@/components/organisms/AmbientGlow";
 import { LayoutEnhancements } from "@/components/molecules/LayoutEnhancements";
 import { DraftModeTools } from "@/components/sanity/DraftModeTools";
 import { GA_MEASUREMENT_ID, REDDIT_PIXEL_ID } from "@/lib/analytics";
+import { getPricingPage } from "@/lib/pricing-repository";
 import "./globals.css";
 
 const geist = Geist({
@@ -98,48 +99,35 @@ const GOOGLE_ADS_ID = "AW-18070613857";
 
 export default async function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
-  const { isEnabled: isDraftMode } = await draftMode();
+  modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
+  const [{ isEnabled: isDraftMode }, pricing] = await Promise.all([
+    draftMode(),
+    getPricingPage(),
+  ]);
 
   return (
     <html
       lang="en"
+      data-theme="light"
       data-scroll-behavior="smooth"
+      suppressHydrationWarning
       className={`${geist.variable} ${newsreader.variable} ${bumbbled.variable}`}
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try { const theme = localStorage.getItem('hora-theme'); if (theme === 'dark') { document.documentElement.dataset.theme = theme; document.documentElement.style.colorScheme = theme; } } catch {}`,
+          }}
+        />
         <link rel="dns-prefetch" href="https://consent.cookiebot.com" />
         <link rel="dns-prefetch" href="https://consentcdn.cookiebot.com" />
       </head>
       <body className="min-h-dvh flex flex-col text-text">
-        <Script
-          id="gads-consent"
-          strategy="beforeInteractive"
-          data-cookieconsent="ignore"
-        >
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            window.gtag = gtag;
-            gtag('consent', 'default', {
-              ad_storage: 'denied',
-              ad_user_data: 'denied',
-              ad_personalization: 'denied',
-              analytics_storage: 'denied',
-              functionality_storage: 'denied',
-              personalization_storage: 'denied',
-              security_storage: 'granted',
-              wait_for_update: 500
-            });
-            gtag('set', 'ads_data_redaction', true);
-            gtag('set', 'url_passthrough', true);
-          `}
-        </Script>
-
         {/* Cookiebot is moved to lazyOnload because its dialog markup was
             being picked as the LCP element (2.4s render delay on mobile).
-            The default-denied gtag consent above keeps us compliant until
-            the banner finishes loading post window.load. */}
+            The default-denied consent initialized in instrumentation-client.ts
+            keeps us compliant until the banner finishes loading post window.load. */}
         <Script
           id="Cookiebot"
           src="https://consent.cookiebot.com/uc.js"
@@ -151,16 +139,20 @@ export default async function RootLayout({
         <AmbientGlow />
         <LayoutEnhancements />
         <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
-          <Nav />
+          <Nav
+            showDownload={pricing.direct.showDownload}
+            downloadLabel={pricing.direct.downloadLabel}
+          />
         </header>
         <main
           id="main-content"
           tabIndex={-1}
-          className="flex-1 pt-[70px] max-md:[&>:first-child]:-mt-[70px] max-md:[&>:first-child]:pt-[134px] max-md:[&>[data-nav-underlay=flush]]:pt-[70px] max-md:[&>[data-nav-underlay=cover]]:pt-0 md:pt-0"
+          className="flex-1 pt-[70px] max-md:[&>:first-child]:-mt-[70px] max-md:[&>:first-child]:pt-[104px] max-md:[&>[data-nav-underlay=flush]]:pt-[70px] max-md:[&>[data-nav-underlay=cover]]:pt-0 md:pt-0"
         >
           {children}
         </main>
         <Footer />
+        {modal}
 
         {isDraftMode ? <DraftModeTools /> : null}
 

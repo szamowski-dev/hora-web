@@ -46,11 +46,11 @@ function renderConfirmation(success: boolean): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Unsubscribed — hora Calendar</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #fafafa; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: oklch(0.144788 0 0); color: oklch(0.985104 0 0); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
     .card { max-width: 420px; padding: 2rem; text-align: center; }
     h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    p { color: #9ca3af; line-height: 1.6; }
-    a { color: #ff383c; text-decoration: none; }
+    p { color: oklch(0.713660 0.019176 261.325); line-height: 1.6; }
+    a { color: oklch(0.653197 0.232821 25.739); text-decoration: none; }
     a:hover { text-decoration: underline; }
   </style>
 </head>

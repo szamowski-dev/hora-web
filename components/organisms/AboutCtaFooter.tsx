@@ -1,7 +1,16 @@
 import Link from "next/link";
+import { MdArrowForward } from "react-icons/md";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
-import { Icon } from "@/components/atoms/Icon";
-import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
@@ -13,48 +22,53 @@ export function AboutCtaFooter({
   content: AboutPageData["cta"];
 }) {
   return (
-    <section className="home-section relative overflow-hidden border-y py-16 md:py-20">
-      <SectionBackdrop direction="left" />
-
-      <div className="relative mx-auto max-w-295 px-6">
-        <div className="shader-panel ui-panel grid gap-8 overflow-hidden rounded-xl p-6 md:grid-cols-[1.15fr_0.85fr] md:items-center md:p-9 lg:p-10">
-          <div>
-            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-accent">
-              {content.eyebrow}
-            </p>
-            <h2 className="mt-4 max-w-xl text-3xl font-semibold leading-tight tracking-tight text-text md:text-4xl">
-              {content.title}
-            </h2>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-muted md:text-base md:leading-7">
+    <>
+      <Separator
+        aria-hidden="true"
+        className="mx-auto max-w-16 bg-text/15 sm:max-w-24"
+      />
+      <section className="bg-bg px-5 py-20 sm:px-10 sm:py-28">
+        <Card className="mx-auto max-w-landing items-center px-6 py-12 text-center sm:px-10 sm:py-16">
+          <CardHeader className="w-full max-w-3xl justify-items-center gap-4 px-0">
+            <p className="text-sm font-semibold text-muted">{content.eyebrow}</p>
+            <CardTitle>
+              <h2 className="text-balance text-4xl tracking-[-0.045em] sm:text-5xl">
+                {content.title}
+              </h2>
+            </CardTitle>
+            <CardDescription className="max-w-2xl text-base sm:text-lg">
               {content.description}
-            </p>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
-            <AppStoreLink
-              href={site.cta.primary.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              {...analyticsAttrs("app_store_cta_click", {
-                placement: ANALYTICS_PLACEMENTS.about,
-                destination: "mac_app_store",
-              })}
-              className="flex min-h-14 items-center justify-between rounded-lg border border-accent/40 bg-accent px-5 py-4 font-semibold text-text transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text"
-            >
-              <span>{content.primaryLabel}</span>
-              <Icon name="arrow-right" size={18} />
-            </AppStoreLink>
-
-            <Link
-              href="/blog/"
-              className="ui-interactive ui-panel-soft flex min-h-14 items-center justify-between rounded-lg px-5 py-4 font-semibold text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
-              <span>{content.secondaryLabel}</span>
-              <Icon name="arrow-right" size={18} className="text-accent" />
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-0">
+            <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Button asChild size="lg" variant="accent">
+                <AppStoreLink
+                  href={site.cta.primary.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  {...analyticsAttrs("app_store_cta_click", {
+                    placement: ANALYTICS_PLACEMENTS.about,
+                    destination: "mac_app_store",
+                  })}
+                >
+                  {content.primaryLabel}
+                  <MdArrowForward
+                    data-icon="inline-end"
+                    aria-hidden="true"
+                  />
+                </AppStoreLink>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/blog/">{content.secondaryLabel}</Link>
+              </Button>
+            </div>
+          </CardContent>
+          <CardFooter className="sr-only px-0">
+            Actions for downloading hora or reading the product story.
+          </CardFooter>
+        </Card>
+      </section>
+    </>
   );
 }

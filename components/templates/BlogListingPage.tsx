@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { PostCard } from "@/components/molecules/PostCard";
 import { BetaCta } from "@/components/organisms/BetaCta";
+import { SitePageHero } from "@/components/templates/SitePageHero";
 import {
   ChevronRightIcon,
   RssIcon,
@@ -57,29 +57,23 @@ export function BlogListingPage({
 
   return (
     <>
-      <section className="home-section relative overflow-hidden border-y pb-10 pt-16 md:pb-8 md:pt-24">
-        <SectionBackdrop direction="left" />
+      <SitePageHero
+        title={title}
+        description={subtitle}
+        action={
+          <Link
+            href="/blog/feed.xml"
+            className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:text-text"
+          >
+            <RssIcon className="size-4" />
+            RSS feed
+          </Link>
+        }
+      />
 
-        <div className="relative mx-auto max-w-295 px-6">
-          <header className="flex flex-col gap-6 border-b border-line-strong pb-8 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h1 className="text-5xl font-semibold leading-[1.04] tracking-tight text-text md:text-[64px]">
-                {title}
-              </h1>
-              <p className="mt-5 max-w-3xl text-base leading-7 text-muted md:text-lg md:leading-8">
-                {subtitle}
-              </p>
-            </div>
-            <Link
-              href="/blog/feed.xml"
-              className="inline-flex min-h-11 items-center gap-2 rounded-sm font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-section"
-            >
-              <RssIcon className="h-3.5 w-3.5" />
-              RSS
-            </Link>
-          </header>
-
-          <div className="mt-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <section className="bg-bg px-5 pt-10 sm:px-10 sm:pt-14">
+        <div className="mx-auto max-w-landing">
+          <div className="flex flex-col gap-4 border-b border-line pb-8 lg:flex-row lg:items-end lg:justify-between">
             <nav
               aria-label="Blog categories"
               className="flex flex-wrap items-center gap-x-1 gap-y-1"
@@ -112,7 +106,7 @@ export function BlogListingPage({
                 type="search"
                 defaultValue={searchQuery}
                 placeholder="Search posts..."
-                className="h-11 w-full rounded-md border border-line bg-bg/35 pl-3.5 pr-11 text-sm text-text outline-none transition-colors placeholder:text-dim focus:border-line-strong focus:ring-2 focus:ring-accent/25"
+                className="h-11 w-full rounded-xl border border-line bg-panel/70 pl-3.5 pr-11 text-sm text-text outline-none transition-colors placeholder:text-dim hover:border-line-strong focus:border-white/20"
               />
               <button
                 type="submit"
@@ -126,7 +120,7 @@ export function BlogListingPage({
         </div>
       </section>
 
-      <div className="mx-auto max-w-295 px-6 pb-16 pt-8 md:pb-20 md:pt-10">
+      <div className="mx-auto max-w-landing px-5 pb-20 pt-10 sm:px-10 sm:pb-28 sm:pt-14">
         <div className="pt-4">
           {featured ? (
             <PostCard post={featured} variant="featured" priority />

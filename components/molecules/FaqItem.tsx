@@ -10,14 +10,17 @@ export function FaqItem({
   className,
   index,
   variant = "card",
+  density = "default",
 }: {
   question: string;
   answer: ReactNode;
   className?: string;
   index?: number;
   variant?: "card" | "integrated";
+  density?: "default" | "compact";
 }) {
   const isIntegrated = variant === "integrated";
+  const isCompact = density === "compact";
 
   return (
     <details
@@ -50,25 +53,45 @@ export function FaqItem({
         className={cn(
           "flex w-full cursor-pointer list-none items-center justify-between gap-4 text-left text-sm font-medium text-text touch-manipulation select-none [&::-webkit-details-marker]:hidden",
           isIntegrated
-            ? "px-5 py-5 md:px-6 md:py-6"
+            ? isCompact
+              ? "px-5 py-4 sm:px-6 sm:py-5"
+              : "px-5 py-5 md:px-6 md:py-6"
             : "px-4 py-3.5 md:px-5 md:py-4",
         )}
       >
-        <span className="flex min-w-0 flex-1 items-start gap-4">
+        <span
+          className={cn(
+            "flex min-w-0 flex-1 items-start",
+            isCompact ? "gap-3.5 sm:gap-5" : "gap-4",
+          )}
+        >
           {isIntegrated && index !== undefined ? (
             <span
               aria-hidden
-              className="mt-0.5 font-mono text-[10px] tracking-[0.16em] text-dim"
+              className={cn(
+                "mt-0.5 font-mono tracking-[0.16em] text-dim",
+                isCompact ? "text-[11px]" : "text-[10px]",
+              )}
             >
               {String(index + 1).padStart(2, "0")}
             </span>
           ) : null}
-          <span className="text-balance">{question}</span>
+          <span
+            className={cn(
+              "text-balance",
+              isCompact && "text-base leading-6 sm:text-lg",
+            )}
+          >
+            {question}
+          </span>
         </span>
         <span
           aria-hidden
           className={cn(
-            "relative flex h-7 w-7 shrink-0 items-center justify-center border text-accent transition-all duration-300",
+            "relative flex shrink-0 items-center justify-center border transition-all duration-300",
+            isCompact
+              ? "h-8 w-8 text-muted group-hover:text-accent"
+              : "h-7 w-7 text-accent",
             isIntegrated
               ? "rounded-full shadow-none"
               : "rounded-md shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.15)]",
@@ -93,7 +116,9 @@ export function FaqItem({
         className={cn(
           "text-sm leading-relaxed text-muted md:text-base",
           isIntegrated
-            ? "px-5 pb-6 pl-[3.75rem] md:px-6 md:pb-7 md:pl-[4.25rem]"
+            ? isCompact
+              ? "px-5 pb-5 pl-[3.625rem] sm:px-6 sm:pb-6 sm:pl-[4.5rem]"
+              : "px-5 pb-6 pl-[3.75rem] md:px-6 md:pb-7 md:pl-[4.25rem]"
             : "border-t border-line px-5 pb-5 pt-4 md:px-6 md:pb-6",
         )}
       >

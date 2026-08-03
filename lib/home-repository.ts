@@ -2,14 +2,20 @@ import "server-only";
 
 import { cache } from "react";
 import { stegaClean } from "next-sanity";
+import { defaultProductLanding } from "@/content/home-landing";
 import type {
   HomeFeatureIcon,
   HomeIntegrationProvider,
   HomePageContent,
   HomeRoadmapStatus,
   HomeTestimonialPlatform,
+  ProductLandingContent,
+  ProductLandingFeature,
+  ProductLandingIcon,
+  ProductLandingTone,
   SiteImage,
   SiteVideo,
+  ThemedSiteImage,
 } from "@/lib/home-model";
 import {
   getSanityFetchContext,
@@ -22,7 +28,9 @@ import {
 import {
   HOME_PAGE_QUERY,
   type SanityHomePageDocument,
+  type SanityProductLandingFeatureValue,
   type SanitySiteImageValue,
+  type SanityThemedProductImageValue,
 } from "@/sanity/lib/home-queries";
 
 const SITE_REVALIDATE_SECONDS = 600;
@@ -48,6 +56,50 @@ const testimonialPlatforms = new Set<HomeTestimonialPlatform>([
   "x",
   "reddit",
   "discord",
+]);
+
+const productLandingIcons = new Set<ProductLandingIcon>([
+  "label",
+  "event",
+  "video-call",
+  "contacts",
+  "accounts",
+  "search",
+  "invitation",
+  "menu-bar",
+  "timer",
+  "auto-awesome",
+  "tasks",
+  "focus-time",
+  "availability",
+  "widgets",
+  "offline",
+  "sync",
+  "key",
+  "storage",
+  "speed",
+  "notifications",
+  "dock",
+  "keyboard",
+  "windows",
+  "dark-mode",
+  "apple-silicon",
+  "view",
+  "drag",
+  "quick-add",
+  "time-zone",
+  "repeat",
+  "location",
+  "out-of-office",
+]);
+
+const productLandingTones = new Set<ProductLandingTone>([
+  "red",
+  "blue",
+  "green",
+  "yellow",
+  "purple",
+  "cyan",
 ]);
 
 const roadmapStatuses: Record<string, HomeRoadmapStatus> = {
@@ -152,6 +204,12 @@ function mapImage(
   };
 }
 
+function hasImageAsset(
+  value: SanitySiteImageValue | null | undefined,
+): value is SanitySiteImageValue {
+  return Boolean(value?.asset?._id || value?.asset?.url);
+}
+
 function mapVideo(
   value:
     | {
@@ -196,6 +254,223 @@ function mapVideo(
   };
 }
 
+function landingString(value: string | undefined, fallback: string): string {
+  return optionalString(value) ?? fallback;
+}
+
+function mapLandingFeatures(
+  value: SanityProductLandingFeatureValue[] | undefined,
+  fallback: ProductLandingFeature[],
+  field: string,
+): ProductLandingFeature[] {
+  if (!value?.length) return fallback;
+
+  return value.map((feature, index) => {
+    const icon = requiredMachineString(
+      feature.icon,
+      `${field}[${index}].icon`,
+    );
+    const tone = requiredMachineString(
+      feature.tone,
+      `${field}[${index}].tone`,
+    );
+
+    if (!productLandingIcons.has(icon as ProductLandingIcon)) {
+      invalidHome(`${field}[${index}].icon is unsupported: ${icon}`);
+    }
+    if (!productLandingTones.has(tone as ProductLandingTone)) {
+      invalidHome(`${field}[${index}].tone is unsupported: ${tone}`);
+    }
+
+    return {
+      icon: icon as ProductLandingIcon,
+      tone: tone as ProductLandingTone,
+      title: requiredString(feature.title, `${field}[${index}].title`),
+      description: requiredString(
+        feature.description,
+        `${field}[${index}].description`,
+      ),
+    };
+  });
+}
+
+function mapLandingThemedImage(
+  value: SanityThemedProductImageValue | undefined,
+  fallback: ThemedSiteImage,
+  field: string,
+): ThemedSiteImage {
+  if (!hasImageAsset(value?.light) || !hasImageAsset(value?.dark)) {
+    return fallback;
+  }
+
+  return {
+    light: mapImage(value.light, `${field}.light`),
+    dark: mapImage(value.dark, `${field}.dark`),
+  };
+}
+
+function mapProductLanding(
+  value: SanityHomePageDocument["productLanding"],
+): ProductLandingContent {
+  const fallback = defaultProductLanding;
+
+  return {
+    hero: {
+      title: landingString(value?.hero?.title, fallback.hero.title),
+      description: landingString(
+        value?.hero?.description,
+        fallback.hero.description,
+      ),
+      primaryCtaLabel: landingString(
+        value?.hero?.primaryCtaLabel,
+        fallback.hero.primaryCtaLabel,
+      ),
+      macAppStoreLabel: landingString(
+        value?.hero?.macAppStoreLabel,
+        fallback.hero.macAppStoreLabel,
+      ),
+      watchVideoLabel: landingString(
+        value?.hero?.watchVideoLabel,
+        fallback.hero.watchVideoLabel,
+      ),
+      showPrimaryCta: value?.hero?.showPrimaryCta === true,
+      showTerminalPrompt: value?.hero?.showTerminalPrompt === true,
+      homebrewCommand: landingString(
+        value?.hero?.homebrewCommand,
+        fallback.hero.homebrewCommand,
+      ),
+      requirement: landingString(
+        value?.hero?.requirement,
+        fallback.hero.requirement,
+      ),
+      copyLabel: landingString(
+        value?.hero?.copyLabel,
+        fallback.hero.copyLabel,
+      ),
+      copiedLabel: landingString(
+        value?.hero?.copiedLabel,
+        fallback.hero.copiedLabel,
+      ),
+    },
+    media: {
+      hero: mapLandingThemedImage(
+        value?.media?.hero,
+        fallback.media.hero,
+        "productLanding.media.hero",
+      ),
+      workflow: mapLandingThemedImage(
+        value?.media?.workflow,
+        fallback.media.workflow,
+        "productLanding.media.workflow",
+      ),
+      googleCalendarCards: fallback.media.googleCalendarCards.map(
+        (image, index) =>
+          mapLandingThemedImage(
+            value?.media?.googleCalendarCards?.[index],
+            image,
+            `productLanding.media.googleCalendarCards[${index}]`,
+          ),
+      ),
+    },
+    api: {
+      title: landingString(value?.api?.title, fallback.api.title),
+      description: landingString(
+        value?.api?.description,
+        fallback.api.description,
+      ),
+    },
+    googleCalendar: {
+      title: landingString(
+        value?.googleCalendar?.title,
+        fallback.googleCalendar.title,
+      ),
+      description: landingString(
+        value?.googleCalendar?.description,
+        fallback.googleCalendar.description,
+      ),
+      primaryFeatures: mapLandingFeatures(
+        value?.googleCalendar?.primaryFeatures,
+        fallback.googleCalendar.primaryFeatures,
+        "productLanding.googleCalendar.primaryFeatures",
+      ),
+      secondaryFeatures: mapLandingFeatures(
+        value?.googleCalendar?.secondaryFeatures,
+        fallback.googleCalendar.secondaryFeatures,
+        "productLanding.googleCalendar.secondaryFeatures",
+      ),
+    },
+    hora: {
+      title: landingString(value?.hora?.title, fallback.hora.title),
+      description: landingString(
+        value?.hora?.description,
+        fallback.hora.description,
+      ),
+      features: mapLandingFeatures(
+        value?.hora?.features,
+        fallback.hora.features,
+        "productLanding.hora.features",
+      ),
+    },
+    privacy: {
+      title: landingString(value?.privacy?.title, fallback.privacy.title),
+      description: landingString(
+        value?.privacy?.description,
+        fallback.privacy.description,
+      ),
+      features: mapLandingFeatures(
+        value?.privacy?.features,
+        fallback.privacy.features,
+        "productLanding.privacy.features",
+      ),
+    },
+    macos: {
+      title: landingString(value?.macos?.title, fallback.macos.title),
+      description: landingString(
+        value?.macos?.description,
+        fallback.macos.description,
+      ),
+      features: mapLandingFeatures(
+        value?.macos?.features,
+        fallback.macos.features,
+        "productLanding.macos.features",
+      ),
+    },
+    featureGrid: {
+      title: landingString(
+        value?.featureGrid?.title,
+        fallback.featureGrid.title,
+      ),
+      description: landingString(
+        value?.featureGrid?.description,
+        fallback.featureGrid.description,
+      ),
+      features: mapLandingFeatures(
+        value?.featureGrid?.features,
+        fallback.featureGrid.features,
+        "productLanding.featureGrid.features",
+      ),
+    },
+    newsletter: {
+      title: landingString(
+        value?.newsletter?.title,
+        fallback.newsletter.title,
+      ),
+      description: landingString(
+        value?.newsletter?.description,
+        fallback.newsletter.description,
+      ),
+      placeholder: landingString(
+        value?.newsletter?.placeholder,
+        fallback.newsletter.placeholder,
+      ),
+      buttonLabel: landingString(
+        value?.newsletter?.buttonLabel,
+        fallback.newsletter.buttonLabel,
+      ),
+    },
+  };
+}
+
 function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
   if (!document) invalidHome("document is missing");
   if (
@@ -222,8 +497,6 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
   if (!founderNote?.author) invalidHome("integrations.founderNote.author is missing");
   const social = document.socialProof;
   if (!social) invalidHome("socialProof is missing");
-  const pricing = document.pricing;
-  if (!pricing) invalidHome("pricing is missing");
   const roadmap = document.roadmap;
   if (!roadmap) invalidHome("roadmap is missing");
   const faq = document.faq;
@@ -328,7 +601,7 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
         (badge, index) => {
           const field = `featuredOn.badges[${index}]`;
           const alt = requiredString(badge.alt, `${field}.alt`);
-          const uploadedImage = badge.image?.asset
+          const uploadedImage = hasImageAsset(badge.image)
             ? mapImage(badge.image, `${field}.image`, alt)
             : undefined;
 
@@ -504,75 +777,6 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
         };
       }),
     },
-    pricing: {
-      titlePrefix: requiredString(pricing.titlePrefix, "pricing.titlePrefix"),
-      titleAccent: requiredString(pricing.titleAccent, "pricing.titleAccent"),
-      description: requiredString(pricing.description, "pricing.description"),
-      familySharing: requiredString(
-        pricing.familySharing,
-        "pricing.familySharing",
-      ),
-      crossPlatform: requiredString(pricing.crossPlatform, "pricing.crossPlatform"),
-      oneTime: {
-        label: requiredString(pricing.oneTime?.label, "pricing.oneTime.label"),
-        badge: requiredString(pricing.oneTime?.badge, "pricing.oneTime.badge"),
-        price: requiredString(pricing.oneTime?.price, "pricing.oneTime.price"),
-      },
-      subscription: {
-        label: requiredString(
-          pricing.subscription?.label,
-          "pricing.subscription.label",
-        ),
-        price: requiredString(
-          pricing.subscription?.price,
-          "pricing.subscription.price",
-        ),
-      },
-      comparisonLabel: requiredString(
-        pricing.comparisonLabel,
-        "pricing.comparisonLabel",
-      ),
-      comparisonDescription: requiredString(
-        pricing.comparisonDescription,
-        "pricing.comparisonDescription",
-      ),
-      comparisonNameLabel: requiredString(
-        pricing.comparisonNameLabel,
-        "pricing.comparisonNameLabel",
-      ),
-      comparisonPriceLabel: requiredString(
-        pricing.comparisonPriceLabel,
-        "pricing.comparisonPriceLabel",
-      ),
-      comparisonItems: requiredArray(
-        pricing.comparisonItems,
-        "pricing.comparisonItems",
-      ).map((item, index) => ({
-        name: requiredString(item.name, `pricing.comparisonItems[${index}].name`),
-        price: requiredString(
-          item.price,
-          `pricing.comparisonItems[${index}].price`,
-        ),
-        description: requiredString(
-          item.description,
-          `pricing.comparisonItems[${index}].description`,
-        ),
-        recommendedLabel: optionalString(item.recommendedLabel),
-      })),
-      comparisonCtaLabel: requiredString(
-        pricing.comparisonCtaLabel,
-        "pricing.comparisonCtaLabel",
-      ),
-      comparisonCtaHref: `/blog/${requiredMachineString(
-        pricing.comparisonCtaSlug,
-        "pricing.comparisonCtaPost.slug",
-      )}/`,
-      appStoreLabel: requiredString(
-        pricing.appStoreLabel,
-        "pricing.appStoreLabel",
-      ),
-      showSetappBadge: pricing.showSetappBadge === true,
-    },
     roadmap: {
       eyebrow: requiredString(roadmap.eyebrow, "roadmap.eyebrow"),
       titlePrefix: requiredString(roadmap.titlePrefix, "roadmap.titlePrefix"),
@@ -622,6 +826,7 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
         "faq.footerLinkLabel",
       ),
     },
+    productLanding: mapProductLanding(document.productLanding),
   };
 }
 

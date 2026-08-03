@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Icon } from "@/components/atoms/Icon";
-import { SectionBackdrop } from "@/components/atoms/SectionBackdrop";
 import { FaqItem } from "@/components/molecules/FaqItem";
 import { SupportForm } from "@/components/organisms/SupportForm";
+import { SitePageHero } from "@/components/templates/SitePageHero";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { defaultOg } from "@/lib/og";
 
 export const metadata: Metadata = {
@@ -76,86 +78,62 @@ export default function SupportPage() {
 
   return (
     <>
-      <section className="home-section relative overflow-hidden border-y py-16 md:py-24">
-        <SectionBackdrop direction="balanced" />
+      <SitePageHero
+        title="Support for your calendar."
+        description="Report a bug, ask for help, or send a feature request. Every message goes directly to the developer."
+        meta="Direct developer support"
+      />
 
-        <div className="relative mx-auto max-w-295 px-6">
-          <div className="flex flex-col gap-6 border-b border-line-strong pb-8 md:flex-row md:items-end md:justify-between md:pb-10">
-            <div>
-              <h1 className="text-5xl font-semibold leading-[1.04] tracking-tight text-text md:text-[64px]">
-                hora <span className="text-accent">Support</span>
-              </h1>
-              <p className="mt-5 max-w-3xl text-base leading-7 text-muted md:text-lg md:leading-8">
-                Report a bug, ask for help, or send a feature request. The form
-                sends your message directly to the developer, and Discord is
-                the fastest place for real-time feedback and follow-ups.
-              </p>
-            </div>
-            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-dim">
-              Direct developer support
-            </p>
+      <section className="bg-bg px-5 py-20 sm:px-10 sm:py-28">
+        <div className="mx-auto max-w-landing">
+          <div className="grid gap-10 md:grid-cols-3 md:gap-12">
+            {quickLinks.map((item, index) => (
+              <article key={item.title} className="flex flex-col items-start">
+                <span
+                  className={
+                    index === 0
+                      ? "text-label-blue"
+                      : index === 1
+                        ? "text-label-purple"
+                        : "text-label-green"
+                  }
+                >
+                  <Icon name={item.icon} size={28} />
+                </span>
+                <h2 className="mt-5 text-xl font-semibold tracking-[-0.025em] text-text">
+                  {item.title}
+                </h2>
+                <p className="mt-3 text-base leading-7 text-muted">
+                  {item.body}
+                </p>
+              </article>
+            ))}
           </div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start md:mt-12">
-            <aside className="lg:sticky lg:top-24">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-dim">
-                Before you send
-              </p>
-              <div className="mt-4 grid gap-3">
-                {quickLinks.map((item) => (
-                  <div
-                    key={item.title}
-                    className="ui-panel-soft rounded-lg p-4 shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.08)]"
-                  >
-                    <div className="flex gap-3">
-                      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-accent/20 bg-accent/8 text-accent">
-                        <Icon name={item.icon} size={17} />
-                      </div>
-                      <div>
-                        <h2 className="text-sm font-semibold text-text">
-                          {item.title}
-                        </h2>
-                        <p className="mt-1 text-sm leading-6 text-muted">
-                          {item.body}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </aside>
-
-            <div className="lg:pt-[31px]">
-              <SupportForm />
-            </div>
+          <div className="mx-auto mt-16 max-w-4xl sm:mt-24">
+            <SupportForm />
           </div>
         </div>
       </section>
 
-      <section className="home-section relative overflow-hidden border-y py-16 md:py-20">
-        <SectionBackdrop direction="right" />
-        <div className="relative mx-auto max-w-295 px-6">
-          <div className="flex flex-col gap-5 border-b border-line-strong pb-8 md:flex-row md:items-end md:justify-between md:pb-10">
-            <div className="max-w-3xl">
-              <h2 className="text-4xl font-semibold leading-tight tracking-tight text-text md:text-5xl">
-                Common <span className="text-accent">questions</span>
-              </h2>
-              <p className="mt-4 text-base leading-7 text-muted md:text-lg md:leading-8">
-                Short answers about how hora works, what to include in support
-                requests, and how beta support is handled.
-              </p>
-            </div>
-            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-dim">
-              {String(faqItems.length).padStart(2, "0")} questions / quick
-              answers
+      <Separator
+        aria-hidden="true"
+        className="mx-auto max-w-16 bg-text/15 sm:max-w-24"
+      />
+
+      <section className="bg-bg px-5 py-20 sm:px-10 sm:py-28">
+        <div className="mx-auto max-w-landing">
+          <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
+            <h2 className="text-balance text-4xl font-semibold tracking-[-0.045em] text-text sm:text-5xl">
+              Common questions
+            </h2>
+            <p className="max-w-2xl text-balance text-base leading-7 text-muted sm:text-lg">
+              Short answers about how hora works and what to include when you
+              need help.
             </p>
           </div>
 
-          <div className="shader-panel ui-panel-deep relative mt-10 overflow-hidden rounded-xl md:mt-12">
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-x-8 top-0 z-10 h-px bg-linear-to-r from-transparent via-accent/70 to-transparent"
-            />
+          <Card className="mx-auto mt-10 max-w-5xl gap-0 overflow-hidden rounded-[20px] border-line/80 bg-feature-panel/45 px-0 py-0 shadow-[0_24px_80px_-56px_oklch(0_0_0/0.95)] sm:mt-14">
             {faqItems.map((item, index) => (
               <div
                 key={item.q}
@@ -170,10 +148,11 @@ export default function SupportPage() {
                   answer={item.a}
                   index={index}
                   variant="integrated"
+                  density="compact"
                 />
               </div>
             ))}
-          </div>
+          </Card>
         </div>
       </section>
 

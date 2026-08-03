@@ -1,17 +1,7 @@
 import type { Metadata } from "next";
-import { Hero } from "@/components/organisms/Hero";
-import { FeaturedOn } from "@/components/organisms/FeaturedOn";
-import { FeaturesOverview } from "@/components/organisms/FeaturesOverview";
-import { UserProof } from "@/components/organisms/UserProof";
-import { PricingSection } from "@/components/organisms/PricingSection";
-import { BetaCta } from "@/components/organisms/BetaCta";
-import { Roadmap } from "@/components/organisms/Roadmap";
-import { Faq } from "@/components/organisms/Faq";
-import { BlogPreview } from "@/components/organisms/BlogPreview";
-import { getAllBlogPosts } from "@/lib/blog-repository";
+import { ProductLanding } from "@/components/organisms/ProductLanding";
 import { getHomePage } from "@/lib/home-repository";
 import { defaultOg } from "@/lib/og";
-import { getTestFlightTesterCount } from "@/lib/testflight";
 
 export const revalidate = 600;
 
@@ -51,14 +41,7 @@ const videoLd = {
 };
 
 export default async function Home() {
-  const [content, allPosts] = await Promise.all([
-    getHomePage(),
-    getAllBlogPosts(),
-  ]);
-  const liveCount = await getTestFlightTesterCount(
-    content.hero.socialProof.fallbackCount,
-  );
-  const posts = allPosts.slice(0, 3);
+  const content = await getHomePage();
   const softwareAppLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -70,7 +53,7 @@ export default async function Home() {
     offers: {
       "@type": "AggregateOffer",
       lowPrice: "29.99",
-      highPrice: "49.90",
+      highPrice: "49.00",
       priceCurrency: "USD",
       offerCount: 2,
     },
@@ -85,19 +68,7 @@ export default async function Home() {
 
   return (
     <>
-      <Hero content={content.hero} liveCount={liveCount} />
-      <FeaturedOn content={content.featuredOn} />
-      <FeaturesOverview
-        showcase={content.showcase}
-        featureOverview={content.featureOverview}
-        integrations={content.integrations}
-      />
-      <UserProof content={content.socialProof} liveCount={liveCount} />
-      <PricingSection content={content.pricing} />
-      <BetaCta />
-      <Roadmap content={content.roadmap} />
-      <Faq content={content.faq} />
-      <BlogPreview posts={posts} />
+      <ProductLanding content={content} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppLd) }}

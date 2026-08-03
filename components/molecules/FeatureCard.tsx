@@ -18,7 +18,7 @@ export function FeatureCard({
   return (
     <div
       className={cn(
-        "rounded-xl border border-border bg-white/2 p-6 transition-colors hover:border-[#2a2a2a]",
+        "rounded-xl border border-border bg-white/2 p-6 transition-colors hover:border-[oklch(0.285017_0_0)]",
         className,
       )}
     >

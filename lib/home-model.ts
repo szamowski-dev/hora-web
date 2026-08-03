@@ -17,6 +17,11 @@ export type SiteVideo = {
   poster?: SiteImage;
 };
 
+export type ThemedSiteImage = {
+  light: SiteImage;
+  dark: SiteImage;
+};
+
 export type HomeFeatureIcon =
   | "app-window"
   | "calendar"
@@ -40,6 +45,112 @@ export type HomeRoadmapStatus =
   | "Up next"
   | "Planned"
   | "On the horizon";
+
+export type ProductLandingIcon =
+  | "label"
+  | "event"
+  | "video-call"
+  | "contacts"
+  | "accounts"
+  | "search"
+  | "invitation"
+  | "menu-bar"
+  | "timer"
+  | "auto-awesome"
+  | "tasks"
+  | "focus-time"
+  | "availability"
+  | "widgets"
+  | "offline"
+  | "sync"
+  | "key"
+  | "storage"
+  | "speed"
+  | "notifications"
+  | "dock"
+  | "keyboard"
+  | "windows"
+  | "dark-mode"
+  | "apple-silicon"
+  | "view"
+  | "drag"
+  | "quick-add"
+  | "time-zone"
+  | "repeat"
+  | "location"
+  | "out-of-office";
+
+export type ProductLandingTone =
+  | "red"
+  | "blue"
+  | "green"
+  | "yellow"
+  | "purple"
+  | "cyan";
+
+export type ProductLandingFeature = {
+  icon: ProductLandingIcon;
+  tone: ProductLandingTone;
+  title: string;
+  description: string;
+};
+
+export type ProductLandingContent = {
+  hero: {
+    title: string;
+    description: string;
+    primaryCtaLabel: string;
+    macAppStoreLabel: string;
+    watchVideoLabel: string;
+    showPrimaryCta: boolean;
+    showTerminalPrompt: boolean;
+    homebrewCommand: string;
+    requirement: string;
+    copyLabel: string;
+    copiedLabel: string;
+  };
+  media: {
+    hero: ThemedSiteImage;
+    workflow: ThemedSiteImage;
+    googleCalendarCards: ThemedSiteImage[];
+  };
+  api: {
+    title: string;
+    description: string;
+  };
+  googleCalendar: {
+    title: string;
+    description: string;
+    primaryFeatures: ProductLandingFeature[];
+    secondaryFeatures: ProductLandingFeature[];
+  };
+  hora: {
+    title: string;
+    description: string;
+    features: ProductLandingFeature[];
+  };
+  privacy: {
+    title: string;
+    description: string;
+    features: ProductLandingFeature[];
+  };
+  macos: {
+    title: string;
+    description: string;
+    features: ProductLandingFeature[];
+  };
+  featureGrid: {
+    title: string;
+    description: string;
+    features: ProductLandingFeature[];
+  };
+  newsletter: {
+    title: string;
+    description: string;
+    placeholder: string;
+    buttonLabel: string;
+  };
+};
 
 export type HomePageContent = {
   updatedAt: string;
@@ -136,29 +247,6 @@ export type HomePageContent = {
       platform: HomeTestimonialPlatform;
     }>;
   };
-  pricing: {
-    titlePrefix: string;
-    titleAccent: string;
-    description: string;
-    familySharing: string;
-    crossPlatform: string;
-    oneTime: { label: string; badge: string; price: string };
-    subscription: { label: string; price: string };
-    comparisonLabel: string;
-    comparisonDescription: string;
-    comparisonNameLabel: string;
-    comparisonPriceLabel: string;
-    comparisonItems: Array<{
-      name: string;
-      price: string;
-      description: string;
-      recommendedLabel?: string;
-    }>;
-    comparisonCtaLabel: string;
-    comparisonCtaHref: string;
-    appStoreLabel: string;
-    showSetappBadge: boolean;
-  };
   roadmap: {
     eyebrow: string;
     titlePrefix: string;
@@ -181,4 +269,5 @@ export type HomePageContent = {
     footerDescription: string;
     footerLinkLabel: string;
   };
+  productLanding: ProductLandingContent;
 };

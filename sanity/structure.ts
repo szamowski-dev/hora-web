@@ -2,6 +2,7 @@ import type { StructureResolver } from "sanity/structure";
 
 const managedDocumentTypes = new Set([
   "homePage",
+  "pricingPage",
   "featuresPage",
   "aboutPage",
   "legalPage",
@@ -13,6 +14,7 @@ const managedDocumentTypes = new Set([
 
 const singletonDocumentTypes = new Set([
   "homePage",
+  "pricingPage",
   "featuresPage",
   "aboutPage",
   "legalPage",
@@ -41,7 +43,7 @@ export const structure: StructureResolver = (S) =>
           S.documentList()
             .title("Recently edited")
             .filter(
-              '_type in ["homePage", "featuresPage", "aboutPage", "legalPage", "blogPost", "blogCategory", "blogTag", "author"]',
+              '_type in ["homePage", "pricingPage", "featuresPage", "aboutPage", "legalPage", "blogPost", "blogCategory", "blogTag", "author"]',
             )
             .defaultOrdering([{ field: "_updatedAt", direction: "desc" }]),
         ),
@@ -54,6 +56,15 @@ export const structure: StructureResolver = (S) =>
             .schemaType("homePage")
             .documentId("homePage")
             .title("Homepage"),
+        ),
+      S.listItem()
+        .id("pricingPage")
+        .title("Pricing")
+        .child(
+          S.document()
+            .schemaType("pricingPage")
+            .documentId("pricingPage")
+            .title("Pricing"),
         ),
       S.listItem()
         .title("Site pages")

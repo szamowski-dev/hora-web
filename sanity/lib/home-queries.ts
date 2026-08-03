@@ -16,6 +16,19 @@ type SanitySiteVideoValue = {
   accessibilityLabel?: string;
 };
 
+export type SanityProductLandingFeatureValue = {
+  _key?: string;
+  icon?: string;
+  tone?: string;
+  title?: string;
+  description?: string;
+};
+
+export type SanityThemedProductImageValue = {
+  light?: SanitySiteImageValue;
+  dark?: SanitySiteImageValue;
+};
+
 export type SanityHomePageDocument = {
   _id?: string;
   _updatedAt?: string;
@@ -46,7 +59,7 @@ export type SanityHomePageDocument = {
       name?: string;
       href?: string;
       src?: string;
-      image?: SanitySiteImageValue;
+      image?: SanitySiteImageValue | null;
       alt?: string;
       width?: number;
       height?: number;
@@ -118,30 +131,6 @@ export type SanityHomePageDocument = {
       platform?: string;
     }>;
   };
-  pricing?: {
-    titlePrefix?: string;
-    titleAccent?: string;
-    description?: string;
-    familySharing?: string;
-    crossPlatform?: string;
-    oneTime?: { label?: string; badge?: string; price?: string };
-    subscription?: { label?: string; price?: string };
-    comparisonLabel?: string;
-    comparisonDescription?: string;
-    comparisonNameLabel?: string;
-    comparisonPriceLabel?: string;
-    comparisonItems?: Array<{
-      _key?: string;
-      name?: string;
-      price?: string;
-      description?: string;
-      recommendedLabel?: string;
-    }>;
-    comparisonCtaLabel?: string;
-    comparisonCtaSlug?: string;
-    appStoreLabel?: string;
-    showSetappBadge?: boolean;
-  };
   roadmap?: {
     eyebrow?: string;
     titlePrefix?: string;
@@ -168,6 +157,62 @@ export type SanityHomePageDocument = {
     footerTitle?: string;
     footerDescription?: string;
     footerLinkLabel?: string;
+  };
+  productLanding?: {
+    hero?: {
+      title?: string;
+      description?: string;
+      primaryCtaLabel?: string;
+      macAppStoreLabel?: string;
+      watchVideoLabel?: string;
+      showPrimaryCta?: boolean;
+      showTerminalPrompt?: boolean;
+      homebrewCommand?: string;
+      requirement?: string;
+      copyLabel?: string;
+      copiedLabel?: string;
+    };
+    media?: {
+      hero?: SanityThemedProductImageValue;
+      workflow?: SanityThemedProductImageValue;
+      googleCalendarCards?: SanityThemedProductImageValue[];
+    };
+    api?: {
+      title?: string;
+      description?: string;
+    };
+    googleCalendar?: {
+      title?: string;
+      description?: string;
+      primaryFeatures?: SanityProductLandingFeatureValue[];
+      secondaryFeatures?: SanityProductLandingFeatureValue[];
+    };
+    hora?: {
+      title?: string;
+      description?: string;
+      features?: SanityProductLandingFeatureValue[];
+    };
+    privacy?: {
+      title?: string;
+      description?: string;
+      features?: SanityProductLandingFeatureValue[];
+    };
+    macos?: {
+      title?: string;
+      description?: string;
+      features?: SanityProductLandingFeatureValue[];
+    };
+    featureGrid?: {
+      title?: string;
+      description?: string;
+      features?: SanityProductLandingFeatureValue[];
+    };
+    newsletter?: {
+      title?: string;
+      description?: string;
+      placeholder?: string;
+      buttonLabel?: string;
+    };
   };
 };
 
@@ -218,7 +263,19 @@ export const HOME_PAGE_QUERY = defineQuery(`
     },
     featuredOn{
       label,
-      badges[]{_key, name, href, src, "image": image${siteImageProjection}, alt, width, height, displayWidth, displayHeight, variant}
+      badges[]{
+        _key,
+        name,
+        href,
+        src,
+        "image": select(defined(image.asset) => image${siteImageProjection}),
+        alt,
+        width,
+        height,
+        displayWidth,
+        displayHeight,
+        variant
+      }
     },
     showcase{
       eyebrow,
@@ -273,30 +330,6 @@ export const HOME_PAGE_QUERY = defineQuery(`
         platform
       }
     },
-    pricing{
-      titlePrefix,
-      titleAccent,
-      description,
-      familySharing,
-      crossPlatform,
-      oneTime{label, badge, price},
-      subscription{label, price},
-      comparisonLabel,
-      comparisonDescription,
-      comparisonNameLabel,
-      comparisonPriceLabel,
-      comparisonItems[]{
-        _key,
-        name,
-        price,
-        description,
-        recommendedLabel
-      },
-      comparisonCtaLabel,
-      "comparisonCtaSlug": comparisonCtaPost->slug.current,
-      appStoreLabel,
-      showSetappBadge
-    },
     roadmap{
       eyebrow,
       titlePrefix,
@@ -313,6 +346,71 @@ export const HOME_PAGE_QUERY = defineQuery(`
       footerTitle,
       footerDescription,
       footerLinkLabel
+    },
+    productLanding{
+      hero{
+      title,
+      description,
+      primaryCtaLabel,
+      macAppStoreLabel,
+      watchVideoLabel,
+        showPrimaryCta,
+        showTerminalPrompt,
+        homebrewCommand,
+        requirement,
+        copyLabel,
+        copiedLabel
+      },
+      media{
+        "hero": hero{
+          "light": light${siteImageProjection},
+          "dark": dark${siteImageProjection}
+        },
+        "workflow": workflow{
+          "light": light${siteImageProjection},
+          "dark": dark${siteImageProjection}
+        },
+        "googleCalendarCards": googleCalendarCards[]{
+          "light": light${siteImageProjection},
+          "dark": dark${siteImageProjection}
+        }
+      },
+      api{
+        title,
+        description
+      },
+      googleCalendar{
+        title,
+        description,
+        primaryFeatures[]{_key, icon, tone, title, description},
+        secondaryFeatures[]{_key, icon, tone, title, description}
+      },
+      hora{
+        title,
+        description,
+        features[]{_key, icon, tone, title, description}
+      },
+      privacy{
+        title,
+        description,
+        features[]{_key, icon, tone, title, description}
+      },
+      macos{
+        title,
+        description,
+        features[]{_key, icon, tone, title, description}
+      },
+      featureGrid{
+        title,
+        description,
+        features[]{_key, icon, tone, title, description}
+      },
+      newsletter{
+        title,
+        description,
+        placeholder,
+        buttonLabel
+      }
     }
   }
 `);

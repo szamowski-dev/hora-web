@@ -1,5 +1,10 @@
 export const HORA_HERO_VIDEO_ID = "hora_hero_video";
 
+export const ANALYTICS_EVENTS = {
+  downloadClick: "download_click",
+  brewCopyClick: "brew_copy_click",
+} as const;
+
 export const ANALYTICS_PLACEMENTS = {
   hero: "hero",
   nav: "nav",

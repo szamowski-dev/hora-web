@@ -7,16 +7,23 @@ export const site = {
   url: "https://horacal.app",
   nav: [
     { label: "Features", href: "/#features" },
-    { label: "Pricing", href: "/#pricing" },
-    { label: "Roadmap", href: "/#roadmap" },
+    { label: "Privacy", href: "/#privacy" },
+    { label: "macOS", href: "/#macos" },
+    { label: "Pricing", href: "/pricing/" },
     { label: "Blog", href: "/blog/" },
-    { label: "FAQ", href: "/#faq" },
-    { label: "Support", href: "/support/" },
   ],
   cta: {
+    trial: {
+      label: "Download",
+      href: "/pricing/",
+    },
     primary: {
       label: "Download on the Mac App Store",
       href: "https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_website&mt=8",
+    },
+    direct: {
+      label: "Download Direct",
+      href: "/download/direct/",
     },
   },
   macAppStoreBadgeSrc:
@@ -28,12 +35,15 @@ export const site = {
     },
   },
   footer: {
+    description:
+      "A fast, native Google Calendar app\nbuilt for the Mac.",
     copyright: "© 2026 hora Calendar",
     productLinks: [
-      { label: "Features", href: "/features/" },
-      { label: "Pricing", href: "/#pricing" },
-      { label: "Roadmap", href: "/#roadmap" },
-      { label: "Download", href: "/download/" },
+      { label: "Features", href: "/#features" },
+      { label: "Privacy", href: "/#privacy" },
+      { label: "macOS integration", href: "/#macos" },
+      { label: "Pricing", href: "/pricing/" },
+      { label: "Download", href: "/pricing/" },
     ],
     popularGuides: [
       {
@@ -60,9 +70,7 @@ export const site = {
       { label: "Terms", href: "/terms/" },
     ],
     socials: [
-      { label: "Email", href: "mailto:hello@horacal.app", icon: "mail" },
       { label: "Discord", href: "https://discord.gg/8JFz4FfBGQ", icon: "discord" },
-      { label: "GitHub", href: "https://github.com/szamowski-dev/hora-web", icon: "github" },
       { label: "X / Twitter", href: "https://x.com/moto_szama", icon: "x" },
       { label: "Bluesky", href: "https://bsky.app/profile/szamski.bsky.social", icon: "bluesky" },
     ],

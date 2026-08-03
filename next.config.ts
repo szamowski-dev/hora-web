@@ -156,6 +156,16 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      {
+        source: "/download",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/download/",
+        destination: "/",
+        permanent: true,
+      },
       ...seoBlogPostRedirects.flatMap(([source, destination]) => [
         { source, destination, permanent: true },
         { source: `${source}/`, destination, permanent: true },
@@ -212,12 +222,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/testflight/",
-        destination: "/download/",
+        destination: "/",
         permanent: true,
       },
       {
         source: "/testflight",
-        destination: "/download/",
+        destination: "/",
         permanent: true,
       },
       ...legacyAssetRedirects.map(([source, destination]) => ({

@@ -34,6 +34,90 @@ const sitePathOrHttps = (value: string | undefined) => {
   }
 };
 
+const productLandingIconOptions = [
+  { title: "Label", value: "label" },
+  { title: "Event", value: "event" },
+  { title: "Video call", value: "video-call" },
+  { title: "Contacts", value: "contacts" },
+  { title: "Accounts", value: "accounts" },
+  { title: "Search", value: "search" },
+  { title: "Invitation", value: "invitation" },
+  { title: "Menu bar", value: "menu-bar" },
+  { title: "Timer", value: "timer" },
+  { title: "Apple Intelligence", value: "auto-awesome" },
+  { title: "Tasks", value: "tasks" },
+  { title: "Focus time", value: "focus-time" },
+  { title: "Availability", value: "availability" },
+  { title: "Widgets", value: "widgets" },
+  { title: "Offline", value: "offline" },
+  { title: "Sync", value: "sync" },
+  { title: "Keychain", value: "key" },
+  { title: "Storage", value: "storage" },
+  { title: "Speed", value: "speed" },
+  { title: "Notifications", value: "notifications" },
+  { title: "Dock", value: "dock" },
+  { title: "Keyboard", value: "keyboard" },
+  { title: "Windows", value: "windows" },
+  { title: "Dark mode", value: "dark-mode" },
+  { title: "Apple Silicon", value: "apple-silicon" },
+  { title: "Calendar views", value: "view" },
+  { title: "Drag and drop", value: "drag" },
+  { title: "Quick add", value: "quick-add" },
+  { title: "Time zone", value: "time-zone" },
+  { title: "Repeat", value: "repeat" },
+  { title: "Location", value: "location" },
+  { title: "Out of office", value: "out-of-office" },
+];
+
+const productLandingToneOptions = [
+  { title: "Red", value: "red" },
+  { title: "Blue", value: "blue" },
+  { title: "Green", value: "green" },
+  { title: "Yellow", value: "yellow" },
+  { title: "Purple", value: "purple" },
+  { title: "Cyan", value: "cyan" },
+];
+
+const productLandingFeature = (name: string) =>
+  defineArrayMember({
+    name,
+    type: "object",
+    fields: [
+      defineField({
+        name: "icon",
+        title: "Icon",
+        type: "string",
+        options: { list: productLandingIconOptions },
+        validation: (rule) => rule.required(),
+      }),
+      defineField({
+        name: "tone",
+        title: "Accent color",
+        type: "string",
+        options: { list: productLandingToneOptions },
+        validation: (rule) => rule.required(),
+      }),
+      defineField({
+        name: "title",
+        title: "Title",
+        type: "string",
+        validation: (rule) =>
+          rule.required().min(2).max(100).custom(trimmed),
+      }),
+      defineField({
+        name: "description",
+        title: "Description",
+        type: "text",
+        rows: 3,
+        validation: (rule) =>
+          rule.required().min(5).max(360).custom(trimmed),
+      }),
+    ],
+    preview: {
+      select: { title: "title", subtitle: "description" },
+    },
+  });
+
 export const homePage = defineType({
   name: "homePage",
   title: "Homepage",
@@ -133,6 +217,364 @@ export const homePage = defineType({
         }),
       ],
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "productLanding",
+      title: "Product landing page",
+      type: "object",
+      description:
+        "Optional product-led homepage copy. Empty fields fall back to the versioned defaults in the Next.js app, so this section can be tuned gradually.",
+      options: { collapsible: true, collapsed: false },
+      fields: [
+        defineField({
+          name: "hero",
+          title: "Opening",
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Headline",
+              type: "string",
+              validation: (rule) =>
+                rule.min(10).max(120).custom(trimmed),
+            }),
+            defineField({
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 3,
+              validation: (rule) =>
+                rule.min(20).max(320).custom(trimmed),
+            }),
+            defineField({
+              name: "primaryCtaLabel",
+              title: "Primary action",
+              type: "string",
+              validation: (rule) =>
+                rule.min(3).max(60).custom(trimmed),
+            }),
+            defineField({
+              name: "macAppStoreLabel",
+              title: "Mac App Store badge label",
+              type: "string",
+              validation: (rule) =>
+                rule.min(3).max(80).custom(trimmed),
+            }),
+            defineField({
+              name: "watchVideoLabel",
+              title: "Video action",
+              type: "string",
+              validation: (rule) =>
+                rule.min(3).max(60).custom(trimmed),
+            }),
+            defineField({
+              name: "showPrimaryCta",
+              title: "Show Download button",
+              type: "boolean",
+              initialValue: false,
+              description:
+                "The Download button stays hidden from visitors until this is enabled.",
+            }),
+            defineField({
+              name: "showTerminalPrompt",
+              title: "Show terminal prompt",
+              type: "boolean",
+              initialValue: false,
+              description:
+                "The terminal installation prompt stays hidden from visitors until this is enabled.",
+            }),
+            defineField({
+              name: "homebrewCommand",
+              title: "Homebrew command",
+              type: "string",
+              description:
+                "Placeholder for now. Replace it when the Homebrew cask is available.",
+              validation: (rule) =>
+                rule.min(8).max(160).custom(trimmed),
+            }),
+            defineField({
+              name: "requirement",
+              title: "System requirement",
+              type: "string",
+              validation: (rule) =>
+                rule.min(5).max(100).custom(trimmed),
+            }),
+            defineField({
+              name: "copyLabel",
+              title: "Terminal copy button",
+              type: "string",
+              validation: (rule) =>
+                rule.min(2).max(40).custom(trimmed),
+            }),
+            defineField({
+              name: "copiedLabel",
+              title: "Terminal copied state",
+              type: "string",
+              validation: (rule) =>
+                rule.min(2).max(40).custom(trimmed),
+            }),
+          ],
+        }),
+        defineField({
+          name: "media",
+          title: "Product imagery",
+          type: "object",
+          description:
+            "Upload matching light and dark screenshots. Until both are supplied for a slot, the versioned fallback remains visible.",
+          fields: [
+            defineField({
+              name: "hero",
+              title: "Hero screenshot",
+              type: "object",
+              fields: [
+                defineField({ name: "light", title: "Light appearance", type: "siteImage" }),
+                defineField({ name: "dark", title: "Dark appearance", type: "siteImage" }),
+              ],
+            }),
+            defineField({
+              name: "workflow",
+              title: "Event workflow screenshot",
+              type: "object",
+              fields: [
+                defineField({ name: "light", title: "Light appearance", type: "siteImage" }),
+                defineField({ name: "dark", title: "Dark appearance", type: "siteImage" }),
+              ],
+            }),
+            defineField({
+              name: "googleCalendarCards",
+              title: "Google Calendar feature screenshots",
+              type: "array",
+              description:
+                "Keep four items in this order: color labels, event types, Meet and Contacts, multiple accounts.",
+              of: [
+                defineArrayMember({
+                  type: "object",
+                  name: "productLandingThemedCardImage",
+                  fields: [
+                    defineField({ name: "light", title: "Light appearance", type: "siteImage" }),
+                    defineField({ name: "dark", title: "Dark appearance", type: "siteImage" }),
+                  ],
+                }),
+              ],
+              validation: (rule) => rule.max(4),
+            }),
+          ],
+        }),
+        defineField({
+          name: "api",
+          title: "Google Calendar API",
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (rule) =>
+                rule.min(5).max(100).custom(trimmed),
+            }),
+            defineField({
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 3,
+              validation: (rule) =>
+                rule.min(15).max(320).custom(trimmed),
+            }),
+          ],
+        }),
+        defineField({
+          name: "googleCalendar",
+          title: "Google Calendar features",
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (rule) =>
+                rule.min(5).max(120).custom(trimmed),
+            }),
+            defineField({
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 2,
+              validation: (rule) =>
+                rule.min(10).max(280).custom(trimmed),
+            }),
+            defineField({
+              name: "primaryFeatures",
+              title: "Primary features",
+              type: "array",
+              of: [productLandingFeature("productLandingGooglePrimaryFeature")],
+              validation: (rule) => rule.min(3).max(3),
+            }),
+            defineField({
+              name: "secondaryFeatures",
+              title: "Secondary features",
+              type: "array",
+              description:
+                "Keep this list editable as the product story is tuned.",
+              of: [productLandingFeature("productLandingGoogleSecondaryFeature")],
+              validation: (rule) => rule.min(1).max(6),
+            }),
+          ],
+        }),
+        defineField({
+          name: "hora",
+          title: "hora-specific features",
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (rule) =>
+                rule.min(5).max(120).custom(trimmed),
+            }),
+            defineField({
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 2,
+              validation: (rule) =>
+                rule.min(10).max(280).custom(trimmed),
+            }),
+            defineField({
+              name: "features",
+              title: "Features",
+              type: "array",
+              of: [productLandingFeature("productLandingHoraFeature")],
+              validation: (rule) => rule.min(4).max(10),
+            }),
+          ],
+        }),
+        defineField({
+          name: "privacy",
+          title: "Privacy",
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (rule) =>
+                rule.min(5).max(120).custom(trimmed),
+            }),
+            defineField({
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 3,
+              validation: (rule) =>
+                rule.min(15).max(360).custom(trimmed),
+            }),
+            defineField({
+              name: "features",
+              title: "Privacy guarantees",
+              type: "array",
+              of: [productLandingFeature("productLandingPrivacyFeature")],
+              validation: (rule) => rule.min(3).max(3),
+            }),
+          ],
+        }),
+        defineField({
+          name: "macos",
+          title: "macOS integration",
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (rule) =>
+                rule.min(5).max(120).custom(trimmed),
+            }),
+            defineField({
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 2,
+              validation: (rule) =>
+                rule.min(10).max(280).custom(trimmed),
+            }),
+            defineField({
+              name: "features",
+              title: "macOS features",
+              type: "array",
+              of: [productLandingFeature("productLandingMacosFeature")],
+              validation: (rule) => rule.min(6).max(12),
+            }),
+          ],
+        }),
+        defineField({
+          name: "featureGrid",
+          title: "Feature directory",
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (rule) =>
+                rule.min(5).max(120).custom(trimmed),
+            }),
+            defineField({
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 2,
+              validation: (rule) =>
+                rule.min(10).max(280).custom(trimmed),
+            }),
+            defineField({
+              name: "features",
+              title: "Features",
+              type: "array",
+              description:
+                "This is the main editable space for adding or removing supporting capabilities.",
+              of: [productLandingFeature("productLandingGridFeature")],
+              validation: (rule) => rule.min(6).max(18),
+            }),
+          ],
+        }),
+        defineField({
+          name: "newsletter",
+          title: "Mailing list",
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (rule) =>
+                rule.min(5).max(100).custom(trimmed),
+            }),
+            defineField({
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 2,
+              validation: (rule) =>
+                rule.min(10).max(280).custom(trimmed),
+            }),
+            defineField({
+              name: "placeholder",
+              title: "Email placeholder",
+              type: "string",
+              validation: (rule) =>
+                rule.min(3).max(80).custom(trimmed),
+            }),
+            defineField({
+              name: "buttonLabel",
+              title: "Submit button",
+              type: "string",
+              validation: (rule) =>
+                rule.min(3).max(60).custom(trimmed),
+            }),
+          ],
+        }),
+      ],
     }),
     defineField({
       name: "featuredOn",
@@ -710,197 +1152,6 @@ export const homePage = defineType({
                   "Testimonial IDs",
                 ),
               ),
-        }),
-      ],
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "pricing",
-      title: "Pricing",
-      type: "object",
-      fields: [
-        defineField({
-          name: "titlePrefix",
-          title: "Title prefix",
-          type: "string",
-          validation: (rule) => rule.required().min(3).max(80).custom(trimmed),
-        }),
-        defineField({
-          name: "titleAccent",
-          title: "Accented title",
-          type: "string",
-          validation: (rule) => rule.required().min(3).max(80).custom(trimmed),
-        }),
-        defineField({
-          name: "description",
-          title: "Description",
-          type: "text",
-          rows: 2,
-          validation: (rule) => rule.required().min(10).max(240).custom(trimmed),
-        }),
-        defineField({
-          name: "familySharing",
-          title: "Family Sharing message",
-          type: "string",
-          validation: (rule) => rule.required().min(5).max(160).custom(trimmed),
-        }),
-        defineField({
-          name: "crossPlatform",
-          title: "Cross-platform message",
-          type: "string",
-          validation: (rule) => rule.required().min(5).max(160).custom(trimmed),
-        }),
-        defineField({
-          name: "oneTime",
-          title: "One-time purchase",
-          type: "object",
-          fields: [
-            defineField({
-              name: "label",
-              title: "Label",
-              type: "string",
-              validation: (rule) => rule.required().min(2).max(50).custom(trimmed),
-            }),
-            defineField({
-              name: "badge",
-              title: "Badge",
-              type: "string",
-              validation: (rule) => rule.required().min(2).max(50).custom(trimmed),
-            }),
-            defineField({
-              name: "price",
-              title: "Price",
-              type: "string",
-              validation: (rule) => rule.required().min(2).max(80).custom(trimmed),
-            }),
-          ],
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: "subscription",
-          title: "Subscription",
-          type: "object",
-          fields: [
-            defineField({
-              name: "label",
-              title: "Label",
-              type: "string",
-              validation: (rule) => rule.required().min(2).max(50).custom(trimmed),
-            }),
-            defineField({
-              name: "price",
-              title: "Price",
-              type: "string",
-              validation: (rule) => rule.required().min(2).max(80).custom(trimmed),
-            }),
-          ],
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: "comparisonLabel",
-          title: "Comparison label",
-          type: "string",
-          validation: (rule) => rule.required().min(5).max(160).custom(trimmed),
-        }),
-        defineField({
-          name: "comparisonDescription",
-          title: "Comparison description",
-          type: "string",
-          validation: (rule) => rule.required().min(5).max(200).custom(trimmed),
-        }),
-        defineField({
-          name: "comparisonNameLabel",
-          title: "Alternative column label",
-          type: "string",
-          validation: (rule) => rule.required().min(2).max(50).custom(trimmed),
-        }),
-        defineField({
-          name: "comparisonPriceLabel",
-          title: "Price column label",
-          type: "string",
-          validation: (rule) => rule.required().min(2).max(50).custom(trimmed),
-        }),
-        defineField({
-          name: "comparisonItems",
-          title: "Pricing alternatives",
-          type: "array",
-          of: [
-            defineArrayMember({
-              type: "object",
-              name: "pricingComparisonItem",
-              fields: [
-                defineField({
-                  name: "name",
-                  title: "Name",
-                  type: "string",
-                  validation: (rule) => rule.required().min(2).max(80).custom(trimmed),
-                }),
-                defineField({
-                  name: "price",
-                  title: "Price",
-                  type: "string",
-                  validation: (rule) => rule.required().min(1).max(100).custom(trimmed),
-                }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 2,
-                  validation: (rule) => rule.required().min(5).max(240).custom(trimmed),
-                }),
-                defineField({
-                  name: "recommendedLabel",
-                  title: "Recommended badge",
-                  type: "string",
-                  description: "Leave empty for non-recommended alternatives.",
-                  validation: (rule) => rule.max(50).custom(trimmed),
-                }),
-              ],
-              preview: { select: { title: "name", subtitle: "price" } },
-            }),
-          ],
-          validation: (rule) =>
-            rule
-              .required()
-              .min(2)
-              .max(8)
-              .custom((value) =>
-                uniqueStringField(
-                  value as Record<string, unknown>[] | undefined,
-                  "name",
-                  "Alternative names",
-                ),
-              ),
-        }),
-        defineField({
-          name: "comparisonCtaLabel",
-          title: "Comparison link label",
-          type: "string",
-          validation: (rule) => rule.required().min(3).max(100).custom(trimmed),
-        }),
-        defineField({
-          name: "comparisonCtaPost",
-          title: "Comparison blog post",
-          type: "reference",
-          to: [{ type: "blogPost" }],
-          options: { disableNew: true },
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: "appStoreLabel",
-          title: "App Store button label",
-          type: "string",
-          description:
-            "The attributed App Store URL remains controlled by the application.",
-          validation: (rule) => rule.required().min(5).max(100).custom(trimmed),
-        }),
-        defineField({
-          name: "showSetappBadge",
-          title: "Show Setapp badge",
-          type: "boolean",
-          initialValue: false,
-          description:
-            "Shows the Setapp badge beside the Mac App Store button. Keep disabled until the Setapp launch is ready.",
         }),
       ],
       validation: (rule) => rule.required(),

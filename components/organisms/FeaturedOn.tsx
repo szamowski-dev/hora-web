@@ -1,5 +1,11 @@
 import { cn } from "@/lib/cn";
 import type { HomePageContent } from "@/lib/home-model";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export function FeaturedOn({
   content,
@@ -9,35 +15,31 @@ export function FeaturedOn({
   return (
     <section
       aria-label={content.label}
-      className="home-section relative overflow-hidden border-b py-10 md:py-12"
+      className="px-5 py-20 sm:px-10 sm:py-28"
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-line-strong to-transparent"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.12]"
-        style={{
-          backgroundImage:
-            "linear-gradient(90deg, var(--ui-line) 1px, transparent 1px)",
-          backgroundSize: "72px 72px",
-        }}
-      />
-
-      <div className="relative mx-auto max-w-295 px-6">
-        <div className="grid gap-5 md:grid-cols-[7.5rem_minmax(0,1fr)] md:items-center">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted/80 md:whitespace-nowrap">
-            {content.label}
-          </span>
-          <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 sm:gap-x-6 md:justify-start lg:gap-x-7">
+      <Card
+        className="mx-auto max-w-landing gap-4 px-4 py-8 sm:gap-6 sm:px-10 sm:py-10"
+      >
+        <CardHeader className="justify-items-center px-0 text-center">
+          <CardTitle>
+            <h2 className="text-3xl tracking-[-0.035em] sm:text-4xl">
+              Featured on
+            </h2>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="px-0">
+          <ul className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-2 gap-y-1 sm:max-w-5xl sm:gap-x-3 sm:gap-y-2">
             {content.badges.map((badge) => (
-              <li key={badge.name} data-anim="featured-badge" className="flex min-w-0 items-center justify-center">
+              <li
+                key={badge.name}
+                data-anim="featured-badge"
+                className="flex min-w-0 basis-[calc(50%-0.25rem)] items-center justify-center sm:basis-auto"
+              >
                 <a
                   href={badge.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-12 items-center justify-center rounded-md opacity-75 grayscale transition-[opacity,filter] hover:opacity-100 hover:grayscale-0 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg md:h-14"
+                  className="flex min-h-12 w-full items-center justify-center rounded-lg px-1 opacity-80 grayscale transition-[opacity,filter] hover:opacity-100 hover:grayscale-0 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg sm:min-h-14 sm:w-auto sm:px-2"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -54,16 +56,16 @@ export function FeaturedOn({
                     className={cn(
                       "block",
                       badge.variant === "productHunt"
-                        ? "h-11 w-auto max-w-none object-contain md:h-16"
-                        : "h-10 w-auto object-contain md:h-11",
+                        ? "h-12 w-auto max-w-full object-contain max-sm:!h-14 max-sm:!w-auto sm:h-14"
+                        : "h-9 w-auto max-w-full object-contain max-sm:!h-11 max-sm:!w-auto sm:h-11",
                     )}
                   />
                 </a>
               </li>
             ))}
           </ul>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </section>
   );
 }

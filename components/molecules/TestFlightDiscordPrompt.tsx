@@ -146,7 +146,7 @@ export function TestFlightDiscordPrompt() {
       <div className="shader-panel relative w-full max-w-125 overflow-hidden rounded-2xl border border-line-strong bg-white/7.5 p-5 text-left shadow-[0_40px_110px_-44px_oklch(0_0_0/0.94),-18px_18px_82px_-72px_oklch(0.6532_0.2328_25.7/0.42),20px_-16px_82px_-72px_oklch(0.4269_0.1069_255.7/0.48),inset_0_1px_0_oklch(0.9851_0_0/0.22)] backdrop-blur-2xl sm:p-7">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.24),rgba(255,255,255,0.05)_34%,rgba(255,255,255,0.02)_64%,rgba(255,255,255,0.12))]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,oklch(1_0_0/0.24),oklch(1_0_0/0.05)_34%,oklch(1_0_0/0.02)_64%,oklch(1_0_0/0.12))]"
         />
         <div
           aria-hidden
@@ -154,7 +154,7 @@ export function TestFlightDiscordPrompt() {
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-[#5865F2]/22 blur-3xl"
+          className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-[oklch(0.577436_0.20909_273.85/0.22)] blur-3xl"
         />
         <div
           aria-hidden
@@ -175,7 +175,7 @@ export function TestFlightDiscordPrompt() {
           className="absolute inset-x-0 top-0 z-10 h-1 bg-white/10"
         >
           <div
-            className="h-full bg-linear-to-r from-accent via-[#ff7a76] to-white/80 transition-[width] duration-1000 ease-linear"
+            className="h-full bg-linear-to-r from-accent via-[oklch(0.733847_0.163116_23.641)] to-white/80 transition-[width] duration-1000 ease-linear"
             style={{
               width: `${Math.max(0, (secondsLeft / OPEN_DELAY_SECONDS) * 100)}%`,
             }}

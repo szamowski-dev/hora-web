@@ -19,7 +19,7 @@ const sizeClasses: Record<Size, string> = {
 };
 
 const baseClasses =
-  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
+  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full [corner-shape:superellipse(1.6)] font-medium disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
 
 type CommonProps = {
   variant?: Variant;
