@@ -56,10 +56,7 @@ export default function PricingPage() {
     <main className="px-5 pb-28 pt-28 sm:px-10 sm:pb-40 sm:pt-40">
       <div className="mx-auto max-w-4xl">
         <header className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-accent">
-            hora Calendar Direct
-          </p>
-          <h1 className="mt-5 text-balance text-5xl font-semibold tracking-[-0.065em] text-text sm:text-7xl">
+          <h1 className="text-balance text-5xl font-semibold tracking-[-0.065em] text-text sm:text-7xl">
             Download first. Choose your plan in the app.
           </h1>
           <p className="mx-auto mt-7 max-w-2xl text-balance text-lg leading-8 text-muted sm:text-xl">
