@@ -10,6 +10,7 @@ import { LandingFeatureCards } from "@/components/landing/LandingFeatureCards";
 import { HomebrewCommand } from "@/components/molecules/HomebrewCommand";
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
 import { ProductVideoDialog } from "@/components/molecules/ProductVideoDialog";
+import { ThemedProductImage } from "@/components/molecules/ThemedProductImage";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
 import { ProductHeroShader } from "@/components/organisms/ProductHeroShader";
 import { Button } from "@/components/ui/button";
@@ -26,28 +27,32 @@ import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 
 const GOOGLE_FEATURE_IMAGES = [
   {
-    src: "/assets/product/event-color-labels.png",
-    alt: "hora calendar showing Google Calendar event color labels",
-    width: 667,
-    height: 256,
+    lightSrc: "/assets/product/label-colors-light-card.png",
+    darkSrc: "/assets/product/label-colors-dark-card.png",
+    alt: "Google Calendar color labels",
+    width: 1334,
+    height: 597,
   },
   {
-    src: "/assets/product/event-types.png",
-    alt: "hora focus-time event settings",
-    width: 296,
-    height: 256,
+    lightSrc: "/assets/product/event-types-light-card.png",
+    darkSrc: "/assets/product/event-types-dark-card.png",
+    alt: "hora calendar showing every Google Calendar event type",
+    width: 592,
+    height: 549,
   },
   {
-    src: "/assets/product/meet-and-contacts.png",
-    alt: "hora event details with Google Meet and Google Contacts guests",
-    width: 296,
-    height: 256,
+    lightSrc: "/assets/product/meet-and-contacts-light-card.png",
+    darkSrc: "/assets/product/meet-and-contacts-dark-card.png",
+    alt: "Google Meet and Local Contacts",
+    width: 592,
+    height: 549,
   },
   {
-    src: "/assets/product/accounts-multiple-swiftui.png",
+    lightSrc: "/assets/product/accounts-multiple-light-card.png",
+    darkSrc: "/assets/product/accounts-multiple-dark-card.png",
     alt: "hora Google Accounts settings with multiple connected accounts",
     width: 1334,
-    height: 512,
+    height: 597,
   },
 ];
 
@@ -134,11 +139,12 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
             className="absolute inset-x-[12%] bottom-0 top-[25%] bg-[radial-gradient(ellipse_at_center,var(--ui-glow-accent-soft),transparent_68%)] blur-3xl"
           />
           <div className="relative">
-            <Image
-              src="/assets/product/hero.png"
+            <ThemedProductImage
+              lightSrc="/assets/product/hero-light.png"
+              darkSrc="/assets/product/hero.png"
               alt="hora Calendar week view with event details, Google Meet, and focus timer"
-              width={3090}
-              height={2052}
+              width={3234}
+              height={2028}
               priority
               sizes="(max-width: 1280px) 94vw, 1216px"
               className="h-auto w-full"
