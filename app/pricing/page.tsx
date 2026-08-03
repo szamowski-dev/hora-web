@@ -50,34 +50,34 @@ export default async function PricingPage() {
         title={content.hero.title}
         description={content.hero.description}
       />
-      <main className="px-5 pb-28 pt-20 sm:px-10 sm:pb-40 sm:pt-28">
+      <main className="px-5 pb-20 pt-12 sm:px-8 sm:pb-28 sm:pt-16">
         <section
           aria-label="Plans"
-          className="mx-auto grid max-w-[1360px] gap-8 md:grid-cols-2"
+          className="mx-auto grid max-w-[960px] gap-4 md:grid-cols-2"
         >
           {content.plans.map((plan) => (
             <article
               key={`${plan.name}-${plan.price}`}
-              className="flex min-h-[34rem] flex-col rounded-[40px] border border-line bg-panel/55 p-8 shadow-[0_24px_70px_-42px_var(--ui-shadow-neutral)] sm:p-12"
+              className="flex min-h-[24rem] flex-col rounded-[28px] border border-line bg-panel/55 p-6 shadow-[0_24px_70px_-42px_var(--ui-shadow-neutral)] sm:p-7"
             >
-              <p className="text-lg font-semibold uppercase tracking-[0.14em] text-muted">
+              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-muted">
                 {plan.name}
               </p>
-              <p className="mt-6 text-5xl font-semibold tracking-[-0.06em] text-text sm:text-7xl">
+              <p className="mt-3 text-3xl font-semibold tracking-[-0.06em] text-text sm:text-4xl">
                 {plan.price}
                 {plan.suffix ? (
-                  <span className="ml-2 text-2xl font-medium tracking-normal text-muted sm:text-3xl">
+                  <span className="ml-1.5 text-base font-medium tracking-normal text-muted sm:text-lg">
                     {plan.suffix}
                   </span>
                 ) : null}
               </p>
-              <p className="mt-6 max-w-xl text-lg leading-8 text-muted sm:text-xl">
+              <p className="mt-3 max-w-xl text-sm leading-6 text-muted sm:text-base">
                 {plan.description}
               </p>
-              <ul className="mt-10 space-y-4 text-lg text-text sm:mt-12">
+              <ul className="mt-7 space-y-2.5 text-sm text-text sm:mt-8 sm:text-base">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-4">
-                    <MdCheck className="size-6 shrink-0 text-success" aria-hidden />
+                  <li key={feature} className="flex items-center gap-3">
+                    <MdCheck className="size-5 shrink-0 text-success" aria-hidden />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -107,7 +107,7 @@ export default async function PricingPage() {
         </section>
 
         {showTerminalPrompt ? (
-          <div className="mx-auto mt-8 flex max-w-[1360px] flex-col items-center text-center">
+          <div className="mx-auto mt-5 flex max-w-[960px] flex-col items-center text-center">
             <HomebrewCommand
               command={content.direct.terminalCommand}
               copyLabel={content.direct.copyLabel}
@@ -119,48 +119,21 @@ export default async function PricingPage() {
           </div>
         ) : null}
 
-        <section className="mx-auto mt-40 max-w-[1600px] sm:mt-56">
-          <h2 className="text-balance text-4xl font-semibold tracking-[-0.055em] text-text sm:text-6xl">
-            {content.faq.title}
-          </h2>
-          <div className="mt-12 overflow-hidden rounded-[40px] border border-line bg-panel/55">
-            {content.faq.items.map((item) => (
-              <details
-                key={item.question}
-                className="group border-b border-line last:border-b-0"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 px-6 py-7 text-left text-xl font-semibold text-text transition-colors hover:bg-overlay focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent sm:px-11 sm:py-10 sm:text-2xl [&::-webkit-details-marker]:hidden">
-                  {item.question}
-                  <span
-                    aria-hidden="true"
-                    className="shrink-0 text-4xl font-light leading-none text-muted transition-transform group-open:rotate-45"
-                  >
-                    +
-                  </span>
-                </summary>
-                <p className="border-t border-line px-6 pb-7 pt-6 text-base leading-7 text-muted sm:px-11 sm:pb-10 sm:text-lg">
-                  {item.answer}
-                </p>
-              </details>
-            ))}
-          </div>
-        </section>
-
         {(content.distribution.showMacAppStore || content.distribution.showSetapp) ? (
-          <section className="mx-auto mt-40 max-w-[1600px] sm:mt-56">
-            <h2 className="text-balance text-4xl font-semibold tracking-[-0.055em] text-text sm:text-6xl">
+          <section className="mx-auto mt-24 max-w-[960px] sm:mt-28">
+            <h2 className="text-balance text-3xl font-semibold tracking-[-0.055em] text-text sm:text-4xl">
               {content.distribution.title}
             </h2>
-            <p className="mt-6 max-w-4xl text-balance text-xl leading-9 text-muted sm:text-2xl">
+            <p className="mt-4 max-w-3xl text-balance text-base leading-7 text-muted">
               {content.distribution.description}
             </p>
-            <div className="mt-16 grid gap-8 md:grid-cols-2">
+            <div className="mt-8 grid gap-4 md:grid-cols-2">
               {content.distribution.showMacAppStore ? (
-                <article className="flex min-h-[25rem] flex-col rounded-[40px] border border-line bg-panel/55 p-8 sm:p-14">
-                  <h3 className="text-3xl font-semibold tracking-[-0.045em] text-text sm:text-4xl">
+                <article className="flex min-h-[18rem] flex-col rounded-[28px] border border-line bg-panel/55 p-6 sm:p-7">
+                  <h3 className="text-xl font-semibold tracking-[-0.045em] text-text sm:text-2xl">
                     {content.distribution.macAppStoreTitle}
                   </h3>
-                  <p className="mt-7 max-w-xl text-xl leading-9 text-muted">
+                  <p className="mt-4 max-w-xl text-base leading-7 text-muted">
                     {content.distribution.macAppStoreDescription}
                   </p>
                   <AppStoreLink
@@ -168,7 +141,7 @@ export default async function PricingPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={content.distribution.macAppStoreLabel}
-                    className="app-store-interactive mt-auto inline-flex h-14 w-fit items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                    className="app-store-interactive mt-auto inline-flex h-12 w-fit items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                     {...analyticsAttrs("app_store_cta_click", {
                       placement: ANALYTICS_PLACEMENTS.pricing,
                       destination: "mac_app_store",
@@ -177,36 +150,36 @@ export default async function PricingPage() {
                     <Image
                       src={site.macAppStoreBadgeSrc}
                       alt={content.distribution.macAppStoreLabel}
-                      width={194}
-                      height={60}
-                      className="h-14 w-auto"
+                      width={162}
+                      height={50}
+                      className="h-12 w-auto"
                     />
                   </AppStoreLink>
                 </article>
               ) : null}
               {content.distribution.showSetapp ? (
-                <article className="flex min-h-[25rem] flex-col rounded-[40px] border border-line bg-panel/55 p-8 sm:p-14">
-                  <h3 className="text-3xl font-semibold tracking-[-0.045em] text-text sm:text-4xl">
+                <article className="flex min-h-[18rem] flex-col rounded-[28px] border border-line bg-panel/55 p-6 sm:p-7">
+                  <h3 className="text-xl font-semibold tracking-[-0.045em] text-text sm:text-2xl">
                     {content.distribution.setappTitle}
                   </h3>
-                  <p className="mt-7 max-w-xl text-xl leading-9 text-muted">
+                  <p className="mt-4 max-w-xl text-base leading-7 text-muted">
                     {content.distribution.setappDescription}
                   </p>
                   <a
                     href={content.distribution.setappHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-auto inline-flex h-14 w-fit items-center gap-3 rounded-xl bg-black px-5 text-left text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                    className="mt-auto inline-flex h-12 w-fit items-center gap-3 rounded-xl bg-black px-4 text-left text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                     {...analyticsAttrs("nav_click", {
                       placement: ANALYTICS_PLACEMENTS.pricing,
                       link_text: content.distribution.setappLabel,
                       link_url: content.distribution.setappHref,
                     })}
                   >
-                    <SiSetapp className="size-8 text-fuchsia-400" aria-hidden />
+                    <SiSetapp className="size-7 text-fuchsia-400" aria-hidden />
                     <span className="flex flex-col leading-none">
                       <span className="text-[10px] font-medium">Available on</span>
-                      <span className="mt-1 text-xl font-semibold">Setapp</span>
+                      <span className="mt-1 text-lg font-semibold">Setapp</span>
                     </span>
                   </a>
                 </article>
@@ -215,7 +188,34 @@ export default async function PricingPage() {
           </section>
         ) : null}
 
-        <p className="mx-auto mt-20 max-w-2xl text-center text-sm leading-6 text-muted">
+        <section className="mx-auto mt-24 max-w-[960px] sm:mt-28">
+          <h2 className="text-balance text-3xl font-semibold tracking-[-0.055em] text-text sm:text-4xl">
+            {content.faq.title}
+          </h2>
+          <div className="mt-7 overflow-hidden rounded-[28px] border border-line bg-panel/55">
+            {content.faq.items.map((item) => (
+              <details
+                key={item.question}
+                className="group border-b border-line last:border-b-0"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 px-6 py-5 text-left text-base font-semibold text-text transition-colors hover:bg-overlay focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent sm:px-7 sm:py-6 sm:text-lg [&::-webkit-details-marker]:hidden">
+                  {item.question}
+                  <span
+                    aria-hidden="true"
+                    className="shrink-0 text-3xl font-light leading-none text-muted transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p className="border-t border-line px-6 pb-6 pt-5 text-base leading-7 text-muted sm:px-8 sm:pb-7">
+                  {item.answer}
+                </p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <p className="mx-auto mt-14 max-w-2xl text-center text-sm leading-6 text-muted">
           {content.footer}
         </p>
       </main>
