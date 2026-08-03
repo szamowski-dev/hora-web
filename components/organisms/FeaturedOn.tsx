@@ -22,9 +22,7 @@ export function FeaturedOn({
       >
         <CardHeader className="justify-items-center px-0 text-center">
           <CardTitle>
-            <h2 className="text-3xl tracking-[-0.035em] sm:text-4xl">
-              Featured on
-            </h2>
+            <h2 className="text-3xl tracking-[-0.035em] sm:text-4xl">{content.label}</h2>
           </CardTitle>
         </CardHeader>
         <CardContent className="px-0">

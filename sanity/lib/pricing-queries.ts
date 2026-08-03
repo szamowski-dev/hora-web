@@ -1,4 +1,8 @@
 import { defineQuery } from "next-sanity";
+import {
+  siteImageProjection,
+  type SanitySiteImageValue,
+} from "@/sanity/lib/home-queries";
 
 export type SanityPricingPageDocument = {
   seo?: { title?: string; description?: string };
@@ -29,6 +33,7 @@ export type SanityPricingPageDocument = {
     macAppStoreTitle?: string;
     macAppStoreDescription?: string;
     macAppStoreLabel?: string;
+    macAppStoreBadge?: SanitySiteImageValue;
     showSetapp?: boolean;
     setappTitle?: string;
     setappDescription?: string;
@@ -37,7 +42,6 @@ export type SanityPricingPageDocument = {
   };
   faq?: {
     title?: string;
-    description?: string;
     items?: Array<{ _key?: string; question?: string; answer?: string }>;
   };
   footer?: string;
@@ -67,13 +71,14 @@ export const PRICING_PAGE_QUERY = defineQuery(`
       macAppStoreTitle,
       macAppStoreDescription,
       macAppStoreLabel,
+      "macAppStoreBadge": macAppStoreBadge${siteImageProjection},
       showSetapp,
       setappTitle,
       setappDescription,
       setappLabel,
       setappHref
     },
-    faq{title, description, items[]{_key, question, answer}},
+    faq{title, items[]{_key, question, answer}},
     footer
   }
 `);

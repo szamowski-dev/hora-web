@@ -148,10 +148,10 @@ export default async function PricingPage() {
                     })}
                   >
                     <Image
-                      src={site.macAppStoreBadgeSrc}
-                      alt={content.distribution.macAppStoreLabel}
-                      width={162}
-                      height={50}
+                      src={content.distribution.macAppStoreBadge.src}
+                      alt={content.distribution.macAppStoreBadge.alt}
+                      width={content.distribution.macAppStoreBadge.width}
+                      height={content.distribution.macAppStoreBadge.height}
                       className="h-12 w-auto"
                     />
                   </AppStoreLink>

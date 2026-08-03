@@ -2,11 +2,14 @@ import "server-only";
 
 import { cache } from "react";
 import { defaultPricingPage } from "@/content/pricing";
+import type { SiteImage } from "@/lib/home-model";
 import type { PricingPageContent, PricingPlan } from "@/lib/pricing-model";
 import {
   getSanityFetchContext,
   type SanityRepositoryOptions,
 } from "@/sanity/lib/fetch-context";
+import { sanityImageDimensions, sanityImageUrl } from "@/sanity/lib/image";
+import type { SanitySiteImageValue } from "@/sanity/lib/home-queries";
 import {
   PRICING_PAGE_QUERY,
   type SanityPricingPageDocument,
@@ -20,6 +23,33 @@ function optionalString(value: string | undefined) {
 
 function text(value: string | undefined, fallback: string) {
   return optionalString(value) ?? fallback;
+}
+
+function hasImageAsset(
+  value: SanitySiteImageValue | undefined,
+): value is SanitySiteImageValue {
+  return Boolean(value?.asset?._id || value?.asset?.url);
+}
+
+function image(
+  value: SanitySiteImageValue | undefined,
+  fallback: SiteImage,
+): SiteImage {
+  if (!hasImageAsset(value)) return fallback;
+  const dimensions = sanityImageDimensions(value);
+  if (!dimensions.width || !dimensions.height) return fallback;
+  const src = sanityImageUrl(value, {
+    width: Math.min(dimensions.width, 512),
+    quality: 90,
+  });
+  if (!src) return fallback;
+  return {
+    src,
+    alt: text(value.alt, fallback.alt),
+    width: dimensions.width,
+    height: dimensions.height,
+    blurDataURL: value.asset?.metadata?.lqip,
+  };
 }
 
 function plans(
@@ -118,6 +148,10 @@ function mapPricingPage(
         value.distribution?.macAppStoreLabel,
         fallback.distribution.macAppStoreLabel,
       ),
+      macAppStoreBadge: image(
+        value.distribution?.macAppStoreBadge,
+        fallback.distribution.macAppStoreBadge,
+      ),
       showSetapp: value.distribution?.showSetapp ?? fallback.distribution.showSetapp,
       setappTitle: text(
         value.distribution?.setappTitle,
@@ -132,7 +166,6 @@ function mapPricingPage(
     },
     faq: {
       title: text(value.faq?.title, fallback.faq.title),
-      description: text(value.faq?.description, fallback.faq.description),
       items: faq(value.faq?.items, fallback.faq.items),
     },
     footer: text(value.footer, fallback.footer),

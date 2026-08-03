@@ -22,30 +22,6 @@ export type ThemedSiteImage = {
   dark: SiteImage;
 };
 
-export type HomeFeatureIcon =
-  | "app-window"
-  | "calendar"
-  | "bell"
-  | "sync"
-  | "check"
-  | "gauge"
-  | "shield";
-
-export type HomeIntegrationProvider =
-  | "google-calendar"
-  | "zoom"
-  | "microsoft-teams"
-  | "apple-intelligence";
-
-export type HomeTestimonialPlatform = "x" | "reddit" | "discord";
-
-export type HomeRoadmapStatus =
-  | "Shipped"
-  | "Open Beta Tests"
-  | "Up next"
-  | "Planned"
-  | "On the horizon";
-
 export type ProductLandingIcon =
   | "label"
   | "event"
@@ -132,7 +108,6 @@ export type ProductLandingContent = {
   privacy: {
     title: string;
     description: string;
-    features: ProductLandingFeature[];
   };
   macos: {
     title: string;
@@ -140,8 +115,6 @@ export type ProductLandingContent = {
     features: ProductLandingFeature[];
   };
   featureGrid: {
-    title: string;
-    description: string;
     features: ProductLandingFeature[];
   };
   newsletter: {
@@ -162,18 +135,6 @@ export type HomePageContent = {
     ogImage?: SiteImage;
     noIndex: boolean;
   };
-  hero: {
-    titlePrefix: string;
-    titleAccent: string;
-    description: string;
-    screenshot: SiteImage;
-    watchDemoLabel: string;
-    socialProof: {
-      label: string;
-      fallbackCount: number;
-      avatars: Array<{ src: string; alt: string }>;
-    };
-  };
   featuredOn: {
     label: string;
     badges: Array<{
@@ -187,87 +148,6 @@ export type HomePageContent = {
       displayHeight?: number;
       variant: "productHunt" | "standard";
     }>;
-  };
-  showcase: {
-    eyebrow: string;
-    headingPrefix: string;
-    headingAccent: string;
-    description: string;
-    mainVideo: SiteVideo;
-    firstSlideTitle: string;
-    firstSlideDescription: string;
-    actions: Array<{
-      number: number;
-      title: string;
-      description: string;
-      video: SiteVideo;
-    }>;
-  };
-  featureOverview: {
-    eyebrow: string;
-    titlePrefix: string;
-    titleAccent: string;
-    allFeaturesLabel: string;
-    items: Array<{
-      icon: HomeFeatureIcon;
-      title: string;
-      description: string;
-    }>;
-  };
-  integrations: {
-    eyebrow: string;
-    titlePrefix: string;
-    titleAccent: string;
-    items: Array<{
-      provider: HomeIntegrationProvider;
-      name: string;
-      description: string;
-    }>;
-    founderNote: {
-      lines: string[];
-      author: {
-        name: string;
-        role: string;
-        portrait: SiteImage;
-      };
-    };
-  };
-  socialProof: {
-    eyebrow: string;
-    titlePrefix: string;
-    titleAccent: string;
-    description: string;
-    testimonials: Array<{
-      id: string;
-      quote: string;
-      author: string;
-      handle: string;
-      href: string;
-      avatarUrl: string;
-      platform: HomeTestimonialPlatform;
-    }>;
-  };
-  roadmap: {
-    eyebrow: string;
-    titlePrefix: string;
-    titleAccent: string;
-    subtitle: string;
-    items: Array<{
-      number: number;
-      status: HomeRoadmapStatus;
-      title: string;
-      description: string;
-    }>;
-  };
-  faq: {
-    eyebrow: string;
-    titlePrefix: string;
-    titleAccent: string;
-    subtitle: string;
-    items: Array<{ question: string; answer: string }>;
-    footerTitle: string;
-    footerDescription: string;
-    footerLinkLabel: string;
   };
   productLanding: ProductLandingContent;
 };

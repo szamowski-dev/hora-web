@@ -34,6 +34,7 @@ export type PricingPageContent = {
     macAppStoreTitle: string;
     macAppStoreDescription: string;
     macAppStoreLabel: string;
+    macAppStoreBadge: SiteImage;
     showSetapp: boolean;
     setappTitle: string;
     setappDescription: string;
@@ -42,8 +43,8 @@ export type PricingPageContent = {
   };
   faq: {
     title: string;
-    description: string;
     items: Array<{ question: string; answer: string }>;
   };
   footer: string;
 };
+import type { SiteImage } from "@/lib/home-model";

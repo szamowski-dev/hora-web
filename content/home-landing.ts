@@ -202,26 +202,6 @@ export const defaultProductLanding = {
     title: "Built for Privacy",
     description:
       "Your schedule stays on your Mac. hora keeps credentials in macOS Keychain and connects directly to the Google Calendar API, without routing calendar data through an intermediary sync service.",
-    features: [
-      {
-        icon: "sync",
-        tone: "green",
-        title: "Direct API connection",
-        description: "Your Mac talks to Google Calendar directly.",
-      },
-      {
-        icon: "key",
-        tone: "yellow",
-        title: "Credentials in Keychain",
-        description: "Account tokens stay protected by macOS.",
-      },
-      {
-        icon: "storage",
-        tone: "blue",
-        title: "No calendar data on our servers",
-        description: "We do not store, index, or back up your calendar.",
-      },
-    ],
   },
   macos: {
     title: "Deeply integrated with macOS.",
@@ -268,9 +248,6 @@ export const defaultProductLanding = {
     ],
   },
   featureGrid: {
-    title: "The details add up.",
-    description:
-      "The everyday calendar tools are here too, with room to tune this list as hora evolves.",
     features: [
       {
         icon: "view",

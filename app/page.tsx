@@ -59,11 +59,11 @@ export default async function Home() {
     },
     author: {
       "@type": "Person",
-      name: content.integrations.founderNote.author.name,
+      name: "Maciej Szamowski",
       url: "https://szamowski.dev",
     },
     image: "https://horacal.app/assets/brand/hora-icon.png",
-    screenshot: content.hero.screenshot.src,
+    screenshot: content.productLanding.media.hero.light.src,
   };
 
   return (

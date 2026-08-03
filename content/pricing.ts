@@ -1,4 +1,5 @@
 import type { PricingPageContent } from "@/lib/pricing-model";
+import { site } from "@/content/site";
 
 export const defaultPricingPage = {
   seo: {
@@ -49,6 +50,12 @@ export const defaultPricingPage = {
     macAppStoreDescription:
       "Purchase through Apple and use Family Sharing across eligible family members.",
     macAppStoreLabel: "Download on the Mac App Store",
+    macAppStoreBadge: {
+      src: site.macAppStoreBadgeSrc,
+      alt: "Download on the Mac App Store",
+      width: 162,
+      height: 50,
+    },
     showSetapp: true,
     setappTitle: "Setapp",
     setappDescription:
@@ -58,7 +65,6 @@ export const defaultPricingPage = {
   },
   faq: {
     title: "Frequently asked questions",
-    description: "",
     items: [
       {
         question: "Can I try the app for free?",

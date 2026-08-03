@@ -3,6 +3,7 @@ import { apiVersion, dataset, projectId } from "../sanity/env";
 
 const EXPECTED_SINGLETONS = {
   homePage: "homePage",
+  pricingPage: "pricingPage",
   featuresPage: "featuresPage",
   aboutPage: "aboutPage",
   privacyPage: "legalPage",
@@ -207,7 +208,114 @@ function validateStringArray(value: unknown, path: string, minimum = 1) {
   return items;
 }
 
+function validateLandingFeatures(value: unknown, path: string, minimum = 1) {
+  const items = keyedObjects(value, path, minimum, 20);
+  const titles: string[] = [];
+  for (const [index, item] of items.entries()) {
+    requiredText(item.icon, `${path}[${index}].icon`);
+    requiredText(item.tone, `${path}[${index}].tone`);
+    titles.push(requiredText(item.title, `${path}[${index}].title`));
+    requiredText(item.description, `${path}[${index}].description`);
+  }
+  expectUnique(titles, `${path}.title`);
+}
+
+function validateThemedImage(value: unknown, path: string) {
+  const image = requiredObject(value, path);
+  validateImage(image.light, `${path}.light`);
+  validateImage(image.dark, `${path}.dark`);
+}
+
+function validateActiveHome(document: SiteDocument) {
+  validateSeo(document.seo, "homePage.seo", true);
+  const landing = requiredObject(document.productLanding, "homePage.productLanding");
+  const hero = requiredObject(landing.hero, "homePage.productLanding.hero");
+  for (const field of [
+    "title", "description", "primaryCtaLabel", "macAppStoreLabel", "watchVideoLabel",
+    "homebrewCommand", "requirement", "copyLabel", "copiedLabel",
+  ]) requiredText(hero[field], `homePage.productLanding.hero.${field}`);
+  expect(typeof hero.showPrimaryCta === "boolean", "homePage.productLanding.hero.showPrimaryCta must be boolean");
+  expect(typeof hero.showTerminalPrompt === "boolean", "homePage.productLanding.hero.showTerminalPrompt must be boolean");
+
+  const media = requiredObject(landing.media, "homePage.productLanding.media");
+  validateThemedImage(media.hero, "homePage.productLanding.media.hero");
+  validateThemedImage(media.workflow, "homePage.productLanding.media.workflow");
+  const cards = requiredArray(media.googleCalendarCards, "homePage.productLanding.media.googleCalendarCards", 4, 4);
+  cards.forEach((card, index) => validateThemedImage(card, `homePage.productLanding.media.googleCalendarCards[${index}]`));
+
+  const api = requiredObject(landing.api, "homePage.productLanding.api");
+  requiredText(api.title, "homePage.productLanding.api.title");
+  requiredText(api.description, "homePage.productLanding.api.description");
+  const googleCalendar = requiredObject(landing.googleCalendar, "homePage.productLanding.googleCalendar");
+  requiredText(googleCalendar.title, "homePage.productLanding.googleCalendar.title");
+  requiredText(googleCalendar.description, "homePage.productLanding.googleCalendar.description");
+  validateLandingFeatures(googleCalendar.primaryFeatures, "homePage.productLanding.googleCalendar.primaryFeatures", 3);
+  validateLandingFeatures(googleCalendar.secondaryFeatures, "homePage.productLanding.googleCalendar.secondaryFeatures");
+
+  for (const sectionName of ["hora", "macos"] as const) {
+    const section = requiredObject(landing[sectionName], `homePage.productLanding.${sectionName}`);
+    requiredText(section.title, `homePage.productLanding.${sectionName}.title`);
+    requiredText(section.description, `homePage.productLanding.${sectionName}.description`);
+    validateLandingFeatures(section.features, `homePage.productLanding.${sectionName}.features`);
+  }
+  const privacy = requiredObject(landing.privacy, "homePage.productLanding.privacy");
+  requiredText(privacy.title, "homePage.productLanding.privacy.title");
+  requiredText(privacy.description, "homePage.productLanding.privacy.description");
+  validateLandingFeatures(requiredObject(landing.featureGrid, "homePage.productLanding.featureGrid").features, "homePage.productLanding.featureGrid.features");
+  const newsletter = requiredObject(landing.newsletter, "homePage.productLanding.newsletter");
+  for (const field of ["title", "description", "placeholder", "buttonLabel"]) requiredText(newsletter[field], `homePage.productLanding.newsletter.${field}`);
+
+  const featuredOn = requiredObject(document.featuredOn, "homePage.featuredOn");
+  requiredText(featuredOn.label, "homePage.featuredOn.label");
+  const badges = keyedObjects(featuredOn.badges, "homePage.featuredOn.badges", 1, 10);
+  for (const [index, badge] of badges.entries()) {
+    const path = `homePage.featuredOn.badges[${index}]`;
+    requiredText(badge.name, `${path}.name`);
+    validateHttpsUrl(badge.href, `${path}.href`);
+    if (badge.image && isRecord(badge.image) && badge.image.asset) validateImage(badge.image, `${path}.image`);
+    else validateHttpsUrl(badge.src, `${path}.src`);
+    requiredText(badge.alt, `${path}.alt`);
+    requiredInteger(badge.width, `${path}.width`);
+    requiredInteger(badge.height, `${path}.height`);
+  }
+}
+
+function validatePricing(document: SiteDocument) {
+  const seo = requiredObject(document.seo, "pricingPage.seo");
+  requiredText(seo.title, "pricingPage.seo.title");
+  requiredText(seo.description, "pricingPage.seo.description");
+  const hero = requiredObject(document.hero, "pricingPage.hero");
+  requiredText(hero.title, "pricingPage.hero.title");
+  requiredText(hero.description, "pricingPage.hero.description");
+  const plans = keyedObjects(document.plans, "pricingPage.plans", 1, 4);
+  for (const [index, plan] of plans.entries()) {
+    const path = `pricingPage.plans[${index}]`;
+    for (const field of ["name", "price", "description", "ctaLabel"]) requiredText(plan[field], `${path}.${field}`);
+    expect(typeof plan.suffix === "string", `${path}.suffix must be a string`);
+    validateStringArray(plan.features, `${path}.features`);
+    expect(typeof plan.featured === "boolean", `${path}.featured must be boolean`);
+  }
+  const direct = requiredObject(document.direct, "pricingPage.direct");
+  for (const field of ["showDownload", "showTerminalPrompt"]) expect(typeof direct[field] === "boolean", `pricingPage.direct.${field} must be boolean`);
+  for (const field of ["downloadLabel", "terminalCommand", "terminalRequirement", "copyLabel", "copiedLabel"]) requiredText(direct[field], `pricingPage.direct.${field}`);
+  const distribution = requiredObject(document.distribution, "pricingPage.distribution");
+  for (const field of ["title", "description", "macAppStoreTitle", "macAppStoreDescription", "macAppStoreLabel", "setappTitle", "setappDescription", "setappLabel"]) requiredText(distribution[field], `pricingPage.distribution.${field}`);
+  expect(typeof distribution.showMacAppStore === "boolean", "pricingPage.distribution.showMacAppStore must be boolean");
+  expect(typeof distribution.showSetapp === "boolean", "pricingPage.distribution.showSetapp must be boolean");
+  validateImage(distribution.macAppStoreBadge, "pricingPage.distribution.macAppStoreBadge");
+  validateHttpsUrl(distribution.setappHref, "pricingPage.distribution.setappHref");
+  const faq = requiredObject(document.faq, "pricingPage.faq");
+  requiredText(faq.title, "pricingPage.faq.title");
+  for (const [index, item] of keyedObjects(faq.items, "pricingPage.faq.items", 1, 12).entries()) {
+    requiredText(item.question, `pricingPage.faq.items[${index}].question`);
+    requiredText(item.answer, `pricingPage.faq.items[${index}].answer`);
+  }
+  requiredText(document.footer, "pricingPage.footer");
+}
+
 function validateHome(document: SiteDocument) {
+  validateActiveHome(document);
+  return;
   validateSeo(document.seo, "homePage.seo", true);
 
   const hero = requiredObject(document.hero, "homePage.hero");
@@ -468,13 +576,13 @@ async function main() {
   const client = getCliClient({ apiVersion }).withConfig({ perspective: "raw", useCdn: false });
   const snapshot = await client.fetch<Snapshot>(`{
     "siteDocuments": *[
-      _type in ["homePage", "featuresPage", "aboutPage", "legalPage"] &&
+      _type in ["homePage", "pricingPage", "featuresPage", "aboutPage", "legalPage"] &&
       !(_id in path("drafts.**")) &&
       !(_id in path("versions.**"))
     ],
-    "fixedIdDocuments": *[_id in ["homePage", "featuresPage", "aboutPage", "privacyPage", "termsPage"]]{_id,_type},
+    "fixedIdDocuments": *[_id in ["homePage", "pricingPage", "featuresPage", "aboutPage", "privacyPage", "termsPage"]]{_id,_type},
     "drafts": *[
-      _type in ["homePage", "featuresPage", "aboutPage", "legalPage"] &&
+      _type in ["homePage", "pricingPage", "featuresPage", "aboutPage", "legalPage"] &&
       _id in path("drafts.**")
     ]{_id,_type}
   }`);
@@ -512,11 +620,13 @@ async function main() {
   }
 
   const home = documents.get("homePage")!;
+  const pricing = documents.get("pricingPage")!;
   const features = documents.get("featuresPage")!;
   const about = documents.get("aboutPage")!;
   const privacy = documents.get("privacyPage")!;
   const terms = documents.get("termsPage")!;
   validateHome(home);
+  validatePricing(pricing);
   validateFeatures(features);
   validateAbout(about);
   validateLegal(privacy, "privacy");
@@ -538,7 +648,6 @@ async function main() {
   }
 
   const typedReferences: Array<[Reference, string, string]> = [
-    [nestedReference(home, ["integrations", "founderNote", "author"]), "author", "homePage.integrations.founderNote.author"],
     [nestedReference(about, ["profile", "author"]), "author", "aboutPage.profile.author"],
   ];
   for (const [ref, expectedType, path] of typedReferences) {
@@ -553,7 +662,7 @@ async function main() {
   const fileAssets = resolvedDocuments.filter((document) => document._type === "sanity.fileAsset").length;
   console.log("\nSANITY SITE CONTENT VERIFIED");
   console.log(
-    `5 published singletons; 0 duplicates; ${snapshot.drafts.length} valid draft(s); anonymous reads: 5/5`,
+    `6 published singletons; 0 duplicates; ${snapshot.drafts.length} valid draft(s); anonymous reads: 6/6`,
   );
   console.log(`${imageAssets} image assets, ${fileAssets} file assets, ${allReferences.length} resolved references`);
   console.log("Rendered SEO titles, editorial legal dates, enums, arrays, links, and Portable Text are valid");

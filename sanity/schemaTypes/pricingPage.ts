@@ -104,6 +104,11 @@ export const pricingPage = defineType({
         textField("macAppStoreTitle", "Mac App Store card title"),
         textField("macAppStoreDescription", "Mac App Store card description", 3),
         textField("macAppStoreLabel", "Mac App Store label"),
+        defineField({
+          name: "macAppStoreBadge",
+          title: "Mac App Store badge",
+          type: "siteImage",
+        }),
         defineField({ name: "showSetapp", title: "Show Setapp link", type: "boolean", initialValue: true }),
         textField("setappTitle", "Setapp card title"),
         textField("setappDescription", "Setapp card description", 3),
@@ -122,7 +127,6 @@ export const pricingPage = defineType({
       type: "object",
       fields: [
         textField("title", "Headline"),
-        textField("description", "Description", 3),
         defineField({
           name: "items",
           title: "Questions",

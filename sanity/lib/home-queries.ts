@@ -9,13 +9,6 @@ export type SanitySiteImageValue = {
   asset?: SanityImageAsset;
 };
 
-type SanitySiteVideoValue = {
-  webmUrl?: string;
-  mp4Url?: string;
-  poster?: SanitySiteImageValue;
-  accessibilityLabel?: string;
-};
-
 export type SanityProductLandingFeatureValue = {
   _key?: string;
   icon?: string;
@@ -40,18 +33,6 @@ export type SanityHomePageDocument = {
     ogImage?: SanitySiteImageValue;
     noIndex?: boolean;
   };
-  hero?: {
-    titlePrefix?: string;
-    titleAccent?: string;
-    description?: string;
-    screenshot?: SanitySiteImageValue;
-    watchDemoLabel?: string;
-    socialProof?: {
-      label?: string;
-      fallbackCount?: number;
-      avatars?: Array<{ _key?: string; src?: string; alt?: string }>;
-    };
-  };
   featuredOn?: {
     label?: string;
     badges?: Array<{
@@ -67,96 +48,6 @@ export type SanityHomePageDocument = {
       displayHeight?: number | null;
       variant?: string;
     }>;
-  };
-  showcase?: {
-    eyebrow?: string;
-    headingPrefix?: string;
-    headingAccent?: string;
-    description?: string;
-    mainVideo?: SanitySiteVideoValue;
-    firstSlideTitle?: string;
-    firstSlideDescription?: string;
-    actions?: Array<{
-      _key?: string;
-      number?: number;
-      title?: string;
-      description?: string;
-      video?: SanitySiteVideoValue;
-    }>;
-  };
-  featureOverview?: {
-    eyebrow?: string;
-    titlePrefix?: string;
-    titleAccent?: string;
-    allFeaturesLabel?: string;
-    items?: Array<{
-      _key?: string;
-      icon?: string;
-      title?: string;
-      description?: string;
-    }>;
-  };
-  integrations?: {
-    eyebrow?: string;
-    titlePrefix?: string;
-    titleAccent?: string;
-    items?: Array<{
-      _key?: string;
-      provider?: string;
-      name?: string;
-      description?: string;
-    }>;
-    founderNote?: {
-      lines?: string[];
-      author?: {
-        name?: string;
-        role?: string;
-        portrait?: SanitySiteImageValue;
-      };
-    };
-  };
-  socialProof?: {
-    eyebrow?: string;
-    titlePrefix?: string;
-    titleAccent?: string;
-    description?: string;
-    testimonials?: Array<{
-      _key?: string;
-      id?: string;
-      quote?: string;
-      author?: string;
-      handle?: string;
-      href?: string;
-      avatarUrl?: string;
-      platform?: string;
-    }>;
-  };
-  roadmap?: {
-    eyebrow?: string;
-    titlePrefix?: string;
-    titleAccent?: string;
-    subtitle?: string;
-    items?: Array<{
-      _key?: string;
-      number?: number;
-      status?: string;
-      title?: string;
-      description?: string;
-    }>;
-  };
-  faq?: {
-    eyebrow?: string;
-    titlePrefix?: string;
-    titleAccent?: string;
-    subtitle?: string;
-    items?: Array<{
-      _key?: string;
-      question?: string;
-      answer?: string;
-    }>;
-    footerTitle?: string;
-    footerDescription?: string;
-    footerLinkLabel?: string;
   };
   productLanding?: {
     hero?: {
@@ -177,10 +68,7 @@ export type SanityHomePageDocument = {
       workflow?: SanityThemedProductImageValue;
       googleCalendarCards?: SanityThemedProductImageValue[];
     };
-    api?: {
-      title?: string;
-      description?: string;
-    };
+    api?: { title?: string; description?: string };
     googleCalendar?: {
       title?: string;
       description?: string;
@@ -192,21 +80,13 @@ export type SanityHomePageDocument = {
       description?: string;
       features?: SanityProductLandingFeatureValue[];
     };
-    privacy?: {
-      title?: string;
-      description?: string;
-      features?: SanityProductLandingFeatureValue[];
-    };
+    privacy?: { title?: string; description?: string };
     macos?: {
       title?: string;
       description?: string;
       features?: SanityProductLandingFeatureValue[];
     };
-    featureGrid?: {
-      title?: string;
-      description?: string;
-      features?: SanityProductLandingFeatureValue[];
-    };
+    featureGrid?: { features?: SanityProductLandingFeatureValue[] };
     newsletter?: {
       title?: string;
       description?: string;
@@ -216,7 +96,7 @@ export type SanityHomePageDocument = {
   };
 };
 
-const siteImageProjection = `{
+export const siteImageProjection = `{
   alt,
   crop,
   hotspot,
@@ -225,13 +105,6 @@ const siteImageProjection = `{
     url,
     metadata{dimensions, lqip}
   }
-}`;
-
-const siteVideoProjection = `{
-  "webmUrl": coalesce(webmUrl, webm.asset->url),
-  "mp4Url": coalesce(mp4Url, mp4.asset->url),
-  "poster": poster${siteImageProjection},
-  accessibilityLabel
 }`;
 
 export const HOME_PAGE_QUERY = defineQuery(`
@@ -249,18 +122,6 @@ export const HOME_PAGE_QUERY = defineQuery(`
       "ogImage": ogImage${siteImageProjection},
       noIndex
     },
-    hero{
-      titlePrefix,
-      titleAccent,
-      description,
-      "screenshot": screenshot${siteImageProjection},
-      watchDemoLabel,
-      socialProof{
-        label,
-        fallbackCount,
-        avatars[]{_key, src, alt}
-      }
-    },
     featuredOn{
       label,
       badges[]{
@@ -277,83 +138,13 @@ export const HOME_PAGE_QUERY = defineQuery(`
         variant
       }
     },
-    showcase{
-      eyebrow,
-      headingPrefix,
-      headingAccent,
-      description,
-      "mainVideo": mainVideo${siteVideoProjection},
-      firstSlideTitle,
-      firstSlideDescription,
-      actions[]{
-        _key,
-        number,
-        title,
-        description,
-        "video": video${siteVideoProjection}
-      }
-    },
-    featureOverview{
-      eyebrow,
-      titlePrefix,
-      titleAccent,
-      allFeaturesLabel,
-      items[]{_key, icon, title, description}
-    },
-    integrations{
-      eyebrow,
-      titlePrefix,
-      titleAccent,
-      items[]{_key, provider, name, description},
-      founderNote{
-        lines,
-        "author": author->{
-          name,
-          role,
-          "portrait": portrait${siteImageProjection}
-        }
-      }
-    },
-    socialProof{
-      eyebrow,
-      titlePrefix,
-      titleAccent,
-      description,
-      testimonials[]{
-        _key,
-        id,
-        quote,
-        author,
-        handle,
-        href,
-        avatarUrl,
-        platform
-      }
-    },
-    roadmap{
-      eyebrow,
-      titlePrefix,
-      titleAccent,
-      subtitle,
-      items[]{_key, number, status, title, description}
-    },
-    faq{
-      eyebrow,
-      titlePrefix,
-      titleAccent,
-      subtitle,
-      items[]{_key, question, answer},
-      footerTitle,
-      footerDescription,
-      footerLinkLabel
-    },
     productLanding{
       hero{
-      title,
-      description,
-      primaryCtaLabel,
-      macAppStoreLabel,
-      watchVideoLabel,
+        title,
+        description,
+        primaryCtaLabel,
+        macAppStoreLabel,
+        watchVideoLabel,
         showPrimaryCta,
         showTerminalPrompt,
         homebrewCommand,
@@ -375,42 +166,18 @@ export const HOME_PAGE_QUERY = defineQuery(`
           "dark": dark${siteImageProjection}
         }
       },
-      api{
-        title,
-        description
-      },
+      api{title, description},
       googleCalendar{
         title,
         description,
         primaryFeatures[]{_key, icon, tone, title, description},
         secondaryFeatures[]{_key, icon, tone, title, description}
       },
-      hora{
-        title,
-        description,
-        features[]{_key, icon, tone, title, description}
-      },
-      privacy{
-        title,
-        description,
-        features[]{_key, icon, tone, title, description}
-      },
-      macos{
-        title,
-        description,
-        features[]{_key, icon, tone, title, description}
-      },
-      featureGrid{
-        title,
-        description,
-        features[]{_key, icon, tone, title, description}
-      },
-      newsletter{
-        title,
-        description,
-        placeholder,
-        buttonLabel
-      }
+      hora{title, description, features[]{_key, icon, tone, title, description}},
+      privacy{title, description},
+      macos{title, description, features[]{_key, icon, tone, title, description}},
+      featureGrid{features[]{_key, icon, tone, title, description}},
+      newsletter{title, description, placeholder, buttonLabel}
     }
   }
 `);
