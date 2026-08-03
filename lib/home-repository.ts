@@ -446,8 +446,6 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
   if (!founderNote?.author) invalidHome("integrations.founderNote.author is missing");
   const social = document.socialProof;
   if (!social) invalidHome("socialProof is missing");
-  const pricing = document.pricing;
-  if (!pricing) invalidHome("pricing is missing");
   const roadmap = document.roadmap;
   if (!roadmap) invalidHome("roadmap is missing");
   const faq = document.faq;
@@ -727,75 +725,6 @@ function mapHomePage(document: SanityHomePageDocument | null): HomePageContent {
           platform: platform as HomeTestimonialPlatform,
         };
       }),
-    },
-    pricing: {
-      titlePrefix: requiredString(pricing.titlePrefix, "pricing.titlePrefix"),
-      titleAccent: requiredString(pricing.titleAccent, "pricing.titleAccent"),
-      description: requiredString(pricing.description, "pricing.description"),
-      familySharing: requiredString(
-        pricing.familySharing,
-        "pricing.familySharing",
-      ),
-      crossPlatform: requiredString(pricing.crossPlatform, "pricing.crossPlatform"),
-      oneTime: {
-        label: requiredString(pricing.oneTime?.label, "pricing.oneTime.label"),
-        badge: requiredString(pricing.oneTime?.badge, "pricing.oneTime.badge"),
-        price: requiredString(pricing.oneTime?.price, "pricing.oneTime.price"),
-      },
-      subscription: {
-        label: requiredString(
-          pricing.subscription?.label,
-          "pricing.subscription.label",
-        ),
-        price: requiredString(
-          pricing.subscription?.price,
-          "pricing.subscription.price",
-        ),
-      },
-      comparisonLabel: requiredString(
-        pricing.comparisonLabel,
-        "pricing.comparisonLabel",
-      ),
-      comparisonDescription: requiredString(
-        pricing.comparisonDescription,
-        "pricing.comparisonDescription",
-      ),
-      comparisonNameLabel: requiredString(
-        pricing.comparisonNameLabel,
-        "pricing.comparisonNameLabel",
-      ),
-      comparisonPriceLabel: requiredString(
-        pricing.comparisonPriceLabel,
-        "pricing.comparisonPriceLabel",
-      ),
-      comparisonItems: requiredArray(
-        pricing.comparisonItems,
-        "pricing.comparisonItems",
-      ).map((item, index) => ({
-        name: requiredString(item.name, `pricing.comparisonItems[${index}].name`),
-        price: requiredString(
-          item.price,
-          `pricing.comparisonItems[${index}].price`,
-        ),
-        description: requiredString(
-          item.description,
-          `pricing.comparisonItems[${index}].description`,
-        ),
-        recommendedLabel: optionalString(item.recommendedLabel),
-      })),
-      comparisonCtaLabel: requiredString(
-        pricing.comparisonCtaLabel,
-        "pricing.comparisonCtaLabel",
-      ),
-      comparisonCtaHref: `/blog/${requiredMachineString(
-        pricing.comparisonCtaSlug,
-        "pricing.comparisonCtaPost.slug",
-      )}/`,
-      appStoreLabel: requiredString(
-        pricing.appStoreLabel,
-        "pricing.appStoreLabel",
-      ),
-      showSetappBadge: pricing.showSetappBadge === true,
     },
     roadmap: {
       eyebrow: requiredString(roadmap.eyebrow, "roadmap.eyebrow"),

@@ -126,30 +126,6 @@ export type SanityHomePageDocument = {
       platform?: string;
     }>;
   };
-  pricing?: {
-    titlePrefix?: string;
-    titleAccent?: string;
-    description?: string;
-    familySharing?: string;
-    crossPlatform?: string;
-    oneTime?: { label?: string; badge?: string; price?: string };
-    subscription?: { label?: string; price?: string };
-    comparisonLabel?: string;
-    comparisonDescription?: string;
-    comparisonNameLabel?: string;
-    comparisonPriceLabel?: string;
-    comparisonItems?: Array<{
-      _key?: string;
-      name?: string;
-      price?: string;
-      description?: string;
-      recommendedLabel?: string;
-    }>;
-    comparisonCtaLabel?: string;
-    comparisonCtaSlug?: string;
-    appStoreLabel?: string;
-    showSetappBadge?: boolean;
-  };
   roadmap?: {
     eyebrow?: string;
     titlePrefix?: string;
@@ -338,30 +314,6 @@ export const HOME_PAGE_QUERY = defineQuery(`
         avatarUrl,
         platform
       }
-    },
-    pricing{
-      titlePrefix,
-      titleAccent,
-      description,
-      familySharing,
-      crossPlatform,
-      oneTime{label, badge, price},
-      subscription{label, price},
-      comparisonLabel,
-      comparisonDescription,
-      comparisonNameLabel,
-      comparisonPriceLabel,
-      comparisonItems[]{
-        _key,
-        name,
-        price,
-        description,
-        recommendedLabel
-      },
-      comparisonCtaLabel,
-      "comparisonCtaSlug": comparisonCtaPost->slug.current,
-      appStoreLabel,
-      showSetappBadge
     },
     roadmap{
       eyebrow,

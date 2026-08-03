@@ -53,7 +53,7 @@ export default async function Home() {
     offers: {
       "@type": "AggregateOffer",
       lowPrice: "29.99",
-      highPrice: "49.90",
+      highPrice: "49.00",
       priceCurrency: "USD",
       offerCount: 2,
     },

@@ -22,9 +22,8 @@ export const site = {
       href: "https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_website&mt=8",
     },
     direct: {
-      label: "Download directly",
-      // Placeholder for the final public R2 installer object.
-      href: "https://media.horacal.app/downloads/hora-latest.dmg",
+      label: "Download Direct",
+      href: "/download/direct/",
     },
   },
   macAppStoreBadgeSrc:

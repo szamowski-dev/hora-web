@@ -232,29 +232,6 @@ export type HomePageContent = {
       platform: HomeTestimonialPlatform;
     }>;
   };
-  pricing: {
-    titlePrefix: string;
-    titleAccent: string;
-    description: string;
-    familySharing: string;
-    crossPlatform: string;
-    oneTime: { label: string; badge: string; price: string };
-    subscription: { label: string; price: string };
-    comparisonLabel: string;
-    comparisonDescription: string;
-    comparisonNameLabel: string;
-    comparisonPriceLabel: string;
-    comparisonItems: Array<{
-      name: string;
-      price: string;
-      description: string;
-      recommendedLabel?: string;
-    }>;
-    comparisonCtaLabel: string;
-    comparisonCtaHref: string;
-    appStoreLabel: string;
-    showSetappBadge: boolean;
-  };
   roadmap: {
     eyebrow: string;
     titlePrefix: string;

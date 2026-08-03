@@ -14,9 +14,6 @@ importers:
       '@portabletext/types':
         specifier: 4.0.2
         version: 4.0.2
-      '@revenuecat/purchases-js':
-        specifier: ^1.51.0
-        version: 1.51.0
       '@sanity/image-url':
         specifier: 2.1.1
         version: 2.1.1
@@ -102,6 +99,9 @@ importers:
       tailwindcss:
         specifier: ^4
         version: 4.2.2
+      tsx:
+        specifier: ^4.23.1
+        version: 4.23.1
       typescript:
         specifier: ^5
         version: 5.9.3
@@ -2699,9 +2699,6 @@ packages:
 
   '@radix-ui/rect@1.1.3':
     resolution: {integrity: sha512-JtyZR+mqgBibTo8xea3B6ZRmzZiM/YeVBtUkas6zMuXjAlfIFIW2FgqeM9eLyvEaYX66vr6DJMK+4U6LV0KhNw==}
-
-  '@revenuecat/purchases-js@1.51.0':
-    resolution: {integrity: sha512-JD/T+7nERHvpz3lI9UjchtUcInKXHsOLHjemyVEKpiELALcfeT1k4s5Nzm83md1HzqQrzsX0bmAYl7FbEXiMZA==}
 
   '@rexxars/react-json-inspector@9.0.1':
     resolution: {integrity: sha512-4uZ4RnrVoOGOShIKKcPoF+qhwDCZJsPPqyoEoW/8HRdzNknN9Q2yhlbEgTX1lMZunF1fv7iHzAs+n1vgIgfg/g==}
@@ -10290,8 +10287,6 @@ snapshots:
       '@types/react-dom': 19.2.3(@types/react@19.2.14)
 
   '@radix-ui/rect@1.1.3': {}
-
-  '@revenuecat/purchases-js@1.51.0': {}
 
   '@rexxars/react-json-inspector@9.0.1(react@19.2.4)':
     dependencies:

@@ -306,27 +306,6 @@ function validateHome(document: SiteDocument) {
   }
   expectUnique(testimonialIds, "homePage.socialProof.testimonials.id");
 
-  const pricing = requiredObject(document.pricing, "homePage.pricing");
-  for (const field of [
-    "titlePrefix", "titleAccent", "description", "familySharing", "crossPlatform",
-    "comparisonLabel", "comparisonDescription", "comparisonNameLabel", "comparisonPriceLabel",
-    "comparisonCtaLabel", "appStoreLabel",
-  ]) requiredText(pricing[field], `homePage.pricing.${field}`);
-  const oneTime = requiredObject(pricing.oneTime, "homePage.pricing.oneTime");
-  for (const field of ["label", "badge", "price"]) requiredText(oneTime[field], `homePage.pricing.oneTime.${field}`);
-  const subscription = requiredObject(pricing.subscription, "homePage.pricing.subscription");
-  for (const field of ["label", "price"]) requiredText(subscription[field], `homePage.pricing.subscription.${field}`);
-  const comparisons = keyedObjects(pricing.comparisonItems, "homePage.pricing.comparisonItems", 2, 8);
-  const comparisonNames: string[] = [];
-  for (const [index, item] of comparisons.entries()) {
-    comparisonNames.push(requiredText(item.name, `homePage.pricing.comparisonItems[${index}].name`));
-    requiredText(item.price, `homePage.pricing.comparisonItems[${index}].price`);
-    requiredText(item.description, `homePage.pricing.comparisonItems[${index}].description`);
-    optionalText(item.recommendedLabel, `homePage.pricing.comparisonItems[${index}].recommendedLabel`);
-  }
-  expectUnique(comparisonNames, "homePage.pricing.comparisonItems.name");
-  reference(pricing.comparisonCtaPost, "homePage.pricing.comparisonCtaPost");
-
   const roadmap = requiredObject(document.roadmap, "homePage.roadmap");
   for (const field of ["eyebrow", "titlePrefix", "titleAccent", "subtitle"]) {
     requiredText(roadmap[field], `homePage.roadmap.${field}`);
@@ -560,7 +539,6 @@ async function main() {
 
   const typedReferences: Array<[Reference, string, string]> = [
     [nestedReference(home, ["integrations", "founderNote", "author"]), "author", "homePage.integrations.founderNote.author"],
-    [nestedReference(home, ["pricing", "comparisonCtaPost"]), "blogPost", "homePage.pricing.comparisonCtaPost"],
     [nestedReference(about, ["profile", "author"]), "author", "aboutPage.profile.author"],
   ];
   for (const [ref, expectedType, path] of typedReferences) {

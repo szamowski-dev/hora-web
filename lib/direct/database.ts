@@ -6,7 +6,7 @@ type IdentityRow = { app_user_id: string };
 function getDatabaseUrl(): string {
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
-    throw new Error("Billing database is not configured");
+    throw new Error("Direct identity database is not configured");
   }
   return databaseUrl;
 }
@@ -16,10 +16,10 @@ function newAppUserId(): string {
 }
 
 /**
- * Returns an opaque ID. It is generated randomly and cannot be used to
- * recover the Google subject or any other Google account information.
+ * Returns the stable opaque RevenueCat App User ID for a verified Google
+ * identity. The Google subject never leaves the server or enters RevenueCat.
  */
-export async function getOrCreateBillingAppUserId(
+export async function getOrCreateDirectAppUserId(
   issuer: string,
   googleSubject: string,
 ): Promise<string> {
@@ -34,7 +34,7 @@ export async function getOrCreateBillingAppUserId(
 
   const appUserId = rows[0]?.app_user_id;
   if (!appUserId) {
-    throw new Error("Billing identity could not be created");
+    throw new Error("Direct identity could not be created");
   }
   return appUserId;
 }
