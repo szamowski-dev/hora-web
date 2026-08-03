@@ -7,30 +7,29 @@ export const defaultPricingPage = {
       "Choose a hora Calendar plan, download it directly, or get it through the Mac App Store and Setapp.",
   },
   hero: {
-    title: "Choose how you want to use hora.",
+    title: "Choose your Direct plan",
     description:
-      "Use hora through the Mac App Store, Setapp, or the Direct edition for Annual and Lifetime access.",
+      "Try hora free for 14 days in the native app. Choose how you would like to continue once the trial ends.",
   },
   plans: [
     {
       name: "Annual",
       price: "$29.99",
       suffix: "/year",
-      description: "A 14-day free trial after checkout, then renews yearly.",
+      description: "A lower upfront price, renewed yearly. No web trial.",
+      features: ["Native Mac app", "Google Calendar, built in", "Cancel any time"],
+      ctaLabel: "Choose Annual",
       featured: false,
     },
     {
       name: "Lifetime",
       price: "$49",
-      suffix: " one time",
-      description: "One payment for ongoing access to the Direct edition.",
+      suffix: "",
+      description: "One payment for ongoing Direct access.",
+      features: ["Native Mac app", "Google Calendar, built in", "No renewal"],
+      ctaLabel: "Choose Lifetime",
       featured: true,
     },
-  ],
-  features: [
-    "Native Mac app",
-    "Direct Google Calendar integration",
-    "The same pro access across supported hora editions",
   ],
   direct: {
     showDownload: false,
@@ -42,31 +41,64 @@ export const defaultPricingPage = {
     copiedLabel: "Copied",
   },
   distribution: {
-    title: "Also available through",
+    title: "Other ways to get hora",
+    description:
+      "Prefer Apple’s purchase flow or already have Setapp? Both options are available for the Mac app.",
     showMacAppStore: true,
+    macAppStoreTitle: "Mac App Store",
+    macAppStoreDescription:
+      "Purchase through Apple and use Family Sharing across eligible family members.",
     macAppStoreLabel: "Download on the Mac App Store",
     showSetapp: true,
+    setappTitle: "Setapp",
+    setappDescription:
+      "hora is included with your Setapp subscription on Mac. No separate purchase is needed.",
     setappLabel: "Available on Setapp",
     setappHref: "https://setapp.com/",
   },
   faq: {
-    title: "Questions before you choose?",
-    description: "A few practical details about the available editions.",
+    title: "Frequently asked questions",
+    description: "",
     items: [
       {
-        question: "Where can I get hora Calendar?",
+        question: "Can I try the app for free?",
         answer:
-          "hora is available through the Mac App Store, Setapp, and as a Direct edition from this website when Direct downloads are enabled.",
+          "Yes. hora includes a 14-day trial in the native app before you choose a Direct plan.",
       },
       {
-        question: "What does the Direct Annual plan include?",
+        question: "Is there a one-time purchase option?",
         answer:
-          "The Annual plan starts with a 14-day trial after checkout and renews yearly while you keep the subscription active.",
+          "Yes. The Lifetime plan is a one-time purchase for ongoing Direct access.",
       },
       {
-        question: "What does the Direct Lifetime plan include?",
+        question: "Can I buy on the App Store?",
         answer:
-          "The Lifetime plan is a one-time purchase for ongoing access to the Direct edition.",
+          "Yes. hora is also available on the Mac App Store.",
+      },
+      {
+        question: "Can I share my license with my family?",
+        answer:
+          "Family Sharing is available for eligible purchases through the Mac App Store.",
+      },
+      {
+        question: "How do I cancel my subscription?",
+        answer:
+          "You can cancel an Annual plan before its renewal date. Your access continues until the end of the current billing period.",
+      },
+      {
+        question: "Do you send a reminder email before renewing?",
+        answer:
+          "Renewal reminders and purchase communication are handled through the checkout and account flow for your edition.",
+      },
+      {
+        question: "What is your refund policy?",
+        answer:
+          "Refund eligibility depends on the store or purchase flow used. Contact support with your order details if you need help.",
+      },
+      {
+        question: "What happens after my subscription expires?",
+        answer:
+          "When an Annual plan ends, you can renew it or choose another available edition to continue using Direct access.",
       },
     ],
   },

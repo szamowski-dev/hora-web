@@ -35,6 +35,8 @@ function plans(
       price: text(plan.price, fallbackPlan.price),
       suffix: text(plan.suffix, fallbackPlan.suffix),
       description: text(plan.description, fallbackPlan.description),
+      features: features(plan.features, fallbackPlan.features),
+      ctaLabel: text(plan.ctaLabel, fallbackPlan.ctaLabel),
       featured: plan.featured ?? fallbackPlan.featured,
     };
   });
@@ -85,7 +87,6 @@ function mapPricingPage(
       description: text(value.hero?.description, fallback.hero.description),
     },
     plans: plans(value.plans, fallback.plans),
-    features: features(value.features, fallback.features),
     direct: {
       showDownload: value.direct?.showDownload === true,
       downloadLabel: text(value.direct?.downloadLabel, fallback.direct.downloadLabel),
@@ -100,12 +101,32 @@ function mapPricingPage(
     },
     distribution: {
       title: text(value.distribution?.title, fallback.distribution.title),
+      description: text(
+        value.distribution?.description,
+        fallback.distribution.description,
+      ),
       showMacAppStore: value.distribution?.showMacAppStore ?? fallback.distribution.showMacAppStore,
+      macAppStoreTitle: text(
+        value.distribution?.macAppStoreTitle,
+        fallback.distribution.macAppStoreTitle,
+      ),
+      macAppStoreDescription: text(
+        value.distribution?.macAppStoreDescription,
+        fallback.distribution.macAppStoreDescription,
+      ),
       macAppStoreLabel: text(
         value.distribution?.macAppStoreLabel,
         fallback.distribution.macAppStoreLabel,
       ),
       showSetapp: value.distribution?.showSetapp ?? fallback.distribution.showSetapp,
+      setappTitle: text(
+        value.distribution?.setappTitle,
+        fallback.distribution.setappTitle,
+      ),
+      setappDescription: text(
+        value.distribution?.setappDescription,
+        fallback.distribution.setappDescription,
+      ),
       setappLabel: text(value.distribution?.setappLabel, fallback.distribution.setappLabel),
       setappHref: text(value.distribution?.setappHref, fallback.distribution.setappHref),
     },

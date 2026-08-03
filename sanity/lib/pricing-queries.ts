@@ -9,9 +9,10 @@ export type SanityPricingPageDocument = {
     price?: string;
     suffix?: string;
     description?: string;
+    features?: string[];
+    ctaLabel?: string;
     featured?: boolean;
   }>;
-  features?: string[];
   direct?: {
     showDownload?: boolean;
     downloadLabel?: string;
@@ -23,9 +24,14 @@ export type SanityPricingPageDocument = {
   };
   distribution?: {
     title?: string;
+    description?: string;
     showMacAppStore?: boolean;
+    macAppStoreTitle?: string;
+    macAppStoreDescription?: string;
     macAppStoreLabel?: string;
     showSetapp?: boolean;
+    setappTitle?: string;
+    setappDescription?: string;
     setappLabel?: string;
     setappHref?: string;
   };
@@ -44,8 +50,7 @@ export const PRICING_PAGE_QUERY = defineQuery(`
   ] | order(_updatedAt desc)[0]{
     seo{title, description},
     hero{title, description},
-    plans[]{_key, name, price, suffix, description, featured},
-    features,
+    plans[]{_key, name, price, suffix, description, features, ctaLabel, featured},
     direct{
       showDownload,
       downloadLabel,
@@ -57,9 +62,14 @@ export const PRICING_PAGE_QUERY = defineQuery(`
     },
     distribution{
       title,
+      description,
       showMacAppStore,
+      macAppStoreTitle,
+      macAppStoreDescription,
       macAppStoreLabel,
       showSetapp,
+      setappTitle,
+      setappDescription,
       setappLabel,
       setappHref
     },

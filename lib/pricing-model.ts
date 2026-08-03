@@ -3,6 +3,8 @@ export type PricingPlan = {
   price: string;
   suffix: string;
   description: string;
+  features: string[];
+  ctaLabel: string;
   featured: boolean;
 };
 
@@ -16,7 +18,6 @@ export type PricingPageContent = {
     description: string;
   };
   plans: PricingPlan[];
-  features: string[];
   direct: {
     showDownload: boolean;
     downloadLabel: string;
@@ -28,9 +29,14 @@ export type PricingPageContent = {
   };
   distribution: {
     title: string;
+    description: string;
     showMacAppStore: boolean;
+    macAppStoreTitle: string;
+    macAppStoreDescription: string;
     macAppStoreLabel: string;
     showSetapp: boolean;
+    setappTitle: string;
+    setappDescription: string;
     setappLabel: string;
     setappHref: string;
   };
