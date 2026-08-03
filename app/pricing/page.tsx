@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { MdCheck, MdDownloadForOffline } from "react-icons/md";
-import { SiSetapp } from "react-icons/si";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
+import { SetappBadge } from "@/components/atoms/SetappBadge";
 import { HomebrewCommand } from "@/components/molecules/HomebrewCommand";
 import { Button } from "@/components/ui/button";
 import { SitePageHero } from "@/components/templates/SitePageHero";
@@ -165,23 +165,9 @@ export default async function PricingPage() {
                   <p className="mt-4 max-w-xl text-base leading-7 text-muted">
                     {content.distribution.setappDescription}
                   </p>
-                  <a
-                    href={content.distribution.setappHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-auto inline-flex h-12 w-fit items-center gap-3 rounded-xl bg-black px-4 text-left text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-                    {...analyticsAttrs("nav_click", {
-                      placement: ANALYTICS_PLACEMENTS.pricing,
-                      link_text: content.distribution.setappLabel,
-                      link_url: content.distribution.setappHref,
-                    })}
-                  >
-                    <SiSetapp className="size-7 text-fuchsia-400" aria-hidden />
-                    <span className="flex flex-col leading-none">
-                      <span className="text-[10px] font-medium">Available on</span>
-                      <span className="mt-1 text-lg font-semibold">Setapp</span>
-                    </span>
-                  </a>
+                  <div className="mt-auto">
+                    <SetappBadge />
+                  </div>
                 </article>
               ) : null}
             </div>

@@ -1,43 +1,19 @@
-"use client";
-
-import { useEffect, useRef } from "react";
+import { createElement } from "react";
 
 const SETAPP_BADGE_SCRIPT = "https://developer.setapp.com/setapp-badge/index.js";
 
 export function SetappBadge() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const badge = document.createElement("setapp-badge");
-    badge.setAttribute("appId", "1977");
-    badge.setAttribute("vendorId", "1584");
-    badge.setAttribute("theme", "dark");
-    badge.setAttribute("height", "44");
-    badge.style.display = "block";
-    container.replaceChildren(badge);
-
-    if (
-      !document.querySelector(
-        `script[src="${SETAPP_BADGE_SCRIPT}"]`,
-      )
-    ) {
-      const script = document.createElement("script");
-      script.src = SETAPP_BADGE_SCRIPT;
-      script.async = true;
-      document.body.appendChild(script);
-    }
-
-    return () => container.replaceChildren();
-  }, []);
-
   return (
     <div
-      ref={containerRef}
-      aria-label="Available on Setapp"
       className="flex h-11 items-center leading-none"
-    />
+      aria-label="Available on Setapp"
+    >
+      {createElement("setapp-badge", {
+        appId: "1977",
+        vendorId: "1584",
+        theme: "dark",
+      })}
+      <script type="text/javascript" src={SETAPP_BADGE_SCRIPT} async />
+    </div>
   );
 }
