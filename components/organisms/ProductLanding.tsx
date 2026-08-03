@@ -25,37 +25,6 @@ import type { HomePageContent } from "@/lib/home-model";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 
-const GOOGLE_FEATURE_IMAGES = [
-  {
-    lightSrc: "/assets/product/label-colors-light-card.png",
-    darkSrc: "/assets/product/label-colors-dark-card.png",
-    alt: "Google Calendar color labels",
-    width: 1334,
-    height: 597,
-  },
-  {
-    lightSrc: "/assets/product/event-types-light-card.png",
-    darkSrc: "/assets/product/event-types-dark-card.png",
-    alt: "hora calendar showing every Google Calendar event type",
-    width: 592,
-    height: 549,
-  },
-  {
-    lightSrc: "/assets/product/meet-and-contacts-light-card.png",
-    darkSrc: "/assets/product/meet-and-contacts-dark-card.png",
-    alt: "Google Meet and Local Contacts",
-    width: 592,
-    height: 549,
-  },
-  {
-    lightSrc: "/assets/product/accounts-multiple-light-card.png",
-    darkSrc: "/assets/product/accounts-multiple-dark-card.png",
-    alt: "hora Google Accounts settings with multiple connected accounts",
-    width: 1334,
-    height: 597,
-  },
-];
-
 function SectionHeading({
   title,
   description,
@@ -112,25 +81,37 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
             {landing.hero.description}
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button asChild size="lg" variant="accent">
-              <Link
-                href="/pricing/"
-                {...analyticsAttrs("nav_click", {
-                  link_text: landing.hero.primaryCtaLabel,
-                  link_url: "/pricing/",
-                })}
-              >
-                <MdDownloadForOffline
-                  data-icon="inline-start"
-                  aria-hidden="true"
-                />
-                {landing.hero.primaryCtaLabel}
-              </Link>
-            </Button>
+            {landing.hero.showPrimaryCta ? (
+              <Button asChild size="lg" variant="accent">
+                <Link
+                  href="/pricing/"
+                  {...analyticsAttrs("nav_click", {
+                    link_text: landing.hero.primaryCtaLabel,
+                    link_url: "/pricing/",
+                  })}
+                >
+                  <MdDownloadForOffline
+                    data-icon="inline-start"
+                    aria-hidden="true"
+                  />
+                  {landing.hero.primaryCtaLabel}
+                </Link>
+              </Button>
+            ) : null}
             <ProductVideoDialog label={landing.hero.watchVideoLabel} />
           </div>
-          <HomebrewCommand command={landing.hero.homebrewCommand} />
-          <p className="mt-3 text-xs text-muted">{landing.hero.requirement}</p>
+          {landing.hero.showTerminalPrompt ? (
+            <>
+              <HomebrewCommand
+                command={landing.hero.homebrewCommand}
+                copyLabel={landing.hero.copyLabel}
+                copiedLabel={landing.hero.copiedLabel}
+              />
+              <p className="mt-3 text-xs text-muted">
+                {landing.hero.requirement}
+              </p>
+            </>
+          ) : null}
         </div>
 
         <div className="relative z-10 mx-auto mt-20 max-w-landing sm:mt-24">
@@ -140,11 +121,11 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
           />
           <div className="relative">
             <ThemedProductImage
-              lightSrc="/assets/product/hero-light.png"
-              darkSrc="/assets/product/hero.png"
-              alt="hora Calendar week view with event details, Google Meet, and focus timer"
-              width={3234}
-              height={2028}
+              lightSrc={landing.media.hero.light.src}
+              darkSrc={landing.media.hero.dark.src}
+              alt={landing.media.hero.light.alt}
+              width={landing.media.hero.light.width}
+              height={landing.media.hero.light.height}
               priority
               sizes="(max-width: 1280px) 94vw, 1216px"
               className="h-auto w-full"
@@ -190,7 +171,13 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
         <div className="mx-auto mt-20 max-w-landing sm:mt-24">
           <LandingFeatureCards
             features={googleMainFeatures}
-            images={GOOGLE_FEATURE_IMAGES}
+            images={landing.media.googleCalendarCards.map((image) => ({
+              lightSrc: image.light.src,
+              darkSrc: image.dark.src,
+              alt: image.light.alt,
+              width: image.light.width,
+              height: image.light.height,
+            }))}
           />
         </div>
         <div className="mx-auto mt-20 max-w-landing sm:mt-28">
@@ -206,7 +193,7 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
           description={landing.hora.description}
         />
         <div className="mt-20 sm:mt-24">
-          <HoraWorkflowVisual />
+          <HoraWorkflowVisual image={landing.media.workflow} />
         </div>
         <div className="mx-auto mt-20 max-w-landing sm:mt-28">
           <LandingFeatureList features={landing.hora.features} prominent />

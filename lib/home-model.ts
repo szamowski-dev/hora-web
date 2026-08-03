@@ -17,6 +17,11 @@ export type SiteVideo = {
   poster?: SiteImage;
 };
 
+export type ThemedSiteImage = {
+  light: SiteImage;
+  dark: SiteImage;
+};
+
 export type HomeFeatureIcon =
   | "app-window"
   | "calendar"
@@ -96,8 +101,17 @@ export type ProductLandingContent = {
     description: string;
     primaryCtaLabel: string;
     watchVideoLabel: string;
+    showPrimaryCta: boolean;
+    showTerminalPrompt: boolean;
     homebrewCommand: string;
     requirement: string;
+    copyLabel: string;
+    copiedLabel: string;
+  };
+  media: {
+    hero: ThemedSiteImage;
+    workflow: ThemedSiteImage;
+    googleCalendarCards: ThemedSiteImage[];
   };
   api: {
     title: string;

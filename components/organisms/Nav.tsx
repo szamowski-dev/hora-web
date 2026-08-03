@@ -6,7 +6,15 @@ import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { MobileNav } from "./MobileNav";
 
-export function Nav({ activePath }: { activePath?: string }) {
+export function Nav({
+  activePath,
+  showDownload = false,
+  downloadLabel = site.cta.trial.label,
+}: {
+  activePath?: string;
+  showDownload?: boolean;
+  downloadLabel?: string;
+}) {
   return (
     <div className="relative mx-auto max-w-6xl">
       <nav className="relative isolate overflow-hidden rounded-[18px] border border-line bg-panel/74 shadow-[inset_0_1px_0_var(--ui-highlight),0_18px_52px_-28px_var(--ui-shadow-neutral)] backdrop-blur-2xl backdrop-saturate-150">
@@ -35,22 +43,28 @@ export function Nav({ activePath }: { activePath?: string }) {
               </Link>
             ))}
             <ThemeToggle />
-            <Button asChild size="sm">
-              <Link
-                href={site.cta.trial.href}
-                {...analyticsAttrs("nav_click", {
-                  link_text: site.cta.trial.label,
-                  link_url: site.cta.trial.href,
-                })}
-              >
-                {site.cta.trial.label}
-              </Link>
-            </Button>
+            {showDownload ? (
+              <Button asChild size="sm">
+                <Link
+                  href={site.cta.trial.href}
+                  {...analyticsAttrs("nav_click", {
+                    link_text: downloadLabel,
+                    link_url: site.cta.trial.href,
+                  })}
+                >
+                  {downloadLabel}
+                </Link>
+              </Button>
+            ) : null}
           </div>
           <ThemeToggle className="mr-10 md:hidden" />
         </div>
       </nav>
-      <MobileNav activePath={activePath} />
+      <MobileNav
+        activePath={activePath}
+        showDownload={showDownload}
+        downloadLabel={downloadLabel}
+      />
     </div>
   );
 }

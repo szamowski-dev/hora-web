@@ -9,6 +9,7 @@ import { AmbientGlow } from "@/components/organisms/AmbientGlow";
 import { LayoutEnhancements } from "@/components/molecules/LayoutEnhancements";
 import { DraftModeTools } from "@/components/sanity/DraftModeTools";
 import { GA_MEASUREMENT_ID, REDDIT_PIXEL_ID } from "@/lib/analytics";
+import { getPricingPage } from "@/lib/pricing-repository";
 import "./globals.css";
 
 const geist = Geist({
@@ -100,7 +101,10 @@ export default async function RootLayout({
   children,
   modal,
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
-  const { isEnabled: isDraftMode } = await draftMode();
+  const [{ isEnabled: isDraftMode }, pricing] = await Promise.all([
+    draftMode(),
+    getPricingPage(),
+  ]);
 
   return (
     <html
@@ -135,7 +139,10 @@ export default async function RootLayout({
         <AmbientGlow />
         <LayoutEnhancements />
         <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
-          <Nav />
+          <Nav
+            showDownload={pricing.direct.showDownload}
+            downloadLabel={pricing.direct.downloadLabel}
+          />
         </header>
         <main
           id="main-content"

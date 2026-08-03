@@ -9,7 +9,15 @@ import {
   ANALYTICS_PLACEMENTS,
 } from "@/lib/analyticsSchema";
 
-export function HomebrewCommand({ command }: { command: string }) {
+export function HomebrewCommand({
+  command,
+  copyLabel,
+  copiedLabel,
+}: {
+  command: string;
+  copyLabel: string;
+  copiedLabel: string;
+}) {
   const [copied, setCopied] = useState(false);
   const resetTimerRef = useRef<number | null>(null);
 
@@ -54,7 +62,7 @@ export function HomebrewCommand({ command }: { command: string }) {
 
   return (
     <div
-      aria-label="Homebrew installation command"
+      aria-label={command}
       className="mt-5 inline-flex max-w-full items-center gap-2 rounded-full [corner-shape:superellipse(1.6)] border border-line-strong bg-panel-deep/80 py-1.5 pl-4 pr-1.5 text-left shadow-[inset_0_1px_0_var(--ui-highlight)]"
     >
       <MdTerminal aria-hidden="true" className="size-5 shrink-0 text-accent" />
@@ -73,7 +81,7 @@ export function HomebrewCommand({ command }: { command: string }) {
           command_type: "homebrew",
           placement: ANALYTICS_PLACEMENTS.hero,
         })}
-        aria-label={copied ? "Homebrew command copied" : "Copy Homebrew command"}
+        aria-label={copied ? copiedLabel : copyLabel}
         className="shrink-0"
       >
         {copied ? (
@@ -81,10 +89,10 @@ export function HomebrewCommand({ command }: { command: string }) {
         ) : (
           <MdContentCopy data-icon="inline-start" aria-hidden="true" />
         )}
-        {copied ? "Copied" : "Copy"}
+        {copied ? copiedLabel : copyLabel}
       </Button>
       <span className="sr-only" aria-live="polite">
-        {copied ? "Homebrew command copied to clipboard." : ""}
+        {copied ? copiedLabel : ""}
       </span>
     </div>
   );

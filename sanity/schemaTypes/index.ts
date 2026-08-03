@@ -15,6 +15,7 @@ import { homePage } from "./homePage";
 import { legalPage } from "./legalPage";
 import { pageBody } from "./pageBody";
 import { pageSeo } from "./pageSeo";
+import { pricingPage } from "./pricingPage";
 import { seo } from "./seo";
 import { optionalSiteImage } from "./optionalSiteImage";
 import { siteImage } from "./siteImage";
@@ -46,6 +47,7 @@ export const schemaTypes = [
   blogTag,
   blogPost,
   homePage,
+  pricingPage,
   featuresPage,
   aboutPage,
   legalPage,

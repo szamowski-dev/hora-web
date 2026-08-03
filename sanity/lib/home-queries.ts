@@ -24,6 +24,11 @@ export type SanityProductLandingFeatureValue = {
   description?: string;
 };
 
+export type SanityThemedProductImageValue = {
+  light?: SanitySiteImageValue;
+  dark?: SanitySiteImageValue;
+};
+
 export type SanityHomePageDocument = {
   _id?: string;
   _updatedAt?: string;
@@ -159,8 +164,17 @@ export type SanityHomePageDocument = {
       description?: string;
       primaryCtaLabel?: string;
       watchVideoLabel?: string;
+      showPrimaryCta?: boolean;
+      showTerminalPrompt?: boolean;
       homebrewCommand?: string;
       requirement?: string;
+      copyLabel?: string;
+      copiedLabel?: string;
+    };
+    media?: {
+      hero?: SanityThemedProductImageValue;
+      workflow?: SanityThemedProductImageValue;
+      googleCalendarCards?: SanityThemedProductImageValue[];
     };
     api?: {
       title?: string;
@@ -338,8 +352,26 @@ export const HOME_PAGE_QUERY = defineQuery(`
         description,
         primaryCtaLabel,
         watchVideoLabel,
+        showPrimaryCta,
+        showTerminalPrompt,
         homebrewCommand,
-        requirement
+        requirement,
+        copyLabel,
+        copiedLabel
+      },
+      media{
+        "hero": hero{
+          "light": light${siteImageProjection},
+          "dark": dark${siteImageProjection}
+        },
+        "workflow": workflow{
+          "light": light${siteImageProjection},
+          "dark": dark${siteImageProjection}
+        },
+        "googleCalendarCards": googleCalendarCards[]{
+          "light": light${siteImageProjection},
+          "dark": dark${siteImageProjection}
+        }
       },
       api{
         title,

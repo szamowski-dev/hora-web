@@ -12,7 +12,15 @@ import { analyticsAttrs } from "@/lib/analyticsAttrs";
 
 const toggleId = "mobile-navigation-toggle";
 
-export function MobileNav({ activePath }: { activePath?: string }) {
+export function MobileNav({
+  activePath,
+  showDownload = false,
+  downloadLabel = site.cta.trial.label,
+}: {
+  activePath?: string;
+  showDownload?: boolean;
+  downloadLabel?: string;
+}) {
   const toggleRef = useRef<HTMLInputElement>(null);
 
   function closeMenu() {
@@ -92,21 +100,20 @@ export function MobileNav({ activePath }: { activePath?: string }) {
               {item.label}
             </Link>
           ))}
-          <Button asChild size="lg" className="mt-7 w-full">
-            <Link
-              href={site.cta.trial.href}
-              onClick={closeMenu}
-              {...analyticsAttrs("nav_click", {
-                link_text: site.cta.trial.label,
-                link_url: site.cta.trial.href,
-              })}
-            >
-              {site.cta.trial.label}
-            </Link>
-          </Button>
-          <p className="mt-3 text-center text-xs text-muted">
-            Requires macOS 26 or newer
-          </p>
+          {showDownload ? (
+            <Button asChild size="lg" className="mt-7 w-full">
+              <Link
+                href={site.cta.trial.href}
+                onClick={closeMenu}
+                {...analyticsAttrs("nav_click", {
+                  link_text: downloadLabel,
+                  link_url: site.cta.trial.href,
+                })}
+              >
+                {downloadLabel}
+              </Link>
+            </Button>
+          ) : null}
         </div>
       </div>
     </div>

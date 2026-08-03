@@ -236,7 +236,7 @@ export const homePage = defineType({
               title: "Headline",
               type: "string",
               validation: (rule) =>
-                rule.required().min(10).max(120).custom(trimmed),
+                rule.min(10).max(120).custom(trimmed),
             }),
             defineField({
               name: "description",
@@ -244,21 +244,37 @@ export const homePage = defineType({
               type: "text",
               rows: 3,
               validation: (rule) =>
-                rule.required().min(20).max(320).custom(trimmed),
+                rule.min(20).max(320).custom(trimmed),
             }),
             defineField({
               name: "primaryCtaLabel",
               title: "Primary action",
               type: "string",
               validation: (rule) =>
-                rule.required().min(3).max(60).custom(trimmed),
+                rule.min(3).max(60).custom(trimmed),
             }),
             defineField({
               name: "watchVideoLabel",
               title: "Video action",
               type: "string",
               validation: (rule) =>
-                rule.required().min(3).max(60).custom(trimmed),
+                rule.min(3).max(60).custom(trimmed),
+            }),
+            defineField({
+              name: "showPrimaryCta",
+              title: "Show Download button",
+              type: "boolean",
+              initialValue: false,
+              description:
+                "The Download button stays hidden from visitors until this is enabled.",
+            }),
+            defineField({
+              name: "showTerminalPrompt",
+              title: "Show terminal prompt",
+              type: "boolean",
+              initialValue: false,
+              description:
+                "The terminal installation prompt stays hidden from visitors until this is enabled.",
             }),
             defineField({
               name: "homebrewCommand",
@@ -267,14 +283,73 @@ export const homePage = defineType({
               description:
                 "Placeholder for now. Replace it when the Homebrew cask is available.",
               validation: (rule) =>
-                rule.required().min(8).max(160).custom(trimmed),
+                rule.min(8).max(160).custom(trimmed),
             }),
             defineField({
               name: "requirement",
               title: "System requirement",
               type: "string",
               validation: (rule) =>
-                rule.required().min(5).max(100).custom(trimmed),
+                rule.min(5).max(100).custom(trimmed),
+            }),
+            defineField({
+              name: "copyLabel",
+              title: "Terminal copy button",
+              type: "string",
+              validation: (rule) =>
+                rule.min(2).max(40).custom(trimmed),
+            }),
+            defineField({
+              name: "copiedLabel",
+              title: "Terminal copied state",
+              type: "string",
+              validation: (rule) =>
+                rule.min(2).max(40).custom(trimmed),
+            }),
+          ],
+        }),
+        defineField({
+          name: "media",
+          title: "Product imagery",
+          type: "object",
+          description:
+            "Upload matching light and dark screenshots. Until both are supplied for a slot, the versioned fallback remains visible.",
+          fields: [
+            defineField({
+              name: "hero",
+              title: "Hero screenshot",
+              type: "object",
+              fields: [
+                defineField({ name: "light", title: "Light appearance", type: "siteImage" }),
+                defineField({ name: "dark", title: "Dark appearance", type: "siteImage" }),
+              ],
+            }),
+            defineField({
+              name: "workflow",
+              title: "Event workflow screenshot",
+              type: "object",
+              fields: [
+                defineField({ name: "light", title: "Light appearance", type: "siteImage" }),
+                defineField({ name: "dark", title: "Dark appearance", type: "siteImage" }),
+              ],
+            }),
+            defineField({
+              name: "googleCalendarCards",
+              title: "Google Calendar feature screenshots",
+              type: "array",
+              description:
+                "Keep four items in this order: color labels, event types, Meet and Contacts, multiple accounts.",
+              of: [
+                defineArrayMember({
+                  type: "object",
+                  name: "productLandingThemedCardImage",
+                  fields: [
+                    defineField({ name: "light", title: "Light appearance", type: "siteImage" }),
+                    defineField({ name: "dark", title: "Dark appearance", type: "siteImage" }),
+                  ],
+                }),
+              ],
+              validation: (rule) => rule.max(4),
             }),
           ],
         }),
@@ -288,7 +363,7 @@ export const homePage = defineType({
               title: "Title",
               type: "string",
               validation: (rule) =>
-                rule.required().min(5).max(100).custom(trimmed),
+                rule.min(5).max(100).custom(trimmed),
             }),
             defineField({
               name: "description",
@@ -296,7 +371,7 @@ export const homePage = defineType({
               type: "text",
               rows: 3,
               validation: (rule) =>
-                rule.required().min(15).max(320).custom(trimmed),
+                rule.min(15).max(320).custom(trimmed),
             }),
           ],
         }),
@@ -310,7 +385,7 @@ export const homePage = defineType({
               title: "Title",
               type: "string",
               validation: (rule) =>
-                rule.required().min(5).max(120).custom(trimmed),
+                rule.min(5).max(120).custom(trimmed),
             }),
             defineField({
               name: "description",
@@ -318,14 +393,14 @@ export const homePage = defineType({
               type: "text",
               rows: 2,
               validation: (rule) =>
-                rule.required().min(10).max(280).custom(trimmed),
+                rule.min(10).max(280).custom(trimmed),
             }),
             defineField({
               name: "primaryFeatures",
               title: "Primary features",
               type: "array",
               of: [productLandingFeature("productLandingGooglePrimaryFeature")],
-              validation: (rule) => rule.required().min(3).max(3),
+              validation: (rule) => rule.min(3).max(3),
             }),
             defineField({
               name: "secondaryFeatures",
@@ -334,7 +409,7 @@ export const homePage = defineType({
               description:
                 "Keep this list editable as the product story is tuned.",
               of: [productLandingFeature("productLandingGoogleSecondaryFeature")],
-              validation: (rule) => rule.required().min(1).max(6),
+              validation: (rule) => rule.min(1).max(6),
             }),
           ],
         }),
@@ -348,7 +423,7 @@ export const homePage = defineType({
               title: "Title",
               type: "string",
               validation: (rule) =>
-                rule.required().min(5).max(120).custom(trimmed),
+                rule.min(5).max(120).custom(trimmed),
             }),
             defineField({
               name: "description",
@@ -356,14 +431,14 @@ export const homePage = defineType({
               type: "text",
               rows: 2,
               validation: (rule) =>
-                rule.required().min(10).max(280).custom(trimmed),
+                rule.min(10).max(280).custom(trimmed),
             }),
             defineField({
               name: "features",
               title: "Features",
               type: "array",
               of: [productLandingFeature("productLandingHoraFeature")],
-              validation: (rule) => rule.required().min(4).max(10),
+              validation: (rule) => rule.min(4).max(10),
             }),
           ],
         }),
@@ -377,7 +452,7 @@ export const homePage = defineType({
               title: "Title",
               type: "string",
               validation: (rule) =>
-                rule.required().min(5).max(120).custom(trimmed),
+                rule.min(5).max(120).custom(trimmed),
             }),
             defineField({
               name: "description",
@@ -385,14 +460,14 @@ export const homePage = defineType({
               type: "text",
               rows: 3,
               validation: (rule) =>
-                rule.required().min(15).max(360).custom(trimmed),
+                rule.min(15).max(360).custom(trimmed),
             }),
             defineField({
               name: "features",
               title: "Privacy guarantees",
               type: "array",
               of: [productLandingFeature("productLandingPrivacyFeature")],
-              validation: (rule) => rule.required().min(3).max(3),
+              validation: (rule) => rule.min(3).max(3),
             }),
           ],
         }),
@@ -406,7 +481,7 @@ export const homePage = defineType({
               title: "Title",
               type: "string",
               validation: (rule) =>
-                rule.required().min(5).max(120).custom(trimmed),
+                rule.min(5).max(120).custom(trimmed),
             }),
             defineField({
               name: "description",
@@ -414,14 +489,14 @@ export const homePage = defineType({
               type: "text",
               rows: 2,
               validation: (rule) =>
-                rule.required().min(10).max(280).custom(trimmed),
+                rule.min(10).max(280).custom(trimmed),
             }),
             defineField({
               name: "features",
               title: "macOS features",
               type: "array",
               of: [productLandingFeature("productLandingMacosFeature")],
-              validation: (rule) => rule.required().min(6).max(12),
+              validation: (rule) => rule.min(6).max(12),
             }),
           ],
         }),
@@ -435,7 +510,7 @@ export const homePage = defineType({
               title: "Title",
               type: "string",
               validation: (rule) =>
-                rule.required().min(5).max(120).custom(trimmed),
+                rule.min(5).max(120).custom(trimmed),
             }),
             defineField({
               name: "description",
@@ -443,7 +518,7 @@ export const homePage = defineType({
               type: "text",
               rows: 2,
               validation: (rule) =>
-                rule.required().min(10).max(280).custom(trimmed),
+                rule.min(10).max(280).custom(trimmed),
             }),
             defineField({
               name: "features",
@@ -452,7 +527,7 @@ export const homePage = defineType({
               description:
                 "This is the main editable space for adding or removing supporting capabilities.",
               of: [productLandingFeature("productLandingGridFeature")],
-              validation: (rule) => rule.required().min(6).max(18),
+              validation: (rule) => rule.min(6).max(18),
             }),
           ],
         }),
@@ -466,7 +541,7 @@ export const homePage = defineType({
               title: "Title",
               type: "string",
               validation: (rule) =>
-                rule.required().min(5).max(100).custom(trimmed),
+                rule.min(5).max(100).custom(trimmed),
             }),
             defineField({
               name: "description",
@@ -474,21 +549,21 @@ export const homePage = defineType({
               type: "text",
               rows: 2,
               validation: (rule) =>
-                rule.required().min(10).max(280).custom(trimmed),
+                rule.min(10).max(280).custom(trimmed),
             }),
             defineField({
               name: "placeholder",
               title: "Email placeholder",
               type: "string",
               validation: (rule) =>
-                rule.required().min(3).max(80).custom(trimmed),
+                rule.min(3).max(80).custom(trimmed),
             }),
             defineField({
               name: "buttonLabel",
               title: "Submit button",
               type: "string",
               validation: (rule) =>
-                rule.required().min(3).max(60).custom(trimmed),
+                rule.min(3).max(60).custom(trimmed),
             }),
           ],
         }),

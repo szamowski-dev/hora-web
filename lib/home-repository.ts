@@ -15,6 +15,7 @@ import type {
   ProductLandingTone,
   SiteImage,
   SiteVideo,
+  ThemedSiteImage,
 } from "@/lib/home-model";
 import {
   getSanityFetchContext,
@@ -29,6 +30,7 @@ import {
   type SanityHomePageDocument,
   type SanityProductLandingFeatureValue,
   type SanitySiteImageValue,
+  type SanityThemedProductImageValue,
 } from "@/sanity/lib/home-queries";
 
 const SITE_REVALIDATE_SECONDS = 600;
@@ -292,6 +294,21 @@ function mapLandingFeatures(
   });
 }
 
+function mapLandingThemedImage(
+  value: SanityThemedProductImageValue | undefined,
+  fallback: ThemedSiteImage,
+  field: string,
+): ThemedSiteImage {
+  if (!hasImageAsset(value?.light) || !hasImageAsset(value?.dark)) {
+    return fallback;
+  }
+
+  return {
+    light: mapImage(value.light, `${field}.light`),
+    dark: mapImage(value.dark, `${field}.dark`),
+  };
+}
+
 function mapProductLanding(
   value: SanityHomePageDocument["productLanding"],
 ): ProductLandingContent {
@@ -312,6 +329,8 @@ function mapProductLanding(
         value?.hero?.watchVideoLabel,
         fallback.hero.watchVideoLabel,
       ),
+      showPrimaryCta: value?.hero?.showPrimaryCta === true,
+      showTerminalPrompt: value?.hero?.showTerminalPrompt === true,
       homebrewCommand: landingString(
         value?.hero?.homebrewCommand,
         fallback.hero.homebrewCommand,
@@ -319,6 +338,34 @@ function mapProductLanding(
       requirement: landingString(
         value?.hero?.requirement,
         fallback.hero.requirement,
+      ),
+      copyLabel: landingString(
+        value?.hero?.copyLabel,
+        fallback.hero.copyLabel,
+      ),
+      copiedLabel: landingString(
+        value?.hero?.copiedLabel,
+        fallback.hero.copiedLabel,
+      ),
+    },
+    media: {
+      hero: mapLandingThemedImage(
+        value?.media?.hero,
+        fallback.media.hero,
+        "productLanding.media.hero",
+      ),
+      workflow: mapLandingThemedImage(
+        value?.media?.workflow,
+        fallback.media.workflow,
+        "productLanding.media.workflow",
+      ),
+      googleCalendarCards: fallback.media.googleCalendarCards.map(
+        (image, index) =>
+          mapLandingThemedImage(
+            value?.media?.googleCalendarCards?.[index],
+            image,
+            `productLanding.media.googleCalendarCards[${index}]`,
+          ),
       ),
     },
     api: {

@@ -7,8 +7,100 @@ export const defaultProductLanding = {
       "A fast, native calendar for people who live in Google Calendar.\nPlan, join, and protect focus time without opening another browser tab.",
     primaryCtaLabel: "Download",
     watchVideoLabel: "Watch video",
+    showPrimaryCta: false,
+    showTerminalPrompt: false,
     homebrewCommand: "brew install --cask hora",
     requirement: "Requires macOS 26 or newer.",
+    copyLabel: "Copy",
+    copiedLabel: "Copied",
+  },
+  media: {
+    hero: {
+      light: {
+        src: "/assets/product/hero-light.png",
+        alt: "hora Calendar week view with event details, Google Meet, and focus timer",
+        width: 3234,
+        height: 2028,
+      },
+      dark: {
+        src: "/assets/product/hero.png",
+        alt: "hora Calendar week view with event details, Google Meet, and focus timer",
+        width: 3234,
+        height: 2028,
+      },
+    },
+    workflow: {
+      light: {
+        src: "/assets/product/fast-native-light.png",
+        alt: "hora event editor with natural-language event creation",
+        width: 3234,
+        height: 2028,
+      },
+      dark: {
+        src: "/assets/product/fast-native.png",
+        alt: "hora event editor with natural-language event creation",
+        width: 3234,
+        height: 2028,
+      },
+    },
+    googleCalendarCards: [
+      {
+        light: {
+          src: "/assets/product/label-colors-light-card.png",
+          alt: "Google Calendar color labels",
+          width: 1334,
+          height: 597,
+        },
+        dark: {
+          src: "/assets/product/label-colors-dark-card.png",
+          alt: "Google Calendar color labels",
+          width: 1334,
+          height: 597,
+        },
+      },
+      {
+        light: {
+          src: "/assets/product/event-types-light-card.png",
+          alt: "hora Calendar showing every Google Calendar event type",
+          width: 592,
+          height: 549,
+        },
+        dark: {
+          src: "/assets/product/event-types-dark-card.png",
+          alt: "hora Calendar showing every Google Calendar event type",
+          width: 592,
+          height: 549,
+        },
+      },
+      {
+        light: {
+          src: "/assets/product/meet-and-contacts-light-card.png",
+          alt: "Google Meet and Local Contacts",
+          width: 592,
+          height: 549,
+        },
+        dark: {
+          src: "/assets/product/meet-and-contacts-dark-card.png",
+          alt: "Google Meet and Local Contacts",
+          width: 592,
+          height: 549,
+        },
+      },
+      {
+        light: {
+          src: "/assets/product/accounts-multiple-light-card.png",
+          alt: "hora Google Accounts settings with multiple connected accounts",
+          width: 1334,
+          height: 597,
+        },
+        dark: {
+          src: "/assets/product/accounts-multiple-dark-card.png",
+          alt: "hora Google Accounts settings with multiple connected accounts",
+          width: 1334,
+          height: 597,
+        },
+      },
+    ],
   },
   api: {
     title: "Powered by the Google Calendar API",
