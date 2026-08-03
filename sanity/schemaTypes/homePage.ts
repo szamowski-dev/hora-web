@@ -254,6 +254,13 @@ export const homePage = defineType({
                 rule.min(3).max(60).custom(trimmed),
             }),
             defineField({
+              name: "macAppStoreLabel",
+              title: "Mac App Store badge label",
+              type: "string",
+              validation: (rule) =>
+                rule.min(3).max(80).custom(trimmed),
+            }),
+            defineField({
               name: "watchVideoLabel",
               title: "Video action",
               type: "string",

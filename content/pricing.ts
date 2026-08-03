@@ -33,7 +33,7 @@ export const defaultPricingPage = {
   ],
   direct: {
     showDownload: false,
-    downloadLabel: "Download Direct",
+    downloadLabel: "Download",
     showTerminalPrompt: false,
     terminalCommand: "brew install --cask hora",
     terminalRequirement: "Requires macOS 26 or newer.",

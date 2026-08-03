@@ -100,6 +100,7 @@ export type ProductLandingContent = {
     title: string;
     description: string;
     primaryCtaLabel: string;
+    macAppStoreLabel: string;
     watchVideoLabel: string;
     showPrimaryCta: boolean;
     showTerminalPrompt: boolean;

@@ -7,6 +7,7 @@ import {
 import { LandingFeatureList } from "@/components/landing/LandingFeatureList";
 import { HoraWorkflowVisual } from "@/components/landing/LandingVisuals";
 import { LandingFeatureCards } from "@/components/landing/LandingFeatureCards";
+import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { HomebrewCommand } from "@/components/molecules/HomebrewCommand";
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
 import { ProductVideoDialog } from "@/components/molecules/ProductVideoDialog";
@@ -21,6 +22,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { site } from "@/content/site";
 import type { HomePageContent } from "@/lib/home-model";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
@@ -97,10 +99,30 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
                   {landing.hero.primaryCtaLabel}
                 </Link>
               </Button>
-            ) : null}
+            ) : (
+              <AppStoreLink
+                href={site.cta.primary.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={landing.hero.macAppStoreLabel}
+                className="app-store-interactive inline-flex h-12 items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                {...analyticsAttrs("app_store_cta_click", {
+                  placement: ANALYTICS_PLACEMENTS.hero,
+                  destination: "mac_app_store",
+                })}
+              >
+                <Image
+                  src={site.macAppStoreBadgeSrc}
+                  alt={landing.hero.macAppStoreLabel}
+                  width={162}
+                  height={50}
+                  className="h-12 w-auto"
+                />
+              </AppStoreLink>
+            )}
             <ProductVideoDialog label={landing.hero.watchVideoLabel} />
           </div>
-          {landing.hero.showTerminalPrompt ? (
+          {landing.hero.showPrimaryCta && landing.hero.showTerminalPrompt ? (
             <>
               <HomebrewCommand
                 command={landing.hero.homebrewCommand}

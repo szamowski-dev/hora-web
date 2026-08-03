@@ -15,6 +15,8 @@ export function Nav({
   showDownload?: boolean;
   downloadLabel?: string;
 }) {
+  const downloadHref = showDownload ? site.cta.trial.href : site.cta.primary.href;
+
   return (
     <div className="relative mx-auto max-w-6xl">
       <nav className="relative isolate overflow-hidden rounded-[18px] border border-line bg-panel/74 shadow-[inset_0_1px_0_var(--ui-highlight),0_18px_52px_-28px_var(--ui-shadow-neutral)] backdrop-blur-2xl backdrop-saturate-150">
@@ -43,19 +45,31 @@ export function Nav({
               </Link>
             ))}
             <ThemeToggle />
-            {showDownload ? (
-              <Button asChild size="sm">
+            <Button asChild size="sm">
+              {showDownload ? (
                 <Link
-                  href={site.cta.trial.href}
+                  href={downloadHref}
                   {...analyticsAttrs("nav_click", {
                     link_text: downloadLabel,
-                    link_url: site.cta.trial.href,
+                    link_url: downloadHref,
                   })}
                 >
                   {downloadLabel}
                 </Link>
-              </Button>
-            ) : null}
+              ) : (
+                <a
+                  href={downloadHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  {...analyticsAttrs("app_store_cta_click", {
+                    placement: "nav",
+                    destination: "mac_app_store",
+                  })}
+                >
+                  {downloadLabel}
+                </a>
+              )}
+            </Button>
           </div>
           <ThemeToggle className="mr-10 md:hidden" />
         </div>

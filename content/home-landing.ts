@@ -6,6 +6,7 @@ export const defaultProductLanding = {
     description:
       "A fast, native calendar for people who live in Google Calendar.\nPlan, join, and protect focus time without opening another browser tab.",
     primaryCtaLabel: "Download",
+    macAppStoreLabel: "Download on the Mac App Store",
     watchVideoLabel: "Watch video",
     showPrimaryCta: false,
     showTerminalPrompt: false,

@@ -325,6 +325,10 @@ function mapProductLanding(
         value?.hero?.primaryCtaLabel,
         fallback.hero.primaryCtaLabel,
       ),
+      macAppStoreLabel: landingString(
+        value?.hero?.macAppStoreLabel,
+        fallback.hero.macAppStoreLabel,
+      ),
       watchVideoLabel: landingString(
         value?.hero?.watchVideoLabel,
         fallback.hero.watchVideoLabel,

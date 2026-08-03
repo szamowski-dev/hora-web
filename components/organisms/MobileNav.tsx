@@ -21,6 +21,7 @@ export function MobileNav({
   showDownload?: boolean;
   downloadLabel?: string;
 }) {
+  const downloadHref = showDownload ? site.cta.trial.href : site.cta.primary.href;
   const toggleRef = useRef<HTMLInputElement>(null);
 
   function closeMenu() {
@@ -100,20 +101,33 @@ export function MobileNav({
               {item.label}
             </Link>
           ))}
-          {showDownload ? (
-            <Button asChild size="lg" className="mt-7 w-full">
+          <Button asChild size="lg" className="mt-7 w-full">
+            {showDownload ? (
               <Link
-                href={site.cta.trial.href}
+                href={downloadHref}
                 onClick={closeMenu}
                 {...analyticsAttrs("nav_click", {
                   link_text: downloadLabel,
-                  link_url: site.cta.trial.href,
+                  link_url: downloadHref,
                 })}
               >
                 {downloadLabel}
               </Link>
-            </Button>
-          ) : null}
+            ) : (
+              <a
+                href={downloadHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMenu}
+                {...analyticsAttrs("app_store_cta_click", {
+                  placement: "nav",
+                  destination: "mac_app_store",
+                })}
+              >
+                {downloadLabel}
+              </a>
+            )}
+          </Button>
         </div>
       </div>
     </div>
