@@ -8,6 +8,7 @@ export const defaultProductLanding = {
     primaryCtaLabel: "Download",
     macAppStoreLabel: "Download on the Mac App Store",
     watchVideoLabel: "Watch video",
+    watchVideoUrl: "https://www.youtube.com/watch?v=ahVV5J25cYM",
     showPrimaryCta: false,
     showTerminalPrompt: false,
     homebrewCommand: "brew install --cask hora",

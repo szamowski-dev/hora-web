@@ -10,11 +10,32 @@ import {
 } from "@/components/ui/dialog";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 
-const videoUrl = "https://www.youtube.com/watch?v=ahVV5J25cYM";
-const embedUrl =
-  "https://www.youtube-nocookie.com/embed/ahVV5J25cYM?autoplay=1&rel=0";
+function youtubeEmbedUrl(videoUrl: string) {
+  const url = new URL(videoUrl);
+  const hostname = url.hostname.toLowerCase().replace(/^www\./, "");
+  const pathSegments = url.pathname.split("/").filter(Boolean);
+  const videoId =
+    hostname === "youtu.be"
+      ? pathSegments[0]
+      : url.searchParams.get("v") ??
+        (["embed", "shorts", "live"].includes(pathSegments[0] ?? "")
+          ? pathSegments[1]
+          : undefined);
 
-export function ProductVideoDialog({ label }: { label: string }) {
+  if (!videoId) throw new Error("YouTube video URL is missing a video ID.");
+
+  return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0`;
+}
+
+export function ProductVideoDialog({
+  label,
+  videoUrl,
+}: {
+  label: string;
+  videoUrl: string;
+}) {
+  const embedUrl = youtubeEmbedUrl(videoUrl);
+
   return (
     <Dialog>
       <DialogTrigger asChild>

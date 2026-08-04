@@ -75,6 +75,41 @@ export const homePage = defineType({
             textField("primaryCtaLabel", "Primary action"),
             textField("macAppStoreLabel", "Mac App Store badge label"),
             textField("watchVideoLabel", "Video action"),
+            defineField({
+              name: "watchVideoUrl",
+              title: "YouTube video URL",
+              description: "The video opened by the Watch video button.",
+              type: "url",
+              validation: (rule) =>
+                rule
+                  .required()
+                  .uri({ scheme: ["https"] })
+                  .custom((value) => {
+                    if (!value) return true;
+                    try {
+                      const url = new URL(value);
+                      const hostname = url.hostname.toLowerCase();
+                      const pathSegments = url.pathname.split("/").filter(Boolean);
+                      const isYouTube =
+                        hostname === "youtu.be" ||
+                        hostname === "youtube.com" ||
+                        hostname.endsWith(".youtube.com");
+                      const videoId =
+                        hostname === "youtu.be"
+                          ? pathSegments[0]
+                          : url.searchParams.get("v") ??
+                            (["embed", "shorts", "live"].includes(pathSegments[0] ?? "")
+                              ? pathSegments[1]
+                              : undefined);
+
+                      return isYouTube && videoId
+                        ? true
+                        : "Use a YouTube or youtu.be video URL.";
+                    } catch {
+                      return "Enter a valid YouTube URL.";
+                    }
+                  }),
+            }),
             defineField({ name: "showPrimaryCta", title: "Show Download button", type: "boolean", initialValue: false }),
             defineField({ name: "showTerminalPrompt", title: "Show terminal prompt", type: "boolean", initialValue: false }),
             textField("homebrewCommand", "Homebrew command"),

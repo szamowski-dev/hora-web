@@ -120,7 +120,10 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
                 />
               </AppStoreLink>
             )}
-            <ProductVideoDialog label={landing.hero.watchVideoLabel} />
+            <ProductVideoDialog
+              label={landing.hero.watchVideoLabel}
+              videoUrl={landing.hero.watchVideoUrl}
+            />
           </div>
           {landing.hero.showPrimaryCta && landing.hero.showTerminalPrompt ? (
             <>
@@ -129,11 +132,9 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
                 copyLabel={landing.hero.copyLabel}
                 copiedLabel={landing.hero.copiedLabel}
               />
-              <p className="mt-3 text-xs text-muted">
-                {landing.hero.requirement}
-              </p>
             </>
           ) : null}
+          <p className="mt-3 text-xs text-muted">{landing.hero.requirement}</p>
         </div>
 
         <div className="relative z-10 mx-auto mt-20 max-w-landing sm:mt-24">

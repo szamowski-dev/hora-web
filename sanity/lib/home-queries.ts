@@ -56,6 +56,7 @@ export type SanityHomePageDocument = {
       primaryCtaLabel?: string;
       macAppStoreLabel?: string;
       watchVideoLabel?: string;
+      watchVideoUrl?: string;
       showPrimaryCta?: boolean;
       showTerminalPrompt?: boolean;
       homebrewCommand?: string;
@@ -145,6 +146,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
         primaryCtaLabel,
         macAppStoreLabel,
         watchVideoLabel,
+        watchVideoUrl,
         showPrimaryCta,
         showTerminalPrompt,
         homebrewCommand,

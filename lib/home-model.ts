@@ -78,6 +78,7 @@ export type ProductLandingContent = {
     primaryCtaLabel: string;
     macAppStoreLabel: string;
     watchVideoLabel: string;
+    watchVideoUrl: string;
     showPrimaryCta: boolean;
     showTerminalPrompt: boolean;
     homebrewCommand: string;

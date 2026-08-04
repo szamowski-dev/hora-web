@@ -231,7 +231,7 @@ function validateActiveHome(document: SiteDocument) {
   const landing = requiredObject(document.productLanding, "homePage.productLanding");
   const hero = requiredObject(landing.hero, "homePage.productLanding.hero");
   for (const field of [
-    "title", "description", "primaryCtaLabel", "macAppStoreLabel", "watchVideoLabel",
+    "title", "description", "primaryCtaLabel", "macAppStoreLabel", "watchVideoLabel", "watchVideoUrl",
     "homebrewCommand", "requirement", "copyLabel", "copiedLabel",
   ]) requiredText(hero[field], `homePage.productLanding.hero.${field}`);
   expect(typeof hero.showPrimaryCta === "boolean", "homePage.productLanding.hero.showPrimaryCta must be boolean");

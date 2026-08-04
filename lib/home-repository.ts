@@ -215,6 +215,10 @@ function mapProductLanding(
         value?.hero?.watchVideoLabel,
         fallback.hero.watchVideoLabel,
       ),
+      watchVideoUrl: landingString(
+        value?.hero?.watchVideoUrl,
+        fallback.hero.watchVideoUrl,
+      ),
       showPrimaryCta: value?.hero?.showPrimaryCta ?? fallback.hero.showPrimaryCta,
       showTerminalPrompt:
         value?.hero?.showTerminalPrompt ?? fallback.hero.showTerminalPrompt,
