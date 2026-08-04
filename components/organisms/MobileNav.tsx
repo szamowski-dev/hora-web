@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
 import Link from "next/link";
+import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { MdClose, MdMenu } from "react-icons/md";
 import { Logo } from "@/components/atoms/Logo";
 import { ThemeToggle } from "@/components/molecules/ThemeToggle";
@@ -64,7 +66,10 @@ export function MobileNav({
         aria-modal="true"
         aria-label="Menu"
       >
-        <div className="landing-glass mx-3 mt-3 flex h-14 shrink-0 items-center justify-between rounded-[18px] px-4 md:mx-6 md:h-16 md:px-6">
+        <div
+          className="landing-glass mx-3 mt-3 flex h-14 shrink-0 items-center justify-between rounded-[18px] px-4 md:mx-6 md:h-16 md:px-6"
+          style={{ background: "var(--ui-panel)" }}
+        >
           <Logo className="min-h-10" />
           <div className="flex items-center gap-1">
             <ThemeToggle />
@@ -101,8 +106,8 @@ export function MobileNav({
               {item.label}
             </Link>
           ))}
-          <Button asChild size="lg" className="mt-7 w-full">
-            {showDownload ? (
+          {showDownload ? (
+            <Button asChild size="lg" className="mt-7 w-full">
               <Link
                 href={downloadHref}
                 onClick={closeMenu}
@@ -113,21 +118,29 @@ export function MobileNav({
               >
                 {downloadLabel}
               </Link>
-            ) : (
-              <a
-                href={downloadHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={closeMenu}
-                {...analyticsAttrs("app_store_cta_click", {
-                  placement: "nav",
-                  destination: "mac_app_store",
-                })}
-              >
-                {downloadLabel}
-              </a>
-            )}
-          </Button>
+            </Button>
+          ) : (
+            <AppStoreLink
+              href={downloadHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={closeMenu}
+              aria-label={site.cta.primary.label}
+              className="app-store-interactive mt-7 inline-flex h-12 self-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              {...analyticsAttrs("app_store_cta_click", {
+                placement: "nav",
+                destination: "mac_app_store",
+              })}
+            >
+              <Image
+                src={site.macAppStoreBadgeSrc}
+                alt={site.cta.primary.label}
+                width={162}
+                height={50}
+                className="h-12 w-auto"
+              />
+            </AppStoreLink>
+          )}
         </div>
       </div>
     </div>

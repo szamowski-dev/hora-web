@@ -51,11 +51,11 @@ export function LandingFeatureCards({
         <Card
           key={`${feature.icon}-${feature.title}`}
           className={cn(
-            "flex min-h-[31rem] flex-col overflow-hidden rounded-[20px] border-transparent bg-feature-panel !py-0 shadow-none backdrop-blur-none lg:h-[33rem]",
+            "flex min-h-[23rem] flex-col overflow-hidden rounded-[20px] border-transparent bg-feature-panel !py-0 shadow-none backdrop-blur-none sm:min-h-[26rem] lg:h-[33rem]",
             cardSpanClasses[index % cardSpanClasses.length],
           )}
         >
-          <CardHeader className="!flex min-h-[12.5rem] flex-col justify-start gap-4 px-7 pb-7 pt-8 sm:px-8 sm:pt-9">
+          <CardHeader className="!flex min-h-40 flex-col justify-start gap-4 px-7 pb-7 pt-8 sm:min-h-44 sm:px-8 sm:pt-9 lg:min-h-[12.5rem]">
             <CardTitle
               className={cn(
                 "text-2xl sm:text-3xl",

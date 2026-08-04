@@ -113,6 +113,7 @@ export default async function RootLayout({
       data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={`${geist.variable} ${newsreader.variable} ${bumbbled.variable}`}
+      style={{ overscrollBehaviorY: "none" }}
     >
       <head>
         <script
@@ -123,7 +124,10 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="https://consent.cookiebot.com" />
         <link rel="dns-prefetch" href="https://consentcdn.cookiebot.com" />
       </head>
-      <body className="min-h-dvh flex flex-col text-text">
+      <body
+        className="min-h-dvh flex flex-col text-text"
+        style={{ overscrollBehaviorY: "none" }}
+      >
         {/* Cookiebot is moved to lazyOnload because its dialog markup was
             being picked as the LCP element (2.4s render delay on mobile).
             The default-denied consent initialized in instrumentation-client.ts

@@ -122,6 +122,7 @@ html[data-theme="dark"] {
 html {
   background: var(--color-bg);
   color: var(--color-text);
+  overscroll-behavior-y: none;
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
 }
@@ -129,6 +130,7 @@ html {
 body {
   background: var(--color-bg);
   font-family: var(--font-sans);
+  overscroll-behavior-y: none;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -146,7 +148,7 @@ body {
 
 .landing-glass {
   border: 1px solid var(--ui-line);
-  background: oklch(0.1779 0.0064 271 / 0.72);
+  background: var(--ui-panel);
   box-shadow:
     inset 0 1px 0 var(--ui-highlight),
     0 36px 96px -56px var(--ui-shadow-neutral);

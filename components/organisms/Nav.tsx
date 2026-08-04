@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { Logo } from "@/components/atoms/Logo";
 import { ThemeToggle } from "@/components/molecules/ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -45,8 +47,8 @@ export function Nav({
               </Link>
             ))}
             <ThemeToggle />
-            <Button asChild size="sm">
-              {showDownload ? (
+            {showDownload ? (
+              <Button asChild size="sm">
                 <Link
                   href={downloadHref}
                   {...analyticsAttrs("nav_click", {
@@ -56,20 +58,28 @@ export function Nav({
                 >
                   {downloadLabel}
                 </Link>
-              ) : (
-                <a
-                  href={downloadHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  {...analyticsAttrs("app_store_cta_click", {
-                    placement: "nav",
-                    destination: "mac_app_store",
-                  })}
-                >
-                  {downloadLabel}
-                </a>
-              )}
-            </Button>
+              </Button>
+            ) : (
+              <AppStoreLink
+                href={downloadHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={site.cta.primary.label}
+                className="app-store-interactive inline-flex h-10 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                {...analyticsAttrs("app_store_cta_click", {
+                  placement: "nav",
+                  destination: "mac_app_store",
+                })}
+              >
+                <Image
+                  src={site.macAppStoreBadgeSrc}
+                  alt={site.cta.primary.label}
+                  width={162}
+                  height={50}
+                  className="h-10 w-auto"
+                />
+              </AppStoreLink>
+            )}
           </div>
           <ThemeToggle className="mr-10 md:hidden" />
         </div>
