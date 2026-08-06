@@ -7,12 +7,13 @@ export const runtime = "nodejs";
 const bodySchema = z.object({
   name: z.string().trim().min(2).max(80),
   email: z.string().trim().email().max(254),
-  category: z.enum(["bug", "account", "sync", "billing", "feature", "other"]),
+  category: z.enum(["bug", "account", "sync", "billing", "refund", "feature", "other"]),
   summary: z.string().trim().min(8).max(120),
   details: z.string().trim().min(20).max(4000),
   appVersion: z.string().trim().max(40).optional(),
   osVersion: z.string().trim().max(80).optional(),
   steps: z.string().trim().max(2000).optional(),
+  paddleTransactionId: z.string().trim().max(100).optional(),
   honey: z.string().max(0).optional(),
 });
 
@@ -21,6 +22,7 @@ const categoryLabels: Record<z.infer<typeof bodySchema>["category"], string> = {
   account: "Account or login",
   sync: "Calendar sync",
   billing: "Billing",
+  refund: "Paddle refund (direct purchase)",
   feature: "Feature request",
   other: "Other",
 };
@@ -30,6 +32,7 @@ const categoryIssueTypes: Record<z.infer<typeof bodySchema>["category"], "Bug" |
   account: "Bug",
   sync: "Bug",
   billing: "Bug",
+  refund: "Bug",
   feature: "Feature",
   other: "Bug",
 };
@@ -80,6 +83,9 @@ function issueBody(input: z.infer<typeof bodySchema>): string {
   const optionalRows = [
     input.appVersion ? `| App version | ${input.appVersion} |` : null,
     input.osVersion ? `| OS version | ${input.osVersion} |` : null,
+    input.paddleTransactionId
+      ? `| Paddle transaction ID | ${input.paddleTransactionId} |`
+      : null,
   ].filter(Boolean);
 
   return [

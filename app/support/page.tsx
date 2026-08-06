@@ -63,6 +63,10 @@ const faqItems = [
     q: "How do I install hora?",
     a: "hora is on the Mac App Store — download it there. A native iOS and iPadOS app is coming next; subscribe to the newsletter for a heads-up when the iOS/iPadOS TestFlight beta opens.",
   },
+  {
+    q: "How do I request a refund for a direct purchase?",
+    a: "Choose “Paddle refund (direct purchase)” in the support form and use the email address from your Paddle receipt. Add the Paddle transaction ID if you have it. Mac App Store purchases are refunded by Apple.",
+  },
 ];
 
 export default function SupportPage() {
