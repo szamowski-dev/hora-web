@@ -27,7 +27,7 @@ const singletonTypes = new Set([
 const singletonActions = new Set(["publish", "discardChanges", "restore"]);
 
 type LegalPageTemplateParameters = {
-  kind: "privacy" | "terms";
+  kind: "privacy" | "terms" | "refunds";
 };
 
 const legalPageTemplate: Template<LegalPageTemplateParameters> = {

@@ -68,6 +68,7 @@ export const site = {
       { label: "Support", href: "/support/" },
       { label: "Privacy", href: "/privacy/" },
       { label: "Terms", href: "/terms/" },
+      { label: "Refunds", href: "/refunds/" },
     ],
     socials: [
       { label: "Discord", href: "https://discord.gg/8JFz4FfBGQ", icon: "discord" },

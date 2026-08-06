@@ -36,7 +36,7 @@ const SITE_PAGE_REVALIDATE_SECONDS = 600;
 
 export type SitePageRepositoryOptions = SanityRepositoryOptions;
 
-type DocumentKind = "features" | "about" | "privacy" | "terms";
+type DocumentKind = "features" | "about" | "privacy" | "terms" | "refunds";
 
 function invalidPage(
   kind: DocumentKind,
@@ -553,7 +553,8 @@ function mapLegalPage(
   }
   const id = assertDocumentId(document._id, documentId, expectedKind) as
     | "privacyPage"
-    | "termsPage";
+    | "termsPage"
+    | "refundsPage";
   const kind = requiredMachineString(
     document.kind,
     "kind",

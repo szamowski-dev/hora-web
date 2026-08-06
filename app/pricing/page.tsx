@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { MdCheck, MdDownloadForOffline } from "react-icons/md";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { SetappBadge } from "@/components/atoms/SetappBadge";
@@ -105,6 +106,17 @@ export default async function PricingPage() {
             </article>
           ))}
         </section>
+
+        <p className="mx-auto mt-6 max-w-[960px] text-center text-sm leading-6 text-muted">
+          Direct purchase questions? Read our{" "}
+          <Link
+            href="/refunds/"
+            className="font-medium text-text underline decoration-line-strong underline-offset-4 transition-colors hover:text-accent"
+          >
+            Refunds & Cancellations Policy
+          </Link>
+          .
+        </p>
 
         {showTerminalPrompt ? (
           <div className="mx-auto mt-5 flex max-w-[960px] flex-col items-center text-center">

@@ -37,7 +37,7 @@ export function LegalPageLayout({
   children,
 }: LegalPageLayoutProps) {
   const isGuide = kind === undefined;
-  const isPrivacy = kind === "privacy";
+  const activeLegalPage = kind;
   const displayTitle =
     typeof title === "string" ? title : `${title.prefix} ${title.accent}`;
 
@@ -79,11 +79,14 @@ export function LegalPageLayout({
                   className="mt-4 flex flex-col gap-1"
                   aria-label="Legal pages"
                 >
-                  <LegalLink href="/privacy/" active={isPrivacy}>
+                  <LegalLink href="/privacy/" active={activeLegalPage === "privacy"}>
                     Privacy Policy
                   </LegalLink>
-                  <LegalLink href="/terms/" active={!isPrivacy}>
+                  <LegalLink href="/terms/" active={activeLegalPage === "terms"}>
                     Terms of Service
+                  </LegalLink>
+                  <LegalLink href="/refunds/" active={activeLegalPage === "refunds"}>
+                    Refunds & Cancellations
                   </LegalLink>
                 </nav>
                 <div className="mt-6 border-t border-line pt-6">

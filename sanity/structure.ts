@@ -112,6 +112,16 @@ export const structure: StructureResolver = (S) =>
                     .initialValueTemplate("legalPage", { kind: "terms" })
                     .title("Terms of Service"),
                 ),
+              S.listItem()
+                .id("refundsPage")
+                .title("Refunds & Cancellations")
+                .child(
+                  S.document()
+                    .schemaType("legalPage")
+                    .documentId("refundsPage")
+                    .initialValueTemplate("legalPage", { kind: "refunds" })
+                    .title("Refunds & Cancellations"),
+                ),
             ]),
         ),
       S.divider(),

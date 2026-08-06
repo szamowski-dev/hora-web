@@ -22,6 +22,10 @@ const mainDocuments = defineDocuments([
     filter: `_type == "legalPage" && kind == "terms"`,
   },
   {
+    route: "/refunds/",
+    filter: `_type == "legalPage" && kind == "refunds"`,
+  },
+  {
     route: "/blog/category/:slug",
     filter: `_type == "blogCategory" && slug.current == $slug`,
     params: ({ params }) => ({ slug: params.slug }),
@@ -54,6 +58,11 @@ const locations = {
       if (document?.kind === "terms") {
         return {
           locations: [{ title: "Terms of Service", href: "/terms/" }],
+        };
+      }
+      if (document?.kind === "refunds") {
+        return {
+          locations: [{ title: "Refunds & Cancellations", href: "/refunds/" }],
         };
       }
       return { locations: [] };
