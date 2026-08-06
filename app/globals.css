@@ -63,6 +63,7 @@
   --color-overlay: oklch(0.22 0.012 260 / 0.045);
   --color-overlay-strong: oklch(0.22 0.012 260 / 0.085);
   --color-dim: oklch(0.22 0.012 260 / 0.42);
+  --color-discord-text: oklch(0.42 0.19 273.9);
   /* Semantic surfaces and effects. */
   --ui-line: oklch(0.22 0.012 260 / 0.12);
   --ui-line-strong: oklch(0.22 0.012 260 / 0.2);
@@ -85,6 +86,7 @@
 
 html[data-theme="dark"] {
   color-scheme: dark;
+  --color-discord-text: oklch(0.8781 0.0608 281);
   --color-bg: oklch(0.182204 0 0);
   --color-section: oklch(0.182204 0 0);
   --color-surface: oklch(0.182204 0 0);

@@ -23,18 +23,27 @@ export const metadata: Metadata = {
 const quickLinks = [
   {
     icon: "sync" as const,
+    color: "text-label-blue",
     title: "Sync problems",
     body: "Include the account type, affected calendar, and whether changes appear in Google Calendar web.",
   },
   {
     icon: "keyboard" as const,
+    color: "text-label-purple",
     title: "Feature requests",
     body: "Describe the workflow you are trying to complete, not only the button you want added.",
   },
   {
     icon: "shield" as const,
+    color: "text-label-green",
     title: "Privacy notes",
     body: "Avoid sending event titles, attendee names, tokens, or screenshots with private calendar data.",
+  },
+  {
+    icon: "hand-heart" as const,
+    color: "text-label-yellow",
+    title: "Direct lifetime refunds",
+    body: "Bought hora Lifetime directly through Paddle? You can request a refund in the form below.",
   },
 ];
 
@@ -90,18 +99,10 @@ export default function SupportPage() {
 
       <section className="bg-bg px-5 py-20 sm:px-10 sm:py-28">
         <div className="mx-auto max-w-landing">
-          <div className="grid gap-10 md:grid-cols-3 md:gap-12">
-            {quickLinks.map((item, index) => (
+          <div className="grid gap-10 md:grid-cols-2 md:gap-12 xl:grid-cols-4">
+            {quickLinks.map((item) => (
               <article key={item.title} className="flex flex-col items-start">
-                <span
-                  className={
-                    index === 0
-                      ? "text-label-blue"
-                      : index === 1
-                        ? "text-label-purple"
-                        : "text-label-green"
-                  }
-                >
+                <span className={item.color}>
                   <Icon name={item.icon} size={28} />
                 </span>
                 <h2 className="mt-5 text-xl font-semibold tracking-[-0.025em] text-text">
