@@ -3,6 +3,7 @@ import { defineField, defineType } from "sanity";
 const LEGAL_IDS = {
   privacy: "privacyPage",
   terms: "termsPage",
+  refunds: "refundsPage",
 } as const;
 
 type LegalDocument = {
@@ -30,6 +31,7 @@ export const legalPage = defineType({
         list: [
           { title: "Privacy Policy", value: "privacy" },
           { title: "Terms of Service", value: "terms" },
+          { title: "Refunds & Cancellations", value: "refunds" },
         ],
       },
       validation: (rule) => rule.required(),
@@ -79,8 +81,13 @@ export const legalPage = defineType({
       const document = value as LegalDocument | undefined;
       const expectedId = document?.kind ? LEGAL_IDS[document.kind] : undefined;
       const id = singletonId(context.document?._id);
-      if (!id || !Object.values(LEGAL_IDS).includes(id as "privacyPage" | "termsPage")) {
-        return "Legal documents must use the fixed IDs privacyPage or termsPage.";
+      if (
+        !id ||
+        !Object.values(LEGAL_IDS).includes(
+          id as "privacyPage" | "termsPage" | "refundsPage",
+        )
+      ) {
+        return "Legal documents must use the fixed IDs privacyPage, termsPage, or refundsPage.";
       }
       return expectedId === id
         ? true
@@ -97,7 +104,11 @@ export const legalPage = defineType({
       return {
         title:
           [prefix, accent].filter(Boolean).join(" ") ||
-          (kind === "privacy" ? "Privacy Policy" : "Terms of Service"),
+          (kind === "privacy"
+            ? "Privacy Policy"
+            : kind === "terms"
+              ? "Terms of Service"
+              : "Refunds & Cancellations"),
         subtitle: lastUpdated ? `Updated ${lastUpdated}` : undefined,
       };
     },

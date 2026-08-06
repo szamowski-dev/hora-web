@@ -119,6 +119,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.3,
     }),
+    ...includeIndexedPage(pageMetadata.refunds.noIndex, {
+      url: `${base}/refunds/`,
+      lastModified: pageMetadata.refunds.lastModified,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    }),
     {
       url: `${base}/zoom-guide/`,
       lastModified: "2026-05-13",

@@ -10,6 +10,7 @@ const categories = [
   { value: "sync", label: "Calendar sync" },
   { value: "account", label: "Account or login" },
   { value: "billing", label: "Billing" },
+  { value: "refund", label: "Paddle refund (direct purchase)" },
   { value: "feature", label: "Feature request" },
   { value: "other", label: "Other" },
 ] as const;
@@ -46,6 +47,8 @@ export function SupportForm() {
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<Status>({ type: "idle" });
   const [showRequestDetails, setShowRequestDetails] = useState(false);
+  const [category, setCategory] = useState<(typeof categories)[number]["value"]>("bug");
+  const [submittedCategory, setSubmittedCategory] = useState<(typeof categories)[number]["value"] | null>(null);
 
   function revealRequestDetails(event: ChangeEvent<HTMLInputElement>) {
     if (showRequestDetails) return;
@@ -72,6 +75,7 @@ export function SupportForm() {
     const form = event.currentTarget;
     const formData = new FormData(form);
     const payload = Object.fromEntries(formData.entries());
+    const requestedCategory = payload.category;
 
     try {
       const res = await fetch("/api/support", {
@@ -94,6 +98,12 @@ export function SupportForm() {
 
       form.reset();
       setShowRequestDetails(false);
+      setCategory("bug");
+      setSubmittedCategory(
+        typeof requestedCategory === "string"
+          ? categories.find((item) => item.value === requestedCategory)?.value ?? null
+          : null,
+      );
       setStatus({ type: "success" });
     } catch {
       setStatus({
@@ -157,7 +167,8 @@ export function SupportForm() {
                 <select
                   name="category"
                   required
-                  defaultValue="bug"
+                  value={category}
+                  onChange={(event) => setCategory(event.target.value as typeof category)}
                   className="h-12 w-full appearance-none rounded-xl border border-line bg-bg/70 px-5 pr-14 text-sm text-text outline-none transition-colors hover:border-line-strong focus-visible:border-white/20"
                 >
                   {categories.map((category) => (
@@ -191,6 +202,22 @@ export function SupportForm() {
             </Field>
           </div>
 
+          {category === "refund" ? (
+            <div className="relative mt-4">
+              <Field
+                label="Paddle transaction ID"
+                hint="Optional, but it helps us find the purchase faster. You can find it in your Paddle receipt."
+              >
+                <Input
+                  name="paddleTransactionId"
+                  maxLength={100}
+                  placeholder="txn_..."
+                  className={fieldClassName}
+                />
+              </Field>
+            </div>
+          ) : null}
+
           <div className="relative mt-4 grid gap-4 sm:grid-cols-2">
             <Field
               label="App version"
@@ -216,7 +243,7 @@ export function SupportForm() {
       ) : null}
 
       <div className="relative mt-4">
-        <Field label="What happened?">
+        <Field label={category === "refund" ? "Why would you like a refund?" : "What happened?"}>
           <textarea
             name="details"
             required
@@ -224,7 +251,11 @@ export function SupportForm() {
             maxLength={4000}
             rows={5}
             className="w-full resize-y rounded-xl border border-line bg-bg/70 px-5 py-4 text-sm leading-6 text-text placeholder:text-muted focus-visible:border-white/20 focus-visible:outline-none"
-            placeholder="Tell us what you expected, what happened instead, and whether it blocks your calendar work."
+            placeholder={
+              category === "refund"
+                ? "Please tell us why you are requesting a refund. Use the same email address as your Paddle purchase."
+                : "Tell us what you expected, what happened instead, and whether it blocks your calendar work."
+            }
           />
         </Field>
       </div>
@@ -279,7 +310,9 @@ export function SupportForm() {
           }
           role="status"
         >
-          {status.type === "success" ? (
+          {status.type === "success" && submittedCategory === "refund" ? (
+            <>Refund request sent. We will verify your Paddle purchase and reply by email.</>
+          ) : status.type === "success" ? (
             <>
               Message sent. For real-time bug reports, quick follow-ups, and
               known issues,{" "}

@@ -30,6 +30,14 @@ const SITEMAP_PAGE_METADATA_QUERY = defineQuery(`
     ][0]{
       "lastModified": lastUpdated,
       "noIndex": coalesce(seo.noIndex, false)
+    },
+    "refunds": *[
+      _id == "refundsPage" &&
+      _type == "legalPage" &&
+      kind == "refunds"
+    ][0]{
+      "lastModified": lastUpdated,
+      "noIndex": coalesce(seo.noIndex, false)
     }
   }
 `);
@@ -45,6 +53,7 @@ type SitemapPageMetadataResult = {
   about?: SitemapPageMetadataValue;
   privacy?: SitemapPageMetadataValue;
   terms?: SitemapPageMetadataValue;
+  refunds?: SitemapPageMetadataValue;
 };
 
 export type SitemapPageMetadata = Record<
@@ -95,6 +104,7 @@ export async function getSitemapPageMetadata(): Promise<SitemapPageMetadata> {
           "site-page:about",
           "site-page:privacy",
           "site-page:terms",
+          "site-page:refunds",
         ],
       },
     },
@@ -110,5 +120,6 @@ export async function getSitemapPageMetadata(): Promise<SitemapPageMetadata> {
     about: requirePageMetadata(result.about, "about", ISO_TIMESTAMP_PATTERN),
     privacy: requirePageMetadata(result.privacy, "privacy", DATE_PATTERN),
     terms: requirePageMetadata(result.terms, "terms", DATE_PATTERN),
+    refunds: requirePageMetadata(result.refunds, "refunds", DATE_PATTERN),
   };
 }

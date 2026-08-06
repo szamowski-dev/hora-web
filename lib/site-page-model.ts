@@ -115,12 +115,12 @@ export type AboutPageData = {
   };
 };
 
-export const LEGAL_PAGE_KINDS = ["privacy", "terms"] as const;
+export const LEGAL_PAGE_KINDS = ["privacy", "terms", "refunds"] as const;
 
 export type LegalPageKind = (typeof LEGAL_PAGE_KINDS)[number];
 
 export type LegalPageData = {
-  id: "privacyPage" | "termsPage";
+  id: "privacyPage" | "termsPage" | "refundsPage";
   updatedAt: string;
   kind: LegalPageKind;
   title: SplitHeading;

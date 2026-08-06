@@ -5,7 +5,7 @@ import { parseBody } from "next-sanity/webhook";
 type SanityWebhookBody = {
   _id?: string;
   _type?: string;
-  kind?: "privacy" | "terms";
+  kind?: "privacy" | "terms" | "refunds";
   slug?: string;
 };
 
@@ -16,10 +16,17 @@ function isPreviewOnlyDocument(id: string | undefined) {
 }
 
 function getLegalKind(body: SanityWebhookBody) {
-  if (body.kind === "privacy" || body.kind === "terms") return body.kind;
+  if (
+    body.kind === "privacy" ||
+    body.kind === "terms" ||
+    body.kind === "refunds"
+  ) {
+    return body.kind;
+  }
   const id = publishedId(body._id);
   if (id === "privacyPage") return "privacy";
   if (id === "termsPage") return "terms";
+  if (id === "refundsPage") return "refunds";
   return null;
 }
 
