@@ -149,7 +149,8 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
               alt={landing.media.hero.light.alt}
               width={landing.media.hero.light.width}
               height={landing.media.hero.light.height}
-              priority
+              preload
+              fetchPriority="high"
               sizes="(max-width: 1280px) 94vw, 1216px"
               className="h-auto w-full"
             />

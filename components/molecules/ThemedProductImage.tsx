@@ -9,8 +9,9 @@ type ThemedProductImageProps = {
   alt: string;
   className?: string;
   darkSrc: string;
+  fetchPriority?: "high" | "low" | "auto";
   lightSrc: string;
-  priority?: boolean;
+  preload?: boolean;
   sizes: string;
   unoptimized?: boolean;
   width: number;
@@ -39,9 +40,10 @@ export function ThemedProductImage({
   alt,
   className,
   darkSrc,
+  fetchPriority,
   height,
   lightSrc,
-  priority,
+  preload,
   sizes,
   unoptimized,
   width,
@@ -54,7 +56,8 @@ export function ThemedProductImage({
       alt={alt}
       width={width}
       height={height}
-      priority={priority}
+      preload={preload}
+      fetchPriority={fetchPriority}
       sizes={sizes}
       unoptimized={unoptimized}
       className={className}
