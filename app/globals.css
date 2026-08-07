@@ -58,6 +58,15 @@
   --color-border: oklch(0.82 0.012 260);
   --color-text: oklch(0.22 0.012 260);
   --color-muted: oklch(0.5 0.024 260);
+  /* Darker semantic accents preserve WCAG AA contrast on light cards and CTA buttons. */
+  --color-accent: oklch(0.55 0.2 25.7);
+  --color-accent-hover: oklch(0.5 0.18 27.3);
+  --color-label-red: oklch(0.5 0.18 22.2);
+  --color-label-blue: oklch(0.47 0.13 244.8);
+  --color-label-green: oklch(0.47 0.13 147.2);
+  --color-label-yellow: oklch(0.48 0.12 84.8);
+  --color-label-purple: oklch(0.5 0.14 306.5);
+  --color-label-cyan: oklch(0.48 0.1 201.7);
   --color-line: oklch(0.22 0.012 260 / 0.12);
   --color-line-strong: oklch(0.22 0.012 260 / 0.2);
   --color-overlay: oklch(0.22 0.012 260 / 0.045);
@@ -97,6 +106,14 @@ html[data-theme="dark"] {
   --color-border: oklch(0.2814 0.0114 271);
   --color-text: oklch(0.9851 0 0);
   --color-muted: oklch(0.7397 0.0203 263);
+  --color-accent: oklch(0.6532 0.2328 25.7);
+  --color-accent-hover: oklch(0.6039 0.2157 27.3);
+  --color-label-red: oklch(0.704 0.191 22.2);
+  --color-label-blue: oklch(0.713 0.15 244.8);
+  --color-label-green: oklch(0.765 0.174 147.2);
+  --color-label-yellow: oklch(0.825 0.16 84.8);
+  --color-label-purple: oklch(0.722 0.163 306.5);
+  --color-label-cyan: oklch(0.786 0.128 201.7);
   --color-line: oklch(0.9851 0 0 / 0.09);
   --color-line-strong: oklch(0.9851 0 0 / 0.14);
   --color-overlay: oklch(0.9851 0 0 / 0.04);

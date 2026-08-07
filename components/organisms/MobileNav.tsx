@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { MdClose, MdMenu } from "react-icons/md";
@@ -24,40 +24,34 @@ export function MobileNav({
   downloadLabel?: string;
 }) {
   const downloadHref = showDownload ? site.cta.trial.href : site.cta.primary.href;
-  const toggleRef = useRef<HTMLInputElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   function closeMenu() {
-    if (toggleRef.current) toggleRef.current.checked = false;
-  }
-
-  function toggleFromKeyboard(event: React.KeyboardEvent<HTMLLabelElement>) {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    event.preventDefault();
-    if (toggleRef.current) toggleRef.current.checked = !toggleRef.current.checked;
+    setIsOpen(false);
   }
 
   return (
     <div className="md:hidden">
       <input
-        ref={toggleRef}
         id={toggleId}
         type="checkbox"
         className="peer sr-only"
         aria-hidden="true"
         tabIndex={-1}
+        checked={isOpen}
+        readOnly
       />
 
-      <label
-        htmlFor={toggleId}
-        role="button"
-        tabIndex={0}
+      <button
+        type="button"
         aria-label="Open menu"
         aria-controls="mobile-navigation"
-        onKeyDown={toggleFromKeyboard}
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen(true)}
         className="absolute right-2 top-1.5 z-20 inline-flex size-11 cursor-pointer touch-manipulation items-center justify-center rounded-full text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent md:right-4 md:top-2.5"
       >
         <MdMenu aria-hidden="true" className="size-6" />
-      </label>
+      </button>
 
       <div
         id="mobile-navigation"
@@ -73,16 +67,14 @@ export function MobileNav({
           <Logo className="min-h-10" />
           <div className="flex items-center gap-1">
             <ThemeToggle />
-            <label
-              htmlFor={toggleId}
-              role="button"
-              tabIndex={0}
+            <button
+              type="button"
               aria-label="Close menu"
-              onKeyDown={toggleFromKeyboard}
+              onClick={closeMenu}
               className="inline-flex size-11 cursor-pointer touch-manipulation items-center justify-center rounded-full text-text transition-colors hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <MdClose aria-hidden="true" className="size-6" />
-            </label>
+            </button>
           </div>
         </div>
 

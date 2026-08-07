@@ -4,12 +4,19 @@ declare global {
   interface Window {
     dataLayer: unknown[][];
     gtag?: (...args: unknown[]) => void;
-    rdt?: (...args: unknown[]) => void;
+    horaGtagReady?: boolean;
+    rdt?: ((...args: unknown[]) => void) & { callQueue: unknown[][] };
+    Cookiebot?: {
+      consent?: {
+        marketing?: boolean;
+      };
+    };
   }
 }
 
 export const REDDIT_PIXEL_ID = "a2_j1933bxzyyfr";
 export const GA_MEASUREMENT_ID = "G-WQZ32S81FX";
+export const GOOGLE_ADS_ID = "AW-18070613857";
 
 export type EventProps = Record<string, string | number | boolean>;
 
@@ -108,6 +115,7 @@ async function sha256Hex(text: string): Promise<string | null> {
 // email; we never send the raw address.
 export async function redditIdentify(email: string) {
   if (typeof window === "undefined") return;
+  if (!window.Cookiebot?.consent?.marketing) return;
   const normalized = normalizeEmail(email);
   if (!normalized || isTestEmail(normalized)) return;
   const hashed = await sha256Hex(normalized);
@@ -119,6 +127,7 @@ export async function redditIdentify(email: string) {
 
 export function redditTrack(event: string, props?: EventProps) {
   if (typeof window === "undefined") return;
+  if (!window.Cookiebot?.consent?.marketing) return;
   if (typeof window.rdt === "function") {
     window.rdt("track", event, props);
   }
