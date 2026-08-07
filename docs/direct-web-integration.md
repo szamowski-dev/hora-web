@@ -1,11 +1,35 @@
 # Direct web integration
 
-The website has one intentionally small responsibility for the Direct app:
-resolve the current signed Direct installer from the release manifest.
+The website has two intentionally small responsibilities for the Direct app:
+resolve its canonical billing identity and the current signed installer.
 
-RevenueCat Funnel owns checkout and the Direct app supplies its own local App
-User ID. The website does not load `purchases-js`, verify Google identity,
+RevenueCat Funnel owns checkout. The website does not load `purchases-js`,
 fetch RevenueCat offerings, or keep a second product catalogue.
+
+## Direct identity endpoint
+
+`POST /api/direct/identity` accepts only a fresh Google ID token in the
+`Authorization: Bearer` header. The server verifies the JWT signature against
+Google JWKS and validates its issuer, native OAuth audience, expiry, issued-at
+time, and subject.
+
+The verified canonical Google issuer and subject are converted to an opaque,
+stable RevenueCat App User ID using HMAC-SHA256:
+
+```text
+usr_direct_v1_<base64url digest>
+```
+
+The Google subject, email address, and raw token are never returned, sent to
+RevenueCat, or logged. The server-only configuration is:
+
+```text
+GOOGLE_OAUTH_NATIVE_CLIENT_IDS=<comma-separated OAuth client IDs>
+DIRECT_IDENTITY_HMAC_KEY_V1=<64 hex characters>
+```
+
+`DIRECT_IDENTITY_HMAC_KEY_V1` is part of the customer identity contract. Do not
+replace it without migrating the existing RevenueCat identities.
 
 ## Direct download endpoint
 
