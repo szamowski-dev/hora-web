@@ -32,7 +32,7 @@ export const siteImage = defineType({
   ],
   validation: (rule) =>
     rule.custom((value) =>
-      value?.asset ? true : "Choose or upload an image asset.",
+      !value || value.asset ? true : "Choose or upload an image asset.",
     ),
   preview: {
     select: { title: "alt", subtitle: "caption", media: "asset" },
