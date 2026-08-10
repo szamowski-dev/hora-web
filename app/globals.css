@@ -61,12 +61,14 @@
   /* Darker semantic accents preserve WCAG AA contrast on light cards and CTA buttons. */
   --color-accent: oklch(0.55 0.2 25.7);
   --color-accent-hover: oklch(0.5 0.18 27.3);
-  --color-label-red: oklch(0.5 0.18 22.2);
-  --color-label-blue: oklch(0.47 0.13 244.8);
-  --color-label-green: oklch(0.47 0.13 147.2);
-  --color-label-yellow: oklch(0.48 0.12 84.8);
-  --color-label-purple: oklch(0.5 0.14 306.5);
-  --color-label-cyan: oklch(0.48 0.1 201.7);
+  /* These tokens colour decorative Material icons and rules, not body text.
+     Keep their recognizable Google-style saturation in the light theme. */
+  --color-label-red: #ea4335;
+  --color-label-blue: #4285f4;
+  --color-label-green: #34a853;
+  --color-label-yellow: #fbbc05;
+  --color-label-purple: #a142f4;
+  --color-label-cyan: #24c1e0;
   --color-line: oklch(0.22 0.012 260 / 0.12);
   --color-line-strong: oklch(0.22 0.012 260 / 0.2);
   --color-overlay: oklch(0.22 0.012 260 / 0.045);
