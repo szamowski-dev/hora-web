@@ -161,12 +161,12 @@ export default async function RootLayout({
 
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           data-cookieconsent="ignore"
         />
         <Script
           id="gads-init"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           data-cookieconsent="ignore"
         >
           {`
