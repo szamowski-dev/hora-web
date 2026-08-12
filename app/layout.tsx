@@ -128,15 +128,14 @@ export default async function RootLayout({
         className="min-h-dvh flex flex-col text-text"
         style={{ overscrollBehaviorY: "none" }}
       >
-        {/* Cookiebot is moved to lazyOnload because its dialog markup was
-            being picked as the LCP element (2.4s render delay on mobile).
-            GA's default-denied Consent Mode is initialized in the head first. */}
+        {/* Consent Mode starts before hydration; Cookiebot follows as soon as
+            the app is interactive so it can apply the visitor's choice. */}
         <Script
           id="Cookiebot"
           src="https://consent.cookiebot.com/uc.js"
           data-cbid="93e42c2d-57e2-448f-9699-a65ce0fffdbd"
           data-blockingmode="auto"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
 
         <AmbientGlow />
