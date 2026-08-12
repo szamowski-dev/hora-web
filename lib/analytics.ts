@@ -9,6 +9,7 @@ declare global {
     Cookiebot?: {
       consent?: {
         marketing?: boolean;
+        statistics?: boolean;
       };
     };
   }

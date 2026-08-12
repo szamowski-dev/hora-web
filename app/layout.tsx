@@ -8,6 +8,7 @@ import { Footer } from "@/components/organisms/Footer";
 import { AmbientGlow } from "@/components/organisms/AmbientGlow";
 import { LayoutEnhancements } from "@/components/molecules/LayoutEnhancements";
 import { DraftModeTools } from "@/components/sanity/DraftModeTools";
+import { ConsentMode } from "@/components/molecules/ConsentMode";
 import { MarketingTracking } from "@/components/molecules/MarketingTracking";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 import { getPricingPage } from "@/lib/pricing-repository";
@@ -129,8 +130,7 @@ export default async function RootLayout({
       >
         {/* Cookiebot is moved to lazyOnload because its dialog markup was
             being picked as the LCP element (2.4s render delay on mobile).
-            The default-denied consent initialized in instrumentation-client.ts
-            keeps us compliant until the banner finishes loading post window.load. */}
+            GA's default-denied Consent Mode is initialized in the head first. */}
         <Script
           id="Cookiebot"
           src="https://consent.cookiebot.com/uc.js"
@@ -160,24 +160,37 @@ export default async function RootLayout({
         {isDraftMode ? <DraftModeTools /> : null}
 
         <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-          data-cookieconsent="ignore"
-        />
-        <Script
           id="gads-init"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
           data-cookieconsent="ignore"
         >
           {`
             window.dataLayer = window.dataLayer || [];
             window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
+            window.gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'denied',
+              functionality_storage: 'denied',
+              personalization_storage: 'denied',
+              security_storage: 'granted',
+              wait_for_update: 500,
+            });
+            window.gtag('set', 'ads_data_redaction', true);
+            window.gtag('set', 'url_passthrough', true);
             window.gtag('js', new Date());
             window.gtag('config', '${GA_MEASUREMENT_ID}', { send_page_view: false });
             window.horaGtagReady = true;
             window.dispatchEvent(new Event('hora-gtag-ready'));
           `}
         </Script>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="beforeInteractive"
+          data-cookieconsent="ignore"
+        />
+        <ConsentMode />
         <MarketingTracking />
 
         <script
