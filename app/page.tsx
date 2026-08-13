@@ -49,6 +49,7 @@ export default async function Home() {
     name: "hora Calendar",
     description: content.seo.description,
     url: "https://horacal.app",
+    downloadUrl: "https://horacal.app/download/direct/",
     applicationCategory: "BusinessApplication",
     operatingSystem: "macOS",
     offers: {
@@ -58,10 +59,10 @@ export default async function Home() {
       priceCurrency: "USD",
       offerCount: 2,
     },
-    author: {
-      "@type": "Person",
-      name: "Maciej Szamowski",
-      url: "https://szamowski.dev",
+    publisher: {
+      "@type": "Organization",
+      name: "NA SERIO Maciej Szamowski",
+      url: "https://horacal.app",
     },
     image: "https://horacal.app/assets/brand/hora-icon.png",
     screenshot: content.productLanding.media.hero.light.src,
