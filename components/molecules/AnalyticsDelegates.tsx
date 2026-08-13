@@ -30,22 +30,29 @@ export function AnalyticsDelegates() {
 
       const url = new URL(anchor.href, window.location.href);
       const normalizedPath = url.pathname.replace(/\/+$/, "");
+      const isDirectDownload = normalizedPath === "/download/direct";
       if (
         url.origin !== window.location.origin ||
-        normalizedPath !== "/download" ||
-        eventName === ANALYTICS_EVENTS.downloadClick
+        (normalizedPath !== "/download" && !isDirectDownload) ||
+        eventName === ANALYTICS_EVENTS.downloadClick ||
+        eventName === ANALYTICS_EVENTS.directDownloadClick
       ) {
         return;
       }
 
-      track(ANALYTICS_EVENTS.downloadClick, {
-        ...props,
-        link_text:
-          props?.link_text ||
-          anchor.textContent?.replace(/\s+/g, " ").trim() ||
-          "Download",
-        link_url: `${url.pathname}${url.search}${url.hash}`,
-      });
+      track(
+        isDirectDownload
+          ? ANALYTICS_EVENTS.directDownloadClick
+          : ANALYTICS_EVENTS.downloadClick,
+        {
+          ...props,
+          link_text:
+            props?.link_text ||
+            anchor.textContent?.replace(/\s+/g, " ").trim() ||
+            "Download",
+          link_url: `${url.pathname}${url.search}${url.hash}`,
+        },
+      );
     }
 
     document.addEventListener("click", onClick, { capture: true });

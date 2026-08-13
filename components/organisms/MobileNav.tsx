@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { ANALYTICS_EVENTS } from "@/lib/analyticsSchema";
 import {
   DIRECT_DOWNLOAD_HREF,
   DIRECT_DOWNLOAD_LABEL,
@@ -104,9 +105,10 @@ export function MobileNav({
               <Link
                 href={DIRECT_DOWNLOAD_HREF}
                 onClick={closeMenu}
-                {...analyticsAttrs("nav_click", {
+                {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
                   link_text: DIRECT_DOWNLOAD_LABEL,
                   link_url: DIRECT_DOWNLOAD_HREF,
+                  placement: "mobile_nav",
                 })}
               >
                 {DIRECT_DOWNLOAD_LABEL}

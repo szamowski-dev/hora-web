@@ -94,7 +94,7 @@ export default async function PricingPage() {
               <Button asChild size="lg" className="w-full sm:w-auto">
                 <a
                   href={DIRECT_DOWNLOAD_HREF}
-                  {...analyticsAttrs(ANALYTICS_EVENTS.downloadClick, {
+                  {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
                     placement: ANALYTICS_PLACEMENTS.pricing,
                     destination: "direct_download",
                   })}

@@ -24,7 +24,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import type { HomePageContent } from "@/lib/home-model";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
-import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
+import { ANALYTICS_EVENTS, ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { site } from "@/content/site";
 import {
   DIRECT_DOWNLOAD_HREF,
@@ -98,9 +98,10 @@ export function ProductLanding({
               <Button asChild size="lg" variant="accent">
                 <Link
                   href={DIRECT_DOWNLOAD_HREF}
-                  {...analyticsAttrs("nav_click", {
+                  {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
                     link_text: DIRECT_DOWNLOAD_LABEL,
                     link_url: DIRECT_DOWNLOAD_HREF,
+                    placement: ANALYTICS_PLACEMENTS.hero,
                   })}
                 >
                   <MdDownloadForOffline

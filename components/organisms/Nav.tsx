@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/molecules/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { ANALYTICS_EVENTS } from "@/lib/analyticsSchema";
 import {
   DIRECT_DOWNLOAD_HREF,
   DIRECT_DOWNLOAD_LABEL,
@@ -51,9 +52,10 @@ export function Nav({
               <Button asChild size="sm">
                 <Link
                   href={DIRECT_DOWNLOAD_HREF}
-                  {...analyticsAttrs("nav_click", {
+                  {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
                     link_text: DIRECT_DOWNLOAD_LABEL,
                     link_url: DIRECT_DOWNLOAD_HREF,
+                    placement: "nav",
                   })}
                 >
                   {DIRECT_DOWNLOAD_LABEL}
