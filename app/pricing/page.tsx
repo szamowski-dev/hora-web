@@ -13,11 +13,7 @@ import { defaultOg } from "@/lib/og";
 import { getPricingPage } from "@/lib/pricing-repository";
 import {
   DIRECT_DOWNLOAD_HREF,
-  DIRECT_DOWNLOAD_LABEL,
   DIRECT_CHECKOUT_PRICE_NOTE,
-  DIRECT_PRICING_FAQ_ITEMS,
-  DIRECT_PRICING_HERO,
-  DIRECT_PRICING_PLANS,
 } from "@/lib/direct/commerce-contract";
 
 export const revalidate = 600;
@@ -42,7 +38,7 @@ export default async function PricingPage() {
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: DIRECT_PRICING_FAQ_ITEMS.map((item) => ({
+    mainEntity: content.faq.items.map((item) => ({
       "@type": "Question",
       name: item.question,
       acceptedAnswer: { "@type": "Answer", text: item.answer },
@@ -53,15 +49,15 @@ export default async function PricingPage() {
     <>
       <SitePageHero
         align="center"
-        title={DIRECT_PRICING_HERO.title}
-        description={DIRECT_PRICING_HERO.description}
+        title={content.hero.title}
+        description={content.hero.description}
       />
       <main className="px-5 pb-20 pt-12 sm:px-8 sm:pb-28 sm:pt-16">
         <section
           aria-label="Plans"
           className="mx-auto grid max-w-[960px] gap-4 md:grid-cols-2"
         >
-          {DIRECT_PRICING_PLANS.map((plan) => (
+          {content.plans.map((plan) => (
             <article
               key={`${plan.name}-${plan.price}`}
               className="flex min-h-[24rem] flex-col rounded-[28px] border border-line bg-panel/55 p-6 shadow-[0_24px_70px_-42px_var(--ui-shadow-neutral)] sm:p-7"
@@ -104,7 +100,7 @@ export default async function PricingPage() {
                   })}
                 >
                   <MdDownloadForOffline data-icon="inline-start" aria-hidden />
-                  {DIRECT_DOWNLOAD_LABEL}
+                  {content.direct.downloadLabel}
                 </a>
               </Button>
             </div>
@@ -186,7 +182,7 @@ export default async function PricingPage() {
             {content.faq.title}
           </h2>
           <div className="mt-7 overflow-hidden rounded-[28px] border border-line bg-panel/55">
-            {DIRECT_PRICING_FAQ_ITEMS.map((item) => (
+            {content.faq.items.map((item) => (
               <details
                 key={item.question}
                 className="group border-b border-line last:border-b-0"
