@@ -52,8 +52,8 @@ export default async function Home() {
     operatingSystem: "macOS",
     offers: {
       "@type": "AggregateOffer",
-      lowPrice: "29.99",
-      highPrice: "49.00",
+      lowPrice: "2.99",
+      highPrice: "29.99",
       priceCurrency: "USD",
       offerCount: 2,
     },

@@ -1,5 +1,11 @@
 import { getCliClient } from "sanity/cli";
 import { apiVersion, dataset, projectId } from "../sanity/env";
+import {
+  DIRECT_SUPPORT_REFUND_BODY,
+  DIRECT_SUPPORT_REFUND_FAQ,
+  DIRECT_SUPPORT_REFUND_TITLE,
+} from "../lib/direct/support-content";
+import { DIRECT_DOWNLOAD_LABEL } from "../lib/direct/commerce-contract";
 
 const EXPECTED_SINGLETONS = {
   homePage: "homePage",
@@ -8,6 +14,7 @@ const EXPECTED_SINGLETONS = {
   aboutPage: "aboutPage",
   privacyPage: "legalPage",
   termsPage: "legalPage",
+  refundsPage: "legalPage",
 } as const;
 
 const TITLE_SUFFIX = " — hora Calendar";
@@ -88,6 +95,33 @@ function requiredText(value: unknown, path: string): string {
 function optionalText(value: unknown, path: string): string | undefined {
   if (value === undefined || value === null || value === "") return undefined;
   return requiredText(value, path);
+}
+
+function searchableText(value: unknown): string {
+  const fragments: string[] = [];
+  function visit(current: unknown) {
+    if (typeof current === "string") {
+      fragments.push(current);
+      return;
+    }
+    if (Array.isArray(current)) {
+      for (const item of current) visit(item);
+      return;
+    }
+    if (isRecord(current)) {
+      for (const item of Object.values(current)) visit(item);
+    }
+  }
+  visit(value);
+  return fragments.join(" ").replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+function expectCopy(
+  content: string,
+  expected: string,
+  path: string,
+) {
+  expect(content.includes(expected.toLowerCase()), `${path} must include “${expected}”`);
 }
 
 function requiredInteger(value: unknown, path: string, minimum = 1): number {
@@ -295,9 +329,28 @@ function validatePricing(document: SiteDocument) {
     validateStringArray(plan.features, `${path}.features`);
     expect(typeof plan.featured === "boolean", `${path}.featured must be boolean`);
   }
+  expect(plans.length === 2, "pricingPage.plans must contain exactly Monthly and Annual");
+  const plansByName = new Map(
+    plans.map((plan) => [requiredText(plan.name, "pricingPage.plans[].name").toLowerCase(), plan]),
+  );
+  const monthly = plansByName.get("monthly");
+  const annual = plansByName.get("annual");
+  expect(monthly, "pricingPage.plans must contain Monthly");
+  expect(annual, "pricingPage.plans must contain Annual");
+  expect(!plansByName.has("lifetime"), "pricingPage must not offer a new Lifetime plan");
+  expectCopy(requiredText(monthly.price, "pricingPage Monthly price"), "2.99", "pricingPage Monthly price");
+  expectCopy(requiredText(monthly.suffix, "pricingPage Monthly suffix"), "month", "pricingPage Monthly suffix");
+  expectCopy(requiredText(annual.price, "pricingPage Annual price"), "29.99", "pricingPage Annual price");
+  expectCopy(requiredText(annual.suffix, "pricingPage Annual suffix"), "year", "pricingPage Annual suffix");
   const direct = requiredObject(document.direct, "pricingPage.direct");
   for (const field of ["showDownload", "showTerminalPrompt"]) expect(typeof direct[field] === "boolean", `pricingPage.direct.${field} must be boolean`);
   for (const field of ["downloadLabel", "terminalCommand", "terminalRequirement", "copyLabel", "copiedLabel"]) requiredText(direct[field], `pricingPage.direct.${field}`);
+  expect(direct.showDownload === true, "pricingPage.direct.showDownload must be true");
+  expect(direct.showTerminalPrompt === false, "pricingPage.direct.showTerminalPrompt must be false");
+  expect(
+    direct.downloadLabel === DIRECT_DOWNLOAD_LABEL,
+    `pricingPage.direct.downloadLabel must be “${DIRECT_DOWNLOAD_LABEL}”`,
+  );
   const distribution = requiredObject(document.distribution, "pricingPage.distribution");
   for (const field of ["title", "description", "macAppStoreTitle", "macAppStoreDescription", "macAppStoreLabel", "setappTitle", "setappDescription", "setappLabel"]) requiredText(distribution[field], `pricingPage.distribution.${field}`);
   expect(typeof distribution.showMacAppStore === "boolean", "pricingPage.distribution.showMacAppStore must be boolean");
@@ -311,6 +364,14 @@ function validatePricing(document: SiteDocument) {
     requiredText(item.answer, `pricingPage.faq.items[${index}].answer`);
   }
   requiredText(document.footer, "pricingPage.footer");
+
+  const publicCopy = searchableText(document);
+  expectCopy(publicCopy, "7-day", "pricingPage public copy");
+  expectCopy(publicCopy, "cardless", "pricingPage public copy");
+  expectCopy(publicCopy, "no new lifetime", "pricingPage public copy");
+  for (const forbidden of ["14-day", "14 day", "24-hour", "24 hour"]) {
+    expect(!publicCopy.includes(forbidden), `pricingPage public copy must not promise ${forbidden}`);
+  }
 }
 
 function validateHome(document: SiteDocument) {
@@ -524,7 +585,7 @@ function validateAbout(document: SiteDocument) {
   }
 }
 
-function validateLegal(document: SiteDocument, kind: "privacy" | "terms") {
+function validateLegal(document: SiteDocument, kind: "privacy" | "terms" | "refunds") {
   const path = `${kind}Page`;
   expect(document.kind === kind, `${path}.kind must be ${kind}`);
   const title = requiredObject(document.title, `${path}.title`);
@@ -540,6 +601,46 @@ function validateLegal(document: SiteDocument, kind: "privacy" | "terms") {
   expect(lastUpdated <= new Date().toISOString().slice(0, 10), `${path}.lastUpdated is in the future`);
   validateSeo(document.seo, `${path}.seo`, false);
   validatePortableText(document.body, `${path}.body`);
+
+  if (kind === "refunds") {
+    const publicCopy = searchableText(document.body);
+    expectCopy(publicCopy, "reviewed case by case", "refundsPage.body");
+    expectCopy(
+      publicCopy,
+      "refund and cancellation of automatic renewal are separate actions",
+      "refundsPage.body",
+    );
+    for (const forbidden of ["14-day", "14 day", "24-hour", "24 hour"]) {
+      expect(!publicCopy.includes(forbidden), `refundsPage.body must not promise ${forbidden}`);
+    }
+  }
+  if (kind === "privacy") {
+    const publicCopy = searchableText(document.body);
+    for (const expected of [
+      "pseudonymous billing id",
+      "apns",
+      "cloudflare worker",
+      "revenuecat",
+      "60 days",
+    ]) {
+      expectCopy(publicCopy, expected, "privacyPage.body");
+    }
+  }
+}
+
+function validateCodeOwnedDirectSupport() {
+  const publicCopy = searchableText([
+    DIRECT_SUPPORT_REFUND_TITLE,
+    DIRECT_SUPPORT_REFUND_BODY,
+    DIRECT_SUPPORT_REFUND_FAQ,
+  ]);
+  expectCopy(publicCopy, "direct purchase refunds", "support Direct refund copy");
+  expectCopy(publicCopy, "reviewed case by case", "support Direct refund copy");
+  expectCopy(
+    publicCopy,
+    "refund and cancellation of automatic renewal are separate actions",
+    "support Direct refund copy",
+  );
 }
 
 function collectReferences(value: unknown, output = new Set<string>()) {
@@ -580,7 +681,7 @@ async function main() {
       !(_id in path("drafts.**")) &&
       !(_id in path("versions.**"))
     ],
-    "fixedIdDocuments": *[_id in ["homePage", "pricingPage", "featuresPage", "aboutPage", "privacyPage", "termsPage"]]{_id,_type},
+    "fixedIdDocuments": *[_id in ["homePage", "pricingPage", "featuresPage", "aboutPage", "privacyPage", "termsPage", "refundsPage"]]{_id,_type},
     "drafts": *[
       _type in ["homePage", "pricingPage", "featuresPage", "aboutPage", "legalPage"] &&
       _id in path("drafts.**")
@@ -625,12 +726,15 @@ async function main() {
   const about = documents.get("aboutPage")!;
   const privacy = documents.get("privacyPage")!;
   const terms = documents.get("termsPage")!;
+  const refunds = documents.get("refundsPage")!;
   validateHome(home);
   validatePricing(pricing);
   validateFeatures(features);
   validateAbout(about);
   validateLegal(privacy, "privacy");
   validateLegal(terms, "terms");
+  validateLegal(refunds, "refunds");
+  validateCodeOwnedDirectSupport();
 
   const allReferences = Array.from(collectReferences(snapshot.siteDocuments));
   const resolvedDocuments = await client.fetch<ResolvedDocument[]>(
@@ -662,7 +766,7 @@ async function main() {
   const fileAssets = resolvedDocuments.filter((document) => document._type === "sanity.fileAsset").length;
   console.log("\nSANITY SITE CONTENT VERIFIED");
   console.log(
-    `6 published singletons; 0 duplicates; ${snapshot.drafts.length} valid draft(s); anonymous reads: 6/6`,
+    `7 published singletons; 0 duplicates; ${snapshot.drafts.length} valid draft(s); anonymous reads: 7/7`,
   );
   console.log(`${imageAssets} image assets, ${fileAssets} file assets, ${allReferences.length} resolved references`);
   console.log("Rendered SEO titles, editorial legal dates, enums, arrays, links, and Portable Text are valid");

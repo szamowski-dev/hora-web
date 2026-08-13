@@ -6,6 +6,12 @@ import { SitePageHero } from "@/components/templates/SitePageHero";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { defaultOg } from "@/lib/og";
+import {
+  DIRECT_SUPPORT_REFUND_BODY,
+  DIRECT_SUPPORT_REFUND_FAQ,
+  DIRECT_SUPPORT_REFUND_TITLE,
+  HORA_INSTALLATION_FAQ,
+} from "@/lib/direct/support-content";
 
 export const metadata: Metadata = {
   title: "hora Calendar Support",
@@ -42,8 +48,8 @@ const quickLinks = [
   {
     icon: "hand-heart" as const,
     color: "text-label-yellow",
-    title: "Direct lifetime refunds",
-    body: "Bought hora Lifetime directly through Paddle? You can request a refund in the form below.",
+    title: DIRECT_SUPPORT_REFUND_TITLE,
+    body: DIRECT_SUPPORT_REFUND_BODY,
   },
 ];
 
@@ -70,11 +76,11 @@ const faqItems = [
   },
   {
     q: "How do I install hora?",
-    a: "hora is on the Mac App Store — download it there. A native iOS and iPadOS app is coming next; subscribe to the newsletter for a heads-up when the iOS/iPadOS TestFlight beta opens.",
+    a: HORA_INSTALLATION_FAQ,
   },
   {
     q: "How do I request a refund for a direct purchase?",
-    a: "Choose “Paddle refund (direct purchase)” in the support form and use the email address from your Paddle receipt. Add the Paddle transaction ID if you have it. Mac App Store purchases are refunded by Apple.",
+    a: DIRECT_SUPPORT_REFUND_FAQ,
   },
 ];
 

@@ -4,20 +4,43 @@ import { checkRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
-const bodySchema = z.object({
-  name: z.string().trim().min(2).max(80),
-  email: z.string().trim().email().max(254),
-  category: z.enum(["bug", "account", "sync", "billing", "refund", "feature", "other"]),
-  summary: z.string().trim().min(8).max(120),
-  details: z.string().trim().min(20).max(4000),
-  appVersion: z.string().trim().max(40).optional(),
-  osVersion: z.string().trim().max(80).optional(),
-  steps: z.string().trim().max(2000).optional(),
-  paddleTransactionId: z.string().trim().max(100).optional(),
-  honey: z.string().max(0).optional(),
-});
+const refundOutcomes = ["refund_only", "refund_and_cancel"] as const;
+type RefundOutcome = (typeof refundOutcomes)[number];
 
-const categoryLabels: Record<z.infer<typeof bodySchema>["category"], string> = {
+export const supportBodySchema = z
+  .object({
+    name: z.string().trim().min(2).max(80),
+    email: z.string().trim().email().max(254),
+    category: z.enum(["bug", "account", "sync", "billing", "refund", "feature", "other"]),
+    summary: z.string().trim().min(8).max(120),
+    details: z.string().trim().min(20).max(4000),
+    appVersion: z.string().trim().max(40).optional(),
+    osVersion: z.string().trim().max(80).optional(),
+    steps: z.string().trim().max(2000).optional(),
+    paddleTransactionId: z.string().trim().max(100).optional(),
+    refundOutcome: z.enum(refundOutcomes).optional(),
+    honey: z.string().max(0).optional(),
+  })
+  .superRefine((input, context) => {
+    if (input.category === "refund" && !input.refundOutcome) {
+      context.addIssue({
+        code: "custom",
+        path: ["refundOutcome"],
+        message: "Choose whether the refund should also cancel renewal.",
+      });
+    }
+    if (input.category !== "refund" && input.refundOutcome) {
+      context.addIssue({
+        code: "custom",
+        path: ["refundOutcome"],
+        message: "Refund outcome is only valid for refund requests.",
+      });
+    }
+  });
+
+type SupportInput = z.infer<typeof supportBodySchema>;
+
+const categoryLabels: Record<SupportInput["category"], string> = {
   bug: "Bug report",
   account: "Account or login",
   sync: "Calendar sync",
@@ -27,7 +50,7 @@ const categoryLabels: Record<z.infer<typeof bodySchema>["category"], string> = {
   other: "Other",
 };
 
-const categoryIssueTypes: Record<z.infer<typeof bodySchema>["category"], "Bug" | "Feature"> = {
+const categoryIssueTypes: Record<SupportInput["category"], "Bug" | "Feature"> = {
   bug: "Bug",
   account: "Bug",
   sync: "Bug",
@@ -79,12 +102,20 @@ function getIssueLabels(): string[] {
     .filter((label, index, labels) => label && labels.indexOf(label) === index);
 }
 
-function issueBody(input: z.infer<typeof bodySchema>): string {
+const refundOutcomeLabels: Record<RefundOutcome, string> = {
+  refund_only: "Refund only — keep automatic renewal unchanged",
+  refund_and_cancel: "Refund and cancel automatic renewal",
+};
+
+export function issueBody(input: SupportInput): string {
   const optionalRows = [
     input.appVersion ? `| App version | ${input.appVersion} |` : null,
     input.osVersion ? `| OS version | ${input.osVersion} |` : null,
     input.paddleTransactionId
       ? `| Paddle transaction ID | ${input.paddleTransactionId} |`
+      : null,
+    input.refundOutcome
+      ? `| Requested refund outcome | ${refundOutcomeLabels[input.refundOutcome]} |`
       : null,
   ].filter(Boolean);
 
@@ -133,7 +164,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json().catch(() => null);
-  const parsed = bodySchema.safeParse(body);
+  const parsed = supportBodySchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Please check the form and try again." },

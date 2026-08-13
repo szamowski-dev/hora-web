@@ -1,9 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
-import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { MdClose, MdMenu } from "react-icons/md";
 import { Logo } from "@/components/atoms/Logo";
 import { ThemeToggle } from "@/components/molecules/ThemeToggle";
@@ -11,19 +9,18 @@ import { Button } from "@/components/ui/button";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import {
+  DIRECT_DOWNLOAD_HREF,
+  DIRECT_DOWNLOAD_LABEL,
+} from "@/lib/direct/commerce-contract";
 
 const toggleId = "mobile-navigation-toggle";
 
 export function MobileNav({
   activePath,
-  showDownload = false,
-  downloadLabel = site.cta.trial.label,
 }: {
   activePath?: string;
-  showDownload?: boolean;
-  downloadLabel?: string;
 }) {
-  const downloadHref = showDownload ? site.cta.trial.href : site.cta.primary.href;
   const [isOpen, setIsOpen] = useState(false);
 
   function closeMenu() {
@@ -31,7 +28,7 @@ export function MobileNav({
   }
 
   return (
-    <div className="md:hidden">
+    <div className="xl:hidden">
       <input
         id={toggleId}
         type="checkbox"
@@ -98,41 +95,18 @@ export function MobileNav({
               {item.label}
             </Link>
           ))}
-          {showDownload ? (
-            <Button asChild size="lg" className="mt-7 w-full">
-              <Link
-                href={downloadHref}
-                onClick={closeMenu}
-                {...analyticsAttrs("nav_click", {
-                  link_text: downloadLabel,
-                  link_url: downloadHref,
-                })}
-              >
-                {downloadLabel}
-              </Link>
-            </Button>
-          ) : (
-            <AppStoreLink
-              href={downloadHref}
-              target="_blank"
-              rel="noopener noreferrer"
+          <Button asChild size="lg" className="mt-7 w-full">
+            <Link
+              href={DIRECT_DOWNLOAD_HREF}
               onClick={closeMenu}
-              aria-label={site.cta.primary.label}
-              className="app-store-interactive mt-7 inline-flex h-12 self-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-              {...analyticsAttrs("app_store_cta_click", {
-                placement: "nav",
-                destination: "mac_app_store",
+              {...analyticsAttrs("nav_click", {
+                link_text: DIRECT_DOWNLOAD_LABEL,
+                link_url: DIRECT_DOWNLOAD_HREF,
               })}
             >
-              <Image
-                src={site.macAppStoreBadgeSrc}
-                alt={site.cta.primary.label}
-                width={162}
-                height={50}
-                className="h-12 w-auto"
-              />
-            </AppStoreLink>
-          )}
+              {DIRECT_DOWNLOAD_LABEL}
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

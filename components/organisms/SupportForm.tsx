@@ -203,7 +203,42 @@ export function SupportForm() {
           </div>
 
           {category === "refund" ? (
-            <div className="relative mt-4">
+            <div className="relative mt-4 grid gap-4 sm:grid-cols-2">
+              <Field
+                label="What should happen to automatic renewal?"
+                hint="A refund and cancellation are separate Paddle actions. Choose the exact outcome you want."
+              >
+                <span className="relative block">
+                  <select
+                    name="refundOutcome"
+                    required
+                    defaultValue=""
+                    className="h-12 w-full appearance-none rounded-xl border border-line bg-bg/70 px-5 pr-14 text-sm text-text outline-none transition-colors hover:border-line-strong focus-visible:border-white/20"
+                  >
+                    <option value="" disabled>
+                      Choose an outcome
+                    </option>
+                    <option value="refund_only">
+                      Refund only — keep renewal unchanged
+                    </option>
+                    <option value="refund_and_cancel">
+                      Refund and cancel automatic renewal
+                    </option>
+                  </select>
+                  <svg
+                    aria-hidden
+                    className="pointer-events-none absolute right-5 top-1/2 h-4 w-4 -translate-y-1/2 text-text/80"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </span>
+              </Field>
               <Field
                 label="Paddle transaction ID"
                 hint="Optional, but it helps us find the purchase faster. You can find it in your Paddle receipt."
@@ -311,7 +346,7 @@ export function SupportForm() {
           role="status"
         >
           {status.type === "success" && submittedCategory === "refund" ? (
-            <>Refund request sent. We will verify your Paddle purchase and reply by email.</>
+            <>Refund request sent with your selected renewal outcome. We will verify your Paddle purchase and reply by email.</>
           ) : status.type === "success" ? (
             <>
               Message sent. For real-time bug reports, quick follow-ups, and

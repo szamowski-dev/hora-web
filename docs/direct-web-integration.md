@@ -1,7 +1,8 @@
 # Direct web integration
 
-The website has two intentionally small responsibilities for the Direct app:
-resolve its canonical billing identity and the current signed installer.
+The website has three intentionally small responsibilities for the Direct app:
+resolve its canonical billing identity, register its entitlement-push token,
+and resolve the current signed installer.
 
 RevenueCat Funnel owns checkout. The website does not load `purchases-js`,
 fetch RevenueCat offerings, or keep a second product catalogue.
@@ -30,6 +31,43 @@ DIRECT_IDENTITY_HMAC_KEY_V1=<64 hex characters>
 
 `DIRECT_IDENTITY_HMAC_KEY_V1` is part of the customer identity contract. Do not
 replace it without migrating the existing RevenueCat identities.
+
+Both Direct API routes use stable machine-readable failures:
+
+```json
+{"code":"identity_unavailable","retryable":true,"retry_after_seconds":30}
+```
+
+HTTP 429 and 503 responses that include `retry_after_seconds` also include the
+matching `Retry-After` header. Clients must not parse human-readable messages.
+
+## Direct entitlement push registration
+
+`POST /api/direct/push/device` accepts the same fresh Google bearer ID token and
+the strict JSON body below:
+
+```json
+{
+  "action": "register",
+  "apns_token": "<32–200 even-length hexadecimal characters>",
+  "apns_environment": "production"
+}
+```
+
+`action` can be `register` or `unregister`; `apns_environment` can be
+`sandbox` or `production`. The APNs token is treated as opaque bytes encoded as
+an even-length 32–200 character hex string; no current device-token length is
+hardcoded. The route rejects unknown fields, including a client-supplied
+`app_user_id`. It derives the canonical `usr_direct_v1_*` ID from the verified
+Google identity and forwards the command to the private worker endpoint.
+
+```text
+DIRECT_PUSH_WORKER_URL=https://<private-worker-origin>
+DIRECT_PUSH_WORKER_SECRET=<dedicated high-entropy secret>
+```
+
+The worker call is `POST /v1/direct/devices` with the dedicated secret in its
+Bearer header. Do not reuse the legacy `DEVICE_REGISTRATION_SECRET`.
 
 ## Direct download endpoint
 

@@ -7,7 +7,6 @@ import {
 import { LandingFeatureList } from "@/components/landing/LandingFeatureList";
 import { HoraWorkflowVisual } from "@/components/landing/LandingVisuals";
 import { LandingFeatureCards } from "@/components/landing/LandingFeatureCards";
-import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { HomebrewCommand } from "@/components/molecules/HomebrewCommand";
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
 import { ProductVideoDialog } from "@/components/molecules/ProductVideoDialog";
@@ -22,10 +21,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { site } from "@/content/site";
 import type { HomePageContent } from "@/lib/home-model";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
+import {
+  DIRECT_DOWNLOAD_HREF,
+  DIRECT_DOWNLOAD_HELPER,
+  DIRECT_DOWNLOAD_LABEL,
+} from "@/lib/direct/commerce-contract";
 
 function SectionHeading({
   title,
@@ -83,43 +86,21 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
             {landing.hero.description}
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            {landing.hero.showPrimaryCta ? (
-              <Button asChild size="lg" variant="accent">
-                <Link
-                  href="/pricing/"
-                  {...analyticsAttrs("nav_click", {
-                    link_text: landing.hero.primaryCtaLabel,
-                    link_url: "/pricing/",
-                  })}
-                >
-                  <MdDownloadForOffline
-                    data-icon="inline-start"
-                    aria-hidden="true"
-                  />
-                  {landing.hero.primaryCtaLabel}
-                </Link>
-              </Button>
-            ) : (
-              <AppStoreLink
-                href={site.cta.primary.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={landing.hero.macAppStoreLabel}
-                className="app-store-interactive inline-flex h-12 items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-                {...analyticsAttrs("app_store_cta_click", {
-                  placement: ANALYTICS_PLACEMENTS.hero,
-                  destination: "mac_app_store",
+            <Button asChild size="lg" variant="accent">
+              <Link
+                href={DIRECT_DOWNLOAD_HREF}
+                {...analyticsAttrs("nav_click", {
+                  link_text: DIRECT_DOWNLOAD_LABEL,
+                  link_url: DIRECT_DOWNLOAD_HREF,
                 })}
               >
-                <Image
-                  src={site.macAppStoreBadgeSrc}
-                  alt={landing.hero.macAppStoreLabel}
-                  width={162}
-                  height={50}
-                  className="h-12 w-auto"
+                <MdDownloadForOffline
+                  data-icon="inline-start"
+                  aria-hidden="true"
                 />
-              </AppStoreLink>
-            )}
+                {DIRECT_DOWNLOAD_LABEL}
+              </Link>
+            </Button>
             <ProductVideoDialog
               label={landing.hero.watchVideoLabel}
               videoUrl={landing.hero.watchVideoUrl}
@@ -134,7 +115,9 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
               />
             </>
           ) : null}
-          <p className="mt-3 text-xs text-muted">{landing.hero.requirement}</p>
+          <p className="mt-3 text-xs text-muted">
+            {DIRECT_DOWNLOAD_HELPER} {landing.hero.requirement}
+          </p>
         </div>
 
         <div className="relative z-10 mx-auto mt-20 max-w-landing sm:mt-24">

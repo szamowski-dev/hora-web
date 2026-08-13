@@ -62,6 +62,10 @@ test("returns only the canonical app_user_id for a verified token", async () => 
 test("rejects missing, invalid, unconfigured and rate-limited proofs", async () => {
   const missing = await handleDirectIdentityRequest(request(), dependencies());
   assert.equal(missing.status, 401);
+  assert.deepEqual(await missing.json(), {
+    code: "invalid_sign_in_proof",
+    retryable: false,
+  });
 
   const invalid = await handleDirectIdentityRequest(
     request("Bearer invalid-token"),
@@ -72,6 +76,10 @@ test("rejects missing, invalid, unconfigured and rate-limited proofs", async () 
     }),
   );
   assert.equal(invalid.status, 401);
+  assert.deepEqual(await invalid.json(), {
+    code: "google_sign_in_invalid",
+    retryable: false,
+  });
 
   const unavailable = await handleDirectIdentityRequest(
     request("Bearer valid-token"),
@@ -82,12 +90,24 @@ test("rejects missing, invalid, unconfigured and rate-limited proofs", async () 
     }),
   );
   assert.equal(unavailable.status, 503);
+  assert.equal(unavailable.headers.get("retry-after"), "60");
+  assert.deepEqual(await unavailable.json(), {
+    code: "direct_identity_not_configured",
+    retryable: true,
+    retry_after_seconds: 60,
+  });
 
   const limited = await handleDirectIdentityRequest(
     request("Bearer valid-token"),
     dependencies({ checkRequestLimit: () => false }),
   );
   assert.equal(limited.status, 429);
+  assert.equal(limited.headers.get("retry-after"), "600");
+  assert.deepEqual(await limited.json(), {
+    code: "rate_limited",
+    retryable: true,
+    retry_after_seconds: 600,
+  });
 });
 
 test("hides identity derivation failures and verified subject data", async () => {
@@ -103,7 +123,9 @@ test("hides identity derivation failures and verified subject data", async () =>
 
   assert.equal(response.status, 503);
   assert.deepEqual(JSON.parse(serializedBody), {
-    error: "Direct identity is temporarily unavailable.",
+    code: "identity_unavailable",
+    retryable: true,
+    retry_after_seconds: 30,
   });
   assert.equal(serializedBody.includes(verifiedIdentity.subject), false);
   assert.equal(serializedBody.includes("valid-token"), false);

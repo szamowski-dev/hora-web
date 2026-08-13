@@ -1,10 +1,11 @@
 import { createHash } from "node:crypto";
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
 import {
   bearerTokenFromAuthorization,
   verifyGoogleIdToken,
 } from "@/lib/direct/google-openid";
 import { directAppUserIdForGoogleIdentity } from "@/lib/direct/identity";
+import { directApiError, directJson } from "@/lib/direct/api-response";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -32,17 +33,6 @@ function identityRateLimitKey(issuer: string, subject: string): string {
   return `direct-identity:${digest}`;
 }
 
-function json(body: object, status = 200) {
-  return NextResponse.json(body, {
-    status,
-    headers: {
-      "Cache-Control": "private, no-store",
-      Vary: "Authorization",
-      "X-Content-Type-Options": "nosniff",
-    },
-  });
-}
-
 export async function handleDirectIdentityRequest(
   request: NextRequest,
   dependencies: DirectIdentityDependencies = productionDependencies,
@@ -51,7 +41,7 @@ export async function handleDirectIdentityRequest(
     request.headers.get("authorization"),
   );
   if (!token) {
-    return json({ error: "Invalid sign-in proof." }, 401);
+    return directApiError("invalid_sign_in_proof", 401);
   }
 
   let identity: VerifiedGoogleIdentity;
@@ -62,9 +52,12 @@ export async function handleDirectIdentityRequest(
       error instanceof Error &&
       error.message === "Google OpenID audiences are not configured"
     ) {
-      return json({ error: "Direct identity is not configured." }, 503);
+      return directApiError("direct_identity_not_configured", 503, {
+        retryable: true,
+        retryAfterSeconds: 60,
+      });
     }
-    return json({ error: "Unable to verify your Google sign-in." }, 401);
+    return directApiError("google_sign_in_invalid", 401);
   }
 
   if (
@@ -73,7 +66,10 @@ export async function handleDirectIdentityRequest(
       30,
     )
   ) {
-    return json({ error: "Too many attempts. Try again shortly." }, 429);
+    return directApiError("rate_limited", 429, {
+      retryable: true,
+      retryAfterSeconds: 600,
+    });
   }
 
   try {
@@ -81,9 +77,12 @@ export async function handleDirectIdentityRequest(
       identity.issuer,
       identity.subject,
     );
-    return json({ app_user_id: appUserId });
+    return directJson({ app_user_id: appUserId });
   } catch {
-    return json({ error: "Direct identity is temporarily unavailable." }, 503);
+    return directApiError("identity_unavailable", 503, {
+      retryable: true,
+      retryAfterSeconds: 30,
+    });
   }
 }
 

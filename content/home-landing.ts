@@ -1,15 +1,16 @@
 import type { ProductLandingContent } from "@/lib/home-model";
+import { DIRECT_DOWNLOAD_LABEL } from "@/lib/direct/commerce-contract";
 
 export const defaultProductLanding = {
   hero: {
     title: "The Mac Calendar Google never built.",
     description:
       "A fast, native calendar for people who live in Google Calendar.\nPlan, join, and protect focus time without opening another browser tab.",
-    primaryCtaLabel: "Download",
+    primaryCtaLabel: DIRECT_DOWNLOAD_LABEL,
     macAppStoreLabel: "Download on the Mac App Store",
     watchVideoLabel: "Watch video",
     watchVideoUrl: "https://www.youtube.com/watch?v=ahVV5J25cYM",
-    showPrimaryCta: false,
+    showPrimaryCta: true,
     showTerminalPrompt: false,
     homebrewCommand: "brew install --cask hora",
     requirement: "Requires macOS 26 or newer.",

@@ -60,7 +60,7 @@
 | Menu bar countdown widget | Yes | Yes | Yes |
 | Availability sharing (FreeBusy) | Yes | Yes | Yes |
 | Localized languages | 9 | 8 | Limited |
-| Pricing | $49 one-time or $30/yr | $100+/yr | Free |
+| Pricing | $2.99/mo or $29.99/yr | $100+/yr | Free |
 
 ### Keyboard shortcuts
 

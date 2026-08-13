@@ -4,7 +4,6 @@ import Link from "next/link";
 import { MdCheck, MdDownloadForOffline } from "react-icons/md";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { SetappBadge } from "@/components/atoms/SetappBadge";
-import { HomebrewCommand } from "@/components/molecules/HomebrewCommand";
 import { Button } from "@/components/ui/button";
 import { SitePageHero } from "@/components/templates/SitePageHero";
 import { site } from "@/content/site";
@@ -12,6 +11,14 @@ import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_EVENTS, ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { defaultOg } from "@/lib/og";
 import { getPricingPage } from "@/lib/pricing-repository";
+import {
+  DIRECT_DOWNLOAD_HREF,
+  DIRECT_DOWNLOAD_LABEL,
+  DIRECT_CHECKOUT_PRICE_NOTE,
+  DIRECT_PRICING_FAQ_ITEMS,
+  DIRECT_PRICING_HERO,
+  DIRECT_PRICING_PLANS,
+} from "@/lib/direct/commerce-contract";
 
 export const revalidate = 600;
 
@@ -32,12 +39,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PricingPage() {
   const content = await getPricingPage();
-  const showTerminalPrompt =
-    content.direct.showDownload && content.direct.showTerminalPrompt;
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: content.faq.items.map((item) => ({
+    mainEntity: DIRECT_PRICING_FAQ_ITEMS.map((item) => ({
       "@type": "Question",
       name: item.question,
       acceptedAnswer: { "@type": "Answer", text: item.answer },
@@ -48,15 +53,15 @@ export default async function PricingPage() {
     <>
       <SitePageHero
         align="center"
-        title={content.hero.title}
-        description={content.hero.description}
+        title={DIRECT_PRICING_HERO.title}
+        description={DIRECT_PRICING_HERO.description}
       />
       <main className="px-5 pb-20 pt-12 sm:px-8 sm:pb-28 sm:pt-16">
         <section
           aria-label="Plans"
           className="mx-auto grid max-w-[960px] gap-4 md:grid-cols-2"
         >
-          {content.plans.map((plan) => (
+          {DIRECT_PRICING_PLANS.map((plan) => (
             <article
               key={`${plan.name}-${plan.price}`}
               className="flex min-h-[24rem] flex-col rounded-[28px] border border-line bg-panel/55 p-6 shadow-[0_24px_70px_-42px_var(--ui-shadow-neutral)] sm:p-7"
@@ -83,29 +88,28 @@ export default async function PricingPage() {
                   </li>
                 ))}
               </ul>
-              {content.direct.showDownload ? (
-                <Button
-                  asChild
-                  size="lg"
-                  variant={plan.featured ? "accent" : "outline"}
-                  className="mt-auto w-full"
-                >
-                  <a
-                    href={site.cta.direct.href}
-                    {...analyticsAttrs(ANALYTICS_EVENTS.downloadClick, {
-                      placement: ANALYTICS_PLACEMENTS.pricing,
-                      destination: "direct_download",
-                      plan: plan.name.toLowerCase(),
-                    })}
-                  >
-                    <MdDownloadForOffline data-icon="inline-start" aria-hidden />
-                    {plan.ctaLabel}
-                  </a>
-                </Button>
-              ) : null}
             </article>
           ))}
         </section>
+
+        <div className="mx-auto mt-7 flex max-w-[960px] justify-center">
+          <Button asChild size="lg" className="w-full sm:w-auto">
+            <a
+              href={DIRECT_DOWNLOAD_HREF}
+              {...analyticsAttrs(ANALYTICS_EVENTS.downloadClick, {
+                placement: ANALYTICS_PLACEMENTS.pricing,
+                destination: "direct_download",
+              })}
+            >
+              <MdDownloadForOffline data-icon="inline-start" aria-hidden />
+              {DIRECT_DOWNLOAD_LABEL}
+            </a>
+          </Button>
+        </div>
+
+        <p className="mx-auto mt-3 max-w-[960px] text-center text-xs leading-5 text-muted">
+          {DIRECT_CHECKOUT_PRICE_NOTE}
+        </p>
 
         <p className="mx-auto mt-6 max-w-[960px] text-center text-sm leading-6 text-muted">
           Direct purchase questions? Read our{" "}
@@ -117,19 +121,6 @@ export default async function PricingPage() {
           </Link>
           .
         </p>
-
-        {showTerminalPrompt ? (
-          <div className="mx-auto mt-5 flex max-w-[960px] flex-col items-center text-center">
-            <HomebrewCommand
-              command={content.direct.terminalCommand}
-              copyLabel={content.direct.copyLabel}
-              copiedLabel={content.direct.copiedLabel}
-            />
-            <p className="mt-3 text-xs text-muted">
-              {content.direct.terminalRequirement}
-            </p>
-          </div>
-        ) : null}
 
         {(content.distribution.showMacAppStore || content.distribution.showSetapp) ? (
           <section className="mx-auto mt-24 max-w-[960px] sm:mt-28">
@@ -191,7 +182,7 @@ export default async function PricingPage() {
             {content.faq.title}
           </h2>
           <div className="mt-7 overflow-hidden rounded-[28px] border border-line bg-panel/55">
-            {content.faq.items.map((item) => (
+            {DIRECT_PRICING_FAQ_ITEMS.map((item) => (
               <details
                 key={item.question}
                 className="group border-b border-line last:border-b-0"
