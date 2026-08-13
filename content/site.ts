@@ -37,7 +37,7 @@ export const site = {
   footer: {
     description:
       "A fast, native Google Calendar app\nbuilt for the Mac.",
-    copyright: "© 2026 hora Calendar",
+    copyright: "© 2026 NA SERIO Maciej Szamowski",
     productLinks: [
       { label: "Features", href: "/#features" },
       { label: "Privacy", href: "/#privacy" },

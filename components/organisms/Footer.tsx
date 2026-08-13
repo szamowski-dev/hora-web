@@ -7,7 +7,7 @@ import { site } from "@/content/site";
 const linkClassName =
   "inline-flex min-h-10 items-center text-sm text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:text-accent";
 
-export function Footer() {
+export function Footer({ copyright }: { copyright: string }) {
   return (
     <footer className="border-t border-line bg-panel-deep px-5 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-6xl">
@@ -18,7 +18,7 @@ export function Footer() {
               {site.footer.description}
             </p>
             <p className="text-sm leading-6 text-muted">
-              {site.footer.copyright}
+              {copyright}
             </p>
             <div className="-ml-3 flex flex-wrap items-center gap-0">
               {site.footer.socials.map((social) => (

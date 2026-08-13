@@ -12,6 +12,7 @@ import { ConsentMode } from "@/components/molecules/ConsentMode";
 import { MarketingTracking } from "@/components/molecules/MarketingTracking";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 import { getPricingPage } from "@/lib/pricing-repository";
+import { getFooterSettings } from "@/lib/footer-settings-repository";
 import "./globals.css";
 
 const geist = Geist({
@@ -101,9 +102,10 @@ export default async function RootLayout({
   children,
   modal,
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
-  const [{ isEnabled: isDraftMode }, pricing] = await Promise.all([
+  const [{ isEnabled: isDraftMode }, pricing, footerSettings] = await Promise.all([
     draftMode(),
     getPricingPage(),
+    getFooterSettings(),
   ]);
 
   return (
@@ -150,7 +152,7 @@ export default async function RootLayout({
         >
           {children}
         </main>
-        <Footer />
+        <Footer copyright={footerSettings.copyright} />
         {modal}
 
         {isDraftMode ? <DraftModeTools /> : null}

@@ -41,6 +41,10 @@ function collectRevalidation(body: SanityWebhookBody) {
       paths.add("/");
       paths.add("/sitemap.xml");
       break;
+    case "footerSettings":
+      tags.add("footer-settings");
+      paths.add("/");
+      break;
     case "pricingPage":
       tags.add("site-page:pricing");
       paths.add("/pricing/");

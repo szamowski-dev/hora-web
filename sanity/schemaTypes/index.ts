@@ -11,6 +11,7 @@ import { blogVideo } from "./blogVideo";
 import { codeBlock } from "./codeBlock";
 import { externalLink, internalPathLink, internalPostLink } from "./links";
 import { featuresPage } from "./featuresPage";
+import { footerSettings } from "./footerSettings";
 import { homePage } from "./homePage";
 import { legalPage } from "./legalPage";
 import { pageBody } from "./pageBody";
@@ -47,6 +48,7 @@ export const schemaTypes = [
   blogTag,
   blogPost,
   homePage,
+  footerSettings,
   pricingPage,
   featuresPage,
   aboutPage,
