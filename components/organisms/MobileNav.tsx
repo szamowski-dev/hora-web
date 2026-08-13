@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
+import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { MdClose, MdMenu } from "react-icons/md";
 import { Logo } from "@/components/atoms/Logo";
 import { ThemeToggle } from "@/components/molecules/ThemeToggle";
@@ -18,8 +20,10 @@ const toggleId = "mobile-navigation-toggle";
 
 export function MobileNav({
   activePath,
+  showDirectDownload = false,
 }: {
   activePath?: string;
+  showDirectDownload?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -95,18 +99,41 @@ export function MobileNav({
               {item.label}
             </Link>
           ))}
-          <Button asChild size="lg" className="mt-7 w-full">
-            <Link
-              href={DIRECT_DOWNLOAD_HREF}
+          {showDirectDownload ? (
+            <Button asChild size="lg" className="mt-7 w-full">
+              <Link
+                href={DIRECT_DOWNLOAD_HREF}
+                onClick={closeMenu}
+                {...analyticsAttrs("nav_click", {
+                  link_text: DIRECT_DOWNLOAD_LABEL,
+                  link_url: DIRECT_DOWNLOAD_HREF,
+                })}
+              >
+                {DIRECT_DOWNLOAD_LABEL}
+              </Link>
+            </Button>
+          ) : (
+            <AppStoreLink
+              href={site.cta.primary.href}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={closeMenu}
-              {...analyticsAttrs("nav_click", {
-                link_text: DIRECT_DOWNLOAD_LABEL,
-                link_url: DIRECT_DOWNLOAD_HREF,
+              aria-label={site.cta.primary.label}
+              className="app-store-interactive mt-7 inline-flex h-12 self-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              {...analyticsAttrs("app_store_cta_click", {
+                placement: "nav",
+                destination: "mac_app_store",
               })}
             >
-              {DIRECT_DOWNLOAD_LABEL}
-            </Link>
-          </Button>
+              <Image
+                src={site.macAppStoreBadgeSrc}
+                alt={site.cta.primary.label}
+                width={162}
+                height={50}
+                className="h-12 w-auto"
+              />
+            </AppStoreLink>
+          )}
         </div>
       </div>
     </div>

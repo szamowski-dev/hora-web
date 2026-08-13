@@ -11,6 +11,7 @@ import { DraftModeTools } from "@/components/sanity/DraftModeTools";
 import { ConsentMode } from "@/components/molecules/ConsentMode";
 import { MarketingTracking } from "@/components/molecules/MarketingTracking";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
+import { getPricingPage } from "@/lib/pricing-repository";
 import "./globals.css";
 
 const geist = Geist({
@@ -100,7 +101,10 @@ export default async function RootLayout({
   children,
   modal,
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
-  const { isEnabled: isDraftMode } = await draftMode();
+  const [{ isEnabled: isDraftMode }, pricing] = await Promise.all([
+    draftMode(),
+    getPricingPage(),
+  ]);
 
   return (
     <html
@@ -137,7 +141,7 @@ export default async function RootLayout({
         <AmbientGlow />
         <LayoutEnhancements />
         <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
-          <Nav />
+          <Nav showDirectDownload={pricing.direct.showDownload} />
         </header>
         <main
           id="main-content"

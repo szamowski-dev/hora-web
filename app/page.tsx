@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ProductLanding } from "@/components/organisms/ProductLanding";
 import { getHomePage } from "@/lib/home-repository";
 import { defaultOg } from "@/lib/og";
+import { getPricingPage } from "@/lib/pricing-repository";
 
 export const revalidate = 600;
 
@@ -41,7 +42,7 @@ const videoLd = {
 };
 
 export default async function Home() {
-  const content = await getHomePage();
+  const [content, pricing] = await Promise.all([getHomePage(), getPricingPage()]);
   const softwareAppLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -68,7 +69,10 @@ export default async function Home() {
 
   return (
     <>
-      <ProductLanding content={content} />
+      <ProductLanding
+        content={content}
+        showDirectDownload={pricing.direct.showDownload}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppLd) }}

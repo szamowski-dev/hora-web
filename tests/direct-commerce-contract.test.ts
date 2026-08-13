@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { defaultProductLanding } from "../content/home-landing";
+import { defaultPricingPage } from "../content/pricing";
 import {
   DIRECT_DOWNLOAD_HREF,
   DIRECT_DOWNLOAD_LABEL,
@@ -11,7 +12,7 @@ import {
 } from "../lib/direct/commerce-contract";
 import { HORA_INSTALLATION_FAQ } from "../lib/direct/support-content";
 
-test("keeps Direct new-sale pricing and CTA independent from CMS", () => {
+test("keeps Direct new-sale pricing in code while Sanity controls download visibility", () => {
   assert.equal(DIRECT_DOWNLOAD_HREF, "/download/direct/");
   assert.equal(
     DIRECT_DOWNLOAD_LABEL,
@@ -43,10 +44,10 @@ test("keeps Direct new-sale pricing and CTA independent from CMS", () => {
     DIRECT_CHECKOUT_PRICE_NOTE,
     "Choose a plan in the app. Final currency and applicable taxes are confirmed in checkout.",
   );
+  assert.equal(defaultPricingPage.direct.showDownload, false);
 });
 
-test("keeps the homepage Direct CTA and installation FAQ aligned across distributions", () => {
-  assert.equal(defaultProductLanding.hero.showPrimaryCta, true);
+test("keeps the homepage copy and installation FAQ aligned across distributions", () => {
   assert.equal(
     defaultProductLanding.hero.primaryCtaLabel,
     DIRECT_DOWNLOAD_LABEL,

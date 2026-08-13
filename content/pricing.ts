@@ -16,7 +16,7 @@ export const defaultPricingPage = {
   hero: DIRECT_PRICING_HERO,
   plans: DIRECT_PRICING_PLANS,
   direct: {
-    showDownload: true,
+    showDownload: false,
     downloadLabel: DIRECT_DOWNLOAD_LABEL,
     showTerminalPrompt: false,
     terminalCommand: "brew install --cask hora",

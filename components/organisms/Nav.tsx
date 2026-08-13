@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { Logo } from "@/components/atoms/Logo";
 import { ThemeToggle } from "@/components/molecules/ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -12,8 +14,10 @@ import { MobileNav } from "./MobileNav";
 
 export function Nav({
   activePath,
+  showDirectDownload = false,
 }: {
   activePath?: string;
+  showDirectDownload?: boolean;
 }) {
   return (
     <div className="relative mx-auto max-w-6xl">
@@ -43,22 +47,47 @@ export function Nav({
               </Link>
             ))}
             <ThemeToggle />
-            <Button asChild size="sm">
-              <Link
-                href={DIRECT_DOWNLOAD_HREF}
-                {...analyticsAttrs("nav_click", {
-                  link_text: DIRECT_DOWNLOAD_LABEL,
-                  link_url: DIRECT_DOWNLOAD_HREF,
+            {showDirectDownload ? (
+              <Button asChild size="sm">
+                <Link
+                  href={DIRECT_DOWNLOAD_HREF}
+                  {...analyticsAttrs("nav_click", {
+                    link_text: DIRECT_DOWNLOAD_LABEL,
+                    link_url: DIRECT_DOWNLOAD_HREF,
+                  })}
+                >
+                  {DIRECT_DOWNLOAD_LABEL}
+                </Link>
+              </Button>
+            ) : (
+              <AppStoreLink
+                href={site.cta.primary.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={site.cta.primary.label}
+                className="app-store-interactive inline-flex h-10 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                {...analyticsAttrs("app_store_cta_click", {
+                  placement: "nav",
+                  destination: "mac_app_store",
                 })}
               >
-                {DIRECT_DOWNLOAD_LABEL}
-              </Link>
-            </Button>
+                <Image
+                  src={site.macAppStoreBadgeSrc}
+                  alt={site.cta.primary.label}
+                  width={162}
+                  height={50}
+                  className="h-10 w-auto"
+                />
+              </AppStoreLink>
+            )}
           </div>
           <ThemeToggle className="mr-10 xl:hidden" />
         </div>
       </nav>
-      <MobileNav activePath={activePath} />
+      <MobileNav
+        activePath={activePath}
+        showDirectDownload={showDirectDownload}
+      />
     </div>
   );
 }

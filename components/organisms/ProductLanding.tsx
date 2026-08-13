@@ -13,6 +13,7 @@ import { ProductVideoDialog } from "@/components/molecules/ProductVideoDialog";
 import { ThemedProductImage } from "@/components/molecules/ThemedProductImage";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
 import { ProductHeroShader } from "@/components/organisms/ProductHeroShader";
+import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,6 +25,7 @@ import { Separator } from "@/components/ui/separator";
 import type { HomePageContent } from "@/lib/home-model";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
+import { site } from "@/content/site";
 import {
   DIRECT_DOWNLOAD_HREF,
   DIRECT_DOWNLOAD_HELPER,
@@ -58,7 +60,13 @@ function SectionDivider() {
   );
 }
 
-export function ProductLanding({ content }: { content: HomePageContent }) {
+export function ProductLanding({
+  content,
+  showDirectDownload = false,
+}: {
+  content: HomePageContent;
+  showDirectDownload?: boolean;
+}) {
   const landing = content.productLanding;
   const googleFeatureCandidates = [
     ...landing.googleCalendar.primaryFeatures,
@@ -86,27 +94,49 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
             {landing.hero.description}
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button asChild size="lg" variant="accent">
-              <Link
-                href={DIRECT_DOWNLOAD_HREF}
-                {...analyticsAttrs("nav_click", {
-                  link_text: DIRECT_DOWNLOAD_LABEL,
-                  link_url: DIRECT_DOWNLOAD_HREF,
+            {showDirectDownload ? (
+              <Button asChild size="lg" variant="accent">
+                <Link
+                  href={DIRECT_DOWNLOAD_HREF}
+                  {...analyticsAttrs("nav_click", {
+                    link_text: DIRECT_DOWNLOAD_LABEL,
+                    link_url: DIRECT_DOWNLOAD_HREF,
+                  })}
+                >
+                  <MdDownloadForOffline
+                    data-icon="inline-start"
+                    aria-hidden="true"
+                  />
+                  {DIRECT_DOWNLOAD_LABEL}
+                </Link>
+              </Button>
+            ) : (
+              <AppStoreLink
+                href={site.cta.primary.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={landing.hero.macAppStoreLabel}
+                className="app-store-interactive inline-flex h-12 items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                {...analyticsAttrs("app_store_cta_click", {
+                  placement: ANALYTICS_PLACEMENTS.hero,
+                  destination: "mac_app_store",
                 })}
               >
-                <MdDownloadForOffline
-                  data-icon="inline-start"
-                  aria-hidden="true"
+                <Image
+                  src={site.macAppStoreBadgeSrc}
+                  alt={landing.hero.macAppStoreLabel}
+                  width={162}
+                  height={50}
+                  className="h-12 w-auto"
                 />
-                {DIRECT_DOWNLOAD_LABEL}
-              </Link>
-            </Button>
+              </AppStoreLink>
+            )}
             <ProductVideoDialog
               label={landing.hero.watchVideoLabel}
               videoUrl={landing.hero.watchVideoUrl}
             />
           </div>
-          {landing.hero.showPrimaryCta && landing.hero.showTerminalPrompt ? (
+          {showDirectDownload && landing.hero.showTerminalPrompt ? (
             <>
               <HomebrewCommand
                 command={landing.hero.homebrewCommand}
@@ -115,9 +145,11 @@ export function ProductLanding({ content }: { content: HomePageContent }) {
               />
             </>
           ) : null}
-          <p className="mt-3 text-xs text-muted">
-            {DIRECT_DOWNLOAD_HELPER} {landing.hero.requirement}
-          </p>
+          {showDirectDownload ? (
+            <p className="mt-3 text-xs text-muted">
+              {DIRECT_DOWNLOAD_HELPER} {landing.hero.requirement}
+            </p>
+          ) : null}
         </div>
 
         <div className="relative z-10 mx-auto mt-20 max-w-landing sm:mt-24">

@@ -92,24 +92,28 @@ export default async function PricingPage() {
           ))}
         </section>
 
-        <div className="mx-auto mt-7 flex max-w-[960px] justify-center">
-          <Button asChild size="lg" className="w-full sm:w-auto">
-            <a
-              href={DIRECT_DOWNLOAD_HREF}
-              {...analyticsAttrs(ANALYTICS_EVENTS.downloadClick, {
-                placement: ANALYTICS_PLACEMENTS.pricing,
-                destination: "direct_download",
-              })}
-            >
-              <MdDownloadForOffline data-icon="inline-start" aria-hidden />
-              {DIRECT_DOWNLOAD_LABEL}
-            </a>
-          </Button>
-        </div>
+        {content.direct.showDownload ? (
+          <>
+            <div className="mx-auto mt-7 flex max-w-[960px] justify-center">
+              <Button asChild size="lg" className="w-full sm:w-auto">
+                <a
+                  href={DIRECT_DOWNLOAD_HREF}
+                  {...analyticsAttrs(ANALYTICS_EVENTS.downloadClick, {
+                    placement: ANALYTICS_PLACEMENTS.pricing,
+                    destination: "direct_download",
+                  })}
+                >
+                  <MdDownloadForOffline data-icon="inline-start" aria-hidden />
+                  {DIRECT_DOWNLOAD_LABEL}
+                </a>
+              </Button>
+            </div>
 
-        <p className="mx-auto mt-3 max-w-[960px] text-center text-xs leading-5 text-muted">
-          {DIRECT_CHECKOUT_PRICE_NOTE}
-        </p>
+            <p className="mx-auto mt-3 max-w-[960px] text-center text-xs leading-5 text-muted">
+              {DIRECT_CHECKOUT_PRICE_NOTE}
+            </p>
+          </>
+        ) : null}
 
         <p className="mx-auto mt-6 max-w-[960px] text-center text-sm leading-6 text-muted">
           Direct purchase questions? Read our{" "}
