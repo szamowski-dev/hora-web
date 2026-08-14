@@ -16,10 +16,11 @@ export function FaqItem({
   answer: ReactNode;
   className?: string;
   index?: number;
-  variant?: "card" | "integrated";
+  variant?: "card" | "integrated" | "pricing";
   density?: "default" | "compact";
 }) {
   const isIntegrated = variant === "integrated";
+  const isPricing = variant === "pricing";
   const isCompact = density === "compact";
 
   return (
@@ -31,7 +32,9 @@ export function FaqItem({
       }}
       className={cn(
         "group relative h-full overflow-hidden",
-        isIntegrated
+        isPricing
+          ? "border-b border-line last:border-b-0"
+          : isIntegrated
           ? "bg-transparent open:bg-overlay-strong hover:bg-overlay"
           : "rounded-md border border-line bg-overlay shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.1),0_16px_40px_-28px_oklch(0_0_0/0.55)] backdrop-blur-xl open:border-accent/35 open:bg-overlay-strong open:shadow-[inset_0_1px_0_oklch(0.9851_0_0/0.16),0_22px_46px_-24px_oklch(0_0_0/0.86)] hover:border-line-strong hover:bg-overlay-strong",
         className,
@@ -52,7 +55,9 @@ export function FaqItem({
       <summary
         className={cn(
           "flex w-full cursor-pointer list-none items-center justify-between gap-4 text-left text-sm font-medium text-text touch-manipulation select-none [&::-webkit-details-marker]:hidden",
-          isIntegrated
+          isPricing
+            ? "px-6 py-5 text-base font-semibold sm:px-7 sm:py-6 sm:text-lg"
+            : isIntegrated
             ? isCompact
               ? "px-5 py-4 sm:px-6 sm:py-5"
               : "px-5 py-5 md:px-6 md:py-6"
@@ -81,11 +86,19 @@ export function FaqItem({
               "text-balance",
               isCompact && "text-base leading-6 sm:text-lg",
             )}
-          >
-            {question}
-          </span>
+        >
+          {question}
         </span>
-        <span
+        </span>
+        {isPricing ? (
+          <span
+            aria-hidden
+            className="shrink-0 text-3xl font-light leading-none text-muted transition-transform group-open:rotate-45"
+          >
+            +
+          </span>
+        ) : (
+          <span
           aria-hidden
           className={cn(
             "relative flex shrink-0 items-center justify-center border transition-all duration-300",
@@ -110,12 +123,15 @@ export function FaqItem({
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-        </span>
+          </span>
+        )}
       </summary>
       <div
         className={cn(
           "text-sm leading-relaxed text-muted md:text-base",
-          isIntegrated
+          isPricing
+            ? "border-t border-line px-6 pb-6 pt-5 sm:px-8 sm:pb-7"
+            : isIntegrated
             ? isCompact
               ? "px-5 pb-5 pl-[3.625rem] sm:px-6 sm:pb-6 sm:pl-[4.5rem]"
               : "px-5 pb-6 pl-[3.75rem] md:px-6 md:pb-7 md:pl-[4.25rem]"
