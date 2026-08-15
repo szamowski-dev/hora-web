@@ -16,8 +16,8 @@ const releaseManifestSchema = z.object({
   marketing_version: z.string().regex(VERSION_PATTERN),
   build_number: z.string().regex(BUILD_PATTERN),
   source_sha: z.string().regex(SOURCE_SHA_PATTERN),
-  dmg_url: z.url(),
-  dmg_sha256: z.string().regex(SHA256_PATTERN),
+  zip_url: z.url(),
+  zip_sha256: z.string().regex(SHA256_PATTERN),
   appcast_sha256: z.string().regex(SHA256_PATTERN),
   appcast_url: z.literal(DIRECT_APPCAST_URL),
   generated_at: z.string().regex(UTC_TIMESTAMP_PATTERN),
@@ -31,8 +31,8 @@ type Fetcher = (
 type ValidatedDirectRelease = {
   checksum: string;
   checksumUrl: URL;
-  dmgFileName: string;
-  dmgUrl: URL;
+  zipFileName: string;
+  zipUrl: URL;
 };
 
 function directDownloadBaseUrl(configuredBaseUrl?: string): URL {
@@ -54,28 +54,28 @@ export function validateDirectReleaseManifest(
   input: unknown,
 ): ValidatedDirectRelease {
   const manifest = releaseManifestSchema.parse(input);
-  const dmgUrl = new URL(manifest.dmg_url);
-  const dmgFileName = `hora-calendar-${manifest.marketing_version}-${manifest.build_number}.dmg`;
+  const zipUrl = new URL(manifest.zip_url);
+  const zipFileName = `hora-calendar-${manifest.marketing_version}-${manifest.build_number}.zip`;
   const expectedPath =
     `/direct/stable/releases/${manifest.marketing_version}/` +
-    `${manifest.build_number}/${dmgFileName}`;
+    `${manifest.build_number}/${zipFileName}`;
 
   if (
-    dmgUrl.origin !== DIRECT_DOWNLOAD_ORIGIN ||
-    dmgUrl.pathname !== expectedPath ||
-    dmgUrl.search ||
-    dmgUrl.hash ||
-    dmgUrl.username ||
-    dmgUrl.password
+    zipUrl.origin !== DIRECT_DOWNLOAD_ORIGIN ||
+    zipUrl.pathname !== expectedPath ||
+    zipUrl.search ||
+    zipUrl.hash ||
+    zipUrl.username ||
+    zipUrl.password
   ) {
     throw new Error("Direct release URL is invalid");
   }
 
   return {
-    checksum: manifest.dmg_sha256,
-    checksumUrl: new URL(`${dmgUrl.href}.sha256`),
-    dmgFileName,
-    dmgUrl,
+    checksum: manifest.zip_sha256,
+    checksumUrl: new URL(`${zipUrl.href}.sha256`),
+    zipFileName,
+    zipUrl,
   };
 }
 
@@ -140,10 +140,10 @@ export async function resolveLatestDirectDownload(
   if (
     !checksumMatch ||
     checksumMatch[1] !== release.checksum ||
-    checksumMatch[2] !== release.dmgFileName
+    checksumMatch[2] !== release.zipFileName
   ) {
     throw new Error("Direct release checksum is invalid");
   }
 
-  return release.dmgUrl;
+  return release.zipUrl;
 }

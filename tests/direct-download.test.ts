@@ -8,8 +8,8 @@ import {
 
 const version = "1.2.3";
 const build = "123";
-const fileName = `hora-calendar-${version}-${build}.dmg`;
-const dmgUrl =
+const fileName = `hora-calendar-${version}-${build}.zip`;
+const zipUrl =
   `https://downloads.horacal.app/direct/stable/releases/${version}/` +
   `${build}/${fileName}`;
 const checksum = "a".repeat(64);
@@ -18,8 +18,8 @@ const validManifest = {
   marketing_version: version,
   build_number: build,
   source_sha: "b".repeat(40),
-  dmg_url: dmgUrl,
-  dmg_sha256: checksum,
+  zip_url: zipUrl,
+  zip_sha256: checksum,
   appcast_sha256: "c".repeat(64),
   appcast_url: "https://downloads.horacal.app/direct/stable/appcast.xml",
   generated_at: "2026-08-03T12:30:00Z",
@@ -35,7 +35,7 @@ function response(body: string, contentType: string) {
   });
 }
 
-test("resolves the published manifest to its immutable DMG", async () => {
+test("resolves the published manifest to its immutable ZIP", async () => {
   const requests: Array<{ cache?: RequestCache; url: string }> = [];
   const fetcher = async (input: string | URL, init?: RequestInit) => {
     const url = String(input);
@@ -43,7 +43,7 @@ test("resolves the published manifest to its immutable DMG", async () => {
     if (url.endsWith(DIRECT_LATEST_MANIFEST_PATH)) {
       return response(JSON.stringify(validManifest), "application/json");
     }
-    if (url === `${dmgUrl}.sha256`) {
+    if (url === `${zipUrl}.sha256`) {
       return response(`${checksum}  ${fileName}\n`, "text/plain");
     }
     return new Response(null, { status: 404 });
@@ -51,30 +51,30 @@ test("resolves the published manifest to its immutable DMG", async () => {
 
   const resolved = await resolveLatestDirectDownload({ fetcher });
 
-  assert.equal(resolved.href, dmgUrl);
+  assert.equal(resolved.href, zipUrl);
   assert.deepEqual(requests, [
     {
       cache: "no-store",
       url: "https://downloads.horacal.app/direct/stable/latest.json",
     },
-    { cache: "no-store", url: `${dmgUrl}.sha256` },
+    { cache: "no-store", url: `${zipUrl}.sha256` },
   ]);
 });
 
-test("rejects mutable, foreign and mismatched DMG URLs", () => {
+test("rejects mutable, foreign and mismatched ZIP URLs", () => {
   const invalidUrls = [
-    "https://downloads.horacal.app/direct/stable/latest.dmg",
+    "https://downloads.horacal.app/direct/stable/latest.zip",
     `https://evil.example/direct/stable/releases/${version}/${build}/${fileName}`,
     `https://downloads.horacal.app/direct/stable/releases/9.9.9/${build}/${fileName}`,
-    `${dmgUrl}?download=1`,
-    `${dmgUrl}#release`,
+    `${zipUrl}?download=1`,
+    `${zipUrl}#release`,
   ];
 
   for (const invalidUrl of invalidUrls) {
     assert.throws(() =>
       validateDirectReleaseManifest({
         ...validManifest,
-        dmg_url: invalidUrl,
+        zip_url: invalidUrl,
       }),
     );
   }
@@ -84,7 +84,7 @@ test("rejects invalid manifest integrity fields", () => {
   assert.throws(() =>
     validateDirectReleaseManifest({
       ...validManifest,
-      dmg_sha256: "not-a-checksum",
+      zip_sha256: "not-a-checksum",
     }),
   );
   assert.throws(() =>
