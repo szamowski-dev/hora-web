@@ -12,16 +12,29 @@ const VERSION_PATTERN = /^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/;
 const BUILD_PATTERN = /^\d+$/;
 const UTC_TIMESTAMP_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 
-const releaseManifestSchema = z.object({
+const releaseManifestBaseSchema = z.object({
   marketing_version: z.string().regex(VERSION_PATTERN),
   build_number: z.string().regex(BUILD_PATTERN),
   source_sha: z.string().regex(SOURCE_SHA_PATTERN),
-  zip_url: z.url(),
-  zip_sha256: z.string().regex(SHA256_PATTERN),
   appcast_sha256: z.string().regex(SHA256_PATTERN),
   appcast_url: z.literal(DIRECT_APPCAST_URL),
   generated_at: z.string().regex(UTC_TIMESTAMP_PATTERN),
 });
+
+const zipReleaseManifestSchema = releaseManifestBaseSchema.extend({
+  zip_url: z.url(),
+  zip_sha256: z.string().regex(SHA256_PATTERN),
+});
+
+const legacyDmgReleaseManifestSchema = releaseManifestBaseSchema.extend({
+  dmg_url: z.url(),
+  dmg_sha256: z.string().regex(SHA256_PATTERN),
+});
+
+const releaseManifestSchema = z.union([
+  zipReleaseManifestSchema,
+  legacyDmgReleaseManifestSchema,
+]);
 
 type Fetcher = (
   input: string | URL,
@@ -29,10 +42,10 @@ type Fetcher = (
 ) => Promise<Response>;
 
 type ValidatedDirectRelease = {
+  archiveFileName: string;
+  archiveUrl: URL;
   checksum: string;
   checksumUrl: URL;
-  zipFileName: string;
-  zipUrl: URL;
 };
 
 function directDownloadBaseUrl(configuredBaseUrl?: string): URL {
@@ -54,28 +67,32 @@ export function validateDirectReleaseManifest(
   input: unknown,
 ): ValidatedDirectRelease {
   const manifest = releaseManifestSchema.parse(input);
-  const zipUrl = new URL(manifest.zip_url);
-  const zipFileName = `hora-calendar-${manifest.marketing_version}-${manifest.build_number}.zip`;
+  const isZipRelease = "zip_url" in manifest;
+  const extension = isZipRelease ? "zip" : "dmg";
+  const archiveUrl = new URL(isZipRelease ? manifest.zip_url : manifest.dmg_url);
+  const archiveFileName =
+    `hora-calendar-${manifest.marketing_version}-${manifest.build_number}.` +
+    extension;
   const expectedPath =
     `/direct/stable/releases/${manifest.marketing_version}/` +
-    `${manifest.build_number}/${zipFileName}`;
+    `${manifest.build_number}/${archiveFileName}`;
 
   if (
-    zipUrl.origin !== DIRECT_DOWNLOAD_ORIGIN ||
-    zipUrl.pathname !== expectedPath ||
-    zipUrl.search ||
-    zipUrl.hash ||
-    zipUrl.username ||
-    zipUrl.password
+    archiveUrl.origin !== DIRECT_DOWNLOAD_ORIGIN ||
+    archiveUrl.pathname !== expectedPath ||
+    archiveUrl.search ||
+    archiveUrl.hash ||
+    archiveUrl.username ||
+    archiveUrl.password
   ) {
     throw new Error("Direct release URL is invalid");
   }
 
   return {
-    checksum: manifest.zip_sha256,
-    checksumUrl: new URL(`${zipUrl.href}.sha256`),
-    zipFileName,
-    zipUrl,
+    archiveFileName,
+    archiveUrl,
+    checksum: isZipRelease ? manifest.zip_sha256 : manifest.dmg_sha256,
+    checksumUrl: new URL(`${archiveUrl.href}.sha256`),
   };
 }
 
@@ -140,10 +157,10 @@ export async function resolveLatestDirectDownload(
   if (
     !checksumMatch ||
     checksumMatch[1] !== release.checksum ||
-    checksumMatch[2] !== release.zipFileName
+    checksumMatch[2] !== release.archiveFileName
   ) {
     throw new Error("Direct release checksum is invalid");
   }
 
-  return release.zipUrl;
+  return release.archiveUrl;
 }

@@ -79,16 +79,13 @@ https://downloads.horacal.app/direct/stable/latest.json
 
 It validates the complete release metadata, exact HTTPS host, immutable release
 path, version, build, file name and SHA-256 checksum file. Only then does it
-return a temporary `307` redirect to the immutable ZIP exported and stapled by
-Xcode Cloud.
+return a temporary `307` redirect. During the ZIP rollout it accepts both the
+legacy immutable DMG manifest and the new immutable ZIP manifest; new releases
+publish ZIPs exported and stapled by Xcode Cloud.
 
-website commit marker and is intentionally requested with `no-store` so a
-rollback is visible on the next request.
-`latest.zip` is never linked directly. `latest.json` is the release pipeline's
-website commit marker and is intentionally requested with `no-store` so a
-rollback is visible on the next request.
-website commit marker and is intentionally requested with `no-store` so a
-rollback is visible on the next request.
+Neither `latest.dmg` nor `latest.zip` is linked directly. `latest.json` is the
+release pipeline's website commit marker and is intentionally requested with
+`no-store` so a rollback is visible on the next request.
 
 The optional server-only variable below must still resolve to the trusted
 production origin. Other hosts, paths, ports and credentials are rejected.

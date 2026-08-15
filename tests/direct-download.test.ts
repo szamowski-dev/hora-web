@@ -13,6 +13,10 @@ const zipUrl =
   `https://downloads.horacal.app/direct/stable/releases/${version}/` +
   `${build}/${fileName}`;
 const checksum = "a".repeat(64);
+const dmgFileName = `hora-calendar-${version}-${build}.dmg`;
+const dmgUrl =
+  `https://downloads.horacal.app/direct/stable/releases/${version}/` +
+  `${build}/${dmgFileName}`;
 
 const validManifest = {
   marketing_version: version,
@@ -59,6 +63,32 @@ test("resolves the published manifest to its immutable ZIP", async () => {
     },
     { cache: "no-store", url: `${zipUrl}.sha256` },
   ]);
+});
+
+test("resolves the legacy immutable DMG manifest during ZIP rollout", async () => {
+  const legacyManifest = {
+    marketing_version: version,
+    build_number: build,
+    source_sha: "b".repeat(40),
+    dmg_url: dmgUrl,
+    dmg_sha256: checksum,
+    appcast_sha256: "c".repeat(64),
+    appcast_url: "https://downloads.horacal.app/direct/stable/appcast.xml",
+    generated_at: "2026-08-03T12:30:00Z",
+  };
+  const fetcher = async (input: string | URL) => {
+    const url = String(input);
+    if (url.endsWith(DIRECT_LATEST_MANIFEST_PATH)) {
+      return response(JSON.stringify(legacyManifest), "application/json");
+    }
+    if (url === `${dmgUrl}.sha256`) {
+      return response(`${checksum}  ${dmgFileName}\n`, "text/plain");
+    }
+    return new Response(null, { status: 404 });
+  };
+
+  const resolved = await resolveLatestDirectDownload({ fetcher });
+  assert.equal(resolved.href, dmgUrl);
 });
 
 test("rejects mutable, foreign and mismatched ZIP URLs", () => {
