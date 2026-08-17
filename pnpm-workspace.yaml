@@ -7,3 +7,5 @@ allowBuilds:
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+overrides:
+  "@posthog/core": 1.48.1

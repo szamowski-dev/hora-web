@@ -1,6 +1,7 @@
 "use client";
 
 import NextError from "next/error";
+import posthog from "posthog-js";
 import { useEffect } from "react";
 import { track } from "@/lib/analytics";
 
@@ -10,6 +11,7 @@ export default function GlobalError({
   error: Error & { digest?: string };
 }) {
   useEffect(() => {
+    posthog.captureException(error);
     track("global_error", {
       name: error.name,
       message: error.message.slice(0, 200),

@@ -4,6 +4,7 @@ import { type ChangeEvent, type FormEvent, useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Icon } from "@/components/atoms/Icon";
+import { track } from "@/lib/analytics";
 
 const categories = [
   { value: "bug", label: "Bug report" },
@@ -86,6 +87,10 @@ export function SupportForm() {
       const json = await res.json().catch(() => null);
 
       if (!res.ok) {
+        track("support_request_failed", {
+          category: typeof requestedCategory === "string" ? requestedCategory : "unknown",
+          failure_type: "request_rejected",
+        });
         setStatus({
           type: "error",
           message:
@@ -104,8 +109,15 @@ export function SupportForm() {
           ? categories.find((item) => item.value === requestedCategory)?.value ?? null
           : null,
       );
+      track("support_request_submitted", {
+        category: typeof requestedCategory === "string" ? requestedCategory : "unknown",
+      });
       setStatus({ type: "success" });
     } catch {
+      track("support_request_failed", {
+        category: typeof requestedCategory === "string" ? requestedCategory : "unknown",
+        failure_type: "network_error",
+      });
       setStatus({
         type: "error",
         message: "Network error. Please try again or email hello@horacal.app.",

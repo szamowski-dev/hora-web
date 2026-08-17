@@ -26,8 +26,49 @@ export type Ga4MeasurementContext = {
   sessionId?: string;
 };
 
+export const POSTHOG_BROWSER_EVENT = "hora-posthog-capture";
+
+const POSTHOG_EVENTS = new Set([
+  "download_click",
+  "direct_download_clicked",
+  "brew_copy_click",
+  "newsletter_submit",
+  "newsletter_form_success",
+  "newsletter_signup_error",
+  "post_signup_share_click",
+  "post_signup_discord_click",
+  "support_request_submitted",
+  "support_request_failed",
+  "blog_share_click",
+  "testflight_cta_click",
+  "testflight_delayed_open",
+  "testflight_manual_open",
+  "testflight_prompt_discord_click",
+]);
+
+function posthogProps(props?: EventProps): EventProps | undefined {
+  if (!props) return undefined;
+
+  const safeProps = { ...props };
+  delete safeProps.first_touch_referrer;
+  delete safeProps.first_touch_landing_page;
+  return safeProps;
+}
+
 export function track(event: string, props?: EventProps) {
   if (typeof window === "undefined") return;
+
+  if (
+    process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+    POSTHOG_EVENTS.has(event)
+  ) {
+    window.dispatchEvent(
+      new CustomEvent(POSTHOG_BROWSER_EVENT, {
+        detail: { event, props: posthogProps(props) },
+      }),
+    );
+  }
+
   // Guard with typeof, not optional chain: privacy extensions (Brave shields,
   // uBlock, AdGuard) can stub window.gtag as a non-callable object.
   if (typeof window.gtag === "function") {
