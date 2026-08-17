@@ -43,7 +43,7 @@ export const site = {
       { label: "Privacy", href: "/#privacy" },
       { label: "macOS integration", href: "/#macos" },
       { label: "Pricing", href: "/pricing/" },
-      { label: "Download", href: "/pricing/" },
+      { label: "Download", href: "/download/direct/" },
     ],
     popularGuides: [
       {
