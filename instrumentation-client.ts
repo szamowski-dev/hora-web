@@ -9,14 +9,6 @@ import {
 const projectToken = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
 const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;
 
-function syncPostHogConsent() {
-  if (window.Cookiebot?.consent?.statistics) {
-    posthog.opt_in_capturing({ captureEventName: false });
-  } else {
-    posthog.opt_out_capturing();
-  }
-}
-
 function capturePostHogEvent(event: Event) {
   const { event: eventName, props } = (
     event as CustomEvent<{ event: string; props?: EventProps }>
@@ -39,20 +31,9 @@ if (!projectToken || !host) {
     defaults: "2026-01-30",
     capture_exceptions: true,
     debug: process.env.NODE_ENV === "development",
-    opt_out_capturing_by_default: true,
-    opt_out_persistence_by_default: true,
-    loaded: syncPostHogConsent,
+    cookieless_mode: "always",
   });
 
-  const consentEvents = [
-    "CookiebotOnConsentReady",
-    "CookiebotOnAccept",
-    "CookiebotOnDecline",
-    "CookiebotOnWithdraw",
-  ];
-  consentEvents.forEach((eventName) => {
-    window.addEventListener(eventName, syncPostHogConsent);
-  });
   window.addEventListener(POSTHOG_BROWSER_EVENT, capturePostHogEvent);
 }
 
