@@ -65,7 +65,7 @@ test("resolves the published manifest to its immutable ZIP", async () => {
   ]);
 });
 
-test("resolves the legacy immutable DMG manifest during ZIP rollout", async () => {
+test("resolves the immutable website DMG manifest", async () => {
   const legacyManifest = {
     marketing_version: version,
     build_number: build,
