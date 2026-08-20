@@ -6,7 +6,7 @@ import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Icon } from "@/components/atoms/Icon";
 import { track } from "@/lib/analytics";
-import posthog from "posthog-js";
+import { getSupportConversations } from "@/lib/support-conversations";
 import {
   supportFailedEventProperties,
   supportSubmittedEventProperties,
@@ -36,19 +36,20 @@ type Status =
   | { type: "error"; message: string };
 
 const discordUrl = "https://discord.gg/8JFz4FfBGQ";
+const supportEmail = "support@horacal.app";
 
 function failureMessage(failureType: SupportFailureType): string {
   switch (failureType) {
     case "conversations_unavailable":
-      return "Support is temporarily unavailable. Please try again or email hello@horacal.app.";
+      return `Support is temporarily unavailable. Please try again or email ${supportEmail}.`;
     case "rate_limited":
-      return "Too many support requests. Please wait a moment or email hello@horacal.app.";
+      return `Too many support requests. Please wait a moment or email ${supportEmail}.`;
     case "ticket_lookup_failed":
-      return "We could not open your existing support conversation. Please try again or email hello@horacal.app.";
+      return `We could not open your existing support conversation. Please try again or email ${supportEmail}.`;
     case "invalid_response":
-      return "Support returned an invalid response. Please try again or email hello@horacal.app.";
+      return `Support returned an invalid response. Please try again or email ${supportEmail}.`;
     case "network_or_server":
-      return "Network error. Please try again or email hello@horacal.app.";
+      return `Network error. Please try again or email ${supportEmail}.`;
   }
 }
 
@@ -132,7 +133,7 @@ export function SupportForm() {
     }
 
     try {
-      await submitSupportRequest(posthog.conversations, parsed.data);
+      await submitSupportRequest(getSupportConversations(), parsed.data);
 
       form.reset();
       setShowRequestDetails(false);
