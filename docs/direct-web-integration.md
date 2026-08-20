@@ -87,6 +87,14 @@ Neither `latest.dmg` nor `latest.zip` is linked directly. `latest.json` is the
 release pipeline's website commit marker and is intentionally requested with
 `no-store` so a rollback is visible on the next request.
 
+For web-initiated downloads, the browser creates an opaque `download_id`. It is
+attached to the `direct_download_clicked` PostHog event and passed through the
+server redirect to `https://download.horacal.app`. That hostname is a small
+Cloudflare Worker proxy which fetches the same immutable R2 artifact and writes
+one successful-download record to R2 under
+`analytics/r2-download-events/YYYY-MM-DD/<download_id>.json`. Direct release
+URLs used by Sparkle remain on `downloads.horacal.app` and are not changed.
+
 The optional server-only variable below must still resolve to the trusted
 production origin. Other hosts, paths, ports and credentials are rejected.
 

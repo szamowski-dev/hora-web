@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   DIRECT_LATEST_MANIFEST_PATH,
+  DIRECT_DOWNLOAD_ID_PARAM,
   resolveLatestDirectDownload,
   validateDirectReleaseManifest,
 } from "../lib/direct/download";
@@ -63,6 +64,42 @@ test("resolves the published manifest to its immutable ZIP", async () => {
     },
     { cache: "no-store", url: `${zipUrl}.sha256` },
   ]);
+});
+
+test("propagates a valid download ID to the immutable archive URL", async () => {
+  const downloadId = "123e4567-e89b-12d3-a456-426614174000";
+  const fetcher = async (input: string | URL) => {
+    const url = String(input);
+    if (url.endsWith(DIRECT_LATEST_MANIFEST_PATH)) {
+      return response(JSON.stringify(validManifest), "application/json");
+    }
+    if (url === `${zipUrl}.sha256`) {
+      return response(`${checksum}  ${fileName}\n`, "text/plain");
+    }
+    return new Response(null, { status: 404 });
+  };
+
+  const resolved = await resolveLatestDirectDownload({ fetcher, downloadId });
+
+  assert.equal(resolved.searchParams.get(DIRECT_DOWNLOAD_ID_PARAM), downloadId);
+  assert.equal(resolved.origin, "https://download.horacal.app");
+  assert.equal(resolved.pathname, new URL(zipUrl).pathname);
+});
+
+test("ignores an invalid download ID when the route receives it", async () => {
+  const fetcher = async (input: string | URL) => {
+    const url = String(input);
+    if (url.endsWith(DIRECT_LATEST_MANIFEST_PATH)) {
+      return response(JSON.stringify(validManifest), "application/json");
+    }
+    if (url === `${zipUrl}.sha256`) {
+      return response(`${checksum}  ${fileName}\n`, "text/plain");
+    }
+    return new Response(null, { status: 404 });
+  };
+
+  const resolved = await resolveLatestDirectDownload({ fetcher });
+  assert.equal(resolved.href, zipUrl);
 });
 
 test("resolves the immutable website DMG manifest", async () => {

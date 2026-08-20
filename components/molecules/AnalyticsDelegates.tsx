@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { track, type EventProps } from "@/lib/analytics";
+import { createDownloadId, track, type EventProps } from "@/lib/analytics";
 import { ANALYTICS_EVENTS } from "@/lib/analyticsSchema";
 
 function parseProps(raw?: string): EventProps | undefined {
@@ -21,16 +21,32 @@ export function AnalyticsDelegates() {
       const eventName = el?.dataset.analyticsEvent;
       const props = parseProps(el?.dataset.analyticsProps);
 
-      if (el && eventName) {
-        track(eventName, props);
-      }
-
       const anchor = target?.closest?.<HTMLAnchorElement>("a[href]");
-      if (!anchor) return;
+      if (!anchor) {
+        if (el && eventName) track(eventName, props);
+        return;
+      }
 
       const url = new URL(anchor.href, window.location.href);
       const normalizedPath = url.pathname.replace(/\/+$/, "");
       const isDirectDownload = normalizedPath === "/download/direct";
+      const isInternalDirectDownload =
+        isDirectDownload && url.origin === window.location.origin;
+      const originalLinkUrl = `${url.pathname}${url.search}${url.hash}`;
+      const downloadId = isInternalDirectDownload ? createDownloadId() : undefined;
+
+      if (downloadId) {
+        url.searchParams.set("download_id", downloadId);
+        anchor.href = `${url.pathname}${url.search}${url.hash}`;
+      }
+
+      if (el && eventName) {
+        track(eventName, {
+          ...props,
+          ...(downloadId ? { download_id: downloadId } : {}),
+        });
+      }
+
       if (
         url.origin !== window.location.origin ||
         (normalizedPath !== "/download" && !isDirectDownload) ||
@@ -50,7 +66,8 @@ export function AnalyticsDelegates() {
             props?.link_text ||
             anchor.textContent?.replace(/\s+/g, " ").trim() ||
             "Download",
-          link_url: `${url.pathname}${url.search}${url.hash}`,
+          link_url: originalLinkUrl,
+          ...(downloadId ? { download_id: downloadId } : {}),
         },
       );
     }

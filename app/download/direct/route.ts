@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { resolveLatestDirectDownload } from "@/lib/direct/download";
+import {
+  isValidDirectDownloadId,
+  resolveLatestDirectDownload,
+} from "@/lib/direct/download";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -9,9 +12,14 @@ const responseHeaders = {
   "X-Robots-Tag": "noindex, nofollow",
 };
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const downloadUrl = await resolveLatestDirectDownload();
+    const requestUrl = new URL(request.url);
+    const rawDownloadId = requestUrl.searchParams.get("download_id");
+    const downloadId = isValidDirectDownloadId(rawDownloadId)
+      ? rawDownloadId
+      : undefined;
+    const downloadUrl = await resolveLatestDirectDownload({ downloadId });
     return NextResponse.redirect(downloadUrl, {
       status: 307,
       headers: responseHeaders,

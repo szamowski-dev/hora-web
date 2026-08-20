@@ -28,6 +28,12 @@ export type Ga4MeasurementContext = {
 
 export const POSTHOG_BROWSER_EVENT = "hora-posthog-capture";
 
+export function createDownloadId(): string | undefined {
+  if (typeof crypto === "undefined") return undefined;
+  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  return undefined;
+}
+
 const POSTHOG_EVENTS = new Set([
   "download_click",
   "direct_download_clicked",

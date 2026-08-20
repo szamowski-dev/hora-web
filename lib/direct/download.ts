@@ -1,7 +1,9 @@
 import { z } from "zod";
 
 export const DIRECT_DOWNLOAD_ORIGIN = "https://downloads.horacal.app";
+export const DIRECT_TRACKED_DOWNLOAD_ORIGIN = "https://download.horacal.app";
 export const DIRECT_LATEST_MANIFEST_PATH = "/direct/stable/latest.json";
+export const DIRECT_DOWNLOAD_ID_PARAM = "download_id";
 
 const DIRECT_APPCAST_URL = `${DIRECT_DOWNLOAD_ORIGIN}/direct/stable/appcast.xml`;
 const MAX_MANIFEST_BYTES = 16 * 1024;
@@ -11,6 +13,8 @@ const SOURCE_SHA_PATTERN = /^[0-9a-f]{40}$/;
 const VERSION_PATTERN = /^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/;
 const BUILD_PATTERN = /^\d+$/;
 const UTC_TIMESTAMP_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
+const DOWNLOAD_ID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const releaseManifestBaseSchema = z.object({
   marketing_version: z.string().regex(VERSION_PATTERN),
@@ -47,6 +51,10 @@ type ValidatedDirectRelease = {
   checksum: string;
   checksumUrl: URL;
 };
+
+export function isValidDirectDownloadId(value: unknown): value is string {
+  return typeof value === "string" && DOWNLOAD_ID_PATTERN.test(value);
+}
 
 function directDownloadBaseUrl(configuredBaseUrl?: string): URL {
   const baseUrl = new URL(configuredBaseUrl || DIRECT_DOWNLOAD_ORIGIN);
@@ -124,6 +132,7 @@ async function fetchSmallText(
 export async function resolveLatestDirectDownload(
   options: {
     baseUrl?: string;
+    downloadId?: string;
     fetcher?: Fetcher;
   } = {},
 ): Promise<URL> {
@@ -160,6 +169,21 @@ export async function resolveLatestDirectDownload(
     checksumMatch[2] !== release.archiveFileName
   ) {
     throw new Error("Direct release checksum is invalid");
+  }
+
+  if (options.downloadId) {
+    if (!isValidDirectDownloadId(options.downloadId)) {
+      throw new Error("Direct download ID is invalid");
+    }
+    const trackedArchiveUrl = new URL(release.archiveUrl);
+    trackedArchiveUrl.hostname = new URL(
+      DIRECT_TRACKED_DOWNLOAD_ORIGIN,
+    ).hostname;
+    trackedArchiveUrl.searchParams.set(
+      DIRECT_DOWNLOAD_ID_PARAM,
+      options.downloadId,
+    );
+    return trackedArchiveUrl;
   }
 
   return release.archiveUrl;
