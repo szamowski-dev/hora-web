@@ -3,6 +3,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import {
   categoryLabels,
   formatSupportMessage,
+  supportTicketMetadata,
   supportRequestSchema,
   type SupportFailureType,
 } from "@/lib/support-request";
@@ -185,6 +186,48 @@ export async function POST(req: NextRequest) {
       502,
       "invalid_response",
       "Could not create the support ticket. Please try again later.",
+    );
+  }
+
+  const metadata = supportTicketMetadata[input.category];
+  let metadataResult: Response;
+  try {
+    metadataResult = await fetch(
+      `${POSTHOG_API_HOST}/api/projects/${encodeURIComponent(projectId)}/conversations/tickets/${encodeURIComponent(ticketId)}/`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${posthogApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(metadata),
+      },
+    );
+  } catch (error) {
+    console.error("PostHog support ticket metadata update failed", error);
+    return errorResponse(
+      origin,
+      isRateLimitedError(error) ? 429 : 502,
+      isRateLimitedError(error) ? "rate_limited" : "network_or_server",
+      "Could not finish setting up the support ticket. Please try again later.",
+    );
+  }
+
+  if (!metadataResult.ok) {
+    const metadataPayload = (await metadataResult.json().catch(() => null)) as
+      | { detail?: unknown; error?: unknown }
+      | null;
+    console.error("PostHog rejected support ticket metadata", {
+      status: metadataResult.status,
+      detail: metadataPayload?.detail ?? metadataPayload?.error,
+      ticketId,
+    });
+    const rateLimited = metadataResult.status === 429;
+    return errorResponse(
+      origin,
+      rateLimited ? 429 : 502,
+      rateLimited ? "rate_limited" : "network_or_server",
+      "Could not finish setting up the support ticket. Please try again later.",
     );
   }
 

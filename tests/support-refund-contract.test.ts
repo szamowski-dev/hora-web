@@ -5,6 +5,7 @@ import {
   refundOutcomeLabels,
   supportFailedEventProperties,
   supportSubmittedEventProperties,
+  supportTicketMetadata,
   supportRequestSchema,
 } from "../lib/support-request";
 
@@ -98,6 +99,18 @@ test("formats every category and omits empty optional sections", () => {
     else assert.doesNotMatch(message, /\nRefund request\n/);
     assert.doesNotMatch(message, /Test User|test@example.com/);
   }
+});
+
+test("maps each support category to a PostHog tag and priority", () => {
+  assert.deepEqual(supportTicketMetadata, {
+    bug: { priority: "high", tags: ["bug"] },
+    account: { priority: "medium", tags: ["account"] },
+    sync: { priority: "high", tags: ["sync"] },
+    billing: { priority: "high", tags: ["billing"] },
+    refund: { priority: "high", tags: ["refund"] },
+    feature: { priority: "low", tags: ["feature"] },
+    other: { priority: "medium", tags: ["other"] },
+  });
 });
 
 test("support analytics properties contain no PII or ticket identifiers", () => {

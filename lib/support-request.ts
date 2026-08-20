@@ -25,6 +25,19 @@ export const categoryLabels: Record<SupportCategory, string> = {
   other: "Other",
 };
 
+export const supportTicketMetadata: Record<
+  SupportCategory,
+  { priority: "low" | "medium" | "high"; tags: string[] }
+> = {
+  bug: { priority: "high", tags: ["bug"] },
+  account: { priority: "medium", tags: ["account"] },
+  sync: { priority: "high", tags: ["sync"] },
+  billing: { priority: "high", tags: ["billing"] },
+  refund: { priority: "high", tags: ["refund"] },
+  feature: { priority: "low", tags: ["feature"] },
+  other: { priority: "medium", tags: ["other"] },
+};
+
 export const refundOutcomeLabels: Record<RefundOutcome, string> = {
   refund_only: "Refund only — keep automatic renewal unchanged",
   refund_and_cancel: "Refund and cancel automatic renewal",
