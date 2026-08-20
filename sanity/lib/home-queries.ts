@@ -61,6 +61,7 @@ export type SanityHomePageDocument = {
       showPrimaryCta?: boolean;
       showTerminalPrompt?: boolean;
       homebrewCommand?: string;
+      directDownloadNote?: string;
       requirement?: string;
       copyLabel?: string;
       copiedLabel?: string;
@@ -152,6 +153,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
         showPrimaryCta,
         showTerminalPrompt,
         homebrewCommand,
+        directDownloadNote,
         requirement,
         copyLabel,
         copiedLabel

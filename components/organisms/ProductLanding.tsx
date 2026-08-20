@@ -25,10 +25,7 @@ import type { HomePageContent } from "@/lib/home-model";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_EVENTS, ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { site } from "@/content/site";
-import {
-  DIRECT_DOWNLOAD_HREF,
-  DIRECT_DOWNLOAD_HELPER,
-} from "@/lib/direct/commerce-contract";
+import { DIRECT_DOWNLOAD_HREF } from "@/lib/direct/commerce-contract";
 
 function SectionHeading({
   title,
@@ -148,7 +145,7 @@ export function ProductLanding({
           ) : null}
           {showDirectDownload ? (
             <p className="mt-3 text-xs text-muted">
-              {DIRECT_DOWNLOAD_HELPER} {landing.hero.requirement}
+              {landing.hero.directDownloadNote}
             </p>
           ) : null}
         </div>

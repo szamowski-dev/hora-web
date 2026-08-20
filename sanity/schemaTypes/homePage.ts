@@ -114,6 +114,7 @@ export const homePage = defineType({
             defineField({ name: "showPrimaryCta", title: "Show Download button", type: "boolean", initialValue: false }),
             defineField({ name: "showTerminalPrompt", title: "Show terminal prompt", type: "boolean", initialValue: false }),
             textField("homebrewCommand", "Homebrew command"),
+            textField("directDownloadNote", "Direct download note", 2),
             textField("requirement", "System requirement"),
             textField("copyLabel", "Terminal copy button"),
             textField("copiedLabel", "Terminal copied state"),

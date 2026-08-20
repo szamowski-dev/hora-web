@@ -53,6 +53,10 @@ test("keeps the homepage copy and installation FAQ aligned across distributions"
     DIRECT_DOWNLOAD_LABEL,
   );
   assert.equal(defaultProductLanding.hero.showTerminalPrompt, false);
+  assert.equal(
+    defaultProductLanding.hero.directDownloadNote,
+    "Choose a plan in the app. Requires macOS 26 or newer.",
+  );
 
   assert.match(HORA_INSTALLATION_FAQ, /Direct edition/);
   assert.match(HORA_INSTALLATION_FAQ, /Mac App Store/);

@@ -3,6 +3,7 @@ import "server-only";
 import { cache } from "react";
 import { stegaClean } from "next-sanity";
 import { defaultProductLanding } from "@/content/home-landing";
+import { DIRECT_DOWNLOAD_HELPER } from "@/lib/direct/commerce-contract";
 import type {
   HomePageContent,
   ProductLandingContent,
@@ -227,7 +228,16 @@ function mapProductLanding(
         value?.hero?.homebrewCommand,
         fallback.hero.homebrewCommand,
       ),
-      requirement: landingString(value?.hero?.requirement, fallback.hero.requirement),
+      directDownloadNote: landingString(
+        value?.hero?.directDownloadNote,
+        DIRECT_DOWNLOAD_HELPER +
+          " " +
+          landingString(value?.hero?.requirement, fallback.hero.requirement),
+      ),
+      requirement: landingString(
+        value?.hero?.requirement,
+        fallback.hero.requirement,
+      ),
       copyLabel: landingString(value?.hero?.copyLabel, fallback.hero.copyLabel),
       copiedLabel: landingString(value?.hero?.copiedLabel, fallback.hero.copiedLabel),
     },
