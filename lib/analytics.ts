@@ -29,9 +29,20 @@ export type Ga4MeasurementContext = {
 export const POSTHOG_BROWSER_EVENT = "hora-posthog-capture";
 
 export function createDownloadId(): string | undefined {
-  if (typeof crypto === "undefined") return undefined;
-  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
-  return undefined;
+  if (typeof globalThis === "undefined" || !globalThis.crypto) return undefined;
+
+  const cryptoApi = globalThis.crypto;
+  if (typeof cryptoApi.randomUUID === "function") return cryptoApi.randomUUID();
+  if (typeof cryptoApi.getRandomValues !== "function") return undefined;
+
+  const bytes = new Uint8Array(16);
+  cryptoApi.getRandomValues(bytes);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"))
+    .join("")
+    .replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
 }
 
 const POSTHOG_EVENTS = new Set([
