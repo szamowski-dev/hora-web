@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { issueBody, supportBodySchema } from "../app/api/support/route";
+import {
+  formatSupportMessage,
+  refundOutcomeLabels,
+  supportFailedEventProperties,
+  supportSubmittedEventProperties,
+  supportRequestSchema,
+} from "../lib/support-request";
 
 const baseRequest = {
   name: "Test User",
@@ -12,11 +18,11 @@ const baseRequest = {
 };
 
 test("requires an explicit refund outcome for every refund request", () => {
-  const missing = supportBodySchema.safeParse(baseRequest);
+  const missing = supportRequestSchema.safeParse(baseRequest);
   assert.equal(missing.success, false);
 
   for (const refundOutcome of ["refund_only", "refund_and_cancel"] as const) {
-    const parsed = supportBodySchema.safeParse({
+    const parsed = supportRequestSchema.safeParse({
       ...baseRequest,
       refundOutcome,
     });
@@ -26,14 +32,14 @@ test("requires an explicit refund outcome for every refund request", () => {
 
 test("rejects unknown outcomes and outcomes on non-refund categories", () => {
   assert.equal(
-    supportBodySchema.safeParse({
+    supportRequestSchema.safeParse({
       ...baseRequest,
       refundOutcome: "cancel_without_refund",
     }).success,
     false,
   );
   assert.equal(
-    supportBodySchema.safeParse({
+    supportRequestSchema.safeParse({
       ...baseRequest,
       category: "billing",
       refundOutcome: "refund_only",
@@ -42,22 +48,70 @@ test("rejects unknown outcomes and outcomes on non-refund categories", () => {
   );
 });
 
-test("records the selected refund and renewal operation in the issue body", () => {
-  const refundOnly = supportBodySchema.parse({
+test("records the selected refund and renewal operation in the support message", () => {
+  const refundOnly = supportRequestSchema.parse({
     ...baseRequest,
     refundOutcome: "refund_only",
   });
-  const refundAndCancel = supportBodySchema.parse({
+  const refundAndCancel = supportRequestSchema.parse({
     ...baseRequest,
     refundOutcome: "refund_and_cancel",
   });
 
   assert.match(
-    issueBody(refundOnly),
-    /Requested refund outcome \| Refund only — keep automatic renewal unchanged/,
+    formatSupportMessage(refundOnly),
+    new RegExp(refundOutcomeLabels.refund_only),
   );
   assert.match(
-    issueBody(refundAndCancel),
-    /Requested refund outcome \| Refund and cancel automatic renewal/,
+    formatSupportMessage(refundAndCancel),
+    new RegExp(refundOutcomeLabels.refund_and_cancel),
   );
+});
+
+test("rejects a filled honeypot", () => {
+  assert.equal(
+    supportRequestSchema.safeParse({
+      ...baseRequest,
+      refundOutcome: "refund_only",
+      honey: "spam",
+    }).success,
+    false,
+  );
+});
+
+test("formats every category and omits empty optional sections", () => {
+  for (const category of ["bug", "sync", "account", "billing", "refund", "feature", "other"] as const) {
+    const input = supportRequestSchema.parse({
+      ...baseRequest,
+      category,
+      refundOutcome: category === "refund" ? "refund_only" : undefined,
+      appVersion: "",
+      osVersion: "",
+      steps: "",
+      paddleTransactionId: category === "refund" ? "txn_123" : undefined,
+    });
+    const message = formatSupportMessage(input);
+    assert.match(message, new RegExp(`^\\[.*\\] ${input.summary}`));
+    assert.match(message, /Details/);
+    assert.doesNotMatch(message, /Environment/);
+    if (category === "refund") assert.match(message, /\nRefund request\n/);
+    else assert.doesNotMatch(message, /\nRefund request\n/);
+    assert.doesNotMatch(message, /Test User|test@example.com/);
+  }
+});
+
+test("support analytics properties contain no PII or ticket identifiers", () => {
+  const submitted = supportSubmittedEventProperties("refund");
+  const failed = supportFailedEventProperties("refund", "network_or_server");
+  assert.deepEqual(submitted, { category: "refund" });
+  assert.deepEqual(failed, {
+    category: "refund",
+    failure_type: "network_or_server",
+  });
+  assert.equal("name" in submitted, false);
+  assert.equal("email" in submitted, false);
+  assert.equal("ticket_id" in submitted, false);
+  assert.equal("name" in failed, false);
+  assert.equal("email" in failed, false);
+  assert.equal("ticket_id" in failed, false);
 });

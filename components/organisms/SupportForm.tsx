@@ -1,10 +1,21 @@
 "use client";
 
 import { type ChangeEvent, type FormEvent, useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Icon } from "@/components/atoms/Icon";
 import { track } from "@/lib/analytics";
+import posthog from "posthog-js";
+import {
+  supportFailedEventProperties,
+  supportSubmittedEventProperties,
+  submitSupportRequest,
+  SupportSubmissionError,
+  supportCategories,
+  supportRequestSchema,
+  type SupportFailureType,
+} from "@/lib/support-request";
 
 const categories = [
   { value: "bug", label: "Bug report" },
@@ -25,6 +36,21 @@ type Status =
   | { type: "error"; message: string };
 
 const discordUrl = "https://discord.gg/8JFz4FfBGQ";
+
+function failureMessage(failureType: SupportFailureType): string {
+  switch (failureType) {
+    case "conversations_unavailable":
+      return "Support is temporarily unavailable. Please try again or email hello@horacal.app.";
+    case "rate_limited":
+      return "Too many support requests. Please wait a moment or email hello@horacal.app.";
+    case "ticket_lookup_failed":
+      return "We could not open your existing support conversation. Please try again or email hello@horacal.app.";
+    case "invalid_response":
+      return "Support returned an invalid response. Please try again or email hello@horacal.app.";
+    case "network_or_server":
+      return "Network error. Please try again or email hello@horacal.app.";
+  }
+}
 
 function Field({
   label,
@@ -77,50 +103,54 @@ export function SupportForm() {
     const formData = new FormData(form);
     const payload = Object.fromEntries(formData.entries());
     const requestedCategory = payload.category;
+    const analyticsCategory =
+      typeof requestedCategory === "string" &&
+      supportCategories.includes(requestedCategory as (typeof supportCategories)[number])
+        ? requestedCategory
+        : "unknown";
+    const honey = typeof payload.honey === "string" ? payload.honey : "";
+
+    if (honey.trim() !== "") {
+      form.reset();
+      setShowRequestDetails(false);
+      setCategory("bug");
+      setSubmittedCategory(null);
+      setStatus({ type: "success" });
+      setSubmitting(false);
+      return;
+    }
+
+    const parsed = supportRequestSchema.safeParse(payload);
+    if (!parsed.success) {
+      track("support_request_failed", supportFailedEventProperties(analyticsCategory, "validation"));
+      setStatus({
+        type: "error",
+        message: "Please check the form and try again.",
+      });
+      setSubmitting(false);
+      return;
+    }
 
     try {
-      const res = await fetch("/api/support", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const json = await res.json().catch(() => null);
-
-      if (!res.ok) {
-        track("support_request_failed", {
-          category: typeof requestedCategory === "string" ? requestedCategory : "unknown",
-          failure_type: "request_rejected",
-        });
-        setStatus({
-          type: "error",
-          message:
-            typeof json?.error === "string"
-              ? json.error
-              : "Could not send your request. Please try again.",
-        });
-        return;
-      }
+      await submitSupportRequest(posthog.conversations, parsed.data);
 
       form.reset();
       setShowRequestDetails(false);
       setCategory("bug");
       setSubmittedCategory(
-        typeof requestedCategory === "string"
-          ? categories.find((item) => item.value === requestedCategory)?.value ?? null
-          : null,
+        analyticsCategory === "unknown" ? null : (analyticsCategory as typeof category),
       );
-      track("support_request_submitted", {
-        category: typeof requestedCategory === "string" ? requestedCategory : "unknown",
-      });
+      track("support_request_submitted", supportSubmittedEventProperties(analyticsCategory));
       setStatus({ type: "success" });
-    } catch {
-      track("support_request_failed", {
-        category: typeof requestedCategory === "string" ? requestedCategory : "unknown",
-        failure_type: "network_error",
-      });
+    } catch (error) {
+      const failureType =
+        error instanceof SupportSubmissionError
+          ? error.failureType
+          : "network_or_server";
+      track("support_request_failed", supportFailedEventProperties(analyticsCategory, failureType));
       setStatus({
         type: "error",
-        message: "Network error. Please try again or email hello@horacal.app.",
+        message: failureMessage(failureType),
       });
     } finally {
       setSubmitting(false);
@@ -345,7 +375,14 @@ export function SupportForm() {
 
       <div className="relative mt-5 rounded-xl border border-line bg-overlay p-4 text-sm leading-6 text-muted">
         Please do not include passwords, API tokens, OAuth codes, or private calendar
-        event details. Your email is included so we can follow up.
+        event details. Your email is included so we can follow up. Processed through{" "}
+        <Link
+          href="/privacy/"
+          className="text-text underline decoration-line-strong underline-offset-4"
+        >
+          PostHog Support
+        </Link>
+        .
       </div>
 
       {status.type !== "idle" ? (
