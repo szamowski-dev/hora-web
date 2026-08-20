@@ -22,9 +22,11 @@ const toggleId = "mobile-navigation-toggle";
 export function MobileNav({
   activePath,
   showDirectDownload = false,
+  directDownloadLabel = DIRECT_DOWNLOAD_LABEL,
 }: {
   activePath?: string;
   showDirectDownload?: boolean;
+  directDownloadLabel?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -106,12 +108,12 @@ export function MobileNav({
                 href={DIRECT_DOWNLOAD_HREF}
                 onClick={closeMenu}
                 {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
-                  link_text: DIRECT_DOWNLOAD_LABEL,
+                  link_text: directDownloadLabel,
                   link_url: DIRECT_DOWNLOAD_HREF,
                   placement: "mobile_nav",
                 })}
               >
-                {DIRECT_DOWNLOAD_LABEL}
+                {directDownloadLabel}
               </Link>
             </Button>
           ) : (

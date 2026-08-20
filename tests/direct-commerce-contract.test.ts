@@ -25,8 +25,8 @@ test("keeps Direct new-sale pricing in code while Sanity controls download visib
       plan.suffix,
     ]),
     [
-      ["Monthly", "USD 2.99", "/month"],
-      ["Annual", "USD 29.99", "/year"],
+      ["Monthly", "$2.99", "/month"],
+      ["Annual", "$29.99", "/year"],
     ],
   );
   assert.equal(

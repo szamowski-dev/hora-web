@@ -211,6 +211,7 @@ function mapProductLanding(
         value?.hero?.macAppStoreLabel,
         fallback.hero.macAppStoreLabel,
       ),
+      trialNote: landingString(value?.hero?.trialNote, fallback.hero.trialNote),
       watchVideoLabel: landingString(
         value?.hero?.watchVideoLabel,
         fallback.hero.watchVideoLabel,

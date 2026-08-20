@@ -55,6 +55,7 @@ export type SanityHomePageDocument = {
       description?: string;
       primaryCtaLabel?: string;
       macAppStoreLabel?: string;
+      trialNote?: string;
       watchVideoLabel?: string;
       watchVideoUrl?: string;
       showPrimaryCta?: boolean;
@@ -145,6 +146,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
         description,
         primaryCtaLabel,
         macAppStoreLabel,
+        trialNote,
         watchVideoLabel,
         watchVideoUrl,
         showPrimaryCta,

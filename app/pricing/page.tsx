@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { MdCheck, MdDownloadForOffline } from "react-icons/md";
+import {
+  MdCheck,
+  MdDownloadForOffline,
+  MdHelpOutline,
+  MdLanguage,
+  MdOutlinePerson,
+  MdOutlineStarBorder,
+} from "react-icons/md";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { SetappBadge } from "@/components/atoms/SetappBadge";
 import { Button } from "@/components/ui/button";
@@ -13,7 +20,6 @@ import { defaultOg } from "@/lib/og";
 import { getPricingPage } from "@/lib/pricing-repository";
 import {
   DIRECT_DOWNLOAD_HREF,
-  DIRECT_CHECKOUT_PRICE_NOTE,
 } from "@/lib/direct/commerce-contract";
 
 export const revalidate = 600;
@@ -51,32 +57,55 @@ export default async function PricingPage() {
         align="center"
         title={content.hero.title}
         description={content.hero.description}
+        className="pb-14 pt-28 sm:pb-16 sm:pt-36"
       />
-      <main className="px-5 pb-20 pt-12 sm:px-8 sm:pb-28 sm:pt-16">
+      <main className="px-5 pb-20 pt-10 sm:px-8 sm:pb-28 sm:pt-12">
         <section
           aria-label="Plans"
-          className="mx-auto grid max-w-[960px] gap-4 md:grid-cols-2"
+          className="mx-auto grid max-w-[960px] gap-5 md:grid-cols-2"
         >
           {content.plans.map((plan) => (
             <article
               key={`${plan.name}-${plan.price}`}
-              className="flex min-h-[24rem] flex-col rounded-[28px] border border-line bg-panel/55 p-6 shadow-[0_24px_70px_-42px_var(--ui-shadow-neutral)] sm:p-7"
+              className={`relative flex min-h-[30rem] flex-col rounded-[28px] border bg-panel/35 p-7 shadow-[0_24px_70px_-42px_var(--ui-shadow-neutral)] sm:p-9 ${
+                plan.featured ? "border-success/65" : "border-line"
+              }`}
             >
-              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-muted">
-                {plan.name}
-              </p>
-              <p className="mt-3 text-3xl font-semibold tracking-[-0.06em] text-text sm:text-4xl">
-                {plan.price}
+              {plan.featured && plan.featuredLabel ? (
+                <span className="absolute right-5 top-0 -translate-y-1/2 rounded-md bg-success px-3 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[0_10px_26px_-14px_var(--color-success)]">
+                  {plan.featuredLabel}
+                </span>
+              ) : null}
+              <div className="flex items-center gap-3">
+                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-muted">
+                  {plan.name}
+                </p>
+                {plan.savingsLabel ? (
+                  <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-success">
+                    {plan.savingsLabel}
+                  </span>
+                ) : null}
+              </div>
+              <div className="mt-5 flex items-baseline gap-2">
+                <p className="text-5xl font-semibold tracking-[-0.07em] text-text sm:text-6xl">
+                  {plan.price}
+                </p>
                 {plan.suffix ? (
-                  <span className="ml-1.5 text-base font-medium tracking-normal text-muted sm:text-lg">
+                  <span className="text-base font-medium tracking-normal text-muted sm:text-lg">
                     {plan.suffix}
                   </span>
                 ) : null}
+              </div>
+              {plan.priceDetail ? (
+                <p className="mt-2 text-lg font-semibold text-success">
+                  {plan.priceDetail}
+                </p>
+              ) : null}
+              <p className="mt-2 text-base leading-7 text-muted">
+                {plan.billingLabel}
               </p>
-              <p className="mt-3 max-w-xl text-sm leading-6 text-muted sm:text-base">
-                {plan.description}
-              </p>
-              <ul className="mt-7 space-y-2.5 text-sm text-text sm:mt-8 sm:text-base">
+              <div className="mt-8 border-t border-line" />
+              <ul className="mt-7 space-y-4 text-base text-text">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-3">
                     <MdCheck className="size-5 shrink-0 text-success" aria-hidden />
@@ -84,43 +113,71 @@ export default async function PricingPage() {
                   </li>
                 ))}
               </ul>
+              <div className="mt-auto pt-8">
+                <Button
+                  asChild
+                  size="lg"
+                  className="w-full rounded-xl"
+                >
+                  <a
+                    href={
+                      content.direct.showDownload
+                        ? DIRECT_DOWNLOAD_HREF
+                        : site.cta.primary.href
+                    }
+                    {...(content.direct.showDownload
+                      ? analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
+                          placement: ANALYTICS_PLACEMENTS.pricing,
+                          destination: "direct_download",
+                        })
+                      : analyticsAttrs("app_store_cta_click", {
+                          placement: ANALYTICS_PLACEMENTS.pricing,
+                          destination: "mac_app_store",
+                        }))}
+                    {...(!content.direct.showDownload
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                  >
+                    <MdDownloadForOffline data-icon="inline-start" aria-hidden />
+                    {plan.ctaLabel}
+                  </a>
+                </Button>
+                <p className="mt-3 text-center text-base leading-6 text-muted">
+                  {plan.ctaHelper}
+                </p>
+              </div>
             </article>
           ))}
         </section>
 
-        {content.direct.showDownload ? (
-          <>
-            <div className="mx-auto mt-7 flex max-w-[960px] justify-center">
-              <Button asChild size="lg" className="w-full sm:w-auto">
-                <a
-                  href={DIRECT_DOWNLOAD_HREF}
-                  {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
-                    placement: ANALYTICS_PLACEMENTS.pricing,
-                    destination: "direct_download",
-                  })}
-                >
-                  <MdDownloadForOffline data-icon="inline-start" aria-hidden />
-                  {content.direct.downloadLabel}
-                </a>
-              </Button>
-            </div>
+        <div className="mx-auto mt-8 flex w-fit max-w-full items-center gap-3 rounded-full border border-line bg-panel/25 px-5 py-3 text-center text-sm text-text shadow-[0_14px_40px_-30px_var(--ui-shadow-neutral)] sm:px-6 sm:text-base">
+          <MdOutlineStarBorder className="size-6 shrink-0 text-muted" aria-hidden />
+          <span>{content.includedNote}</span>
+        </div>
 
-            <p className="mx-auto mt-3 max-w-[960px] text-center text-xs leading-5 text-muted">
-              {DIRECT_CHECKOUT_PRICE_NOTE}
-            </p>
-          </>
-        ) : null}
-
-        <p className="mx-auto mt-6 max-w-[960px] text-center text-sm leading-6 text-muted">
-          Direct purchase questions? Read our{" "}
-          <Link
-            href="/refunds/"
-            className="font-medium text-text underline decoration-line-strong underline-offset-4 transition-colors hover:text-accent"
-          >
-            Refunds & Cancellations Policy
-          </Link>
-          .
-        </p>
+        <div className="mx-auto mt-8 flex max-w-[960px] flex-col gap-3 border-t border-line pt-6 text-sm leading-6 text-muted sm:mt-9 sm:pt-7">
+          <p className="flex items-start gap-3">
+            <MdOutlinePerson className="mt-0.5 size-5 shrink-0" aria-hidden />
+            <span>{content.accountNote}</span>
+          </p>
+          <p className="flex items-start gap-3">
+            <MdLanguage className="mt-0.5 size-5 shrink-0" aria-hidden />
+            <span>{content.currencyNote}</span>
+          </p>
+          <p className="flex items-start gap-3">
+            <MdHelpOutline className="mt-0.5 size-5 shrink-0" aria-hidden />
+            <span>
+              Direct purchase questions? Read our{" "}
+              <Link
+                href="/refunds/"
+                className="font-medium text-text underline decoration-line-strong underline-offset-4 transition-colors hover:text-accent"
+              >
+                Refunds & Cancellations Policy
+              </Link>
+              .
+            </span>
+          </p>
+        </div>
 
         {(content.distribution.showMacAppStore || content.distribution.showSetapp) ? (
           <section className="mx-auto mt-24 max-w-[960px] sm:mt-28">

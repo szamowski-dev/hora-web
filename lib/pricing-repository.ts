@@ -64,9 +64,14 @@ function plans(
       name: text(plan.name, fallbackPlan.name),
       price: text(plan.price, fallbackPlan.price),
       suffix: text(plan.suffix, fallbackPlan.suffix),
+      priceDetail: text(plan.priceDetail, fallbackPlan.priceDetail),
+      billingLabel: text(plan.billingLabel, plan.description ?? fallbackPlan.billingLabel),
+      savingsLabel: text(plan.savingsLabel, fallbackPlan.savingsLabel),
+      featuredLabel: text(plan.featuredLabel, fallbackPlan.featuredLabel),
       description: text(plan.description, fallbackPlan.description),
       features: features(plan.features, fallbackPlan.features),
       ctaLabel: text(plan.ctaLabel, fallbackPlan.ctaLabel),
+      ctaHelper: text(plan.ctaHelper, fallbackPlan.ctaHelper),
       featured: plan.featured ?? fallbackPlan.featured,
     };
   });
@@ -117,6 +122,9 @@ function mapPricingPage(
       description: text(value.hero?.description, fallback.hero.description),
     },
     plans: plans(value.plans, fallback.plans),
+    includedNote: text(value.includedNote, fallback.includedNote),
+    accountNote: text(value.accountNote, fallback.accountNote),
+    currencyNote: text(value.currencyNote, fallback.currencyNote),
     direct: {
       showDownload: value.direct?.showDownload === true,
       downloadLabel: text(value.direct?.downloadLabel, fallback.direct.downloadLabel),

@@ -16,9 +16,11 @@ import { MobileNav } from "./MobileNav";
 export function Nav({
   activePath,
   showDirectDownload = false,
+  directDownloadLabel = DIRECT_DOWNLOAD_LABEL,
 }: {
   activePath?: string;
   showDirectDownload?: boolean;
+  directDownloadLabel?: string;
 }) {
   return (
     <div className="relative mx-auto max-w-6xl">
@@ -53,12 +55,12 @@ export function Nav({
                 <Link
                   href={DIRECT_DOWNLOAD_HREF}
                   {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
-                    link_text: DIRECT_DOWNLOAD_LABEL,
+                    link_text: directDownloadLabel,
                     link_url: DIRECT_DOWNLOAD_HREF,
                     placement: "nav",
                   })}
                 >
-                  {DIRECT_DOWNLOAD_LABEL}
+                  {directDownloadLabel}
                 </Link>
               </Button>
             ) : (
@@ -89,6 +91,7 @@ export function Nav({
       <MobileNav
         activePath={activePath}
         showDirectDownload={showDirectDownload}
+        directDownloadLabel={directDownloadLabel}
       />
     </div>
   );

@@ -143,7 +143,10 @@ export default async function RootLayout({
         <AmbientGlow />
         <LayoutEnhancements />
         <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
-          <Nav showDirectDownload={pricing.direct.showDownload} />
+          <Nav
+            showDirectDownload={pricing.direct.showDownload}
+            directDownloadLabel={pricing.direct.downloadLabel}
+          />
         </header>
         <main
           id="main-content"

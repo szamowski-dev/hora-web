@@ -9,7 +9,6 @@ import { HoraWorkflowVisual } from "@/components/landing/LandingVisuals";
 import { LandingFeatureCards } from "@/components/landing/LandingFeatureCards";
 import { HomebrewCommand } from "@/components/molecules/HomebrewCommand";
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
-import { ProductVideoDialog } from "@/components/molecules/ProductVideoDialog";
 import { ThemedProductImage } from "@/components/molecules/ThemedProductImage";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
 import { ProductHeroShader } from "@/components/organisms/ProductHeroShader";
@@ -29,7 +28,6 @@ import { site } from "@/content/site";
 import {
   DIRECT_DOWNLOAD_HREF,
   DIRECT_DOWNLOAD_HELPER,
-  DIRECT_DOWNLOAD_LABEL,
 } from "@/lib/direct/commerce-contract";
 
 function SectionHeading({
@@ -99,7 +97,7 @@ export function ProductLanding({
                 <Link
                   href={DIRECT_DOWNLOAD_HREF}
                   {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
-                    link_text: DIRECT_DOWNLOAD_LABEL,
+                    link_text: landing.hero.primaryCtaLabel,
                     link_url: DIRECT_DOWNLOAD_HREF,
                     placement: ANALYTICS_PLACEMENTS.hero,
                   })}
@@ -108,7 +106,7 @@ export function ProductLanding({
                     data-icon="inline-start"
                     aria-hidden="true"
                   />
-                  {DIRECT_DOWNLOAD_LABEL}
+                  {landing.hero.primaryCtaLabel}
                 </Link>
               </Button>
             ) : (
@@ -132,11 +130,13 @@ export function ProductLanding({
                 />
               </AppStoreLink>
             )}
-            <ProductVideoDialog
-              label={landing.hero.watchVideoLabel}
-              videoUrl={landing.hero.watchVideoUrl}
-            />
           </div>
+          <Link
+            href="/pricing/"
+            className="mt-4 inline-flex text-sm font-medium text-muted underline decoration-line underline-offset-4 transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+          >
+            {landing.hero.trialNote}
+          </Link>
           {showDirectDownload && landing.hero.showTerminalPrompt ? (
             <>
               <HomebrewCommand

@@ -7,36 +7,44 @@ export const DIRECT_CHECKOUT_PRICE_NOTE =
   "Choose a plan in the app. Final currency and applicable taxes are confirmed in checkout.";
 
 export const DIRECT_PRICING_HERO = {
-  title: "Choose your Direct plan",
+  title: "Simple pricing. Everything included.",
   description:
-    "Try hora free for 7 days without a payment card. Choose Monthly or Annual in the app when you are ready.",
+    "Try hora Calendar free for 7 days. Choose monthly or annual billing after installing the app.",
 } satisfies PricingPageContent["hero"];
 
 export const DIRECT_PRICING_PLANS = [
   {
     name: "Monthly",
-    price: "USD 2.99",
+    price: "$2.99",
     suffix: "/month",
-    description: "A flexible subscription renewed monthly.",
+    priceDetail: "",
+    billingLabel: "Billed monthly",
+    savingsLabel: "",
+    featuredLabel: "BEST VALUE",
+    description: "Billed monthly",
     features: [
-      "7-day cardless trial in the app",
-      "Native Mac app",
-      "Cancel any time",
+      "7-day free trial",
+      "Cancel anytime",
     ],
     ctaLabel: DIRECT_DOWNLOAD_LABEL,
+    ctaHelper: "Start your 7-day free trial",
     featured: false,
   },
   {
     name: "Annual",
-    price: "USD 29.99",
+    price: "$29.99",
     suffix: "/year",
-    description: "The best value, renewed yearly.",
+    priceDetail: "$2.50/month",
+    billingLabel: "Billed annually",
+    savingsLabel: "SAVE 16%",
+    featuredLabel: "BEST VALUE",
+    description: "Billed annually",
     features: [
-      "7-day cardless trial in the app",
-      "Native Mac app",
-      "Cancel any time",
+      "7-day free trial",
+      "Cancel renewal anytime",
     ],
     ctaLabel: DIRECT_DOWNLOAD_LABEL,
+    ctaHelper: "Start your 7-day free trial",
     featured: true,
   },
 ] satisfies PricingPlan[];

@@ -74,6 +74,7 @@ export const homePage = defineType({
             textField("description", "Description", 3),
             textField("primaryCtaLabel", "Primary action"),
             textField("macAppStoreLabel", "Mac App Store badge label"),
+            textField("trialNote", "Trial and pricing note"),
             textField("watchVideoLabel", "Video action"),
             defineField({
               name: "watchVideoUrl",

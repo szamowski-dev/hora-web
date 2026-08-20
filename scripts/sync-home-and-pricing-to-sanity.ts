@@ -113,6 +113,9 @@ async function pricingPage() {
       _key: key("plan", index),
       ...plan,
     })),
+    includedNote: pricing.includedNote,
+    accountNote: pricing.accountNote,
+    currencyNote: pricing.currencyNote,
     direct: pricing.direct,
     distribution: {
       ...pricing.distribution,

@@ -77,6 +77,7 @@ export type ProductLandingContent = {
     description: string;
     primaryCtaLabel: string;
     macAppStoreLabel: string;
+    trialNote: string;
     watchVideoLabel: string;
     watchVideoUrl: string;
     showPrimaryCta: boolean;

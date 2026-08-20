@@ -2,9 +2,14 @@ export type PricingPlan = {
   name: string;
   price: string;
   suffix: string;
+  priceDetail: string;
+  billingLabel: string;
+  savingsLabel: string;
+  featuredLabel: string;
   description: string;
   features: string[];
   ctaLabel: string;
+  ctaHelper: string;
   featured: boolean;
 };
 
@@ -18,6 +23,9 @@ export type PricingPageContent = {
     description: string;
   };
   plans: PricingPlan[];
+  includedNote: string;
+  accountNote: string;
+  currencyNote: string;
   direct: {
     showDownload: boolean;
     downloadLabel: string;

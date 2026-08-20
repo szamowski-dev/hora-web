@@ -51,6 +51,10 @@ export const pricingPage = defineType({
             textField("name", "Name"),
             textField("price", "Price"),
             textField("suffix", "Price suffix"),
+            textField("priceDetail", "Secondary price detail"),
+            textField("billingLabel", "Billing label"),
+            textField("savingsLabel", "Savings label"),
+            textField("featuredLabel", "Featured badge label"),
             textField("description", "Description", 3),
             defineField({
               name: "features",
@@ -60,6 +64,7 @@ export const pricingPage = defineType({
               validation: (rule) => rule.max(6),
             }),
             textField("ctaLabel", "Button label"),
+            textField("ctaHelper", "Button helper text"),
             defineField({ name: "featured", title: "Featured", type: "boolean" }),
           ],
           preview: { select: { title: "name", subtitle: "price" } },
@@ -67,6 +72,9 @@ export const pricingPage = defineType({
       ],
       validation: (rule) => rule.max(4),
     }),
+    textField("includedNote", "Included features note"),
+    textField("accountNote", "Account note", 2),
+    textField("currencyNote", "Currency and tax note", 2),
     defineField({
       name: "direct",
       title: "Direct edition visibility",

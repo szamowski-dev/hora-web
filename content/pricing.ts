@@ -15,6 +15,11 @@ export const defaultPricingPage = {
   },
   hero: DIRECT_PRICING_HERO,
   plans: DIRECT_PRICING_PLANS,
+  includedNote: "All hora Calendar features included · Cancel anytime",
+  accountNote:
+    "Subscription is linked to the Google Account used to activate hora Calendar.",
+  currencyNote:
+    "Choose a plan in the app. Final currency and applicable taxes are confirmed in checkout.",
   direct: {
     showDownload: false,
     downloadLabel: DIRECT_DOWNLOAD_LABEL,
