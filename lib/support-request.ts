@@ -1,9 +1,4 @@
 import { z } from "zod";
-import type {
-  SendMessageResponse,
-  TicketStatus,
-  UserProvidedTraits,
-} from "posthog-js";
 
 export const refundOutcomes = ["refund_only", "refund_and_cancel"] as const;
 export type RefundOutcome = (typeof refundOutcomes)[number];
@@ -101,24 +96,9 @@ export function formatSupportMessage(input: SupportRequest): string {
   return lines.join("\n");
 }
 
-export type ConversationsClient = {
-  isAvailable(): boolean;
-  getCurrentTicketId(): string | null;
-  getMessages(ticketId?: string): Promise<
-    | { ticket_id: string; ticket_status: TicketStatus; messages?: unknown[] }
-    | null
-  >;
-  sendMessage(
-    message: string,
-    userTraits?: UserProvidedTraits,
-    newTicket?: boolean,
-  ): Promise<SendMessageResponse | null>;
-};
-
 export type SupportFailureType =
-  | "conversations_unavailable"
+  | "email_unavailable"
   | "rate_limited"
-  | "ticket_lookup_failed"
   | "network_or_server"
   | "invalid_response";
 
@@ -145,120 +125,56 @@ export class SupportSubmissionError extends Error {
   }
 }
 
-function isActiveTicketStatus(status: TicketStatus): boolean {
-  return ["new", "open", "pending", "on_hold"].includes(status);
-}
+export type SupportEmailResponse = { success: true; message_id: string };
 
-function isTicketStatus(value: unknown): value is TicketStatus {
-  return ["new", "open", "pending", "on_hold", "resolved"].includes(value as TicketStatus);
-}
+type SupportRequestFetcher = typeof fetch;
 
-function isRateLimitError(error: unknown): boolean {
-  const message = error instanceof Error ? error.message : String(error);
-  return /\b429\b|rate.?limit|too many requests/i.test(message);
-}
-
-export async function waitForConversations(
-  client: Pick<ConversationsClient, "isAvailable">,
-  timeoutMs = 5_000,
-  intervalMs = 100,
-): Promise<void> {
-  const deadline = Date.now() + timeoutMs;
-  while (Date.now() <= deadline) {
-    try {
-      if (client.isAvailable()) return;
-    } catch {
-      // The SDK can still be finalizing remote config. Keep polling until the deadline.
-    }
-    if (Date.now() >= deadline) break;
-    await new Promise((resolve) => setTimeout(resolve, intervalMs));
-  }
-  throw new SupportSubmissionError(
-    "conversations_unavailable",
-    "PostHog Conversations is not available.",
-  );
+function isRateLimitStatus(status: number): boolean {
+  return status === 429;
 }
 
 export async function submitSupportRequest(
-  client: ConversationsClient,
   input: SupportRequest,
-  options?: { availabilityTimeoutMs?: number; availabilityIntervalMs?: number },
-): Promise<{ ticketId: string; appended: boolean }> {
-  await waitForConversations(
-    client,
-    options?.availabilityTimeoutMs,
-    options?.availabilityIntervalMs,
-  );
-
-  const message = formatSupportMessage(input);
-  const userTraits: UserProvidedTraits = {
-    name: input.name.trim(),
-    email: input.email.trim(),
-  };
-
-  let currentTicketId: string | null = null;
+  fetcher: SupportRequestFetcher = fetch,
+): Promise<{ messageId: string }> {
+  let response: Response;
   try {
-    currentTicketId = client.getCurrentTicketId();
+    response = await fetcher("/api/support", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    });
   } catch (error) {
     throw new SupportSubmissionError(
-      isRateLimitError(error) ? "rate_limited" : "network_or_server",
-      "Could not read the current support ticket.",
-      error,
-    );
-  }
-
-  let appendToTicket = false;
-  if (currentTicketId) {
-    let ticket;
-    try {
-      ticket = await client.getMessages(currentTicketId);
-    } catch (error) {
-      throw new SupportSubmissionError(
-        isRateLimitError(error) ? "rate_limited" : "ticket_lookup_failed",
-        "Could not look up the current support ticket.",
-        error,
-      );
-    }
-    if (!ticket) {
-      throw new SupportSubmissionError(
-        "ticket_lookup_failed",
-        "Could not look up the current support ticket.",
-      );
-    }
-    if (!isTicketStatus(ticket.ticket_status)) {
-      throw new SupportSubmissionError(
-        "invalid_response",
-        "PostHog Conversations returned an invalid ticket response.",
-      );
-    }
-    if (isActiveTicketStatus(ticket.ticket_status)) appendToTicket = true;
-  }
-
-  let response: SendMessageResponse | null;
-  try {
-    response = appendToTicket
-      ? await client.sendMessage(message, userTraits)
-      : await client.sendMessage(message, userTraits, true);
-  } catch (error) {
-    throw new SupportSubmissionError(
-      isRateLimitError(error) ? "rate_limited" : "network_or_server",
+      "network_or_server",
       "Could not send the support request.",
       error,
     );
   }
 
-  if (!response) {
+  const payload = (await response.json().catch(() => null)) as
+    | Partial<SupportEmailResponse> & { failure_type?: SupportFailureType }
+    | null;
+
+  if (isRateLimitStatus(response.status) || payload?.failure_type === "rate_limited") {
     throw new SupportSubmissionError(
-      "conversations_unavailable",
-      "PostHog Conversations returned no response.",
+      "rate_limited",
+      "Too many support requests. Please try again later.",
     );
   }
-  if (typeof response.ticket_id !== "string" || response.ticket_id.trim() === "") {
+  if (!response.ok) {
+    const failureType = payload?.failure_type;
+    throw new SupportSubmissionError(
+      failureType ?? "network_or_server",
+      "Could not send the support request.",
+    );
+  }
+  if (payload?.success !== true || typeof payload.message_id !== "string" || !payload.message_id.trim()) {
     throw new SupportSubmissionError(
       "invalid_response",
-      "PostHog Conversations returned an invalid response.",
+      "The support email service returned an invalid response.",
     );
   }
 
-  return { ticketId: response.ticket_id, appended: appendToTicket };
+  return { messageId: payload.message_id };
 }

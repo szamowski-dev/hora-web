@@ -6,7 +6,6 @@ import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Icon } from "@/components/atoms/Icon";
 import { track } from "@/lib/analytics";
-import { getSupportConversations } from "@/lib/support-conversations";
 import {
   supportFailedEventProperties,
   supportSubmittedEventProperties,
@@ -40,14 +39,12 @@ const supportEmail = "support@horacal.app";
 
 function failureMessage(failureType: SupportFailureType): string {
   switch (failureType) {
-    case "conversations_unavailable":
-      return `Support is temporarily unavailable. Please try again or email ${supportEmail}.`;
+    case "email_unavailable":
+      return `Support email is temporarily unavailable. Please try again or email ${supportEmail}.`;
     case "rate_limited":
       return `Too many support requests. Please wait a moment or email ${supportEmail}.`;
-    case "ticket_lookup_failed":
-      return `We could not open your existing support conversation. Please try again or email ${supportEmail}.`;
     case "invalid_response":
-      return `Support returned an invalid response. Please try again or email ${supportEmail}.`;
+      return `Support email returned an invalid response. Please try again or email ${supportEmail}.`;
     case "network_or_server":
       return `Network error. Please try again or email ${supportEmail}.`;
   }
@@ -133,7 +130,7 @@ export function SupportForm() {
     }
 
     try {
-      await submitSupportRequest(getSupportConversations(), parsed.data);
+      await submitSupportRequest(parsed.data);
 
       form.reset();
       setShowRequestDetails(false);
@@ -399,8 +396,8 @@ export function SupportForm() {
             <>Refund request sent with your selected renewal outcome. We will verify your Paddle purchase and reply by email.</>
           ) : status.type === "success" ? (
             <>
-              Message sent. For real-time bug reports, quick follow-ups, and
-              known issues,{" "}
+              Support email sent. We will reply to your email. For real-time bug reports,
+              quick follow-ups, and known issues,{" "}
               <a
                 href={discordUrl}
                 target="_blank"
