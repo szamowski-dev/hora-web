@@ -54,7 +54,7 @@ test("keeps the homepage copy and installation FAQ aligned across distributions"
   );
   assert.equal(defaultProductLanding.hero.showTerminalPrompt, false);
   assert.equal(
-    defaultProductLanding.hero.directDownloadNote,
+    defaultProductLanding.hero.requirement,
     "Choose a plan in the app. Requires macOS 26 or newer.",
   );
 

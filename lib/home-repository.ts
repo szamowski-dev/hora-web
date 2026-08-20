@@ -3,7 +3,6 @@ import "server-only";
 import { cache } from "react";
 import { stegaClean } from "next-sanity";
 import { defaultProductLanding } from "@/content/home-landing";
-import { DIRECT_DOWNLOAD_HELPER } from "@/lib/direct/commerce-contract";
 import type {
   HomePageContent,
   ProductLandingContent,
@@ -227,12 +226,6 @@ function mapProductLanding(
       homebrewCommand: landingString(
         value?.hero?.homebrewCommand,
         fallback.hero.homebrewCommand,
-      ),
-      directDownloadNote: landingString(
-        value?.hero?.directDownloadNote,
-        DIRECT_DOWNLOAD_HELPER +
-          " " +
-          landingString(value?.hero?.requirement, fallback.hero.requirement),
       ),
       requirement: landingString(
         value?.hero?.requirement,

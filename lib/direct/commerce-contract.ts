@@ -2,7 +2,6 @@ import type { PricingPageContent, PricingPlan } from "@/lib/pricing-model";
 
 export const DIRECT_DOWNLOAD_HREF = "/download/direct/";
 export const DIRECT_DOWNLOAD_LABEL = "Download";
-export const DIRECT_DOWNLOAD_HELPER = "Choose a plan in the app.";
 export const DIRECT_CHECKOUT_PRICE_NOTE =
   "Choose a plan in the app. Final currency and applicable taxes are confirmed in checkout.";
 

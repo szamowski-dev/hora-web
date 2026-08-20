@@ -145,7 +145,7 @@ export function ProductLanding({
           ) : null}
           {showDirectDownload ? (
             <p className="mt-3 text-xs text-muted">
-              {landing.hero.directDownloadNote}
+              {landing.hero.requirement}
             </p>
           ) : null}
         </div>

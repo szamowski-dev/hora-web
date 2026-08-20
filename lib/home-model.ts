@@ -83,7 +83,6 @@ export type ProductLandingContent = {
     showPrimaryCta: boolean;
     showTerminalPrompt: boolean;
     homebrewCommand: string;
-    directDownloadNote: string;
     requirement: string;
     copyLabel: string;
     copiedLabel: string;
