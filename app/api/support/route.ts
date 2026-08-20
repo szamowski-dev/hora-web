@@ -1,5 +1,4 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
 import { checkRateLimit } from "@/lib/rate-limit";
 import {
   categoryLabels,
@@ -10,10 +9,10 @@ import {
 
 export const runtime = "nodejs";
 
-const POSTHOG_SUPPORT_INBOUND_EMAIL =
-  process.env.POSTHOG_SUPPORT_INBOUND_EMAIL ??
-  "team-9fb21ee080d1977fa58d3f33aff2f0db@mg.posthog.com";
-const DEFAULT_SUPPORT_FROM = "Hora Support <support@horacal.app>";
+const POSTHOG_API_HOST = (process.env.POSTHOG_API_HOST ?? "https://us.posthog.com").replace(
+  /\/+$/,
+  "",
+);
 
 const ALLOWED_ORIGINS = new Set([
   "https://horacal.app",
@@ -72,8 +71,8 @@ export async function POST(req: NextRequest) {
   const origin = req.headers.get("origin");
   const ip = getClientIp(req);
 
-  // Unlike the browser Conversations API, this endpoint sends email using our
-  // provider and therefore needs a small server-side abuse guard.
+  // The server-side API key is kept private, while this endpoint still needs a
+  // small abuse guard because it can create outbound email tickets.
   if (!checkRateLimit(`support-email:${ip}`, 5)) {
     return errorResponse(
       origin,
@@ -92,7 +91,7 @@ export async function POST(req: NextRequest) {
     body.honey.trim()
   ) {
     return NextResponse.json(
-      { success: true, message_id: "honeypot" },
+      { success: true, ticket_id: "honeypot" },
       { status: 201, headers: jsonHeaders(origin) },
     );
   }
@@ -107,54 +106,90 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("RESEND_API_KEY is missing for support email intake");
+  const posthogApiKey = process.env.POSTHOG_PERSONAL_API_KEY;
+  const projectId = process.env.POSTHOG_PROJECT_ID;
+  const emailConfigId = process.env.POSTHOG_SUPPORT_EMAIL_CONFIG_ID;
+  if (!posthogApiKey || !projectId || !emailConfigId) {
+    console.error("PostHog support compose configuration is incomplete");
     return errorResponse(
       origin,
       503,
-      "email_unavailable",
+      "conversations_unavailable",
       "Support email is temporarily unavailable.",
     );
   }
 
   const input = parsed.data;
   const subject = `[${categoryLabels[input.category]}] ${headerValue(input.summary)}`;
-  const replyTo = `${headerValue(input.name)} <${input.email.trim()}>`;
-  const resend = new Resend(apiKey);
 
-  let result;
+  let result: Response;
   try {
-    result = await resend.emails.send({
-      from: process.env.SUPPORT_EMAIL_FROM ?? DEFAULT_SUPPORT_FROM,
-      to: POSTHOG_SUPPORT_INBOUND_EMAIL,
-      replyTo,
-      subject,
-      text: formatSupportMessage(input),
-    });
+    result = await fetch(
+      `${POSTHOG_API_HOST}/api/projects/${encodeURIComponent(projectId)}/conversations/tickets/compose/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${posthogApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          recipient_email: input.email.trim(),
+          email_subject: subject,
+          email_config_id: emailConfigId,
+          message: formatSupportMessage(input),
+        }),
+      },
+    );
   } catch (error) {
-    console.error("Support email send failed", error);
+    console.error("PostHog support ticket creation failed", error);
     return errorResponse(
       origin,
       isRateLimitedError(error) ? 429 : 502,
       isRateLimitedError(error) ? "rate_limited" : "network_or_server",
-      "Could not send the support request. Please try again later.",
+      "Could not create the support ticket. Please try again later.",
     );
   }
 
-  if (result.error || !result.data?.id) {
-    console.error("Support email provider rejected the message", result.error);
-    const rateLimited = isRateLimitedError(result.error);
+  const payload = (await result.json().catch(() => null)) as
+    | { id?: unknown; ticket_id?: unknown; detail?: unknown; error?: unknown }
+    | null;
+  if (!result.ok) {
+    console.error("PostHog rejected support ticket", {
+      status: result.status,
+      detail: payload?.detail ?? payload?.error,
+    });
+    const rateLimited = result.status === 429 || isRateLimitedError(payload?.detail);
+    const unavailable = [401, 403, 404].includes(result.status);
     return errorResponse(
       origin,
       rateLimited ? 429 : 502,
-      rateLimited ? "rate_limited" : "network_or_server",
-      "Could not send the support request. Please try again later.",
+      rateLimited
+        ? "rate_limited"
+        : unavailable
+          ? "conversations_unavailable"
+          : "network_or_server",
+      "Could not create the support ticket. Please try again later.",
+    );
+  }
+
+  const ticketId =
+    typeof payload?.id === "string" && payload.id.trim()
+      ? payload.id.trim()
+      : typeof payload?.ticket_id === "string" && payload.ticket_id.trim()
+        ? payload.ticket_id.trim()
+        : null;
+  if (!ticketId) {
+    console.error("PostHog returned an invalid support ticket response", payload);
+    return errorResponse(
+      origin,
+      502,
+      "invalid_response",
+      "Could not create the support ticket. Please try again later.",
     );
   }
 
   return NextResponse.json(
-    { success: true, message_id: result.data.id },
+    { success: true, ticket_id: ticketId },
     { status: 201, headers: jsonHeaders(origin) },
   );
 }

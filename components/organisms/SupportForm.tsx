@@ -39,7 +39,7 @@ const supportEmail = "support@horacal.app";
 
 function failureMessage(failureType: SupportFailureType): string {
   switch (failureType) {
-    case "email_unavailable":
+    case "conversations_unavailable":
       return `Support email is temporarily unavailable. Please try again or email ${supportEmail}.`;
     case "rate_limited":
       return `Too many support requests. Please wait a moment or email ${supportEmail}.`;
@@ -396,7 +396,7 @@ export function SupportForm() {
             <>Refund request sent with your selected renewal outcome. We will verify your Paddle purchase and reply by email.</>
           ) : status.type === "success" ? (
             <>
-              Support email sent. We will reply to your email. For real-time bug reports,
+              Support ticket created. We will reply to your email. For real-time bug reports,
               quick follow-ups, and known issues,{" "}
               <a
                 href={discordUrl}

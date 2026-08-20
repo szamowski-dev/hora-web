@@ -97,7 +97,7 @@ export function formatSupportMessage(input: SupportRequest): string {
 }
 
 export type SupportFailureType =
-  | "email_unavailable"
+  | "conversations_unavailable"
   | "rate_limited"
   | "network_or_server"
   | "invalid_response";
@@ -125,7 +125,7 @@ export class SupportSubmissionError extends Error {
   }
 }
 
-export type SupportEmailResponse = { success: true; message_id: string };
+export type SupportTicketResponse = { success: true; ticket_id: string };
 
 type SupportRequestFetcher = typeof fetch;
 
@@ -136,7 +136,7 @@ function isRateLimitStatus(status: number): boolean {
 export async function submitSupportRequest(
   input: SupportRequest,
   fetcher: SupportRequestFetcher = fetch,
-): Promise<{ messageId: string }> {
+): Promise<{ ticketId: string }> {
   let response: Response;
   try {
     response = await fetcher("/api/support", {
@@ -147,13 +147,13 @@ export async function submitSupportRequest(
   } catch (error) {
     throw new SupportSubmissionError(
       "network_or_server",
-      "Could not send the support request.",
+      "Could not create the support ticket.",
       error,
     );
   }
 
   const payload = (await response.json().catch(() => null)) as
-    | Partial<SupportEmailResponse> & { failure_type?: SupportFailureType }
+    | Partial<SupportTicketResponse> & { failure_type?: SupportFailureType }
     | null;
 
   if (isRateLimitStatus(response.status) || payload?.failure_type === "rate_limited") {
@@ -166,15 +166,15 @@ export async function submitSupportRequest(
     const failureType = payload?.failure_type;
     throw new SupportSubmissionError(
       failureType ?? "network_or_server",
-      "Could not send the support request.",
+      "Could not create the support ticket.",
     );
   }
-  if (payload?.success !== true || typeof payload.message_id !== "string" || !payload.message_id.trim()) {
+  if (payload?.success !== true || typeof payload.ticket_id !== "string" || !payload.ticket_id.trim()) {
     throw new SupportSubmissionError(
       "invalid_response",
-      "The support email service returned an invalid response.",
+      "The support ticket service returned an invalid response.",
     );
   }
 
-  return { messageId: payload.message_id };
+  return { ticketId: payload.ticket_id };
 }

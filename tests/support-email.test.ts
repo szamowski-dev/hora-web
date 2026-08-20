@@ -14,17 +14,17 @@ const input = supportRequestSchema.parse({
   details: "The calendar stays stale after I change an event in Google Calendar.",
 });
 
-test("submits the validated request to the server email adapter", async () => {
+test("submits the validated request to the server PostHog ticket adapter", async () => {
   let request: { url: string; init?: RequestInit } | undefined;
   const result = await submitSupportRequest(input, async (url, init) => {
     request = { url: String(url), init };
-    return new Response(JSON.stringify({ success: true, message_id: "email-123" }), {
+    return new Response(JSON.stringify({ success: true, ticket_id: "ticket-123" }), {
       status: 201,
       headers: { "Content-Type": "application/json" },
     });
   });
 
-  assert.deepEqual(result, { messageId: "email-123" });
+  assert.deepEqual(result, { ticketId: "ticket-123" });
   assert.equal(request?.url, "/api/support");
   assert.equal(request?.init?.method, "POST");
   assert.deepEqual(JSON.parse(String(request?.init?.body)), input);
@@ -39,7 +39,7 @@ test("maps rate limits, invalid responses, and network failures", async () => {
 
   await assert.rejects(
     submitSupportRequest(input, async () =>
-      new Response(JSON.stringify({ success: true, message_id: "" }), { status: 201 }),
+      new Response(JSON.stringify({ success: true, ticket_id: "" }), { status: 201 }),
     ),
     (error: unknown) =>
       error instanceof SupportSubmissionError && error.failureType === "invalid_response",
