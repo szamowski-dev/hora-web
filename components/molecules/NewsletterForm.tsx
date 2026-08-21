@@ -10,8 +10,6 @@ import {
   CONVERSION_TAGS,
   getGa4MeasurementContext,
   getAttribution,
-  redditIdentify,
-  redditTrack,
   track,
   trackConversion,
 } from "@/lib/analytics";
@@ -71,9 +69,6 @@ export function NewsletterForm({
         ...attribution,
       });
       trackConversion(CONVERSION_TAGS.waitlistSignup);
-      redditIdentify(normalizedEmail).then(() => {
-        redditTrack("SignUp");
-      });
     } catch {
       setStatus("error");
       setMessage(

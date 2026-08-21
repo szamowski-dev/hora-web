@@ -1,11 +1,8 @@
-import { isTestEmail, normalizeEmail } from "@/lib/identity";
-
 declare global {
   interface Window {
     dataLayer: unknown[][];
     gtag?: (...args: unknown[]) => void;
     horaGtagReady?: boolean;
-    rdt?: ((...args: unknown[]) => void) & { callQueue: unknown[][] };
     Cookiebot?: {
       consent?: {
         marketing?: boolean;
@@ -15,7 +12,6 @@ declare global {
   }
 }
 
-export const REDDIT_PIXEL_ID = "a2_j1933bxzyyfr";
 export const GA_MEASUREMENT_ID = "G-WQZ32S81FX";
 export const GOOGLE_ADS_ID = "AW-18070613857";
 
@@ -151,44 +147,6 @@ export function trackConversion(sendTo: string) {
   if (typeof window === "undefined") return;
   if (typeof window.gtag === "function") {
     window.gtag("event", "conversion", { send_to: sendTo });
-  }
-}
-
-async function sha256Hex(text: string): Promise<string | null> {
-  if (typeof crypto === "undefined" || !crypto.subtle) return null;
-  try {
-    const buf = await crypto.subtle.digest(
-      "SHA-256",
-      new TextEncoder().encode(text),
-    );
-    return Array.from(new Uint8Array(buf))
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-  } catch {
-    return null;
-  }
-}
-
-// Re-init the Reddit Pixel with hashed email so advanced matching attaches
-// to subsequent events. Reddit accepts SHA-256 of a normalized (trim+lower)
-// email; we never send the raw address.
-export async function redditIdentify(email: string) {
-  if (typeof window === "undefined") return;
-  if (!window.Cookiebot?.consent?.marketing) return;
-  const normalized = normalizeEmail(email);
-  if (!normalized || isTestEmail(normalized)) return;
-  const hashed = await sha256Hex(normalized);
-  if (!hashed) return;
-  if (typeof window.rdt === "function") {
-    window.rdt("init", REDDIT_PIXEL_ID, { email: hashed });
-  }
-}
-
-export function redditTrack(event: string, props?: EventProps) {
-  if (typeof window === "undefined") return;
-  if (!window.Cookiebot?.consent?.marketing) return;
-  if (typeof window.rdt === "function") {
-    window.rdt("track", event, props);
   }
 }
 
