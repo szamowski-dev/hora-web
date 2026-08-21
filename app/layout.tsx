@@ -8,9 +8,8 @@ import { Footer } from "@/components/organisms/Footer";
 import { AmbientGlow } from "@/components/organisms/AmbientGlow";
 import { LayoutEnhancements } from "@/components/molecules/LayoutEnhancements";
 import { DraftModeTools } from "@/components/sanity/DraftModeTools";
-import { ConsentMode } from "@/components/molecules/ConsentMode";
-import { MarketingTracking } from "@/components/molecules/MarketingTracking";
-import { GA_MEASUREMENT_ID } from "@/lib/analytics";
+import { CookieConsentBanner } from "@/components/molecules/CookieConsentBanner";
+import { GOOGLE_ADS_ID } from "@/lib/analytics";
 import { getPricingPage } from "@/lib/pricing-repository";
 import { getFooterSettings } from "@/lib/footer-settings-repository";
 import "./globals.css";
@@ -123,23 +122,11 @@ export default async function RootLayout({
             __html: `try { const theme = localStorage.getItem('hora-theme'); if (theme === 'dark') { document.documentElement.dataset.theme = theme; document.documentElement.style.colorScheme = theme; } } catch {}`,
           }}
         />
-        <link rel="dns-prefetch" href="https://consent.cookiebot.com" />
-        <link rel="dns-prefetch" href="https://consentcdn.cookiebot.com" />
       </head>
       <body
         className="min-h-dvh flex flex-col text-text"
         style={{ overscrollBehaviorY: "none" }}
       >
-        {/* Consent Mode starts before hydration; Cookiebot follows as soon as
-            the app is interactive so it can apply the visitor's choice. */}
-        <Script
-          id="Cookiebot"
-          src="https://consent.cookiebot.com/uc.js"
-          data-cbid="93e42c2d-57e2-448f-9699-a65ce0fffdbd"
-          data-blockingmode="auto"
-          strategy="afterInteractive"
-        />
-
         <AmbientGlow />
         <LayoutEnhancements />
         <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
@@ -172,27 +159,19 @@ export default async function RootLayout({
               ad_storage: 'denied',
               ad_user_data: 'denied',
               ad_personalization: 'denied',
-              analytics_storage: 'denied',
-              functionality_storage: 'denied',
-              personalization_storage: 'denied',
-              security_storage: 'granted',
               wait_for_update: 500,
             });
             window.gtag('set', 'ads_data_redaction', true);
             window.gtag('set', 'url_passthrough', true);
             window.gtag('js', new Date());
-            window.gtag('config', '${GA_MEASUREMENT_ID}', { send_page_view: false });
-            window.horaGtagReady = true;
-            window.dispatchEvent(new Event('hora-gtag-ready'));
           `}
         </Script>
         <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
           strategy="beforeInteractive"
           data-cookieconsent="ignore"
         />
-        <ConsentMode />
-        <MarketingTracking />
+        <CookieConsentBanner />
 
         <script
           type="application/ld+json"

@@ -6,13 +6,7 @@ import { Input } from "@/components/atoms/Input";
 import { Icon } from "@/components/atoms/Icon";
 import { site } from "@/content/site";
 import { home } from "@/content/home";
-import {
-  CONVERSION_TAGS,
-  getGa4MeasurementContext,
-  getAttribution,
-  track,
-  trackConversion,
-} from "@/lib/analytics";
+import { getAttribution, track } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import { normalizeEmail } from "@/lib/identity";
 import type { NewsletterPlacement } from "@/lib/analyticsSchema";
@@ -49,16 +43,10 @@ export function NewsletterForm({
     track("newsletter_submit", { method: "email", placement, ...attribution });
 
     try {
-      const ga4MeasurementContext = await getGa4MeasurementContext();
       const res = await fetch(site.newsletter.endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: normalizedEmail,
-          ...(ga4MeasurementContext
-            ? { ga4MeasurementContext }
-            : {}),
-        }),
+        body: JSON.stringify({ email: normalizedEmail }),
       });
       if (!res.ok) throw new Error("Request failed");
       setStatus("success");
@@ -68,7 +56,6 @@ export function NewsletterForm({
         placement,
         ...attribution,
       });
-      trackConversion(CONVERSION_TAGS.waitlistSignup);
     } catch {
       setStatus("error");
       setMessage(

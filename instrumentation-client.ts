@@ -5,6 +5,11 @@ import {
   POSTHOG_BROWSER_EVENT,
   type EventProps,
 } from "@/lib/analytics";
+import {
+  applyCookieConsent,
+  readCookieConsent,
+  requiresCookieConsent,
+} from "@/lib/cookie-consent";
 
 const projectToken = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
 const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;
@@ -32,12 +37,20 @@ if (!projectToken || !host) {
     defaults: "2026-05-30",
     capture_exceptions: true,
     debug: process.env.NODE_ENV === "development",
-    cookieless_mode: "always",
+    persistence: "memory",
   });
+
+  // Apply a prior choice during startup, before React renders the banner.
+  const savedConsent = readCookieConsent();
+  if (savedConsent) {
+    applyCookieConsent(savedConsent);
+  } else if (!requiresCookieConsent(posthog.get_property("$geoip_country_code"))) {
+    applyCookieConsent("yes");
+    captureFirstTouch(true);
+  }
 
   window.addEventListener(POSTHOG_BROWSER_EVENT, capturePostHogEvent);
 }
 
-// GA4 is initialized before hydration in app/layout.tsx. Capture first-touch
-// attribution after the app becomes interactive.
+// Save first-touch attribution only where browser storage is allowed.
 captureFirstTouch();

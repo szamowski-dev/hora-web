@@ -1,5 +1,4 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { after } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -9,12 +8,6 @@ export const runtime = "nodejs";
 
 const bodySchema = z.object({
   email: z.string().email().max(254),
-  ga4MeasurementContext: z
-    .object({
-      clientId: z.string().min(1).max(200),
-      sessionId: z.string().regex(/^\d+$/).max(20).optional(),
-    })
-    .optional(),
 });
 const RESEND_WAITLIST_EVENT = "hora Calendar Waitlist";
 
@@ -111,40 +104,6 @@ export async function POST(req: NextRequest) {
       { status: 500, headers },
     );
   }
-
-  after(async () => {
-    const measurementId = process.env.GA_MEASUREMENT_ID;
-    const secret = process.env.GA_API_SECRET;
-    const ga4MeasurementContext = parsed.data.ga4MeasurementContext;
-    if (measurementId && secret && ga4MeasurementContext) {
-      try {
-        await fetch(
-          `https://www.google-analytics.com/mp/collect?measurement_id=${measurementId}&api_secret=${secret}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              client_id: ga4MeasurementContext.clientId,
-              events: [
-                {
-                  name: "newsletter_signup_completed",
-                  params: {
-                    method: "server_side",
-                    engagement_time_msec: 100,
-                    ...(ga4MeasurementContext.sessionId
-                      ? { session_id: ga4MeasurementContext.sessionId }
-                      : {}),
-                  },
-                },
-              ],
-            }),
-          },
-        );
-      } catch {
-        // non-blocking
-      }
-    }
-  });
 
   return NextResponse.json({ success: true }, { headers });
 }

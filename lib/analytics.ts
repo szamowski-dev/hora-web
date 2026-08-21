@@ -2,25 +2,12 @@ declare global {
   interface Window {
     dataLayer: unknown[][];
     gtag?: (...args: unknown[]) => void;
-    horaGtagReady?: boolean;
-    Cookiebot?: {
-      consent?: {
-        marketing?: boolean;
-        statistics?: boolean;
-      };
-    };
   }
 }
 
-export const GA_MEASUREMENT_ID = "G-WQZ32S81FX";
 export const GOOGLE_ADS_ID = "AW-18070613857";
 
 export type EventProps = Record<string, string | number | boolean>;
-
-export type Ga4MeasurementContext = {
-  clientId: string;
-  sessionId?: string;
-};
 
 export const POSTHOG_BROWSER_EVENT = "hora-posthog-capture";
 
@@ -81,79 +68,10 @@ export function track(event: string, props?: EventProps) {
       }),
     );
   }
-
-  // Guard with typeof, not optional chain: privacy extensions (Brave shields,
-  // uBlock, AdGuard) can stub window.gtag as a non-callable object.
-  if (typeof window.gtag === "function") {
-    window.gtag("event", event, props);
-  }
 }
 
-export function trackPageView(pagePath: string) {
-  if (typeof window === "undefined") return;
-  if (typeof window.gtag === "function") {
-    window.gtag("event", "page_view", {
-      page_location: window.location.href,
-      page_path: pagePath,
-      page_title: document.title,
-    });
-  }
-}
-
-function getGtagField(field: "client_id" | "session_id"): Promise<string | undefined> {
-  const gtag = typeof window === "undefined" ? undefined : window.gtag;
-  if (typeof gtag !== "function") {
-    return Promise.resolve(undefined);
-  }
-
-  return new Promise((resolve) => {
-    let settled = false;
-    const finish = (value?: unknown) => {
-      if (settled) return;
-      settled = true;
-      resolve(typeof value === "string" && value.length > 0 ? value : undefined);
-    };
-
-    window.setTimeout(() => finish(), 750);
-    try {
-      gtag("get", GA_MEASUREMENT_ID, field, finish);
-    } catch {
-      finish();
-    }
-  });
-}
-
-// The Measurement Protocol event is sent from our server after a successful
-// subscription. Keep it joined to the browser session instead of substituting
-// an email address or another application identifier.
-export async function getGa4MeasurementContext(): Promise<Ga4MeasurementContext | null> {
-  const [clientId, sessionId] = await Promise.all([
-    getGtagField("client_id"),
-    getGtagField("session_id"),
-  ]);
-
-  if (!clientId) return null;
-  return {
-    clientId,
-    ...(sessionId && /^\d+$/.test(sessionId) ? { sessionId } : {}),
-  };
-}
-
-export const CONVERSION_TAGS = {
-  waitlistSignup: "AW-18070613857/NVQcCNP48ZscEOHe3qhD",
-} as const;
-
-export function trackConversion(sendTo: string) {
-  if (typeof window === "undefined") return;
-  if (typeof window.gtag === "function") {
-    window.gtag("event", "conversion", { send_to: sendTo });
-  }
-}
-
-// First-touch attribution — persisted across sessions in localStorage so that a
-// signup three days / two visits later still knows where the user originally
-// came from. We attach it directly to conversion events for GA4 funnels and
-// breakdowns.
+// First-touch attribution is forwarded with PostHog conversion events after
+// the visitor has allowed browser storage.
 
 const FIRST_TOUCH_KEY = "hora_first_touch_v1";
 
@@ -178,9 +96,12 @@ function readFirstTouch(): FirstTouch | null {
   }
 }
 
-export function captureFirstTouch() {
+export function captureFirstTouch(storageAllowed = false) {
   if (typeof window === "undefined") return;
   try {
+    if (!storageAllowed && window.localStorage?.getItem("cookie_consent") !== "yes") {
+      return;
+    }
     if (window.localStorage?.getItem(FIRST_TOUCH_KEY)) return;
     const url = new URL(window.location.href);
     const param = (k: string) => url.searchParams.get(k) || undefined;
