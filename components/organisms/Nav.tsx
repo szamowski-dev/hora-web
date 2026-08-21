@@ -52,7 +52,7 @@ export function Nav({
             <ThemeToggle />
             {showDirectDownload ? (
               <Button asChild size="sm">
-                <Link
+                <a
                   href={DIRECT_DOWNLOAD_HREF}
                   {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
                     link_text: directDownloadLabel,
@@ -61,7 +61,7 @@ export function Nav({
                   })}
                 >
                   {directDownloadLabel}
-                </Link>
+                </a>
               </Button>
             ) : (
               <AppStoreLink

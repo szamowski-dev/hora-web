@@ -104,7 +104,7 @@ export function MobileNav({
           ))}
           {showDirectDownload ? (
             <Button asChild size="lg" className="mt-7 w-full">
-              <Link
+              <a
                 href={DIRECT_DOWNLOAD_HREF}
                 onClick={closeMenu}
                 {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
@@ -114,7 +114,7 @@ export function MobileNav({
                 })}
               >
                 {directDownloadLabel}
-              </Link>
+              </a>
             </Button>
           ) : (
             <AppStoreLink

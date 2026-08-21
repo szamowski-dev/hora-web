@@ -91,7 +91,7 @@ export function ProductLanding({
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             {showDirectDownload ? (
               <Button asChild size="lg" variant="accent">
-                <Link
+                <a
                   href={DIRECT_DOWNLOAD_HREF}
                   {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
                     link_text: landing.hero.primaryCtaLabel,
@@ -104,7 +104,7 @@ export function ProductLanding({
                     aria-hidden="true"
                   />
                   {landing.hero.primaryCtaLabel}
-                </Link>
+                </a>
               </Button>
             ) : (
               <AppStoreLink
