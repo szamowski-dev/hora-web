@@ -30,6 +30,7 @@ export function ProductHeroShaderMotion() {
     const webGL2Available = supportsWebGL2();
     let isIntersecting = true;
     let disposed = false;
+    let hasLoaded = false;
     let loadVersion = 0;
     let idleId: number | undefined;
     let timeoutId: ReturnType<typeof globalThis.setTimeout> | undefined;
@@ -41,7 +42,7 @@ export function ProductHeroShaderMotion() {
       timeoutId = undefined;
     };
 
-    const shouldAnimate = () =>
+    const canLoadShader = () =>
       desktop.matches &&
       !reducedMotion.matches &&
       webGL2Available &&
@@ -51,7 +52,8 @@ export function ProductHeroShaderMotion() {
     const loadShader = (version: number) => {
       void import("@/components/organisms/ProductHeroShaderCanvas")
         .then((module) => {
-          if (disposed || version !== loadVersion || !shouldAnimate()) return;
+          if (disposed || version !== loadVersion || !canLoadShader()) return;
+          hasLoaded = true;
           setCanvas(() => module.ProductHeroShaderCanvas);
         })
         .catch(() => {
@@ -64,10 +66,7 @@ export function ProductHeroShaderMotion() {
       cancelScheduledLoad();
       loadVersion += 1;
 
-      if (!shouldAnimate()) {
-        setCanvas(null);
-        return;
-      }
+      if (hasLoaded || !canLoadShader()) return;
 
       const version = loadVersion;
       if ("requestIdleCallback" in window) {
