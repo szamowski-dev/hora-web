@@ -9,6 +9,14 @@ import {
 
 type ShaderCanvasComponent = ComponentType;
 
+function supportsWebGL2() {
+  try {
+    return document.createElement("canvas").getContext("webgl2") !== null;
+  } catch {
+    return false;
+  }
+}
+
 export function ProductHeroShaderMotion() {
   const hostRef = useRef<HTMLDivElement>(null);
   const [Canvas, setCanvas] = useState<ShaderCanvasComponent | null>(null);
@@ -19,6 +27,7 @@ export function ProductHeroShaderMotion() {
 
     const desktop = window.matchMedia("(min-width: 768px)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const webGL2Available = supportsWebGL2();
     let isIntersecting = true;
     let disposed = false;
     let loadVersion = 0;
@@ -35,6 +44,7 @@ export function ProductHeroShaderMotion() {
     const shouldAnimate = () =>
       desktop.matches &&
       !reducedMotion.matches &&
+      webGL2Available &&
       isIntersecting &&
       document.visibilityState === "visible";
 
