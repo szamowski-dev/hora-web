@@ -1,3 +1,5 @@
+import { normalizeUtmMedium } from "./utm";
+
 export type UtmAttribution = {
   source?: string;
   medium?: string;
@@ -15,7 +17,7 @@ export function utmAttributionFromSearchParams(
 
   return {
     source: read("utm_source"),
-    medium: read("utm_medium"),
+    medium: normalizeUtmMedium(read("utm_medium")),
     campaign: read("utm_campaign"),
     content: read("utm_content"),
     term: read("utm_term"),

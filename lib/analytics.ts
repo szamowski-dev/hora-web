@@ -1,3 +1,5 @@
+import { normalizeUtmMedium } from "./utm";
+
 declare global {
   interface Window {
     dataLayer: unknown[][];
@@ -107,7 +109,7 @@ export function captureFirstTouch(storageAllowed = false) {
     const param = (k: string) => url.searchParams.get(k) || undefined;
     const data: FirstTouch = {
       source: param("utm_source"),
-      medium: param("utm_medium"),
+      medium: normalizeUtmMedium(param("utm_medium")),
       campaign: param("utm_campaign"),
       term: param("utm_term"),
       content: param("utm_content"),
