@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withPostHogConfig } from "@posthog/nextjs-config";
 
 import { legacyBlogAssetRedirects } from "./lib/legacy-blog-asset-redirects";
 
@@ -279,4 +280,20 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const posthogErrorTrackingApiKey = process.env.POSTHOG_ERROR_TRACKING_API_KEY;
+const posthogProjectId = process.env.POSTHOG_PROJECT_ID;
+
+export default
+  process.env.NODE_ENV === "production" &&
+  posthogErrorTrackingApiKey &&
+  posthogProjectId
+    ? withPostHogConfig(nextConfig, {
+        personalApiKey: posthogErrorTrackingApiKey,
+        projectId: posthogProjectId,
+        host: process.env.POSTHOG_API_HOST ?? "https://us.posthog.com",
+        sourcemaps: {
+          enabled: true,
+          deleteAfterUpload: true,
+        },
+      })
+    : nextConfig;
