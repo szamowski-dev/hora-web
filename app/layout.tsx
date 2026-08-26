@@ -215,6 +215,7 @@ export default async function RootLayout({
         </Script>
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
+          crossOrigin="anonymous"
           strategy="beforeInteractive"
           data-cookieconsent="ignore"
         />
