@@ -117,6 +117,57 @@ export const homePage = defineType({
             textField("requirement", "Homepage download note", 2),
             textField("copyLabel", "Terminal copy button"),
             textField("copiedLabel", "Terminal copied state"),
+            textField("distributionMenuLabel", "Other download options button"),
+            defineField({
+              name: "distributionOptions",
+              title: "Other download options",
+              description:
+                "Shown beside the Direct Download button. Homebrew also opens the install command.",
+              type: "array",
+              of: [
+                defineArrayMember({
+                  type: "object",
+                  name: "productLandingDistributionOption",
+                  fields: [
+                    defineField({
+                      name: "kind",
+                      title: "Destination",
+                      type: "string",
+                      options: {
+                        list: [
+                          { title: "Mac App Store", value: "mac_app_store" },
+                          { title: "Homebrew", value: "homebrew" },
+                          { title: "Setapp", value: "setapp" },
+                        ],
+                        layout: "radio",
+                      },
+                      validation: (rule) => rule.required(),
+                    }),
+                    textField("title", "Title"),
+                    textField("description", "Description", 2),
+                    defineField({
+                      name: "href",
+                      title: "Link",
+                      type: "url",
+                      validation: (rule) => rule.required().uri({ scheme: ["https"] }),
+                    }),
+                  ],
+                  preview: {
+                    select: { title: "title", subtitle: "description" },
+                  },
+                }),
+              ],
+              validation: (rule) =>
+                rule.unique().custom((options) => {
+                  if (!options?.length) return true;
+                  const kinds = options
+                    .map((option) => (option as { kind?: string } | undefined)?.kind)
+                    .filter(Boolean);
+                  return new Set(kinds).size === kinds.length
+                    ? true
+                    : "Each destination can appear only once.";
+                }),
+            }),
           ],
         }),
         defineField({

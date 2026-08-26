@@ -1,9 +1,5 @@
-"use client";
-
 import Image from "next/image";
-import { useSyncExternalStore } from "react";
-
-type Theme = "light" | "dark";
+import { cn } from "@/lib/cn";
 
 type ThemedProductImageProps = {
   alt: string;
@@ -18,24 +14,6 @@ type ThemedProductImageProps = {
   height: number;
 };
 
-function getTheme(): Theme {
-  return window.localStorage.getItem("hora-theme") === "dark" ? "dark" : "light";
-}
-
-function getServerTheme(): Theme {
-  return "light";
-}
-
-function subscribeToThemeChange(onStoreChange: () => void) {
-  window.addEventListener("storage", onStoreChange);
-  window.addEventListener("hora-theme-change", onStoreChange);
-
-  return () => {
-    window.removeEventListener("storage", onStoreChange);
-    window.removeEventListener("hora-theme-change", onStoreChange);
-  };
-}
-
 export function ThemedProductImage({
   alt,
   className,
@@ -48,19 +26,37 @@ export function ThemedProductImage({
   unoptimized,
   width,
 }: ThemedProductImageProps) {
-  const theme = useSyncExternalStore(subscribeToThemeChange, getTheme, getServerTheme);
-
   return (
-    <Image
-      src={theme === "dark" ? darkSrc : lightSrc}
-      alt={alt}
-      width={width}
-      height={height}
-      preload={preload}
-      fetchPriority={fetchPriority}
-      sizes={sizes}
-      unoptimized={unoptimized}
-      className={className}
-    />
+    <div className="themed-product-image">
+      <Image
+        src={lightSrc}
+        alt={alt}
+        width={width}
+        height={height}
+        preload={preload}
+        fetchPriority={fetchPriority}
+        sizes={sizes}
+        unoptimized={unoptimized}
+        className={cn(
+          className,
+          "themed-product-image-light",
+        )}
+      />
+      <Image
+        src={darkSrc}
+        alt=""
+        aria-hidden="true"
+        width={width}
+        height={height}
+        preload={false}
+        fetchPriority={fetchPriority}
+        sizes={sizes}
+        unoptimized={unoptimized}
+        className={cn(
+          className,
+          "themed-product-image-dark",
+        )}
+      />
+    </div>
   );
 }

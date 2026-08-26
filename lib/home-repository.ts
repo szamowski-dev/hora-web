@@ -6,6 +6,7 @@ import { defaultProductLanding } from "@/content/home-landing";
 import type {
   HomePageContent,
   ProductLandingContent,
+  ProductLandingDistributionOption,
   ProductLandingFeature,
   ProductLandingIcon,
   ProductLandingTone,
@@ -20,6 +21,7 @@ import { sanityImageDimensions, sanityImageUrl } from "@/sanity/lib/image";
 import {
   HOME_PAGE_QUERY,
   type SanityHomePageDocument,
+  type SanityProductLandingDistributionOptionValue,
   type SanityProductLandingFeatureValue,
   type SanitySiteImageValue,
   type SanityThemedProductImageValue,
@@ -69,6 +71,12 @@ const productLandingTones = new Set<ProductLandingTone>([
   "yellow",
   "purple",
   "cyan",
+]);
+
+const distributionOptionKinds = new Set<ProductLandingDistributionOption["kind"]>([
+  "mac_app_store",
+  "homebrew",
+  "setapp",
 ]);
 
 function invalidHome(message: string): never {
@@ -181,6 +189,41 @@ function mapLandingFeatures(
   });
 }
 
+function mapDistributionOptions(
+  value: SanityProductLandingDistributionOptionValue[] | undefined,
+  fallback: ProductLandingDistributionOption[],
+): ProductLandingDistributionOption[] {
+  if (!value?.length) return fallback;
+
+  return value.map((option, index) => {
+    const kind = requiredMachineString(
+      option.kind,
+      `productLanding.hero.distributionOptions[${index}].kind`,
+    );
+    if (!distributionOptionKinds.has(kind as ProductLandingDistributionOption["kind"])) {
+      invalidHome(
+        `productLanding.hero.distributionOptions[${index}].kind is unsupported: ${kind}`,
+      );
+    }
+
+    return {
+      kind: kind as ProductLandingDistributionOption["kind"],
+      title: requiredString(
+        option.title,
+        `productLanding.hero.distributionOptions[${index}].title`,
+      ),
+      description: requiredString(
+        option.description,
+        `productLanding.hero.distributionOptions[${index}].description`,
+      ),
+      href: requiredUrl(
+        option.href,
+        `productLanding.hero.distributionOptions[${index}].href`,
+      ),
+    };
+  });
+}
+
 function mapLandingThemedImage(
   value: SanityThemedProductImageValue | undefined,
   fallback: ThemedSiteImage,
@@ -233,6 +276,14 @@ function mapProductLanding(
       ),
       copyLabel: landingString(value?.hero?.copyLabel, fallback.hero.copyLabel),
       copiedLabel: landingString(value?.hero?.copiedLabel, fallback.hero.copiedLabel),
+      distributionMenuLabel: landingString(
+        value?.hero?.distributionMenuLabel,
+        fallback.hero.distributionMenuLabel,
+      ),
+      distributionOptions: mapDistributionOptions(
+        value?.hero?.distributionOptions,
+        fallback.hero.distributionOptions,
+      ),
     },
     media: {
       hero: mapLandingThemedImage(value?.media?.hero, fallback.media.hero, "productLanding.media.hero"),

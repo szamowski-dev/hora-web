@@ -8,6 +8,7 @@ import { LandingFeatureList } from "@/components/landing/LandingFeatureList";
 import { HoraWorkflowVisual } from "@/components/landing/LandingVisuals";
 import { LandingFeatureCards } from "@/components/landing/LandingFeatureCards";
 import { HomebrewCommand } from "@/components/molecules/HomebrewCommand";
+import { DistributionMenu } from "@/components/molecules/DistributionMenu";
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
 import { ThemedProductImage } from "@/components/molecules/ThemedProductImage";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
@@ -90,22 +91,31 @@ export function ProductLanding({
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             {showDirectDownload ? (
-              <Button asChild size="lg" variant="accent">
-                <a
-                  href={DIRECT_DOWNLOAD_HREF}
-                  {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
-                    link_text: landing.hero.primaryCtaLabel,
-                    link_url: DIRECT_DOWNLOAD_HREF,
-                    placement: ANALYTICS_PLACEMENTS.hero,
-                  })}
-                >
-                  <MdDownloadForOffline
-                    data-icon="inline-start"
-                    aria-hidden="true"
-                  />
-                  {landing.hero.primaryCtaLabel}
-                </a>
-              </Button>
+              <>
+                <Button asChild size="lg" variant="accent">
+                  <a
+                    href={DIRECT_DOWNLOAD_HREF}
+                    {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
+                      link_text: landing.hero.primaryCtaLabel,
+                      link_url: DIRECT_DOWNLOAD_HREF,
+                      placement: ANALYTICS_PLACEMENTS.hero,
+                    })}
+                  >
+                    <MdDownloadForOffline
+                      data-icon="inline-start"
+                      aria-hidden="true"
+                    />
+                    {landing.hero.primaryCtaLabel}
+                  </a>
+                </Button>
+                <DistributionMenu
+                  options={landing.hero.distributionOptions}
+                  homebrewCommand={landing.hero.homebrewCommand}
+                  copyLabel={landing.hero.copyLabel}
+                  copiedLabel={landing.hero.copiedLabel}
+                  label={landing.hero.distributionMenuLabel}
+                />
+              </>
             ) : (
               <AppStoreLink
                 href={site.cta.primary.href}
@@ -150,7 +160,7 @@ export function ProductLanding({
           ) : null}
         </div>
 
-        <div className="relative z-10 mx-auto mt-20 max-w-landing sm:mt-24">
+        <div className="relative z-0 mx-auto mt-20 max-w-landing sm:mt-24">
           <div
             aria-hidden="true"
             className="absolute inset-x-[12%] bottom-0 top-[25%] bg-[radial-gradient(ellipse_at_center,var(--ui-glow-accent-soft),transparent_68%)] blur-3xl"

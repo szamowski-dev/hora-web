@@ -17,6 +17,13 @@ export type SanityProductLandingFeatureValue = {
   description?: string;
 };
 
+export type SanityProductLandingDistributionOptionValue = {
+  kind?: string;
+  title?: string;
+  description?: string;
+  href?: string;
+};
+
 export type SanityThemedProductImageValue = {
   light?: SanitySiteImageValue;
   dark?: SanitySiteImageValue;
@@ -64,6 +71,8 @@ export type SanityHomePageDocument = {
       requirement?: string;
       copyLabel?: string;
       copiedLabel?: string;
+      distributionMenuLabel?: string;
+      distributionOptions?: SanityProductLandingDistributionOptionValue[];
     };
     media?: {
       hero?: SanityThemedProductImageValue;
@@ -154,7 +163,9 @@ export const HOME_PAGE_QUERY = defineQuery(`
         homebrewCommand,
         requirement,
         copyLabel,
-        copiedLabel
+        copiedLabel,
+        distributionMenuLabel,
+        distributionOptions[]{_key, kind, title, description, href}
       },
       media{
         "hero": hero{

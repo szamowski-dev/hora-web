@@ -140,6 +140,72 @@ html[data-theme="dark"] {
   --ui-shadow-neutral: oklch(0 0 0 / 0.82);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-transition,
+  html.theme-transition * {
+    transition-duration: 180ms !important;
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow !important;
+    transition-timing-function: ease-out !important;
+  }
+}
+
+.theme-toggle-light-action {
+  display: none;
+}
+
+.themed-product-image {
+  position: relative;
+}
+
+.themed-product-image-light,
+.themed-product-image-dark {
+  transition: opacity 200ms ease-out;
+}
+
+.themed-product-image-light {
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+}
+
+.themed-product-image-dark {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  opacity: 0;
+}
+
+html[data-theme="dark"] .theme-toggle-dark-action {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-toggle-light-action {
+  display: block;
+}
+
+html[data-theme="dark"] .themed-product-image-light {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  opacity: 0;
+}
+
+html[data-theme="dark"] .themed-product-image-dark {
+  position: relative;
+  z-index: 1;
+  display: block;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .themed-product-image-light,
+  .themed-product-image-dark {
+    transition: none;
+  }
+}
+
 html {
   background: var(--color-bg);
   color: var(--color-text);

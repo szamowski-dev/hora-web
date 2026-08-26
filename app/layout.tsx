@@ -110,7 +110,6 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="light"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={`${geist.variable} ${newsreader.variable} ${bumbbled.variable}`}
@@ -119,7 +118,55 @@ export default async function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `try { const theme = localStorage.getItem('hora-theme'); if (theme === 'dark') { document.documentElement.dataset.theme = theme; document.documentElement.style.colorScheme = theme; } } catch {}`,
+            __html: `(() => {
+              const storageKey = 'hora-theme';
+              const root = document.documentElement;
+              const media = matchMedia('(prefers-color-scheme: dark)');
+              let transitionTimer;
+              const storedTheme = () => {
+                try {
+                  const value = localStorage.getItem(storageKey);
+                  return value === 'light' || value === 'dark' ? value : null;
+                } catch { return null; }
+              };
+              const systemTheme = () => media.matches ? 'dark' : 'light';
+              const syncToggleLabels = () => {
+                const isDark = root.dataset.theme === 'dark';
+                const label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+                document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+                  button.setAttribute('aria-label', label);
+                  button.setAttribute('title', label);
+                  const text = button.querySelector('.theme-toggle-label');
+                  if (text) text.textContent = label;
+                });
+              };
+              const applyTheme = (theme, animate = false) => {
+                if (animate) {
+                  root.classList.add('theme-transition');
+                  clearTimeout(transitionTimer);
+                  transitionTimer = setTimeout(() => root.classList.remove('theme-transition'), 220);
+                }
+                root.dataset.theme = theme;
+                root.style.colorScheme = theme;
+                syncToggleLabels();
+              };
+              applyTheme(storedTheme() || systemTheme());
+              document.addEventListener('click', (event) => {
+                const target = event.target instanceof Element ? event.target.closest('[data-theme-toggle]') : null;
+                if (!target) return;
+                const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+                try { localStorage.setItem(storageKey, nextTheme); } catch {}
+                applyTheme(nextTheme, true);
+              });
+              media.addEventListener('change', () => {
+                if (storedTheme() === null) applyTheme(systemTheme());
+              });
+              if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', syncToggleLabels, { once: true });
+              } else {
+                syncToggleLabels();
+              }
+            })();`,
           }}
         />
       </head>

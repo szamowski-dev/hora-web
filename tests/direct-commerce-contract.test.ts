@@ -53,6 +53,16 @@ test("keeps the homepage copy and installation FAQ aligned across distributions"
     DIRECT_DOWNLOAD_LABEL,
   );
   assert.equal(defaultProductLanding.hero.showTerminalPrompt, false);
+  assert.deepEqual(
+    defaultProductLanding.hero.distributionOptions.map((option) => option.kind),
+    ["mac_app_store", "homebrew", "setapp"],
+  );
+  assert.equal(
+    defaultProductLanding.hero.distributionOptions.every(
+      (option) => option.title && option.description && option.href.startsWith("https://"),
+    ),
+    true,
+  );
   assert.equal(
     defaultProductLanding.hero.requirement,
     "Choose a plan in the app. Requires macOS 26 or newer.",

@@ -17,6 +17,27 @@ export const defaultProductLanding = {
     requirement: "Choose a plan in the app. Requires macOS 26 or newer.",
     copyLabel: "Copy",
     copiedLabel: "Copied",
+    distributionMenuLabel: "Other ways to get hora",
+    distributionOptions: [
+      {
+        kind: "mac_app_store",
+        title: "Mac App Store",
+        description: "Download hora from the Mac App Store.",
+        href: "https://apps.apple.com/app/apple-store/id6761409895?pt=128724444&ct=hora_website&mt=8",
+      },
+      {
+        kind: "homebrew",
+        title: "Homebrew",
+        description: "Install hora with one command in Terminal.",
+        href: "https://formulae.brew.sh/cask/hora",
+      },
+      {
+        kind: "setapp",
+        title: "Setapp",
+        description: "Use hora with your Setapp subscription.",
+        href: "https://setapp.com/",
+      },
+    ],
   },
   media: {
     hero: {

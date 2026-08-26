@@ -33,6 +33,7 @@ export function createDownloadId(): string | undefined {
 const POSTHOG_EVENTS = new Set([
   "download_click",
   "direct_download_clicked",
+  "app_store_cta_click",
   "brew_copy_click",
   "newsletter_submit",
   "newsletter_form_success",
@@ -41,6 +42,7 @@ const POSTHOG_EVENTS = new Set([
   "post_signup_discord_click",
   "support_request_submitted",
   "support_request_failed",
+  "support_request_metadata_failed",
   "blog_share_click",
   "testflight_cta_click",
   "testflight_delayed_open",

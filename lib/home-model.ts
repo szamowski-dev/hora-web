@@ -71,6 +71,13 @@ export type ProductLandingFeature = {
   description: string;
 };
 
+export type ProductLandingDistributionOption = {
+  kind: "mac_app_store" | "homebrew" | "setapp";
+  title: string;
+  description: string;
+  href: string;
+};
+
 export type ProductLandingContent = {
   hero: {
     title: string;
@@ -86,6 +93,8 @@ export type ProductLandingContent = {
     requirement: string;
     copyLabel: string;
     copiedLabel: string;
+    distributionMenuLabel: string;
+    distributionOptions: ProductLandingDistributionOption[];
   };
   media: {
     hero: ThemedSiteImage;
