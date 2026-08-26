@@ -17,6 +17,10 @@
     "sanity:verify:site": "sanity exec scripts/verify-sanity-site.ts --with-user-token"
   },
   "dependencies": {
+    "@opentelemetry/api-logs": "0.221.0",
+    "@opentelemetry/exporter-logs-otlp-http": "0.221.0",
+    "@opentelemetry/resources": "2.10.0",
+    "@opentelemetry/sdk-logs": "0.221.0",
     "@portabletext/types": "4.0.2",
     "@sanity/image-url": "2.1.1",
     "@sanity/vision": "6.4.0",
@@ -25,7 +29,7 @@
     "next": "16.2.4",
     "next-mdx-remote": "^6.0.0",
     "next-sanity": "13.1.1",
-    "posthog-js": "1.407.2",
+    "posthog-js": "1.420.0",
     "radix-ui": "^1.6.7",
     "react": "19.2.4",
     "react-dom": "19.2.4",

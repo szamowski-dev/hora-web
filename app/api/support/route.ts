@@ -5,6 +5,7 @@ import {
   supportTicketMetadataRequestSchema,
   type SupportFailureType,
 } from "@/lib/support-request";
+import { logServerError } from "@/lib/server-logger";
 
 export const runtime = "nodejs";
 
@@ -91,7 +92,10 @@ export async function POST(req: NextRequest) {
   const posthogApiKey = process.env.POSTHOG_PERSONAL_API_KEY;
   const projectId = process.env.POSTHOG_PROJECT_ID;
   if (!posthogApiKey || !projectId) {
-    console.error("PostHog support ticket metadata configuration is incomplete");
+    logServerError({
+      route: "/api/support",
+      operation: "posthog_support_configuration",
+    });
     return errorResponse(
       origin,
       503,
@@ -116,7 +120,10 @@ export async function POST(req: NextRequest) {
       },
     );
   } catch (error) {
-    console.error("PostHog support ticket metadata update failed", error);
+    logServerError({
+      route: "/api/support",
+      operation: "posthog_support_metadata_update",
+    });
     return errorResponse(
       origin,
       isRateLimitedError(error) ? 429 : 502,
@@ -126,13 +133,10 @@ export async function POST(req: NextRequest) {
   }
 
   if (!metadataResult.ok) {
-    const metadataPayload = (await metadataResult.json().catch(() => null)) as
-      | { detail?: unknown; error?: unknown }
-      | null;
-    console.error("PostHog rejected support ticket metadata", {
-      status: metadataResult.status,
-      detail: metadataPayload?.detail ?? metadataPayload?.error,
-      ticketId: input.ticket_id,
+    logServerError({
+      route: "/api/support",
+      operation: "posthog_support_metadata_rejected",
+      statusCode: metadataResult.status,
     });
     const rateLimited = metadataResult.status === 429;
     return errorResponse(

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { Resend } from "resend";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { normalizeEmail } from "@/lib/identity";
+import { logServerError } from "@/lib/server-logger";
 
 export const runtime = "nodejs";
 
@@ -68,7 +69,10 @@ export async function POST(req: NextRequest) {
   const apiKey = process.env.RESEND_API_KEY;
   const audienceId = process.env.RESEND_AUDIENCE_ID;
   if (!apiKey || !audienceId) {
-    console.error("Resend env vars missing");
+    logServerError({
+      route: "/api/subscribe",
+      operation: "resend_configuration",
+    });
     return NextResponse.json(
       { error: "Server misconfigured" },
       { status: 500, headers },
@@ -83,7 +87,10 @@ export async function POST(req: NextRequest) {
     unsubscribed: false,
   });
   if (contact.error) {
-    console.error("Resend contacts.create failed", contact.error);
+    logServerError({
+      route: "/api/subscribe",
+      operation: "resend_contact_create",
+    });
     return NextResponse.json(
       { error: contact.error.message },
       { status: 500, headers },
@@ -98,7 +105,10 @@ export async function POST(req: NextRequest) {
     },
   });
   if (event.error) {
-    console.error("Resend events.send failed", event.error);
+    logServerError({
+      route: "/api/subscribe",
+      operation: "resend_event_send",
+    });
     return NextResponse.json(
       { error: event.error.message },
       { status: 500, headers },

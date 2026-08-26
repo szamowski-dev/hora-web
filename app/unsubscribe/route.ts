@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { logServerError } from "@/lib/server-logger";
 
 export const runtime = "nodejs";
 
@@ -18,7 +19,10 @@ async function removeContact(email: string): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const audienceId = process.env.RESEND_AUDIENCE_ID;
   if (!apiKey || !audienceId) {
-    console.error("Resend env vars missing");
+    logServerError({
+      route: "/unsubscribe",
+      operation: "resend_configuration",
+    });
     return false;
   }
   const resend = new Resend(apiKey);
@@ -26,7 +30,10 @@ async function removeContact(email: string): Promise<boolean> {
   if (res.error) {
     // Treat "not found" as success — the desired end state is achieved.
     if (String(res.error.message).toLowerCase().includes("not found")) return true;
-    console.error("Resend contacts.remove failed", res.error);
+    logServerError({
+      route: "/unsubscribe",
+      operation: "resend_contact_remove",
+    });
     return false;
   }
   return true;
