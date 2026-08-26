@@ -156,7 +156,14 @@ export function DistributionMenu({
   if (!options.length) return null;
 
   return (
-    <details className="group relative">
+    <details
+      className="group relative"
+      data-analytics-open-event="distribution_menu_open"
+      data-analytics-open-props={JSON.stringify({
+        menu_id: "homepage_distribution",
+        placement: ANALYTICS_PLACEMENTS.hero,
+      })}
+    >
       <summary
         className="inline-flex h-12 cursor-pointer list-none items-center justify-center gap-2 whitespace-nowrap rounded-full [corner-shape:superellipse(1.6)] border border-line-strong bg-overlay px-7 text-[15px] font-semibold text-text shadow-[inset_0_1px_0_var(--ui-highlight)] transition-[background-color,border-color,color,box-shadow,transform] hover:border-white/20 hover:bg-overlay-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg [&::-webkit-details-marker]:hidden"
         aria-label={label}

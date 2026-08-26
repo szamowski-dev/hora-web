@@ -35,6 +35,7 @@ const POSTHOG_EVENTS = new Set([
   "direct_download_clicked",
   "app_store_cta_click",
   "brew_copy_click",
+  "distribution_menu_open",
   "newsletter_submit",
   "newsletter_form_success",
   "newsletter_signup_error",

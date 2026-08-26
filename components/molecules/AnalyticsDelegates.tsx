@@ -72,9 +72,23 @@ export function AnalyticsDelegates() {
       );
     }
 
+    function onToggle(event: Event) {
+      const details = event.target;
+      if (!(details instanceof HTMLDetailsElement) || !details.open) return;
+
+      const eventName = details.dataset.analyticsOpenEvent;
+      if (!eventName) return;
+
+      track(eventName, parseProps(details.dataset.analyticsOpenProps));
+    }
+
     document.addEventListener("click", onClick, { capture: true });
+    document.addEventListener("toggle", onToggle, { capture: true });
     return () =>
-      document.removeEventListener("click", onClick, { capture: true });
+      {
+        document.removeEventListener("click", onClick, { capture: true });
+        document.removeEventListener("toggle", onToggle, { capture: true });
+      };
   }, []);
 
   return null;
