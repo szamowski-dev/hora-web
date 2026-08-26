@@ -153,6 +153,10 @@ html[data-theme="dark"] {
   display: none;
 }
 
+.theme-toggle-light-label {
+  display: none;
+}
+
 .themed-product-image {
   position: relative;
   width: 100%;
@@ -182,6 +186,14 @@ html[data-theme="dark"] .theme-toggle-dark-action {
 }
 
 html[data-theme="dark"] .theme-toggle-light-action {
+  display: block;
+}
+
+html[data-theme="dark"] .theme-toggle-dark-label {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-toggle-light-label {
   display: block;
 }
 

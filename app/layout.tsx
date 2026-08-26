@@ -130,16 +130,6 @@ export default async function RootLayout({
                 } catch { return null; }
               };
               const systemTheme = () => media.matches ? 'dark' : 'light';
-              const syncToggleLabels = () => {
-                const isDark = root.dataset.theme === 'dark';
-                const label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
-                document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
-                  button.setAttribute('aria-label', label);
-                  button.setAttribute('title', label);
-                  const text = button.querySelector('.theme-toggle-label');
-                  if (text) text.textContent = label;
-                });
-              };
               const applyTheme = (theme, animate = false) => {
                 if (animate) {
                   root.classList.add('theme-transition');
@@ -148,7 +138,6 @@ export default async function RootLayout({
                 }
                 root.dataset.theme = theme;
                 root.style.colorScheme = theme;
-                syncToggleLabels();
               };
               applyTheme(storedTheme() || systemTheme());
               document.addEventListener('click', (event) => {
@@ -161,11 +150,6 @@ export default async function RootLayout({
               media.addEventListener('change', () => {
                 if (storedTheme() === null) applyTheme(systemTheme());
               });
-              if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', syncToggleLabels, { once: true });
-              } else {
-                syncToggleLabels();
-              }
             })();`,
           }}
         />
