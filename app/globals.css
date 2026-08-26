@@ -155,6 +155,7 @@ html[data-theme="dark"] {
 
 .themed-product-image {
   position: relative;
+  width: 100%;
 }
 
 .themed-product-image-light,

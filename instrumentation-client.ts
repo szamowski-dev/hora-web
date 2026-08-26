@@ -36,6 +36,7 @@ if (!projectToken || !host) {
     ui_host: "https://us.posthog.com",
     defaults: "2026-05-30",
     capture_exceptions: true,
+    opt_in_site_apps: true,
     debug: process.env.NODE_ENV === "development",
     persistence: "memory",
   });
