@@ -1,5 +1,6 @@
 import { createDownloadId, getAttribution, type EventProps } from "@/lib/analytics";
 import { isAnalyticsConsentGranted } from "@/lib/cookie-consent";
+import { metaAttribution, type MetaAttribution } from "@/lib/meta-pixel";
 import posthog from "posthog-js";
 
 const HANDOFF_SESSION_KEY = "hora_attribution_handoff_session_v1";
@@ -21,6 +22,7 @@ type HandoffTouch = {
   download_id?: string;
   browser_distinct_id?: string;
   attribution: EventProps;
+  meta_attribution?: MetaAttribution;
 };
 
 function sessionID(): string | undefined {
@@ -83,6 +85,7 @@ function recordTouch(
   const path = details.path ?? currentPath();
   if (!handoffSessionID || !path) return Promise.resolve();
   const identity = details.includeBrowserIdentity ? browserDistinctID() : undefined;
+  const meta = details.includeBrowserIdentity ? metaAttribution() : undefined;
 
   return sendTouch({
     schema_version: 1,
@@ -96,6 +99,7 @@ function recordTouch(
     ...(details.downloadID ? { download_id: details.downloadID } : {}),
     ...(identity ? { browser_distinct_id: identity } : {}),
     attribution: getAttribution(),
+    ...(meta ? { meta_attribution: meta } : {}),
   });
 }
 

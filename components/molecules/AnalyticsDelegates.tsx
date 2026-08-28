@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { createDownloadId, track, type EventProps } from "@/lib/analytics";
 import { recordAttributionCta } from "@/lib/attribution-handoff";
 import { ANALYTICS_EVENTS } from "@/lib/analyticsSchema";
+import { trackMetaPixel } from "@/lib/meta-pixel";
 
 const DIRECT_HANDOFF_NAVIGATION_TIMEOUT_MS = 750;
 
@@ -84,6 +85,25 @@ export function AnalyticsDelegates() {
           ...(downloadId ? { download_id: downloadId } : {}),
         };
         track(eventName, trackedProps);
+        if (
+          eventName === ANALYTICS_EVENTS.directDownloadClick ||
+          eventName === "app_store_cta_click" ||
+          eventName === ANALYTICS_EVENTS.downloadClick
+        ) {
+          trackMetaPixel(
+            "Lead",
+            {
+              content_category: "distribution",
+              content_name:
+                eventName === ANALYTICS_EVENTS.directDownloadClick
+                  ? "direct_download"
+                  : eventName === "app_store_cta_click"
+                    ? "mac_app_store"
+                    : "download",
+            },
+            downloadId,
+          );
+        }
         const handoff = recordAttributionCta(eventName, trackedProps);
         if (
           isInternalDirectDownload &&
