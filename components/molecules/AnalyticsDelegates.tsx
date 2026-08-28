@@ -44,11 +44,12 @@ export function AnalyticsDelegates() {
       }
 
       if (el && eventName) {
-        track(eventName, {
+        const trackedProps = {
           ...props,
           ...(downloadId ? { download_id: downloadId } : {}),
-        });
-        recordAttributionCta(eventName, props);
+        };
+        track(eventName, trackedProps);
+        recordAttributionCta(eventName, trackedProps);
       }
 
       if (

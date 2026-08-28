@@ -1,5 +1,6 @@
 import { createDownloadId, getAttribution, type EventProps } from "@/lib/analytics";
 import { isAnalyticsConsentGranted } from "@/lib/cookie-consent";
+import posthog from "posthog-js";
 
 const HANDOFF_SESSION_KEY = "hora_attribution_handoff_session_v1";
 const HANDOFF_ENDPOINT =
@@ -17,6 +18,8 @@ type HandoffTouch = {
   placement?: string;
   destination?: string;
   event_name?: string;
+  download_id?: string;
+  browser_distinct_id?: string;
   attribution: EventProps;
 };
 
@@ -54,6 +57,15 @@ function sendTouch(touch: HandoffTouch) {
   });
 }
 
+function browserDistinctID(): string | undefined {
+  try {
+    const distinctID = posthog.get_distinct_id()?.trim();
+    return distinctID && distinctID.length <= 200 ? distinctID : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function recordTouch(
   kind: TouchKind,
   details: {
@@ -61,6 +73,8 @@ function recordTouch(
     placement?: string;
     destination?: string;
     eventName?: string;
+    downloadID?: string;
+    includeBrowserIdentity?: boolean;
   } = {},
 ) {
   if (!isAnalyticsConsentGranted()) return;
@@ -68,6 +82,7 @@ function recordTouch(
   const handoffSessionID = sessionID();
   const path = details.path ?? currentPath();
   if (!handoffSessionID || !path) return;
+  const identity = details.includeBrowserIdentity ? browserDistinctID() : undefined;
 
   sendTouch({
     schema_version: 1,
@@ -78,6 +93,8 @@ function recordTouch(
     ...(details.placement ? { placement: details.placement } : {}),
     ...(details.destination ? { destination: details.destination } : {}),
     ...(details.eventName ? { event_name: details.eventName } : {}),
+    ...(details.downloadID ? { download_id: details.downloadID } : {}),
+    ...(identity ? { browser_distinct_id: identity } : {}),
     attribution: getAttribution(),
   });
 }
@@ -95,5 +112,11 @@ export function recordAttributionCta(
     destination:
       typeof props?.destination === "string" ? props.destination : undefined,
     eventName,
+    downloadID: typeof props?.download_id === "string" ? props.download_id : undefined,
+    // The Worker only retains this opaque identifier for short, consented
+    // Direct and Mac App Store matching windows. It is never sent for page views.
+    includeBrowserIdentity:
+      eventName === "direct_download_clicked" ||
+      eventName === "app_store_cta_click",
   });
 }
