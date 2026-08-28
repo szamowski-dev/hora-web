@@ -3,6 +3,9 @@ import { Logo } from "@/components/atoms/Logo";
 import { type IconName } from "@/components/atoms/Icon";
 import { FooterSocialLink } from "@/components/molecules/FooterSocialLink";
 import { site } from "@/content/site";
+import { analyticsAttrs } from "@/lib/analyticsAttrs";
+import { ANALYTICS_EVENTS } from "@/lib/analyticsSchema";
+import { DIRECT_DOWNLOAD_HREF } from "@/lib/direct/commerce-contract";
 
 const linkClassName =
   "inline-flex min-h-10 items-center text-sm text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:text-accent";
@@ -40,6 +43,12 @@ export function Footer({ copyright }: { copyright: string }) {
                   key={`${link.label}-${link.href}`}
                   href={link.href}
                   className={linkClassName}
+                  {...(link.href === DIRECT_DOWNLOAD_HREF
+                    ? analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
+                        placement: "footer",
+                        destination: "direct_download",
+                      })
+                    : {})}
                 >
                   {link.label}
                 </Link>

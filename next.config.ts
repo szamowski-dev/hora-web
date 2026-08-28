@@ -159,13 +159,13 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/download",
-        destination: "/",
-        permanent: true,
+        destination: "/download/direct/",
+        permanent: false,
       },
       {
         source: "/download/",
-        destination: "/",
-        permanent: true,
+        destination: "/download/direct/",
+        permanent: false,
       },
       ...seoBlogPostRedirects.flatMap(([source, destination]) => [
         { source, destination, permanent: true },

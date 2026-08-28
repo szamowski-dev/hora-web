@@ -8,7 +8,6 @@ import { LandingFeatureList } from "@/components/landing/LandingFeatureList";
 import { HoraWorkflowVisual } from "@/components/landing/LandingVisuals";
 import { LandingFeatureCards } from "@/components/landing/LandingFeatureCards";
 import { HomebrewCommand } from "@/components/molecules/HomebrewCommand";
-import { DistributionMenu } from "@/components/molecules/DistributionMenu";
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
 import { ThemedProductImage } from "@/components/molecules/ThemedProductImage";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
@@ -108,13 +107,25 @@ export function ProductLanding({
                     {landing.hero.primaryCtaLabel}
                   </a>
                 </Button>
-                <DistributionMenu
-                  options={landing.hero.distributionOptions}
-                  homebrewCommand={landing.hero.homebrewCommand}
-                  copyLabel={landing.hero.copyLabel}
-                  copiedLabel={landing.hero.copiedLabel}
-                  label={landing.hero.distributionMenuLabel}
-                />
+                <AppStoreLink
+                  href={site.cta.primary.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={landing.hero.macAppStoreLabel}
+                  className="app-store-interactive inline-flex h-12 items-center rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                  {...analyticsAttrs("app_store_cta_click", {
+                    placement: ANALYTICS_PLACEMENTS.hero,
+                    destination: "mac_app_store",
+                  })}
+                >
+                  <Image
+                    src={site.macAppStoreBadgeSrc}
+                    alt={landing.hero.macAppStoreLabel}
+                    width={162}
+                    height={50}
+                    className="h-12 w-auto"
+                  />
+                </AppStoreLink>
               </>
             ) : (
               <AppStoreLink

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { createDownloadId, track, type EventProps } from "@/lib/analytics";
+import { recordAttributionCta } from "@/lib/attribution-handoff";
 import { ANALYTICS_EVENTS } from "@/lib/analyticsSchema";
 
 function parseProps(raw?: string): EventProps | undefined {
@@ -29,7 +30,9 @@ export function AnalyticsDelegates() {
 
       const url = new URL(anchor.href, window.location.href);
       const normalizedPath = url.pathname.replace(/\/+$/, "");
-      const isDirectDownload = normalizedPath === "/download/direct";
+      const isDirectDownload =
+        normalizedPath === "/download/direct" &&
+        eventName === ANALYTICS_EVENTS.directDownloadClick;
       const isInternalDirectDownload =
         isDirectDownload && url.origin === window.location.origin;
       const originalLinkUrl = `${url.pathname}${url.search}${url.hash}`;
@@ -45,11 +48,12 @@ export function AnalyticsDelegates() {
           ...props,
           ...(downloadId ? { download_id: downloadId } : {}),
         });
+        recordAttributionCta(eventName, props);
       }
 
       if (
         url.origin !== window.location.origin ||
-        (normalizedPath !== "/download" && !isDirectDownload) ||
+        normalizedPath !== "/download/direct" ||
         eventName === ANALYTICS_EVENTS.downloadClick ||
         eventName === ANALYTICS_EVENTS.directDownloadClick
       ) {

@@ -71,7 +71,8 @@ Bearer header. Do not reuse the legacy `DEVICE_REGISTRATION_SECRET`.
 
 ## Direct download endpoint
 
-Buttons link to `GET /download/direct/`. The resolver fetches:
+Website Direct CTAs call `GET /download/direct/` directly. The browser begins
+the download on the current page. The resolver fetches:
 
 ```text
 https://downloads.horacal.app/direct/stable/latest.json

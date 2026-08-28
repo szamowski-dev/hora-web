@@ -11,9 +11,15 @@ import {
   DIRECT_PRICING_PLANS,
 } from "../lib/direct/commerce-contract";
 import { HORA_INSTALLATION_FAQ } from "../lib/direct/support-content";
+import { site } from "../content/site";
 
 test("keeps Direct new-sale pricing in code while Sanity controls download visibility", () => {
   assert.equal(DIRECT_DOWNLOAD_HREF, "/download/direct/");
+  assert.equal(site.cta.direct.href, DIRECT_DOWNLOAD_HREF);
+  assert.equal(
+    site.footer.productLinks.find((link) => link.label === "Download")?.href,
+    DIRECT_DOWNLOAD_HREF,
+  );
   assert.equal(
     DIRECT_DOWNLOAD_LABEL,
     "Download",
