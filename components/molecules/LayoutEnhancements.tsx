@@ -6,12 +6,15 @@ import { DeferredMount } from "@/components/molecules/DeferredMount";
 import { SectionViewTracker } from "@/components/molecules/SectionViewTracker";
 import { SmoothAnchorScroll } from "@/components/molecules/SmoothAnchorScroll";
 import { TestFlightDiscordPrompt } from "@/components/molecules/TestFlightDiscordPrompt";
+import { Suspense } from "react";
 
 export function LayoutEnhancements() {
   return (
     <>
       <AnalyticsDelegates />
-      <AttributionHandoff />
+      <Suspense fallback={null}>
+        <AttributionHandoff />
+      </Suspense>
       <SmoothAnchorScroll />
       <TestFlightDiscordPrompt />
       <DeferredMount timeout={4000}>
