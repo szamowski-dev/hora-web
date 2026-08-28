@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MdCheck, MdContentCopy, MdTerminal } from "react-icons/md";
-import { Button } from "@/components/ui/button";
+import { MdCheck, MdContentCopy } from "react-icons/md";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import {
   ANALYTICS_EVENTS,
@@ -63,26 +62,23 @@ export function HomebrewCommand({
   return (
     <div
       aria-label={command}
-      className="mt-5 inline-flex max-w-full items-center gap-2 rounded-full [corner-shape:superellipse(1.6)] border border-line-strong bg-panel-deep/80 py-1.5 pl-4 pr-1.5 text-left shadow-[inset_0_1px_0_var(--ui-highlight)]"
+      className="mt-5 inline-flex max-w-full items-stretch overflow-hidden rounded-[4px] border border-line-strong bg-bg text-left font-mono shadow-[inset_0_1px_0_var(--ui-highlight),0_14px_32px_-24px_var(--ui-shadow-neutral)]"
     >
-      <MdTerminal aria-hidden="true" className="size-5 shrink-0 text-accent" />
-      <code className="truncate text-xs text-text sm:text-sm">
-        <span aria-hidden="true" className="text-muted">
-          ${" "}
+      <code className="min-w-0 flex-1 truncate px-3 py-2 text-xs leading-5 text-text sm:px-4 sm:text-sm">
+        <span aria-hidden="true" className="select-none text-success">
+          $ {" "}
         </span>
         {command}
       </code>
-      <Button
+      <button
         type="button"
-        variant="ghost"
-        size="xs"
         onClick={copyCommand}
         {...analyticsAttrs(ANALYTICS_EVENTS.brewCopyClick, {
           command_type: "homebrew",
           placement: ANALYTICS_PLACEMENTS.hero,
         })}
         aria-label={copied ? copiedLabel : copyLabel}
-        className="shrink-0"
+        className="inline-flex shrink-0 items-center gap-1.5 border-l border-line-strong px-2.5 text-xs font-medium text-muted transition-colors hover:bg-overlay hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent sm:px-3"
       >
         {copied ? (
           <MdCheck data-icon="inline-start" aria-hidden="true" />
@@ -90,7 +86,7 @@ export function HomebrewCommand({
           <MdContentCopy data-icon="inline-start" aria-hidden="true" />
         )}
         {copied ? copiedLabel : copyLabel}
-      </Button>
+      </button>
       <span className="sr-only" aria-live="polite">
         {copied ? copiedLabel : ""}
       </span>
