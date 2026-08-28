@@ -1,17 +1,17 @@
 "use client";
 
-import posthog from "posthog-js";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { captureFirstTouch } from "@/lib/analytics";
 import {
   applyCookieConsent,
   readCookieConsent,
-  requiresCookieConsent,
   saveCookieConsent,
 } from "@/lib/cookie-consent";
 
-export function CookieConsentBanner() {
+export function CookieConsentBanner({
+  requiresConsent,
+}: Readonly<{ requiresConsent: boolean }>) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -21,8 +21,7 @@ export function CookieConsentBanner() {
       return;
     }
 
-    const countryCode = posthog.get_property("$geoip_country_code");
-    if (requiresCookieConsent(countryCode)) {
+    if (requiresConsent) {
       const frame = window.requestAnimationFrame(() => setVisible(true));
       return () => window.cancelAnimationFrame(frame);
     }
@@ -31,7 +30,7 @@ export function CookieConsentBanner() {
     // rendering the consent UI.
     applyCookieConsent("yes");
     captureFirstTouch(true);
-  }, []);
+  }, [requiresConsent]);
 
   if (!visible) return null;
 

@@ -8,7 +8,8 @@ import { Footer } from "@/components/organisms/Footer";
 import { AmbientGlow } from "@/components/organisms/AmbientGlow";
 import { LayoutEnhancements } from "@/components/molecules/LayoutEnhancements";
 import { DraftModeTools } from "@/components/sanity/DraftModeTools";
-import { CookieConsentBanner } from "@/components/molecules/CookieConsentBanner";
+import { CookieConsentGate } from "@/components/molecules/CookieConsentGate";
+import { MetaPixel } from "@/components/molecules/MetaPixel";
 import { GOOGLE_ADS_ID } from "@/lib/analytics";
 import { getPricingPage } from "@/lib/pricing-repository";
 import { getFooterSettings } from "@/lib/footer-settings-repository";
@@ -203,7 +204,8 @@ export default async function RootLayout({
           strategy="beforeInteractive"
           data-cookieconsent="ignore"
         />
-        <CookieConsentBanner />
+        <CookieConsentGate />
+        <MetaPixel />
 
         <script
           type="application/ld+json"

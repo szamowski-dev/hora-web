@@ -8,7 +8,6 @@ import {
 import {
   applyCookieConsent,
   readCookieConsent,
-  requiresCookieConsent,
 } from "@/lib/cookie-consent";
 
 const projectToken = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
@@ -45,9 +44,6 @@ if (!projectToken || !host) {
   const savedConsent = readCookieConsent();
   if (savedConsent) {
     applyCookieConsent(savedConsent);
-  } else if (!requiresCookieConsent(posthog.get_property("$geoip_country_code"))) {
-    applyCookieConsent("yes");
-    captureFirstTouch(true);
   }
 
   window.addEventListener(POSTHOG_BROWSER_EVENT, capturePostHogEvent);
