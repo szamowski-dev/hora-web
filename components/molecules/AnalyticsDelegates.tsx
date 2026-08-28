@@ -5,6 +5,8 @@ import { createDownloadId, track, type EventProps } from "@/lib/analytics";
 import { recordAttributionCta } from "@/lib/attribution-handoff";
 import { ANALYTICS_EVENTS } from "@/lib/analyticsSchema";
 
+const DIRECT_HANDOFF_NAVIGATION_TIMEOUT_MS = 750;
+
 function parseProps(raw?: string): EventProps | undefined {
   if (!raw) return undefined;
   try {
@@ -12,6 +14,39 @@ function parseProps(raw?: string): EventProps | undefined {
   } catch {
     return undefined;
   }
+}
+
+function shouldWaitForDirectHandoff(event: MouseEvent, anchor: HTMLAnchorElement) {
+  return (
+    !event.defaultPrevented &&
+    event.button === 0 &&
+    !event.metaKey &&
+    !event.ctrlKey &&
+    !event.shiftKey &&
+    !event.altKey &&
+    (!anchor.target || anchor.target === "_self") &&
+    !anchor.hasAttribute("download")
+  );
+}
+
+function navigateAfterDirectHandoff(handoff: Promise<void>, href: string) {
+  let didNavigate = false;
+  const navigate = () => {
+    if (didNavigate) return;
+    didNavigate = true;
+    window.location.assign(href);
+  };
+  const timeout = window.setTimeout(navigate, DIRECT_HANDOFF_NAVIGATION_TIMEOUT_MS);
+  void handoff.then(
+    () => {
+      window.clearTimeout(timeout);
+      navigate();
+    },
+    () => {
+      window.clearTimeout(timeout);
+      navigate();
+    },
+  );
 }
 
 export function AnalyticsDelegates() {
@@ -49,7 +84,15 @@ export function AnalyticsDelegates() {
           ...(downloadId ? { download_id: downloadId } : {}),
         };
         track(eventName, trackedProps);
-        recordAttributionCta(eventName, trackedProps);
+        const handoff = recordAttributionCta(eventName, trackedProps);
+        if (
+          isInternalDirectDownload &&
+          shouldWaitForDirectHandoff(event, anchor)
+        ) {
+          event.preventDefault();
+          navigateAfterDirectHandoff(handoff, anchor.href);
+          return;
+        }
       }
 
       if (

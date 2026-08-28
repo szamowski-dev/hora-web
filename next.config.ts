@@ -273,7 +273,14 @@ const nextConfig: NextConfig = {
         source: "/:path((?!studio(?:/|$)).*)",
         headers: [
           ...sharedSecurityHeaders,
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          // PostHog renders in-app heatmaps over the public site in an iframe.
+          // `X-Frame-Options: SAMEORIGIN` would still block that embed, so this
+          // narrowly permits PostHog's US application while retaining the
+          // same-origin default for every other ancestor.
+          {
+            key: "Content-Security-Policy",
+            value: "frame-ancestors 'self' https://us.posthog.com",
+          },
         ],
       },
     ];

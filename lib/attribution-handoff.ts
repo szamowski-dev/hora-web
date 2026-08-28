@@ -44,15 +44,15 @@ function currentPath(): string | undefined {
   return `${window.location.pathname}${window.location.search}`;
 }
 
-function sendTouch(touch: HandoffTouch) {
-  void fetch(HANDOFF_ENDPOINT, {
+function sendTouch(touch: HandoffTouch): Promise<void> {
+  return fetch(HANDOFF_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=UTF-8" },
     body: JSON.stringify(touch),
     credentials: "omit",
     keepalive: true,
     mode: "cors",
-  }).catch(() => {
+  }).then(() => undefined).catch(() => {
     // Attribution is best-effort and must never affect page navigation.
   });
 }
@@ -76,15 +76,15 @@ function recordTouch(
     downloadID?: string;
     includeBrowserIdentity?: boolean;
   } = {},
-) {
-  if (!isAnalyticsConsentGranted()) return;
+): Promise<void> {
+  if (!isAnalyticsConsentGranted()) return Promise.resolve();
 
   const handoffSessionID = sessionID();
   const path = details.path ?? currentPath();
-  if (!handoffSessionID || !path) return;
+  if (!handoffSessionID || !path) return Promise.resolve();
   const identity = details.includeBrowserIdentity ? browserDistinctID() : undefined;
 
-  sendTouch({
+  return sendTouch({
     schema_version: 1,
     handoff_session_id: handoffSessionID,
     kind,
@@ -100,14 +100,14 @@ function recordTouch(
 }
 
 export function recordAttributionPageView(path?: string) {
-  recordTouch("page_view", { path });
+  void recordTouch("page_view", { path });
 }
 
 export function recordAttributionCta(
   eventName: string,
   props?: EventProps,
-) {
-  recordTouch("cta_click", {
+): Promise<void> {
+  return recordTouch("cta_click", {
     placement: typeof props?.placement === "string" ? props.placement : undefined,
     destination:
       typeof props?.destination === "string" ? props.destination : undefined,
