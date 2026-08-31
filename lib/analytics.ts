@@ -89,6 +89,7 @@ type FirstTouch = {
   gclid?: string;
   gbraid?: string;
   wbraid?: string;
+  fbclid?: string;
   referrer?: string;
   landing_page?: string;
   at: string;
@@ -122,6 +123,7 @@ export function captureFirstTouch(storageAllowed = false) {
       gclid: param("gclid"),
       gbraid: param("gbraid"),
       wbraid: param("wbraid"),
+      fbclid: param("fbclid"),
       referrer: document.referrer || undefined,
       landing_page: url.pathname + url.search,
       at: new Date().toISOString(),
@@ -144,6 +146,7 @@ export function getAttribution(): EventProps {
   if (ft.gclid) props.gclid = ft.gclid;
   if (ft.gbraid) props.gbraid = ft.gbraid;
   if (ft.wbraid) props.wbraid = ft.wbraid;
+  if (ft.fbclid) props.fbclid = ft.fbclid;
   if (ft.referrer) props.first_touch_referrer = ft.referrer;
   if (ft.landing_page) props.first_touch_landing_page = ft.landing_page;
   props.first_touch_at = ft.at;
