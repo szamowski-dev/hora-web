@@ -9,6 +9,7 @@ import {
   applyCookieConsent,
   readCookieConsent,
 } from "@/lib/cookie-consent";
+import { filterPostHogEvent } from "@/lib/posthog-error-filter";
 
 const projectToken = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
 const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;
@@ -35,6 +36,7 @@ if (!projectToken || !host) {
     ui_host: "https://us.posthog.com",
     defaults: "2026-05-30",
     capture_exceptions: true,
+    before_send: filterPostHogEvent,
     opt_in_site_apps: true,
     debug: process.env.NODE_ENV === "development",
     persistence: "memory",
