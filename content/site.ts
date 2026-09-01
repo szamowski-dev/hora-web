@@ -7,9 +7,9 @@ export const site = {
   url: "https://horacal.app",
   nav: [
     { label: "Features", href: "/#features" },
-    { label: "Privacy", href: "/#privacy" },
-    { label: "macOS", href: "/#macos" },
     { label: "Pricing", href: "/pricing/" },
+    { label: "Support", href: "/support/" },
+    { label: "Privacy", href: "/#privacy" },
     { label: "Blog", href: "/blog/" },
   ],
   cta: {

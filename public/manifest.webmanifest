@@ -9,20 +9,20 @@
   "theme_color": "#0a0a0a",
   "icons": [
     {
-      "src": "/assets/hora-favicon-32.png",
+      "src": "/assets/brand/favicon-32.png",
       "sizes": "32x32",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/hora-apple-touch-180.png",
+      "src": "/assets/brand/apple-touch-icon-180.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/hora-icon-512.png",
-      "sizes": "512x512",
+      "src": "/assets/brand/hora-icon.png",
+      "sizes": "120x120",
       "type": "image/png",
       "purpose": "any maskable"
     }

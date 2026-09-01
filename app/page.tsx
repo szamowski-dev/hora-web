@@ -18,6 +18,14 @@ const personLd = {
   ],
 };
 
+const websiteLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "hora Calendar",
+  alternateName: ["hora", "horacal.app"],
+  url: "https://horacal.app/",
+};
+
 const videoLd = {
   "@context": "https://schema.org",
   "@type": "VideoObject",
@@ -77,6 +85,10 @@ export default async function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
       />
       <script
         type="application/ld+json"
