@@ -10,6 +10,9 @@ type ServerErrorOperation =
   | "resend_event_send"
   | "resend_contact_remove"
   | "posthog_support_configuration"
+  | "posthog_support_ticket_creation"
+  | "posthog_support_ticket_rejected"
+  | "posthog_support_ticket_invalid_response"
   | "posthog_support_metadata_update"
   | "posthog_support_metadata_rejected";
 

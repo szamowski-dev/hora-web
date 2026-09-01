@@ -1,47 +1,52 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  submitSupportTicketMetadata,
+  submitSupportRequest,
   SupportSubmissionError,
+  supportRequestSchema,
 } from "../lib/support-request";
 
-const ticketId = "be5c35a8-107a-4cd7-8a85-5885cb9b2305";
+const input = supportRequestSchema.parse({
+  name: "Test User",
+  email: "test@example.com",
+  category: "bug",
+  summary: "Calendar does not refresh",
+  details: "The calendar stays stale after I change an event in Google Calendar.",
+});
 
-test("submits only ticket metadata to the server PostHog ticket adapter", async () => {
+test("submits the validated request to the server PostHog ticket adapter", async () => {
   let request: { url: string; init?: RequestInit } | undefined;
-  await submitSupportTicketMetadata(ticketId, "bug", async (url, init) => {
+  const result = await submitSupportRequest(input, async (url, init) => {
     request = { url: String(url), init };
-    return new Response(JSON.stringify({ success: true }), {
-      status: 200,
+    return new Response(JSON.stringify({ success: true, ticket_id: "ticket-123" }), {
+      status: 201,
       headers: { "Content-Type": "application/json" },
     });
   });
 
+  assert.deepEqual(result, { ticketId: "ticket-123" });
   assert.equal(request?.url, "/api/support");
   assert.equal(request?.init?.method, "POST");
-  assert.deepEqual(JSON.parse(String(request?.init?.body)), {
-    ticket_id: ticketId,
-    category: "bug",
-  });
+  assert.deepEqual(JSON.parse(String(request?.init?.body)), input);
 });
 
 test("maps rate limits, invalid responses, and network failures", async () => {
   await assert.rejects(
-    submitSupportTicketMetadata(ticketId, "bug", async () => new Response("", { status: 429 })),
+    submitSupportRequest(input, async () => new Response("", { status: 429 })),
     (error: unknown) =>
       error instanceof SupportSubmissionError && error.failureType === "rate_limited",
   );
 
   await assert.rejects(
-    submitSupportTicketMetadata(ticketId, "bug", async () =>
-      new Response(JSON.stringify({ success: false }), { status: 200 }),
+    submitSupportRequest(input, async () =>
+      new Response(JSON.stringify({ success: true, ticket_id: "" }), { status: 201 }),
     ),
     (error: unknown) =>
       error instanceof SupportSubmissionError && error.failureType === "invalid_response",
   );
 
   await assert.rejects(
-    submitSupportTicketMetadata(ticketId, "bug", async () => {
+    submitSupportRequest(input, async () => {
       throw new Error("network failed");
     }),
     (error: unknown) =>

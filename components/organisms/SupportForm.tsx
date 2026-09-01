@@ -2,7 +2,6 @@
 
 import { type ChangeEvent, type FormEvent, useState } from "react";
 import Link from "next/link";
-import posthog from "posthog-js";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Icon } from "@/components/atoms/Icon";
@@ -10,8 +9,7 @@ import { track } from "@/lib/analytics";
 import {
   supportFailedEventProperties,
   supportSubmittedEventProperties,
-  formatSupportMessage,
-  submitSupportTicketMetadata,
+  submitSupportRequest,
   SupportSubmissionError,
   supportCategories,
   supportRequestSchema,
@@ -132,31 +130,7 @@ export function SupportForm() {
     }
 
     try {
-      if (!posthog.conversations.isAvailable()) {
-        throw new SupportSubmissionError(
-          "conversations_unavailable",
-          "PostHog Support is not available.",
-        );
-      }
-
-      const ticket = await posthog.conversations.sendMessage(
-        formatSupportMessage(parsed.data),
-        { name: parsed.data.name, email: parsed.data.email },
-        true,
-      );
-      if (!ticket?.ticket_id) {
-        throw new SupportSubmissionError(
-          "invalid_response",
-          "PostHog Support returned an invalid ticket response.",
-        );
-      }
-
-      // The ticket already exists at this point. Metadata is deliberately
-      // best-effort so a tag API failure cannot make the customer retry and
-      // create a duplicate ticket.
-      void submitSupportTicketMetadata(ticket.ticket_id, parsed.data.category).catch(() => {
-        track("support_request_metadata_failed", { category: parsed.data.category });
-      });
+      await submitSupportRequest(parsed.data);
 
       form.reset();
       setShowRequestDetails(false);

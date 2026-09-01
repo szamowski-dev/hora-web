@@ -76,11 +76,6 @@ export const supportRequestSchema = z
 
 export type SupportRequest = z.infer<typeof supportRequestSchema>;
 
-export const supportTicketMetadataRequestSchema = z.object({
-  ticket_id: z.string().uuid(),
-  category: z.enum(supportCategories),
-});
-
 function nonEmpty(value: string | undefined): string | null {
   const trimmed = value?.trim();
   return trimmed ? trimmed : null;
@@ -143,7 +138,7 @@ export class SupportSubmissionError extends Error {
   }
 }
 
-export type SupportTicketMetadataResponse = { success: true };
+export type SupportTicketResponse = { success: true; ticket_id: string };
 
 type SupportRequestFetcher = typeof fetch;
 
@@ -151,28 +146,27 @@ function isRateLimitStatus(status: number): boolean {
   return status === 429;
 }
 
-export async function submitSupportTicketMetadata(
-  ticketId: string,
-  category: SupportCategory,
+export async function submitSupportRequest(
+  input: SupportRequest,
   fetcher: SupportRequestFetcher = fetch,
-): Promise<void> {
+): Promise<{ ticketId: string }> {
   let response: Response;
   try {
     response = await fetcher("/api/support", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ticket_id: ticketId, category }),
+      body: JSON.stringify(input),
     });
   } catch (error) {
     throw new SupportSubmissionError(
       "network_or_server",
-      "Could not update the support ticket.",
+      "Could not create the support ticket.",
       error,
     );
   }
 
   const payload = (await response.json().catch(() => null)) as
-    | Partial<SupportTicketMetadataResponse> & { failure_type?: SupportFailureType }
+    | Partial<SupportTicketResponse> & { failure_type?: SupportFailureType }
     | null;
 
   if (isRateLimitStatus(response.status) || payload?.failure_type === "rate_limited") {
@@ -185,13 +179,15 @@ export async function submitSupportTicketMetadata(
     const failureType = payload?.failure_type;
     throw new SupportSubmissionError(
       failureType ?? "network_or_server",
-      "Could not update the support ticket.",
+      "Could not create the support ticket.",
     );
   }
-  if (payload?.success !== true) {
+  if (payload?.success !== true || typeof payload.ticket_id !== "string" || !payload.ticket_id.trim()) {
     throw new SupportSubmissionError(
       "invalid_response",
-      "The support ticket metadata service returned an invalid response.",
+      "The support ticket service returned an invalid response.",
     );
   }
+
+  return { ticketId: payload.ticket_id };
 }
