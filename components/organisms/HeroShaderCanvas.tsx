@@ -41,6 +41,7 @@ export function HeroShaderCanvas() {
         speed={0.18}
       />
       <Ascii
+        id="hero-ascii"
         alphaThreshold={0.06}
         blendMode="screen"
         cellSize={18}
@@ -51,8 +52,9 @@ export function HeroShaderCanvas() {
         preserveAlpha
         spacing={0.82}
       />
-      <FilmGrain strength={0.1} animated={false} />
+      <FilmGrain id="hero-grain" strength={0.1} animated={false} />
       <ChromaFlow
+        id="hero-chroma-flow"
         blendMode="normal"
         intensity={0.7}
         maskSource="hero-flow-mask"

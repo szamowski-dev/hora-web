@@ -24,6 +24,7 @@ export function ProductHeroShaderCanvas() {
         visible={false}
       />
       <FlowingGradient
+        id="product-hero-flow"
         colorA="oklch(0.144273 0.014268 262.103)"
         colorB="oklch(0.443226 0.153078 259.855)"
         colorC="oklch(0.794642 0.116521 239.522)"
@@ -36,7 +37,7 @@ export function ProductHeroShaderCanvas() {
         seed={31}
         speed={0.32}
       />
-      <FilmGrain animated={false} strength={0.025} />
+      <FilmGrain id="product-hero-grain" animated={false} strength={0.025} />
     </Shader>
   );
 }
