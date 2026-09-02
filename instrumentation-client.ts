@@ -10,6 +10,7 @@ import {
   readCookieConsent,
 } from "@/lib/cookie-consent";
 import { filterPostHogEvent } from "@/lib/posthog-error-filter";
+import { limitRepeatedLogs } from "@/lib/posthog-log-limit";
 
 const projectToken = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
 const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;
@@ -37,6 +38,9 @@ if (!projectToken || !host) {
     defaults: "2026-05-30",
     capture_exceptions: true,
     before_send: filterPostHogEvent,
+    // Console capture stays governed by the project's remote config; this only
+    // caps repeats once a record has been captured.
+    logs: { beforeSend: limitRepeatedLogs },
     opt_in_site_apps: true,
     debug: process.env.NODE_ENV === "development",
     persistence: "memory",
