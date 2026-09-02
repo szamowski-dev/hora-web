@@ -1,5 +1,7 @@
 import type { StructureResolver } from "sanity/structure";
 
+import { apiVersion } from "@/sanity/env";
+
 const managedDocumentTypes = new Set([
   "homePage",
   "footerSettings",
@@ -44,6 +46,7 @@ export const structure: StructureResolver = (S) =>
         .child(
           S.documentList()
             .title("Recently edited")
+            .apiVersion(apiVersion)
             .filter(
               '_type in ["homePage", "footerSettings", "pricingPage", "featuresPage", "aboutPage", "legalPage", "blogPost", "blogCategory", "blogTag", "author"]',
             )
