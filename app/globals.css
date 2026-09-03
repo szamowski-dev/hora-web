@@ -396,7 +396,12 @@ body:has(#mobile-navigation-toggle:checked) {
   transform: translateX(-50%);
 }
 
-.blog-prose :where(table) {
+/* Makes bare markdown tables scrollable. Components that bring their own
+   scroll container opt out with `not-prose`, the same escape hatch the
+   typography plugin uses — `display: block` here would otherwise wrap their
+   rows in an anonymous table box that shrink-to-fits and ignores `w-full`. */
+.blog-prose
+  :where(table):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
   display: block;
   max-width: 100%;
   overflow-x: auto;
