@@ -4,6 +4,7 @@ export type SanityBlogCtaSlotValue = {
   enabled?: boolean;
   heading?: string;
   body?: string;
+  ctaLabel?: string;
 };
 
 export type SanityBlogCtaSettingsDocument = {
@@ -37,8 +38,8 @@ export const BLOG_CTA_SETTINGS_QUERY = defineQuery(`
     homebrewCommand,
     copyLabel,
     copiedLabel,
-    aside { enabled, heading, body },
-    rail { enabled, heading, body },
-    band { enabled, heading, body }
+    aside { enabled, heading, body, ctaLabel },
+    rail { enabled, heading, body, ctaLabel },
+    band { enabled, heading, body, ctaLabel }
   }
 `);

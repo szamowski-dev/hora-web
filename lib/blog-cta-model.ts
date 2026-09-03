@@ -2,6 +2,8 @@ export type BlogCtaSlot = {
   enabled: boolean;
   heading: string;
   body: string;
+  /** Overrides the shared `ctaLabel` for this banner only. */
+  ctaLabel?: string;
 };
 
 export type BlogCtaContent = {

@@ -19,10 +19,13 @@ function slot(
   value: SanityBlogCtaSlotValue | undefined,
   fallback: BlogCtaSlot,
 ): BlogCtaSlot {
+  const ctaLabel = value?.ctaLabel?.trim() || fallback.ctaLabel;
+
   return {
     enabled: value?.enabled ?? fallback.enabled,
     heading: text(value?.heading, fallback.heading),
     body: text(value?.body, fallback.body),
+    ...(ctaLabel ? { ctaLabel } : {}),
   };
 }
 

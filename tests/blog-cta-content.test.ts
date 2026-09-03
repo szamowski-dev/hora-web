@@ -30,6 +30,22 @@ test("editors can turn a single banner off without touching the others", () => {
   assert.equal(content.rail.heading, defaultBlogCta.rail.heading);
 });
 
+test("a banner can carry its own button label without affecting the others", () => {
+  const content = mapBlogCtaSettings({
+    ctaLabel: "Download hora",
+    aside: { ctaLabel: "Start the free trial" },
+  });
+  assert.equal(content.aside.ctaLabel, "Start the free trial");
+  assert.equal(content.ctaLabel, "Download hora");
+  assert.equal(content.rail.ctaLabel, undefined);
+  assert.equal(content.band.ctaLabel, undefined);
+});
+
+test("a blank per-banner button label falls back to the shared one", () => {
+  const content = mapBlogCtaSettings({ aside: { ctaLabel: "  " } });
+  assert.equal(content.aside.ctaLabel, undefined);
+});
+
 test("showHomebrew stays false when an editor disables it", () => {
   assert.equal(mapBlogCtaSettings({ showHomebrew: false }).showHomebrew, false);
   assert.equal(

@@ -31,6 +31,14 @@ const slotField = (name: string, title: string, description: string) =>
       }),
       textField("heading", "Heading"),
       textField("body", "Supporting line", 3),
+      defineField({
+        name: "ctaLabel",
+        title: "Button label for this banner",
+        type: "string",
+        description:
+          "Leave empty to use the shared button label above.",
+        validation: (rule) => rule.max(180).custom(trimmed),
+      }),
     ],
   });
 

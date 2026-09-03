@@ -58,6 +58,7 @@ export function BlogDownloadCta({
   const isBand = variant === "band";
   const isRail = variant === "rail";
   const showHomebrew = content.showHomebrew && showDirectDownload && isBand;
+  const ctaLabel = slot.ctaLabel ?? content.ctaLabel;
 
   const downloadButton = showDirectDownload ? (
     <Button
@@ -69,13 +70,13 @@ export function BlogDownloadCta({
       <a
         href={DIRECT_DOWNLOAD_HREF}
         {...analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
-          link_text: content.ctaLabel,
+          link_text: ctaLabel,
           link_url: DIRECT_DOWNLOAD_HREF,
           placement,
         })}
       >
         <MdDownloadForOffline aria-hidden="true" />
-        {content.ctaLabel}
+        {ctaLabel}
       </a>
     </Button>
   ) : (
