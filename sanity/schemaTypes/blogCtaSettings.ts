@@ -5,6 +5,19 @@ const trimmed = (value: string | undefined) =>
     ? true
     : "Remove whitespace from the beginning or end.";
 
+/**
+ * Text copied out of the live preview carries Sanity's stega markers: runs of
+ * zero-width characters that are invisible in the input but count towards the
+ * length limit, so a 40-character line fails as "at most 180 characters" with
+ * no hint why. Name the real problem instead.
+ */
+const invisibleCharacters = /[\u200B-\u200D\uFEFF]/;
+
+const noHiddenCharacters = (value: string | undefined) =>
+  !value || !invisibleCharacters.test(value)
+    ? true
+    : "This text carries invisible visual-editing characters, which happens when it is pasted from the live preview. Retype it by hand instead of pasting.";
+
 const singletonId = (id: string | undefined) => id?.replace(/^drafts\./, "");
 
 const textField = (name: string, title: string, rows?: number) =>
@@ -13,7 +26,11 @@ const textField = (name: string, title: string, rows?: number) =>
     title,
     type: rows ? "text" : "string",
     ...(rows ? { rows } : {}),
-    validation: (rule) => rule.max(rows ? 1500 : 180).custom(trimmed),
+    validation: (rule) =>
+      rule
+        .max(rows ? 1500 : 180)
+        .custom(trimmed)
+        .custom(noHiddenCharacters),
   });
 
 const slotField = (name: string, title: string, description: string) =>
@@ -37,7 +54,8 @@ const slotField = (name: string, title: string, description: string) =>
         type: "string",
         description:
           "Leave empty to use the shared button label above.",
-        validation: (rule) => rule.max(180).custom(trimmed),
+        validation: (rule) =>
+          rule.max(180).custom(trimmed).custom(noHiddenCharacters),
       }),
     ],
   });
