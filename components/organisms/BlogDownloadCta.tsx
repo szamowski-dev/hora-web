@@ -101,10 +101,15 @@ export function BlogDownloadCta({
     </AppStoreLink>
   );
 
-  const trialNote = (
+  // Long enough to wrap in every variant, so balance it rather than let the
+  // last line dangle on one word.
+  const trialNote = (alignment?: string) => (
     <Link
       href="/pricing/"
-      className="inline-flex text-xs font-medium text-white/70 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-privacy-panel"
+      className={cn(
+        "text-balance text-xs font-medium text-white/70 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-privacy-panel",
+        alignment,
+      )}
     >
       {content.trialNote}
     </Link>
@@ -146,13 +151,13 @@ export function BlogDownloadCta({
             <h2 className="mt-4 text-balance text-2xl font-semibold tracking-[-0.03em] sm:text-3xl">
               {slot.heading}
             </h2>
-            <p className="mt-3 text-[15px] leading-7 text-white/85">
+            <p className="mt-3 whitespace-pre-line text-[15px] leading-7 text-white/85">
               {slot.body}
             </p>
           </div>
           <div className="flex flex-col items-start gap-4 lg:items-end">
             {downloadButton}
-            {trialNote}
+            {trialNote("lg:text-right")}
             {showHomebrew ? (
               <HomebrewCommand
                 command={content.homebrewCommand}
@@ -164,7 +169,7 @@ export function BlogDownloadCta({
               />
             ) : null}
             {showDirectDownload ? (
-              <p className="text-xs leading-5 text-white/55">
+              <p className="text-xs leading-5 text-white/55 lg:text-right">
                 {content.requirement}
               </p>
             ) : null}
@@ -193,7 +198,7 @@ export function BlogDownloadCta({
       </p>
       <p
         className={cn(
-          "mt-2 text-white/85",
+          "mt-2 whitespace-pre-line text-white/85",
           isRail ? "text-[13px] leading-5" : "text-sm leading-6",
         )}
       >
@@ -201,7 +206,7 @@ export function BlogDownloadCta({
       </p>
       <div className="mt-5 flex flex-col items-start gap-3">
         {downloadButton}
-        {trialNote}
+        {trialNote()}
       </div>
     </aside>
   );
