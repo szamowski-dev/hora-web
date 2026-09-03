@@ -2,6 +2,7 @@ import { aboutPage } from "./aboutPage";
 import { author } from "./author";
 import { blogBody } from "./blogBody";
 import { blogCategory } from "./blogCategory";
+import { blogCtaSettings } from "./blogCtaSettings";
 import { blogFaq, blogFaqItem } from "./blogFaq";
 import { blogImage } from "./blogImage";
 import { blogPost } from "./blogPost";
@@ -49,6 +50,7 @@ export const schemaTypes = [
   blogPost,
   homePage,
   footerSettings,
+  blogCtaSettings,
   pricingPage,
   featuresPage,
   aboutPage,
