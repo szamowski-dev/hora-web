@@ -19,6 +19,7 @@ import { StudioIcon } from "./sanity/StudioIcon";
 const singletonTypes = new Set([
   "homePage",
   "footerSettings",
+  "blogCtaSettings",
   "pricingPage",
   "featuresPage",
   "aboutPage",

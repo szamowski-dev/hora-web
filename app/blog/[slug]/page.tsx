@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { BlogPostLayout } from "@/components/templates/BlogPostLayout";
 import { site } from "@/content/site";
 import { getRelatedPosts } from "@/lib/blog";
+import { getBlogCta } from "@/lib/blog-cta-repository";
+import { getPricingPage } from "@/lib/pricing-repository";
 import {
   getAllBlogPosts,
   getBlogPostBySlug,
@@ -72,9 +74,11 @@ export default async function BlogPostPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const [post, allPosts] = await Promise.all([
+  const [post, allPosts, cta, pricing] = await Promise.all([
     getBlogPostBySlug(slug),
     getAllBlogPosts(),
+    getBlogCta(),
+    getPricingPage(),
   ]);
   if (!post) notFound();
 
@@ -134,6 +138,8 @@ export default async function BlogPostPage({
       <BlogPostLayout
         post={post}
         relatedPosts={getRelatedPosts(allPosts, slug)}
+        cta={cta}
+        showDirectDownload={pricing.direct.showDownload}
       />
       <script
         type="application/ld+json"

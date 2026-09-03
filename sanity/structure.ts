@@ -5,6 +5,7 @@ import { apiVersion } from "@/sanity/env";
 const managedDocumentTypes = new Set([
   "homePage",
   "footerSettings",
+  "blogCtaSettings",
   "pricingPage",
   "featuresPage",
   "aboutPage",
@@ -18,6 +19,7 @@ const managedDocumentTypes = new Set([
 const singletonDocumentTypes = new Set([
   "homePage",
   "footerSettings",
+  "blogCtaSettings",
   "pricingPage",
   "featuresPage",
   "aboutPage",
@@ -48,7 +50,7 @@ export const structure: StructureResolver = (S) =>
             .title("Recently edited")
             .apiVersion(apiVersion)
             .filter(
-              '_type in ["homePage", "footerSettings", "pricingPage", "featuresPage", "aboutPage", "legalPage", "blogPost", "blogCategory", "blogTag", "author"]',
+              '_type in ["homePage", "footerSettings", "blogCtaSettings", "pricingPage", "featuresPage", "aboutPage", "legalPage", "blogPost", "blogCategory", "blogTag", "author"]',
             )
             .defaultOrdering([{ field: "_updatedAt", direction: "desc" }]),
         ),
@@ -140,6 +142,15 @@ export const structure: StructureResolver = (S) =>
         ),
       S.divider(),
       S.documentTypeListItem("blogPost").title("Posts"),
+      S.listItem()
+        .id("blogCtaSettings")
+        .title("Blog download banners")
+        .child(
+          S.document()
+            .schemaType("blogCtaSettings")
+            .documentId("blogCtaSettings")
+            .title("Blog download banners"),
+        ),
       S.divider(),
       S.listItem()
         .title("Categories")

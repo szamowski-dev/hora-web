@@ -12,11 +12,22 @@ export const ANALYTICS_PLACEMENTS = {
   pricing: "pricing",
   about: "about",
   blog: "blog",
+  blogPostAside: "blog_post_aside",
+  blogPostRail: "blog_post_rail",
+  blogPostBand: "blog_post_band",
   download: "download",
   betaCta: "beta_cta",
   stayInLoop: "stay_in_loop",
   testflightPrompt: "testflight_prompt",
 } as const;
+
+export type AnalyticsPlacement =
+  (typeof ANALYTICS_PLACEMENTS)[keyof typeof ANALYTICS_PLACEMENTS];
+
+export type BlogPostCtaPlacement =
+  | typeof ANALYTICS_PLACEMENTS.blogPostAside
+  | typeof ANALYTICS_PLACEMENTS.blogPostRail
+  | typeof ANALYTICS_PLACEMENTS.blogPostBand;
 
 export type NewsletterPlacement =
   | typeof ANALYTICS_PLACEMENTS.betaCta

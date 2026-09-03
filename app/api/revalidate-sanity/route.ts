@@ -45,6 +45,10 @@ function collectRevalidation(body: SanityWebhookBody) {
       tags.add("footer-settings");
       paths.add("/");
       break;
+    case "blogCtaSettings":
+      tags.add("blog-cta-settings");
+      paths.add("/blog/");
+      break;
     case "pricingPage":
       tags.add("site-page:pricing");
       paths.add("/pricing/");

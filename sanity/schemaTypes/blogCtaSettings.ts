@@ -1,0 +1,83 @@
+import { defineField, defineType } from "sanity";
+
+const trimmed = (value: string | undefined) =>
+  !value || value.trim() === value
+    ? true
+    : "Remove whitespace from the beginning or end.";
+
+const singletonId = (id: string | undefined) => id?.replace(/^drafts\./, "");
+
+const textField = (name: string, title: string, rows?: number) =>
+  defineField({
+    name,
+    title,
+    type: rows ? "text" : "string",
+    ...(rows ? { rows } : {}),
+    validation: (rule) => rule.max(rows ? 1500 : 180).custom(trimmed),
+  });
+
+const slotField = (name: string, title: string, description: string) =>
+  defineField({
+    name,
+    title,
+    type: "object",
+    description,
+    fields: [
+      defineField({
+        name: "enabled",
+        title: "Show this banner",
+        type: "boolean",
+        initialValue: true,
+      }),
+      textField("heading", "Heading"),
+      textField("body", "Supporting line", 3),
+    ],
+  });
+
+export const blogCtaSettings = defineType({
+  name: "blogCtaSettings",
+  title: "Blog download banners",
+  type: "document",
+  description:
+    "Copy for the download banners on blog post pages. The Direct Download button and the Homebrew prompt still follow the Direct edition visibility switches on the Pricing document.",
+  fields: [
+    textField("eyebrow", "Eyebrow"),
+    textField("ctaLabel", "Button label"),
+    textField("macAppStoreLabel", "Mac App Store button label"),
+    textField("trialNote", "Trial note"),
+    textField("requirement", "System requirement note (banner above Topics)"),
+    defineField({
+      name: "showHomebrew",
+      title: "Show the Homebrew prompt",
+      type: "boolean",
+      description:
+        "Applies to the banner above Topics only. The title banner and the narrow sticky banner stay a single clear ask.",
+      initialValue: true,
+    }),
+    textField("homebrewCommand", "Homebrew command"),
+    textField("copyLabel", "Copy button label"),
+    textField("copiedLabel", "Copied state label"),
+    slotField(
+      "aside",
+      "Beside the title",
+      "Sits to the right of the post title and excerpt. Moves below the byline on narrow screens.",
+    ),
+    slotField(
+      "rail",
+      "Sticky rail",
+      "Narrow vertical banner hanging outside the article column. Appears only when the viewport has room for it, from 1400px up.",
+    ),
+    slotField(
+      "band",
+      "Above Topics",
+      "Full-width banner between the article body and the Topics list.",
+    ),
+  ],
+  validation: (rule) =>
+    rule.custom((_document, context) =>
+      singletonId(context.document?._id) === "blogCtaSettings"
+        ? true
+        : "Blog download banners must use the fixed document ID blogCtaSettings.",
+    ),
+  preview: { prepare: () => ({ title: "Blog download banners" }) },
+});

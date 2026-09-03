@@ -2,51 +2,64 @@ import Image from "next/image";
 import Link from "next/link";
 import { Prose } from "@/components/atoms/Prose";
 import { CopyLinkButton } from "@/components/molecules/CopyLinkButton";
+import { HideWhenInView } from "@/components/molecules/HideWhenInView";
 import { PostCard } from "@/components/molecules/PostCard";
 import { ShareButton } from "@/components/molecules/ShareButton";
 import { BetaCta } from "@/components/organisms/BetaCta";
+import { BlogDownloadCta } from "@/components/organisms/BlogDownloadCta";
 import { Separator } from "@/components/ui/separator";
+import { defaultBlogCta } from "@/content/blog-cta";
 import { site } from "@/content/site";
 import { formatBlogDate } from "@/lib/blog";
 import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
+import type { BlogCtaContent } from "@/lib/blog-cta-model";
 import type {
   BlogPostDetail,
   BlogPostSummary,
 } from "@/lib/blog-model";
 
+/** The rail watches this element and steps aside once it reaches the viewport. */
+const BLOG_CTA_BAND_ID = "blog-post-download";
+
 export function BlogPostLayout({
   post,
   relatedPosts,
+  cta = defaultBlogCta,
+  showDirectDownload = false,
 }: {
   post: BlogPostDetail;
   relatedPosts: readonly BlogPostSummary[];
+  cta?: BlogCtaContent;
+  showDirectDownload?: boolean;
 }) {
   return (
     <>
       <article data-nav-underlay="cover" className="pb-20 md:pb-28">
         <section className="relative bg-bg px-5 pb-16 pt-32 sm:px-10 sm:pb-20 sm:pt-44">
-          <header className="mx-auto max-w-landing">
-            <div>
-              <nav
-                aria-label="Breadcrumb"
-                className="flex flex-wrap items-center gap-2 text-xs text-muted"
+          <header className="mx-auto max-w-landing lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-x-12">
+            {/* The breadcrumb spans both columns, so the banner starts on the
+                grid row the title starts on and their top edges line up. */}
+            <nav
+              aria-label="Breadcrumb"
+              className="flex flex-wrap items-center gap-2 text-xs text-muted lg:col-span-2"
+            >
+              <Link
+                href="/blog/"
+                className="inline-flex min-h-11 items-center rounded-sm text-accent transition-colors hover:text-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-section"
               >
-                <Link
-                  href="/blog/"
-                  className="inline-flex min-h-11 items-center rounded-sm text-accent transition-colors hover:text-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-section"
-                >
-                  Blog
-                </Link>
-                <span aria-hidden>/</span>
-                <Link
-                  href={post.category.href}
-                  className="inline-flex min-h-11 items-center rounded-sm transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-section"
-                >
-                  {post.category.label}
-                </Link>
-              </nav>
+                Blog
+              </Link>
+              <span aria-hidden>/</span>
+              <Link
+                href={post.category.href}
+                className="inline-flex min-h-11 items-center rounded-sm transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-section"
+              >
+                {post.category.label}
+              </Link>
+            </nav>
 
-              <h1 className="mt-5 max-w-5xl text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.055em] text-text sm:text-7xl">
+            <div>
+              <h1 className="mt-5 max-w-5xl text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.055em] text-text sm:text-7xl lg:text-5xl xl:text-6xl">
                 {post.title}
               </h1>
               <p className="mt-7 max-w-3xl text-lg leading-8 text-muted sm:text-xl">
@@ -91,6 +104,13 @@ export function BlogPostLayout({
                 </div>
               </div>
             </div>
+
+            <BlogDownloadCta
+              variant="aside"
+              content={cta}
+              showDirectDownload={showDirectDownload}
+              className="mt-10 lg:mt-5"
+            />
           </header>
         </section>
         <Separator aria-hidden className="mx-auto max-w-24 bg-text/15" />
@@ -108,7 +128,34 @@ export function BlogPostLayout({
             />
           ) : null}
 
-          <Prose className="mx-auto mt-12 md:mt-16">{post.body}</Prose>
+          {/* The rail hangs off the right edge of the article column, outside
+              the content canvas, and only once the viewport has room for it.
+              `inset-y-0` bounds the sticky travel to the article body, so it
+              scrolls in below the hero image and stops before the Topics
+              footer without any scroll JS. */}
+          <div className="relative mx-auto mt-12 max-w-[var(--container-article)] md:mt-16">
+            <Prose>{post.body}</Prose>
+
+            <HideWhenInView
+              watchId={BLOG_CTA_BAND_ID}
+              className="absolute inset-y-0 left-full ml-6 hidden w-52 transition-opacity duration-300 data-[out-of-view]:pointer-events-none data-[out-of-view]:opacity-0 min-[1400px]:block"
+            >
+              <BlogDownloadCta
+                variant="rail"
+                content={cta}
+                showDirectDownload={showDirectDownload}
+                className="sticky top-28"
+              />
+            </HideWhenInView>
+          </div>
+
+          <BlogDownloadCta
+            id={BLOG_CTA_BAND_ID}
+            variant="band"
+            content={cta}
+            showDirectDownload={showDirectDownload}
+            className="mt-14 max-w-[var(--container-blog-media)]"
+          />
 
           <footer className="mx-auto mt-14 max-w-[var(--container-blog-media)] border-t border-line pt-7">
             {post.tags.length > 0 ? (
