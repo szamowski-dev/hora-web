@@ -45,7 +45,9 @@ test("keeps Direct new-sale pricing in code while Sanity controls download visib
   const publicCopy = JSON.stringify(DIRECT_PRICING_FAQ_ITEMS).toLowerCase();
   assert.match(publicCopy, /7-day cardless trial/);
   assert.match(publicCopy, /no new lifetime plan/);
-  assert.doesNotMatch(publicCopy, /14-day|14 day|24-hour|24 hour/);
+  assert.match(publicCopy, /within 14 days of any direct payment/);
+  assert.match(publicCopy, /reviewed case by case/);
+  assert.doesNotMatch(publicCopy, /24-hour|24 hour/);
   assert.equal(
     DIRECT_CHECKOUT_PRICE_NOTE,
     "Choose a plan in the app. Final currency and applicable taxes are confirmed in checkout.",
