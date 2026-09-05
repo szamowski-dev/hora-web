@@ -369,7 +369,8 @@ function validatePricing(document: SiteDocument) {
   expectCopy(publicCopy, "7-day", "pricingPage public copy");
   expectCopy(publicCopy, "cardless", "pricingPage public copy");
   expectCopy(publicCopy, "no new lifetime", "pricingPage public copy");
-  for (const forbidden of ["14-day", "14 day", "24-hour", "24 hour"]) {
+  expectCopy(publicCopy, "14 days", "pricingPage public copy");
+  for (const forbidden of ["24-hour", "24 hour"]) {
     expect(!publicCopy.includes(forbidden), `pricingPage public copy must not promise ${forbidden}`);
   }
 }
@@ -604,13 +605,15 @@ function validateLegal(document: SiteDocument, kind: "privacy" | "terms" | "refu
 
   if (kind === "refunds") {
     const publicCopy = searchableText(document.body);
+    expectCopy(publicCopy, "within 14 days", "refundsPage.body");
+    expectCopy(publicCopy, "without giving a reason", "refundsPage.body");
     expectCopy(publicCopy, "reviewed case by case", "refundsPage.body");
     expectCopy(
       publicCopy,
       "refund and cancellation of automatic renewal are separate actions",
       "refundsPage.body",
     );
-    for (const forbidden of ["14-day", "14 day", "24-hour", "24 hour"]) {
+    for (const forbidden of ["24-hour", "24 hour"]) {
       expect(!publicCopy.includes(forbidden), `refundsPage.body must not promise ${forbidden}`);
     }
   }
@@ -635,6 +638,7 @@ function validateCodeOwnedDirectSupport() {
     DIRECT_SUPPORT_REFUND_FAQ,
   ]);
   expectCopy(publicCopy, "direct purchase refunds", "support Direct refund copy");
+  expectCopy(publicCopy, "within 14 days", "support Direct refund copy");
   expectCopy(publicCopy, "reviewed case by case", "support Direct refund copy");
   expectCopy(
     publicCopy,

@@ -81,7 +81,7 @@ export const DIRECT_PRICING_FAQ_ITEMS = [
   {
     question: "What is your refund policy?",
     answer:
-      "Direct refund requests are reviewed case by case. A refund and cancellation of automatic renewal are separate actions, so tell support which outcome you need.",
+      "You can cancel and get a full refund within 14 days of any Direct payment, without giving a reason. Later requests are reviewed case by case. A refund and cancellation of automatic renewal are separate actions, so tell support which outcome you need.",
   },
   {
     question: "What happens after my subscription expires?",
