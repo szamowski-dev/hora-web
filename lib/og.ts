@@ -7,7 +7,7 @@ export function defaultOg(overrides: OpenGraph): OpenGraph {
     type: "website",
     locale: "en_US",
     siteName: "hora Calendar",
-    images: [{ url: "/assets/seo/default-og-image.png", width: 1200, height: 630 }],
+    images: [{ url: "/assets/seo/default-og-image.png", width: 2400, height: 1260 }],
     ...overrides,
   };
 }
