@@ -158,6 +158,7 @@ export default async function RootLayout({
             })();`,
           }}
         />
+        <link rel="me" href="https://mastodon.social/@szamsk1" />
       </head>
       <body
         className="min-h-dvh flex flex-col text-text"
