@@ -1,4 +1,5 @@
 import { defineQuery } from "next-sanity";
+import { defaultGoogleCalendarMacPage } from "@/content/google-calendar-mac";
 import { client } from "@/sanity/lib/client";
 
 const SITEMAP_PAGE_METADATA_QUERY = defineQuery(`
@@ -12,6 +13,13 @@ const SITEMAP_PAGE_METADATA_QUERY = defineQuery(`
       "noIndex": coalesce(seo.noIndex, false)
     },
     "about": *[_id == "aboutPage" && _type == "aboutPage"][0]{
+      "lastModified": _updatedAt,
+      "noIndex": coalesce(seo.noIndex, false)
+    },
+    "googleCalendarMac": *[
+      _id == "googleCalendarMacPage" &&
+      _type == "googleCalendarMacPage"
+    ][0]{
       "lastModified": _updatedAt,
       "noIndex": coalesce(seo.noIndex, false)
     },
@@ -59,6 +67,7 @@ type SitemapPageMetadataResult = {
   home?: SitemapPageMetadataValue;
   features?: SitemapPageMetadataValue;
   about?: SitemapPageMetadataValue;
+  googleCalendarMac?: SitemapPageMetadataValue;
   privacy?: SitemapPageMetadataValue;
   terms?: SitemapPageMetadataValue;
   refunds?: SitemapPageMetadataValue;
@@ -82,6 +91,20 @@ function requireDate(
     throw new Error(`Published Sanity ${field} sitemap date is missing or invalid`);
   }
   return value;
+}
+
+/**
+ * Pages whose Sanity singleton is optional fall back to the date packaged with
+ * their code-owned copy, so the sitemap still lists them before a first publish.
+ */
+function optionalPageMetadata(
+  value: SitemapPageMetadataValue | undefined,
+  fallbackDate: string,
+) {
+  return {
+    lastModified: value?.lastModified ?? fallbackDate,
+    noIndex: value?.noIndex === true,
+  };
 }
 
 function requirePageMetadata(
@@ -111,6 +134,7 @@ export async function getSitemapPageMetadata(): Promise<SitemapPageMetadata> {
           "site-page:home",
           "site-page:features",
           "site-page:about",
+          "site-page:google-calendar-mac",
           "site-page:privacy",
           "site-page:terms",
           "site-page:refunds",
@@ -128,6 +152,10 @@ export async function getSitemapPageMetadata(): Promise<SitemapPageMetadata> {
       ISO_TIMESTAMP_PATTERN,
     ),
     about: requirePageMetadata(result.about, "about", ISO_TIMESTAMP_PATTERN),
+    googleCalendarMac: optionalPageMetadata(
+      result.googleCalendarMac,
+      defaultGoogleCalendarMacPage.updatedAt,
+    ),
     privacy: requirePageMetadata(result.privacy, "privacy", DATE_PATTERN),
     terms: requirePageMetadata(result.terms, "terms", DATE_PATTERN),
     refunds: requirePageMetadata(result.refunds, "refunds", DATE_PATTERN),

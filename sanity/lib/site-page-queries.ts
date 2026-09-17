@@ -240,3 +240,98 @@ export const LEGAL_PAGE_QUERY = defineQuery(`
     }
   }
 `);
+
+export type SanityGoogleCalendarMacPageDocument = {
+  _id?: string;
+  _updatedAt?: string;
+  seo?: SanityPageSeoValue;
+  hero?: {
+    title?: string;
+    description?: string;
+    primaryCtaLabel?: string;
+    macAppStoreLabel?: string;
+    trialNote?: string;
+    requirement?: string;
+  };
+  answer?: {
+    heading?: string;
+    items?: Array<{
+      _key?: string;
+      eyebrow?: string;
+      body?: string;
+    }>;
+  };
+  features?: {
+    title?: string;
+    description?: string;
+    items?: Array<{
+      _key?: string;
+      icon?: string;
+      tone?: string;
+      title?: string;
+      description?: string;
+    }>;
+  };
+  trust?: {
+    title?: string;
+    description?: string;
+    linkLabel?: string;
+  };
+  pricing?: {
+    title?: string;
+    description?: string;
+    linkLabel?: string;
+  };
+  faq?: {
+    title?: string;
+    items?: Array<{
+      _key?: string;
+      question?: string;
+      answer?: string;
+    }>;
+  };
+  closing?: {
+    title?: string;
+    description?: string;
+    ctaLabel?: string;
+    guideLabel?: string;
+    guideHref?: string;
+  };
+};
+
+export const GOOGLE_CALENDAR_MAC_PAGE_QUERY = defineQuery(`
+  *[
+    _type == "googleCalendarMacPage" &&
+    (_id == "googleCalendarMacPage" || _id == "drafts.googleCalendarMacPage")
+  ] | order(_updatedAt desc)[0] {
+    _id,
+    _updatedAt,
+    seo{
+      ${PAGE_SEO_PROJECTION}
+    },
+    hero{
+      title,
+      description,
+      primaryCtaLabel,
+      macAppStoreLabel,
+      trialNote,
+      requirement
+    },
+    answer{
+      heading,
+      items[]{_key, eyebrow, body}
+    },
+    features{
+      title,
+      description,
+      items[]{_key, icon, tone, title, description}
+    },
+    trust{title, description, linkLabel},
+    pricing{title, description, linkLabel},
+    faq{
+      title,
+      items[]{_key, question, answer}
+    },
+    closing{title, description, ctaLabel, guideLabel, guideHref}
+  }
+`);

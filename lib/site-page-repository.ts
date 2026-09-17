@@ -1,11 +1,17 @@
 import { cache } from "react";
+import { defaultGoogleCalendarMacPage } from "@/content/google-calendar-mac";
 import { stegaClean } from "next-sanity";
+import type {
+  ProductLandingIcon,
+  ProductLandingTone,
+} from "@/lib/home-model";
 import {
   ABOUT_CONTACT_KINDS,
   type AboutContactKind,
   type AboutPageData,
   type FeaturesPageData,
   type FeatureShortcutsCard,
+  type GoogleCalendarMacPageData,
   type LegalPageData,
   type LegalPageKind,
   type PageSeo,
@@ -24,9 +30,11 @@ import {
 import {
   ABOUT_PAGE_QUERY,
   FEATURES_PAGE_QUERY,
+  GOOGLE_CALENDAR_MAC_PAGE_QUERY,
   LEGAL_PAGE_QUERY,
   type SanityAboutPageDocument,
   type SanityFeaturesPageDocument,
+  type SanityGoogleCalendarMacPageDocument,
   type SanityLegalPageDocument,
   type SanityPageSeoValue,
   type SanitySiteImageValue,
@@ -38,6 +46,7 @@ export type SitePageRepositoryOptions = SanityRepositoryOptions;
 
 type DocumentKind =
   | "features"
+  | "google-calendar-mac"
   | "about"
   | "privacy"
   | "terms"
@@ -334,6 +343,250 @@ function mapFeaturesPage(
         ...(wideShortcutsCard ? { wideShortcutsCard } : {}),
       };
     }),
+  };
+}
+
+const LANDING_ICONS = new Set<ProductLandingIcon>([
+  "label", "event", "video-call", "contacts", "accounts", "search",
+  "invitation", "menu-bar", "timer", "auto-awesome", "tasks", "focus-time",
+  "availability", "widgets", "offline", "sync", "key", "storage", "speed",
+  "notifications", "dock", "keyboard", "windows", "dark-mode", "apple-silicon",
+  "view", "drag", "quick-add", "time-zone", "repeat", "location",
+  "out-of-office",
+]);
+
+const LANDING_TONES = new Set<ProductLandingTone>([
+  "red", "blue", "green", "yellow", "purple", "cyan",
+]);
+
+export function mapGoogleCalendarMacPage(
+  document: SanityGoogleCalendarMacPageDocument | null,
+): GoogleCalendarMacPageData {
+  const kind: DocumentKind = "google-calendar-mac";
+  // The singleton is optional: without it the route serves the packaged copy,
+  // the same way the homepage falls back to content/home-landing.ts.
+  if (!document) return defaultGoogleCalendarMacPage;
+  const id = assertDocumentId(document._id, "googleCalendarMacPage", kind);
+  const documentId = document._id;
+
+  const guideHref = requiredMachineString(
+    document.closing?.guideHref,
+    "closing.guideHref",
+    kind,
+    documentId,
+  );
+  if (!guideHref.startsWith("/") || !guideHref.endsWith("/")) {
+    invalidPage(
+      kind,
+      documentId,
+      "closing.guideHref must be a site-relative path with a trailing slash",
+    );
+  }
+
+  return {
+    id,
+    updatedAt: requiredMachineString(
+      document._updatedAt,
+      "_updatedAt",
+      kind,
+      documentId,
+    ),
+    seo: mapSeo(document.seo, kind, documentId),
+    hero: {
+      title: requiredString(document.hero?.title, "hero.title", kind, documentId),
+      description: requiredString(
+        document.hero?.description,
+        "hero.description",
+        kind,
+        documentId,
+      ),
+      primaryCtaLabel: requiredString(
+        document.hero?.primaryCtaLabel,
+        "hero.primaryCtaLabel",
+        kind,
+        documentId,
+      ),
+      macAppStoreLabel: requiredString(
+        document.hero?.macAppStoreLabel,
+        "hero.macAppStoreLabel",
+        kind,
+        documentId,
+      ),
+      trialNote: requiredString(
+        document.hero?.trialNote,
+        "hero.trialNote",
+        kind,
+        documentId,
+      ),
+      requirement: requiredString(
+        document.hero?.requirement,
+        "hero.requirement",
+        kind,
+        documentId,
+      ),
+    },
+    answer: {
+      heading: requiredString(
+        document.answer?.heading,
+        "answer.heading",
+        kind,
+        documentId,
+      ),
+      items: requiredArray(
+        document.answer?.items,
+        "answer.items",
+        kind,
+        documentId,
+      ).map((item, index) => ({
+        eyebrow: requiredString(
+          item.eyebrow,
+          `answer.items[${index}].eyebrow`,
+          kind,
+          documentId,
+        ),
+        body: requiredString(
+          item.body,
+          `answer.items[${index}].body`,
+          kind,
+          documentId,
+        ),
+      })),
+    },
+    features: {
+      title: requiredString(
+        document.features?.title,
+        "features.title",
+        kind,
+        documentId,
+      ),
+      description: requiredString(
+        document.features?.description,
+        "features.description",
+        kind,
+        documentId,
+      ),
+      items: requiredArray(
+        document.features?.items,
+        "features.items",
+        kind,
+        documentId,
+      ).map((item, index) => {
+        const field = `features.items[${index}]`;
+        const icon = requiredMachineString(
+          item.icon,
+          `${field}.icon`,
+          kind,
+          documentId,
+        );
+        const tone = requiredMachineString(
+          item.tone,
+          `${field}.tone`,
+          kind,
+          documentId,
+        );
+        if (!LANDING_ICONS.has(icon as ProductLandingIcon)) {
+          invalidPage(kind, documentId, `${field}.icon is unsupported: ${icon}`);
+        }
+        if (!LANDING_TONES.has(tone as ProductLandingTone)) {
+          invalidPage(kind, documentId, `${field}.tone is unsupported: ${tone}`);
+        }
+        return {
+          icon: icon as ProductLandingIcon,
+          tone: tone as ProductLandingTone,
+          title: requiredString(item.title, `${field}.title`, kind, documentId),
+          description: requiredString(
+            item.description,
+            `${field}.description`,
+            kind,
+            documentId,
+          ),
+        };
+      }),
+    },
+    trust: {
+      title: requiredString(document.trust?.title, "trust.title", kind, documentId),
+      description: requiredString(
+        document.trust?.description,
+        "trust.description",
+        kind,
+        documentId,
+      ),
+      linkLabel: requiredString(
+        document.trust?.linkLabel,
+        "trust.linkLabel",
+        kind,
+        documentId,
+      ),
+    },
+    pricing: {
+      title: requiredString(
+        document.pricing?.title,
+        "pricing.title",
+        kind,
+        documentId,
+      ),
+      description: requiredString(
+        document.pricing?.description,
+        "pricing.description",
+        kind,
+        documentId,
+      ),
+      linkLabel: requiredString(
+        document.pricing?.linkLabel,
+        "pricing.linkLabel",
+        kind,
+        documentId,
+      ),
+    },
+    faq: {
+      title: requiredString(document.faq?.title, "faq.title", kind, documentId),
+      items: requiredArray(
+        document.faq?.items,
+        "faq.items",
+        kind,
+        documentId,
+      ).map((item, index) => ({
+        question: requiredString(
+          item.question,
+          `faq.items[${index}].question`,
+          kind,
+          documentId,
+        ),
+        answer: requiredString(
+          item.answer,
+          `faq.items[${index}].answer`,
+          kind,
+          documentId,
+        ),
+      })),
+    },
+    closing: {
+      title: requiredString(
+        document.closing?.title,
+        "closing.title",
+        kind,
+        documentId,
+      ),
+      description: requiredString(
+        document.closing?.description,
+        "closing.description",
+        kind,
+        documentId,
+      ),
+      ctaLabel: requiredString(
+        document.closing?.ctaLabel,
+        "closing.ctaLabel",
+        kind,
+        documentId,
+      ),
+      guideLabel: requiredString(
+        document.closing?.guideLabel,
+        "closing.guideLabel",
+        kind,
+        documentId,
+      ),
+      guideHref,
+    },
   };
 }
 
@@ -639,6 +892,30 @@ async function fetchFeaturesPage(
   return mapFeaturesPage(document);
 }
 
+async function fetchGoogleCalendarMacPage(
+  perspective: NonNullable<SitePageRepositoryOptions["perspective"]>,
+  stega: boolean,
+): Promise<GoogleCalendarMacPageData> {
+  const context = await getSanityFetchContext({ perspective, stega });
+  const document = context.draft
+    ? await context.client.fetch<SanityGoogleCalendarMacPageDocument | null>(
+        GOOGLE_CALENDAR_MAC_PAGE_QUERY,
+        {},
+        { cache: "no-store" },
+      )
+    : await context.client.fetch<SanityGoogleCalendarMacPageDocument | null>(
+        GOOGLE_CALENDAR_MAC_PAGE_QUERY,
+        {},
+        {
+          next: {
+            revalidate: SITE_PAGE_REVALIDATE_SECONDS,
+            tags: ["site-page:google-calendar-mac"],
+          },
+        },
+      );
+  return mapGoogleCalendarMacPage(document);
+}
+
 async function fetchAboutPage(
   perspective: NonNullable<SitePageRepositoryOptions["perspective"]>,
   stega: boolean,
@@ -690,6 +967,7 @@ async function fetchLegalPage(
 }
 
 const getFeaturesPageCached = cache(fetchFeaturesPage);
+const getGoogleCalendarMacPageCached = cache(fetchGoogleCalendarMacPage);
 const getAboutPageCached = cache(fetchAboutPage);
 const getLegalPageCached = cache(fetchLegalPage);
 
@@ -697,6 +975,15 @@ export function getFeaturesPage(
   options: SitePageRepositoryOptions = {},
 ): Promise<FeaturesPageData> {
   return getFeaturesPageCached(
+    options.perspective ?? "auto",
+    options.stega ?? true,
+  );
+}
+
+export function getGoogleCalendarMacPage(
+  options: SitePageRepositoryOptions = {},
+): Promise<GoogleCalendarMacPageData> {
+  return getGoogleCalendarMacPageCached(
     options.perspective ?? "auto",
     options.stega ?? true,
   );

@@ -14,6 +14,10 @@ const mainDocuments = defineDocuments([
     type: "aboutPage",
   },
   {
+    route: "/google-calendar-app-for-mac/",
+    type: "googleCalendarMacPage",
+  },
+  {
     route: "/privacy/",
     filter: `_type == "legalPage" && kind == "privacy"`,
   },
@@ -50,6 +54,14 @@ const locations = {
   }),
   aboutPage: defineLocations({
     locations: [{ title: "About", href: "/about/" }],
+  }),
+  googleCalendarMacPage: defineLocations({
+    locations: [
+      {
+        title: "Google Calendar for Mac",
+        href: "/google-calendar-app-for-mac/",
+      },
+    ],
   }),
   legalPage: defineLocations({
     select: { kind: "kind" },

@@ -66,6 +66,11 @@ function collectRevalidation(body: SanityWebhookBody) {
       paths.add("/about/");
       paths.add("/sitemap.xml");
       break;
+    case "googleCalendarMacPage":
+      tags.add("site-page:google-calendar-mac");
+      paths.add("/google-calendar-app-for-mac/");
+      paths.add("/sitemap.xml");
+      break;
     case "legalPage": {
       const kind = getLegalKind(body);
       if (kind) {

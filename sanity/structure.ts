@@ -10,6 +10,7 @@ const managedDocumentTypes = new Set([
   "featuresPage",
   "aboutPage",
   "legalPage",
+  "googleCalendarMacPage",
   "blogPost",
   "blogCategory",
   "blogTag",
@@ -24,6 +25,7 @@ const singletonDocumentTypes = new Set([
   "featuresPage",
   "aboutPage",
   "legalPage",
+  "googleCalendarMacPage",
 ]);
 
 const categories = [
@@ -50,7 +52,7 @@ export const structure: StructureResolver = (S) =>
             .title("Recently edited")
             .apiVersion(apiVersion)
             .filter(
-              '_type in ["homePage", "footerSettings", "blogCtaSettings", "pricingPage", "featuresPage", "aboutPage", "legalPage", "blogPost", "blogCategory", "blogTag", "author"]',
+              '_type in ["homePage", "footerSettings", "blogCtaSettings", "pricingPage", "featuresPage", "aboutPage", "legalPage", "googleCalendarMacPage", "blogPost", "blogCategory", "blogTag", "author"]',
             )
             .defaultOrdering([{ field: "_updatedAt", direction: "desc" }]),
         ),
@@ -97,6 +99,15 @@ export const structure: StructureResolver = (S) =>
                     .schemaType("featuresPage")
                     .documentId("featuresPage")
                     .title("Features"),
+                ),
+              S.listItem()
+                .id("googleCalendarMacPage")
+                .title("Google Calendar for Mac")
+                .child(
+                  S.document()
+                    .schemaType("googleCalendarMacPage")
+                    .documentId("googleCalendarMacPage")
+                    .title("Google Calendar for Mac"),
                 ),
               S.listItem()
                 .id("aboutPage")

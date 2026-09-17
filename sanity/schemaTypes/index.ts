@@ -13,6 +13,7 @@ import { codeBlock } from "./codeBlock";
 import { externalLink, internalPathLink, internalPostLink } from "./links";
 import { featuresPage } from "./featuresPage";
 import { footerSettings } from "./footerSettings";
+import { googleCalendarMacPage } from "./googleCalendarMacPage";
 import { homePage } from "./homePage";
 import { legalPage } from "./legalPage";
 import { pageBody } from "./pageBody";
@@ -55,4 +56,5 @@ export const schemaTypes = [
   featuresPage,
   aboutPage,
   legalPage,
+  googleCalendarMacPage,
 ];

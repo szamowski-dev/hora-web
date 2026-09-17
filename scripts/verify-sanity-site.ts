@@ -18,6 +18,12 @@ const EXPECTED_SINGLETONS = {
   trustPage: "legalPage",
 } as const;
 
+// Pages that render packaged copy until their singleton is published. They are
+// validated when present and skipped when absent.
+const OPTIONAL_SINGLETONS = {
+  googleCalendarMacPage: "googleCalendarMacPage",
+} as const;
+
 const TITLE_SUFFIX = " — hora Calendar";
 const MAX_RENDERED_TITLE_LENGTH = 65;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -45,6 +51,22 @@ const ROADMAP_STATUSES = new Set([
   "Up next",
   "Planned",
   "On the horizon",
+]);
+const LANDING_FEATURE_ICONS = new Set([
+  "label", "event", "video-call", "contacts", "accounts", "search",
+  "invitation", "menu-bar", "timer", "auto-awesome", "tasks", "focus-time",
+  "availability", "widgets", "offline", "sync", "key", "storage", "speed",
+  "notifications", "dock", "keyboard", "windows", "dark-mode", "apple-silicon",
+  "view", "drag", "quick-add", "time-zone", "repeat", "location",
+  "out-of-office",
+]);
+const LANDING_FEATURE_TONES = new Set([
+  "red",
+  "blue",
+  "green",
+  "yellow",
+  "purple",
+  "cyan",
 ]);
 const BADGE_VARIANTS = new Set(["standard", "productHunt"]);
 const ABOUT_CONTACT_KINDS = new Set([
@@ -541,6 +563,78 @@ function validateFeatures(document: SiteDocument) {
   expectUnique(labels, "featuresPage.sections.label");
 }
 
+function validateGoogleCalendarMac(document: SiteDocument) {
+  const root = "googleCalendarMacPage";
+  validateSeo(document.seo, `${root}.seo`, true);
+
+  const hero = requiredObject(document.hero, `${root}.hero`);
+  for (const field of [
+    "title",
+    "description",
+    "primaryCtaLabel",
+    "macAppStoreLabel",
+    "trialNote",
+    "requirement",
+  ]) {
+    requiredText(hero[field], `${root}.hero.${field}`);
+  }
+
+  const answer = requiredObject(document.answer, `${root}.answer`);
+  requiredText(answer.heading, `${root}.answer.heading`);
+  const answerItems = keyedObjects(answer.items, `${root}.answer.items`, 1, 4);
+  const eyebrows: string[] = [];
+  for (const [index, item] of answerItems.entries()) {
+    eyebrows.push(
+      requiredText(item.eyebrow, `${root}.answer.items[${index}].eyebrow`),
+    );
+    requiredText(item.body, `${root}.answer.items[${index}].body`);
+  }
+  expectUnique(eyebrows, `${root}.answer.items.eyebrow`);
+
+  const features = requiredObject(document.features, `${root}.features`);
+  requiredText(features.title, `${root}.features.title`);
+  requiredText(features.description, `${root}.features.description`);
+  const items = keyedObjects(features.items, `${root}.features.items`, 3, 12);
+  const featureTitles: string[] = [];
+  for (const [index, item] of items.entries()) {
+    const path = `${root}.features.items[${index}]`;
+    enumValue(item.icon, LANDING_FEATURE_ICONS, `${path}.icon`);
+    enumValue(item.tone, LANDING_FEATURE_TONES, `${path}.tone`);
+    featureTitles.push(requiredText(item.title, `${path}.title`));
+    requiredText(item.description, `${path}.description`);
+  }
+  expectUnique(featureTitles, `${root}.features.items.title`);
+
+  for (const group of ["trust", "pricing"] as const) {
+    const section = requiredObject(document[group], `${root}.${group}`);
+    requiredText(section.title, `${root}.${group}.title`);
+    requiredText(section.description, `${root}.${group}.description`);
+    requiredText(section.linkLabel, `${root}.${group}.linkLabel`);
+  }
+
+  const faq = requiredObject(document.faq, `${root}.faq`);
+  requiredText(faq.title, `${root}.faq.title`);
+  const faqItems = keyedObjects(faq.items, `${root}.faq.items`, 3, 10);
+  const questions: string[] = [];
+  for (const [index, item] of faqItems.entries()) {
+    questions.push(
+      requiredText(item.question, `${root}.faq.items[${index}].question`),
+    );
+    requiredText(item.answer, `${root}.faq.items[${index}].answer`);
+  }
+  expectUnique(questions, `${root}.faq.items.question`);
+
+  const closing = requiredObject(document.closing, `${root}.closing`);
+  for (const field of ["title", "description", "ctaLabel", "guideLabel"]) {
+    requiredText(closing[field], `${root}.closing.${field}`);
+  }
+  const guideHref = requiredText(closing.guideHref, `${root}.closing.guideHref`);
+  expect(
+    guideHref.startsWith("/") && guideHref.endsWith("/"),
+    `${root}.closing.guideHref must be a site-relative path with a trailing slash`,
+  );
+}
+
 function validatePortableText(value: unknown, path: string) {
   const blocks = keyedObjects(value, path);
   for (const [index, block] of blocks.entries()) {
@@ -669,7 +763,9 @@ function nestedReference(document: SiteDocument, path: string[]): Reference {
 }
 
 async function anonymousDocuments() {
-  const ids = Object.keys(EXPECTED_SINGLETONS).map((id) => `"${id}"`).join(",");
+  const ids = [...Object.keys(EXPECTED_SINGLETONS), ...Object.keys(OPTIONAL_SINGLETONS)]
+    .map((id) => `"${id}"`)
+    .join(",");
   const query = `*[_id in [${ids}]]{_id,_type}`;
   const url = new URL(`https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`);
   url.searchParams.set("query", query);
@@ -681,29 +777,38 @@ async function anonymousDocuments() {
 }
 
 async function main() {
-  const expectedIds = Object.keys(EXPECTED_SINGLETONS);
+  const requiredIds = Object.keys(EXPECTED_SINGLETONS);
+  const optionalIds = Object.keys(OPTIONAL_SINGLETONS);
   const client = getCliClient({ apiVersion }).withConfig({ perspective: "raw", useCdn: false });
   const snapshot = await client.fetch<Snapshot>(`{
     "siteDocuments": *[
-      _type in ["homePage", "pricingPage", "featuresPage", "aboutPage", "legalPage"] &&
+      _type in ["homePage", "pricingPage", "featuresPage", "aboutPage", "legalPage", "googleCalendarMacPage"] &&
       !(_id in path("drafts.**")) &&
       !(_id in path("versions.**"))
     ],
-    "fixedIdDocuments": *[_id in ["homePage", "pricingPage", "featuresPage", "aboutPage", "privacyPage", "termsPage", "refundsPage", "trustPage"]]{_id,_type},
+    "fixedIdDocuments": *[_id in ["homePage", "pricingPage", "featuresPage", "aboutPage", "googleCalendarMacPage", "privacyPage", "termsPage", "refundsPage", "trustPage"]]{_id,_type},
     "drafts": *[
-      _type in ["homePage", "pricingPage", "featuresPage", "aboutPage", "legalPage"] &&
+      _type in ["homePage", "pricingPage", "featuresPage", "aboutPage", "legalPage", "googleCalendarMacPage"] &&
       _id in path("drafts.**")
     ]{_id,_type}
   }`);
+
+  const presentOptionalIds = optionalIds.filter((id) =>
+    snapshot.siteDocuments.some((document) => document._id === id),
+  );
+  const expectedIds = [...requiredIds, ...presentOptionalIds];
+  const expectedTypes: Record<string, string> = {
+    ...EXPECTED_SINGLETONS,
+    ...OPTIONAL_SINGLETONS,
+  };
 
   expect(snapshot.siteDocuments.length === expectedIds.length, `found ${snapshot.siteDocuments.length} published site documents, expected ${expectedIds.length}`);
   expect(snapshot.fixedIdDocuments.length === expectedIds.length, "one or more fixed IDs are missing or duplicated by type");
   const invalidDrafts = snapshot.drafts.filter((draft) => {
     const publishedId = draft._id.replace(/^drafts\./, "");
     return (
-      !(publishedId in EXPECTED_SINGLETONS) ||
-      EXPECTED_SINGLETONS[publishedId as keyof typeof EXPECTED_SINGLETONS] !==
-        draft._type
+      !(publishedId in expectedTypes) ||
+      expectedTypes[publishedId] !== draft._type
     );
   });
   expect(
@@ -712,7 +817,8 @@ async function main() {
   );
 
   const documents = new Map(snapshot.siteDocuments.map((document) => [document._id, document]));
-  for (const [id, type] of Object.entries(EXPECTED_SINGLETONS)) {
+  for (const id of expectedIds) {
+    const type = expectedTypes[id];
     const document = documents.get(id);
     expect(document, `${id} is missing`);
     expect(document._type === type, `${id} has type ${document._type}, expected ${type}`);
@@ -724,7 +830,8 @@ async function main() {
 
   const publicDocuments = await anonymousDocuments();
   expect(publicDocuments.length === expectedIds.length, `anonymous query returned ${publicDocuments.length} site documents, expected ${expectedIds.length}`);
-  for (const [id, type] of Object.entries(EXPECTED_SINGLETONS)) {
+  for (const id of expectedIds) {
+    const type = expectedTypes[id];
     expect(publicDocuments.some((document) => document._id === id && document._type === type), `${id} is not anonymously readable with type ${type}`);
   }
 
@@ -732,6 +839,7 @@ async function main() {
   const pricing = documents.get("pricingPage")!;
   const features = documents.get("featuresPage")!;
   const about = documents.get("aboutPage")!;
+  const googleCalendarMac = documents.get("googleCalendarMacPage");
   const privacy = documents.get("privacyPage")!;
   const terms = documents.get("termsPage")!;
   const refunds = documents.get("refundsPage")!;
@@ -740,6 +848,7 @@ async function main() {
   validatePricing(pricing);
   validateFeatures(features);
   validateAbout(about);
+  if (googleCalendarMac) validateGoogleCalendarMac(googleCalendarMac);
   validateLegal(privacy, "privacy");
   validateLegal(terms, "terms");
   validateLegal(refunds, "refunds");

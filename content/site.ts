@@ -48,6 +48,10 @@ export const site = {
     popularGuides: [
       {
         label: "Google Calendar for Mac",
+        href: "/google-calendar-app-for-mac/",
+      },
+      {
+        label: "Google Calendar on Mac: 5 ways compared",
         href: "/blog/2026-07-09-google-calendar-desktop-app-mac/",
       },
       {

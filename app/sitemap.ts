@@ -83,6 +83,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...categoryEntries,
     ...postEntries,
+    ...includeIndexedPage(pageMetadata.googleCalendarMac.noIndex, {
+      url: `${base}/google-calendar-app-for-mac/`,
+      lastModified: pageMetadata.googleCalendarMac.lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    }),
     ...includeIndexedPage(pageMetadata.features.noIndex, {
       url: `${base}/features/`,
       lastModified: pageMetadata.features.lastModified,

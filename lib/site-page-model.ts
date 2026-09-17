@@ -1,3 +1,4 @@
+import type { ProductLandingFeature } from "@/lib/home-model";
 import type { SanityTextBlock } from "@/sanity/lib/queries";
 
 export type SiteImage = {
@@ -132,4 +133,48 @@ export type LegalPageData = {
   lastUpdated: string;
   seo: PageSeo;
   body: SanityTextBlock[];
+};
+
+export type GoogleCalendarMacPageData = {
+  id: "googleCalendarMacPage";
+  updatedAt: string;
+  seo: PageSeo;
+  hero: {
+    title: string;
+    description: string;
+    primaryCtaLabel: string;
+    macAppStoreLabel: string;
+    trialNote: string;
+    requirement: string;
+  };
+  answer: {
+    heading: string;
+    items: Array<{ eyebrow: string; body: string }>;
+  };
+  features: {
+    title: string;
+    description: string;
+    items: ProductLandingFeature[];
+  };
+  trust: {
+    title: string;
+    description: string;
+    linkLabel: string;
+  };
+  pricing: {
+    title: string;
+    description: string;
+    linkLabel: string;
+  };
+  faq: {
+    title: string;
+    items: Array<{ question: string; answer: string }>;
+  };
+  closing: {
+    title: string;
+    description: string;
+    ctaLabel: string;
+    guideLabel: string;
+    guideHref: string;
+  };
 };
