@@ -3,6 +3,14 @@ import { defineField, defineType } from "sanity";
 const TITLE_SUFFIX = " — hora Calendar";
 const MAX_RENDERED_TITLE_LENGTH = 65;
 
+/**
+ * Pages whose route renders `title.absolute` opt out of the layout's
+ * "%s — hora Calendar" template, so their meta title is the whole HTML title
+ * and the suffix must not be counted against their budget. Every other page
+ * inherits the template and spends part of the budget on the suffix.
+ */
+const ABSOLUTE_TITLE_TYPES = new Set(["homePage", "googleCalendarMacPage"]);
+
 export const pageSeo = defineType({
   name: "pageSeo",
   title: "Page SEO",
@@ -24,12 +32,16 @@ export const pageSeo = defineType({
           )
           .custom((value, context) => {
             if (!value) return true;
-            const suffix =
-              context.document?._type === "homePage" ? "" : TITLE_SUFFIX;
+            const documentType = context.document?._type;
+            const usesSuffix =
+              typeof documentType === "string" &&
+              !ABSOLUTE_TITLE_TYPES.has(documentType);
+            const suffix = usesSuffix ? TITLE_SUFFIX : "";
             const renderedLength = `${value}${suffix}`.length;
-            return renderedLength <= MAX_RENDERED_TITLE_LENGTH
-              ? true
-              : `The rendered HTML title is ${renderedLength} characters. Shorten it to ${MAX_RENDERED_TITLE_LENGTH} characters or fewer, including the site suffix.`;
+            if (renderedLength <= MAX_RENDERED_TITLE_LENGTH) return true;
+            return usesSuffix
+              ? `The rendered HTML title is ${renderedLength} characters, including the "${TITLE_SUFFIX.trim()}" suffix. Shorten it to ${MAX_RENDERED_TITLE_LENGTH} characters or fewer.`
+              : `The rendered HTML title is ${renderedLength} characters. This page sets its own full title, so shorten it to ${MAX_RENDERED_TITLE_LENGTH} characters or fewer.`;
           }),
     }),
     defineField({
