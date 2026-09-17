@@ -10,6 +10,7 @@ import { LayoutEnhancements } from "@/components/molecules/LayoutEnhancements";
 import { DraftModeTools } from "@/components/sanity/DraftModeTools";
 import { CookieConsentGate } from "@/components/molecules/CookieConsentGate";
 import { MetaPixel } from "@/components/molecules/MetaPixel";
+import { site } from "@/content/site";
 import { GOOGLE_ADS_ID } from "@/lib/analytics";
 import { getPricingPage } from "@/lib/pricing-repository";
 import { getFooterSettings } from "@/lib/footer-settings-repository";
@@ -93,6 +94,7 @@ export const metadata: Metadata = {
   },
   other: {
     llms: "/llms.txt",
+    "fediverse:creator": site.fediverseCreator,
   },
 };
 

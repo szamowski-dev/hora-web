@@ -74,6 +74,7 @@ const ABOUT_CONTACT_KINDS = new Set([
   "website",
   "x",
   "bluesky",
+  "mastodon",
   "github",
 ]);
 

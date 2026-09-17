@@ -72,6 +72,7 @@ export const ABOUT_CONTACT_KINDS = [
   "website",
   "x",
   "bluesky",
+  "mastodon",
   "github",
 ] as const;
 

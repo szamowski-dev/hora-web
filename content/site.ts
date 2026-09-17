@@ -34,6 +34,11 @@ export const site = {
       href: "https://discord.gg/8JFz4FfBGQ",
     },
   },
+  /**
+   * Mastodon author attribution. Mastodon reads `fediverse:creator` when one of
+   * our articles is shared and credits this account under the link preview.
+   */
+  fediverseCreator: "@szamsk1@mastodon.social",
   footer: {
     description:
       "A fast, native Google Calendar app\nbuilt for the Mac.",
@@ -79,6 +84,7 @@ export const site = {
       { label: "Discord", href: "https://discord.gg/8JFz4FfBGQ", icon: "discord" },
       { label: "X / Twitter", href: "https://x.com/moto_szama", icon: "x" },
       { label: "Bluesky", href: "https://bsky.app/profile/szamski.bsky.social", icon: "bluesky" },
+      { label: "Mastodon", href: "https://mastodon.social/@szamsk1", icon: "mastodon" },
     ],
   },
   contactEmail: "hello@horacal.app",

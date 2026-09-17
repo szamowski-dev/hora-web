@@ -43,6 +43,7 @@ const contactIcons: Record<AboutContactKind, IconName> = {
   website: "app-window",
   x: "x",
   bluesky: "bluesky",
+  mastodon: "mastodon",
   github: "github",
 };
 

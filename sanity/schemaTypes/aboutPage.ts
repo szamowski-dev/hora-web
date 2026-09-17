@@ -7,7 +7,7 @@ const trimmed = (value: string | undefined) =>
     : "Remove whitespace from the beginning or end.";
 
 type AboutContact = {
-  kind?: "email" | "website" | "x" | "bluesky" | "github";
+  kind?: "email" | "website" | "x" | "bluesky" | "mastodon" | "github";
   href?: string;
 };
 
@@ -181,6 +181,7 @@ export const aboutPage = defineType({
                   { title: "Website", value: "website" },
                   { title: "X", value: "x" },
                   { title: "Bluesky", value: "bluesky" },
+                  { title: "Mastodon", value: "mastodon" },
                   { title: "GitHub", value: "github" },
                 ],
               },
