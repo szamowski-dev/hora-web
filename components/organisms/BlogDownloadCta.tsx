@@ -9,6 +9,7 @@ import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import {
   ANALYTICS_EVENTS,
   ANALYTICS_PLACEMENTS,
+  type AnalyticsPlacement,
   type BlogPostCtaPlacement,
 } from "@/lib/analyticsSchema";
 import type { BlogCtaContent } from "@/lib/blog-cta-model";
@@ -27,6 +28,11 @@ import { DIRECT_DOWNLOAD_HREF } from "@/lib/direct/commerce-contract";
  */
 type BlogCtaVariant = "aside" | "rail" | "band";
 
+/**
+ * Each variant reports the blog placement it was built for. Pages outside the
+ * blog pass `placement` so their clicks are attributed to that page's funnel
+ * step instead of being counted as blog traffic.
+ */
 const placements: Record<BlogCtaVariant, BlogPostCtaPlacement> = {
   aside: ANALYTICS_PLACEMENTS.blogPostAside,
   rail: ANALYTICS_PLACEMENTS.blogPostRail,
@@ -40,18 +46,20 @@ export function BlogDownloadCta({
   variant,
   content,
   showDirectDownload = false,
+  placement: placementOverride,
   className,
 }: {
   id?: string;
   variant: BlogCtaVariant;
   content: BlogCtaContent;
   showDirectDownload?: boolean;
+  placement?: AnalyticsPlacement;
   className?: string;
 }) {
   const slot = content[variant];
   if (!slot.enabled) return null;
 
-  const placement = placements[variant];
+  const placement = placementOverride ?? placements[variant];
   // Only the wide banner above Topics carries the terminal prompt and the
   // system requirement. The title banner stays a single clear ask, and the rail
   // is too narrow for a monospace command.
