@@ -26,6 +26,10 @@ const mainDocuments = defineDocuments([
     filter: `_type == "legalPage" && kind == "refunds"`,
   },
   {
+    route: "/trust/",
+    filter: `_type == "legalPage" && kind == "trust"`,
+  },
+  {
     route: "/blog/category/:slug",
     filter: `_type == "blogCategory" && slug.current == $slug`,
     params: ({ params }) => ({ slug: params.slug }),
@@ -63,6 +67,11 @@ const locations = {
       if (document?.kind === "refunds") {
         return {
           locations: [{ title: "Refunds & Cancellations", href: "/refunds/" }],
+        };
+      }
+      if (document?.kind === "trust") {
+        return {
+          locations: [{ title: "Trust Center", href: "/trust/" }],
         };
       }
       return { locations: [] };

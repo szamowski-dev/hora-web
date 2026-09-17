@@ -109,6 +109,16 @@ export const structure: StructureResolver = (S) =>
                 ),
               S.divider(),
               S.listItem()
+                .id("trustPage")
+                .title("Trust Center")
+                .child(
+                  S.document()
+                    .schemaType("legalPage")
+                    .documentId("trustPage")
+                    .initialValueTemplate("legalPage", { kind: "trust" })
+                    .title("Trust Center"),
+                ),
+              S.listItem()
                 .id("privacyPage")
                 .title("Privacy Policy")
                 .child(

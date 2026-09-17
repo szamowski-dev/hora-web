@@ -66,6 +66,7 @@ export const site = {
     links: [
       { label: "About", href: "/about/" },
       { label: "Support", href: "/support/" },
+      { label: "Trust", href: "/trust/" },
       { label: "Privacy", href: "/privacy/" },
       { label: "Terms", href: "/terms/" },
       { label: "Refunds", href: "/refunds/" },

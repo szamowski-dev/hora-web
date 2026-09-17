@@ -48,7 +48,9 @@ export function LegalPageLayout({
         description={
           isGuide
             ? "A practical setup guide for using Zoom meetings with hora Calendar."
-            : "Clear terms, plain language, and no surprises hidden behind legal shorthand."
+            : kind === "trust"
+              ? "How hora Calendar handles your calendar data, where it is stored, and what leaves your Mac."
+              : "Clear terms, plain language, and no surprises hidden behind legal shorthand."
         }
         meta={`Last updated: ${displayDate(lastUpdated)}`}
       />
@@ -79,6 +81,9 @@ export function LegalPageLayout({
                   className="mt-4 flex flex-col gap-1"
                   aria-label="Legal pages"
                 >
+                  <LegalLink href="/trust/" active={activeLegalPage === "trust"}>
+                    Trust Center
+                  </LegalLink>
                   <LegalLink href="/privacy/" active={activeLegalPage === "privacy"}>
                     Privacy Policy
                   </LegalLink>

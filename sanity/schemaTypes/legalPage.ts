@@ -4,6 +4,7 @@ const LEGAL_IDS = {
   privacy: "privacyPage",
   terms: "termsPage",
   refunds: "refundsPage",
+  trust: "trustPage",
 } as const;
 
 type LegalDocument = {
@@ -32,6 +33,7 @@ export const legalPage = defineType({
           { title: "Privacy Policy", value: "privacy" },
           { title: "Terms of Service", value: "terms" },
           { title: "Refunds & Cancellations", value: "refunds" },
+          { title: "Trust Center", value: "trust" },
         ],
       },
       validation: (rule) => rule.required(),
@@ -84,10 +86,10 @@ export const legalPage = defineType({
       if (
         !id ||
         !Object.values(LEGAL_IDS).includes(
-          id as "privacyPage" | "termsPage" | "refundsPage",
+          id as "privacyPage" | "termsPage" | "refundsPage" | "trustPage",
         )
       ) {
-        return "Legal documents must use the fixed IDs privacyPage, termsPage, or refundsPage.";
+        return "Legal documents must use the fixed IDs privacyPage, termsPage, refundsPage, or trustPage.";
       }
       return expectedId === id
         ? true
@@ -108,7 +110,9 @@ export const legalPage = defineType({
             ? "Privacy Policy"
             : kind === "terms"
               ? "Terms of Service"
-              : "Refunds & Cancellations"),
+              : kind === "trust"
+                ? "Trust Center"
+                : "Refunds & Cancellations"),
         subtitle: lastUpdated ? `Updated ${lastUpdated}` : undefined,
       };
     },

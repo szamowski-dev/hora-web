@@ -38,6 +38,14 @@ const SITEMAP_PAGE_METADATA_QUERY = defineQuery(`
     ][0]{
       "lastModified": lastUpdated,
       "noIndex": coalesce(seo.noIndex, false)
+    },
+    "trust": *[
+      _id == "trustPage" &&
+      _type == "legalPage" &&
+      kind == "trust"
+    ][0]{
+      "lastModified": lastUpdated,
+      "noIndex": coalesce(seo.noIndex, false)
     }
   }
 `);
@@ -54,6 +62,7 @@ type SitemapPageMetadataResult = {
   privacy?: SitemapPageMetadataValue;
   terms?: SitemapPageMetadataValue;
   refunds?: SitemapPageMetadataValue;
+  trust?: SitemapPageMetadataValue;
 };
 
 export type SitemapPageMetadata = Record<
@@ -105,6 +114,7 @@ export async function getSitemapPageMetadata(): Promise<SitemapPageMetadata> {
           "site-page:privacy",
           "site-page:terms",
           "site-page:refunds",
+          "site-page:trust",
         ],
       },
     },
@@ -121,5 +131,6 @@ export async function getSitemapPageMetadata(): Promise<SitemapPageMetadata> {
     privacy: requirePageMetadata(result.privacy, "privacy", DATE_PATTERN),
     terms: requirePageMetadata(result.terms, "terms", DATE_PATTERN),
     refunds: requirePageMetadata(result.refunds, "refunds", DATE_PATTERN),
+    trust: requirePageMetadata(result.trust, "trust", DATE_PATTERN),
   };
 }

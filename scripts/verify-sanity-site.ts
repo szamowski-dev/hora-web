@@ -15,6 +15,7 @@ const EXPECTED_SINGLETONS = {
   privacyPage: "legalPage",
   termsPage: "legalPage",
   refundsPage: "legalPage",
+  trustPage: "legalPage",
 } as const;
 
 const TITLE_SUFFIX = " — hora Calendar";
@@ -586,7 +587,10 @@ function validateAbout(document: SiteDocument) {
   }
 }
 
-function validateLegal(document: SiteDocument, kind: "privacy" | "terms" | "refunds") {
+function validateLegal(
+  document: SiteDocument,
+  kind: "privacy" | "terms" | "refunds" | "trust",
+) {
   const path = `${kind}Page`;
   expect(document.kind === kind, `${path}.kind must be ${kind}`);
   const title = requiredObject(document.title, `${path}.title`);
@@ -685,7 +689,7 @@ async function main() {
       !(_id in path("drafts.**")) &&
       !(_id in path("versions.**"))
     ],
-    "fixedIdDocuments": *[_id in ["homePage", "pricingPage", "featuresPage", "aboutPage", "privacyPage", "termsPage", "refundsPage"]]{_id,_type},
+    "fixedIdDocuments": *[_id in ["homePage", "pricingPage", "featuresPage", "aboutPage", "privacyPage", "termsPage", "refundsPage", "trustPage"]]{_id,_type},
     "drafts": *[
       _type in ["homePage", "pricingPage", "featuresPage", "aboutPage", "legalPage"] &&
       _id in path("drafts.**")
@@ -731,6 +735,7 @@ async function main() {
   const privacy = documents.get("privacyPage")!;
   const terms = documents.get("termsPage")!;
   const refunds = documents.get("refundsPage")!;
+  const trust = documents.get("trustPage")!;
   validateHome(home);
   validatePricing(pricing);
   validateFeatures(features);
@@ -738,6 +743,7 @@ async function main() {
   validateLegal(privacy, "privacy");
   validateLegal(terms, "terms");
   validateLegal(refunds, "refunds");
+  validateLegal(trust, "trust");
   validateCodeOwnedDirectSupport();
 
   const allReferences = Array.from(collectReferences(snapshot.siteDocuments));

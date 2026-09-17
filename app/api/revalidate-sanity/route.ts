@@ -5,7 +5,7 @@ import { parseBody } from "next-sanity/webhook";
 type SanityWebhookBody = {
   _id?: string;
   _type?: string;
-  kind?: "privacy" | "terms" | "refunds";
+  kind?: "privacy" | "terms" | "refunds" | "trust";
   slug?: string;
 };
 
@@ -19,7 +19,8 @@ function getLegalKind(body: SanityWebhookBody) {
   if (
     body.kind === "privacy" ||
     body.kind === "terms" ||
-    body.kind === "refunds"
+    body.kind === "refunds" ||
+    body.kind === "trust"
   ) {
     return body.kind;
   }
@@ -27,6 +28,7 @@ function getLegalKind(body: SanityWebhookBody) {
   if (id === "privacyPage") return "privacy";
   if (id === "termsPage") return "terms";
   if (id === "refundsPage") return "refunds";
+  if (id === "trustPage") return "trust";
   return null;
 }
 
