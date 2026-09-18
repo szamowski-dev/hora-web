@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "field": {
+    "source": "PostHog $web_vitals, 28-day p75, separately for mobile and desktop",
+    "budgets": { "lcpMs": 2500, "inpMs": 200, "cls": 0.1 }
+  },
+  "lab": {
+    "source": "Lighthouse cold-load report",
+    "budgets": { "lcpMs": 2500, "fcpMs": 1800, "tbtMs": 200, "cls": 0.1 }
+  },
+  "routes": [
+    "/",
+    "/pricing/",
+    "/blog/best-calendar-app-for-mac/",
+    "/blog/real-time-google-calendar-sync-macos/",
+    "/blog/transfer-apple-calendar-to-google-calendar/",
+    "/blog/hora-calendar-first-month-update/",
+    "/blog/delete-recurring-events-google-calendar/"
+  ]
+}

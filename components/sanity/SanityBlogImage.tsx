@@ -11,7 +11,7 @@ export function SanityBlogImage({ value }: { value: SanityBlogImageValue }) {
   const dimensions = sanityImageDimensions(value);
   const width = dimensions.width ?? 1600;
   const height = dimensions.height ?? 900;
-  const src = sanityImageUrl(value, { width: Math.min(width, 1920) });
+  const src = sanityImageUrl(value, { width: Math.min(width, 1600), quality: 75 });
   if (!src) return null;
 
   const blurDataURL = value.asset?.metadata?.lqip;

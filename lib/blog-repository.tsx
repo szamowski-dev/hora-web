@@ -13,7 +13,7 @@ import {
   getSanityFetchContext,
   type SanityRepositoryOptions,
 } from "@/sanity/lib/fetch-context";
-import { sanityImageUrl } from "@/sanity/lib/image";
+import { sanityImageDimensions, sanityImageUrl } from "@/sanity/lib/image";
 import {
   BLOG_POST_QUERY,
   BLOG_POSTS_QUERY,
@@ -26,6 +26,8 @@ import {
 } from "@/sanity/lib/queries";
 
 const BLOG_REVALIDATE_SECONDS = 600;
+const BLOG_IMAGE_MAX_WIDTH = 1600;
+const BLOG_IMAGE_QUALITY = 75;
 
 export type BlogRepositoryOptions = SanityRepositoryOptions;
 
@@ -71,14 +73,20 @@ function mapImage(
 ): BlogImage {
   if (!value) invalidPost(documentId, `${field} is missing`);
 
-  const src = sanityImageUrl(value, { width: 1920, height: 1080 });
+  const dimensions = sanityImageDimensions(value);
+  const width = dimensions.width ?? BLOG_IMAGE_MAX_WIDTH;
+  const height = dimensions.height ?? 900;
+  const src = sanityImageUrl(value, {
+    width: Math.min(width, BLOG_IMAGE_MAX_WIDTH),
+    quality: BLOG_IMAGE_QUALITY,
+  });
   if (!src) invalidPost(documentId, `${field}.asset is missing`);
 
   return {
     src,
     alt,
-    width: 1920,
-    height: 1080,
+    width,
+    height,
   };
 }
 

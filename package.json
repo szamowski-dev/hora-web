@@ -10,6 +10,7 @@
     "test": "node --import tsx --test tests/*.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint",
+    "performance:check": "node scripts/check-lighthouse-budgets.mjs",
     "indexnow": "node scripts/indexnow.mjs",
     "sanity": "sanity",
     "sanity:schema": "sanity schema validate",
