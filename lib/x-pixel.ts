@@ -1,4 +1,4 @@
-export const X_PIXEL_ID = "rf9ce";
+export const X_PIXEL_ID = "rfmpu";
 
 type XPixelFunction = ((...args: unknown[]) => void) & {
   exe?: (...args: unknown[]) => void;
