@@ -10,6 +10,7 @@ import { LayoutEnhancements } from "@/components/molecules/LayoutEnhancements";
 import { DraftModeTools } from "@/components/sanity/DraftModeTools";
 import { CookieConsentGate } from "@/components/molecules/CookieConsentGate";
 import { MetaPixel } from "@/components/molecules/MetaPixel";
+import { XPixel } from "@/components/molecules/XPixel";
 import { site } from "@/content/site";
 import { GOOGLE_ADS_ID } from "@/lib/analytics";
 import { getPricingPage } from "@/lib/pricing-repository";
@@ -213,6 +214,7 @@ export default async function RootLayout({
         />
         <CookieConsentGate />
         <MetaPixel />
+        <XPixel />
 
         <script
           type="application/ld+json"

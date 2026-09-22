@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { captureFirstTouch, getAttribution } from "../lib/analytics";
 
-test("captures fbclid with the consented first touch", () => {
+test("captures ad click IDs with the consented first touch", () => {
   const previousWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
   const previousDocument = Object.getOwnPropertyDescriptor(globalThis, "document");
   const storage = new Map<string, string>();
@@ -10,7 +10,7 @@ test("captures fbclid with the consented first touch", () => {
   Object.defineProperty(globalThis, "window", {
     configurable: true,
     value: {
-      location: { href: "https://horacal.app/?fbclid=meta-click-id" },
+      location: { href: "https://horacal.app/?fbclid=meta-click-id&twclid=x-click-id" },
       localStorage: {
         getItem: (key: string) => storage.get(key) ?? null,
         setItem: (key: string, value: string) => storage.set(key, value),
@@ -26,7 +26,8 @@ test("captures fbclid with the consented first touch", () => {
     captureFirstTouch(true);
     assert.deepEqual(getAttribution(), {
       fbclid: "meta-click-id",
-      first_touch_landing_page: "/?fbclid=meta-click-id",
+      twclid: "x-click-id",
+      first_touch_landing_page: "/?fbclid=meta-click-id&twclid=x-click-id",
       first_touch_at: storage.has("hora_first_touch_v1")
         ? JSON.parse(storage.get("hora_first_touch_v1")!).at
         : "",
