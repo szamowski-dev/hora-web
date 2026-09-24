@@ -11,12 +11,26 @@ function includeIndexedPage(
   return noIndex ? [] : [entry];
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [posts, pageMetadata] = await Promise.all([
-    getAllBlogPosts({
+async function loadSitemapBlogPosts() {
+  try {
+    return await getAllBlogPosts({
       perspective: "published",
       stega: false,
-    }),
+    });
+  } catch (error) {
+    // One invalid published post (or a Sanity outage) used to 500 the whole
+    // sitemap after revalidation. Prefer a thinner XML over Search Console gaps.
+    console.error(
+      "[sitemap] Blog posts unavailable; omitting post and category URLs",
+      error,
+    );
+    return [];
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [posts, pageMetadata] = await Promise.all([
+    loadSitemapBlogPosts(),
     getSitemapPageMetadata(),
   ]);
   const base = site.url;

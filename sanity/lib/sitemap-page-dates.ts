@@ -82,39 +82,91 @@ export type SitemapPageMetadata = Record<
 const ISO_TIMESTAMP_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-function requireDate(
-  value: string | undefined,
-  field: keyof SitemapPageMetadataResult,
-  pattern: RegExp,
-) {
-  if (!value || !pattern.test(value)) {
-    throw new Error(`Published Sanity ${field} sitemap date is missing or invalid`);
-  }
-  return value;
+function todayIsoTimestamp() {
+  return new Date().toISOString();
+}
+
+function todayDate() {
+  return todayIsoTimestamp().slice(0, 10);
 }
 
 /**
- * Pages whose Sanity singleton is optional fall back to the date packaged with
- * their code-owned copy, so the sitemap still lists them before a first publish.
+ * Prefer the CMS date when it matches the expected shape; otherwise keep the
+ * sitemap online with a deterministic fallback (never throw).
  */
-function optionalPageMetadata(
+function resolveDate(
+  value: string | undefined,
+  field: keyof SitemapPageMetadataResult,
+  pattern: RegExp,
+  fallback: string,
+) {
+  if (value && pattern.test(value)) return value;
+  if (value) {
+    console.error(
+      `[sitemap] Published Sanity ${field} date is invalid (${value}); using fallback`,
+    );
+  }
+  return fallback;
+}
+
+function resolvePageMetadata(
   value: SitemapPageMetadataValue | undefined,
+  field: keyof SitemapPageMetadataResult,
+  pattern: RegExp,
   fallbackDate: string,
 ) {
   return {
-    lastModified: value?.lastModified ?? fallbackDate,
+    lastModified: resolveDate(value?.lastModified, field, pattern, fallbackDate),
     noIndex: value?.noIndex === true,
   };
 }
 
-function requirePageMetadata(
-  value: SitemapPageMetadataValue | undefined,
-  field: keyof SitemapPageMetadataResult,
-  pattern: RegExp,
-) {
+/**
+ * Pure mapper used by the sitemap fetch and unit tests. Missing documents,
+ * invalid dates, or a null fetch result all degrade to fallback lastmod values
+ * so /sitemap.xml can still return 200.
+ */
+export function resolveSitemapPageMetadata(
+  result: SitemapPageMetadataResult | null | undefined,
+): SitemapPageMetadata {
+  const isoFallback = todayIsoTimestamp();
+  const dateFallback = todayDate();
+  const source = result ?? {};
+
   return {
-    lastModified: requireDate(value?.lastModified, field, pattern),
-    noIndex: value?.noIndex === true,
+    home: resolvePageMetadata(source.home, "home", ISO_TIMESTAMP_PATTERN, isoFallback),
+    features: resolvePageMetadata(
+      source.features,
+      "features",
+      ISO_TIMESTAMP_PATTERN,
+      isoFallback,
+    ),
+    about: resolvePageMetadata(
+      source.about,
+      "about",
+      ISO_TIMESTAMP_PATTERN,
+      isoFallback,
+    ),
+    googleCalendarMac: resolvePageMetadata(
+      source.googleCalendarMac,
+      "googleCalendarMac",
+      ISO_TIMESTAMP_PATTERN,
+      defaultGoogleCalendarMacPage.updatedAt,
+    ),
+    privacy: resolvePageMetadata(
+      source.privacy,
+      "privacy",
+      DATE_PATTERN,
+      dateFallback,
+    ),
+    terms: resolvePageMetadata(source.terms, "terms", DATE_PATTERN, dateFallback),
+    refunds: resolvePageMetadata(
+      source.refunds,
+      "refunds",
+      DATE_PATTERN,
+      dateFallback,
+    ),
+    trust: resolvePageMetadata(source.trust, "trust", DATE_PATTERN, dateFallback),
   };
 }
 
@@ -122,43 +174,37 @@ function requirePageMetadata(
  * Fetches the indexing state and editorial dates needed by sitemap.xml. The
  * shared Sanity client is pinned to the published perspective and public CDN,
  * while tags let the publish webhook invalidate an individual page immediately.
+ *
+ * Failures (CDN lag after revalidate, network errors, missing singletons) are
+ * logged and degraded — the sitemap route must stay 200 for Search Console.
  */
 export async function getSitemapPageMetadata(): Promise<SitemapPageMetadata> {
-  const result = await client.fetch<SitemapPageMetadataResult>(
-    SITEMAP_PAGE_METADATA_QUERY,
-    {},
-    {
-      next: {
-        revalidate: 3600,
-        tags: [
-          "site-page:home",
-          "site-page:features",
-          "site-page:about",
-          "site-page:google-calendar-mac",
-          "site-page:privacy",
-          "site-page:terms",
-          "site-page:refunds",
-          "site-page:trust",
-        ],
+  try {
+    const result = await client.fetch<SitemapPageMetadataResult>(
+      SITEMAP_PAGE_METADATA_QUERY,
+      {},
+      {
+        next: {
+          revalidate: 3600,
+          tags: [
+            "site-page:home",
+            "site-page:features",
+            "site-page:about",
+            "site-page:google-calendar-mac",
+            "site-page:privacy",
+            "site-page:terms",
+            "site-page:refunds",
+            "site-page:trust",
+          ],
+        },
       },
-    },
-  );
-
-  return {
-    home: requirePageMetadata(result.home, "home", ISO_TIMESTAMP_PATTERN),
-    features: requirePageMetadata(
-      result.features,
-      "features",
-      ISO_TIMESTAMP_PATTERN,
-    ),
-    about: requirePageMetadata(result.about, "about", ISO_TIMESTAMP_PATTERN),
-    googleCalendarMac: optionalPageMetadata(
-      result.googleCalendarMac,
-      defaultGoogleCalendarMacPage.updatedAt,
-    ),
-    privacy: requirePageMetadata(result.privacy, "privacy", DATE_PATTERN),
-    terms: requirePageMetadata(result.terms, "terms", DATE_PATTERN),
-    refunds: requirePageMetadata(result.refunds, "refunds", DATE_PATTERN),
-    trust: requirePageMetadata(result.trust, "trust", DATE_PATTERN),
-  };
+    );
+    return resolveSitemapPageMetadata(result);
+  } catch (error) {
+    console.error(
+      "[sitemap] Sanity page metadata fetch failed; using fallback dates",
+      error,
+    );
+    return resolveSitemapPageMetadata(null);
+  }
 }

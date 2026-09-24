@@ -265,7 +265,19 @@ const getAllBlogPostsCached = cache(
           },
         );
 
-    return (result.posts ?? []).map(mapSummary);
+    return (result.posts ?? []).flatMap((document) => {
+      try {
+        return [mapSummary(document)];
+      } catch (error) {
+        // Keep listings and sitemap.xml online when one published doc is incomplete
+        // (common after webhook revalidate while CDN/content catch up).
+        console.error(
+          `[blog] Skipping invalid published post ${document._id ?? "<unknown>"}`,
+          error,
+        );
+        return [];
+      }
+    });
   },
 );
 
