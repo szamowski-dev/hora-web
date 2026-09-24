@@ -14,7 +14,11 @@ export const DEFAULT_FOOTER_COPYRIGHT = "© 2026 NA SERIO Maciej Szamowski";
 
 function mapFooterSettings(document: SanityFooterSettingsDocument | null) {
   const copyright = document?.copyright?.trim();
-  return { copyright: copyright ? stegaClean(copyright) : DEFAULT_FOOTER_COPYRIGHT };
+  const googleDisclaimer = document?.googleDisclaimer?.trim();
+  return {
+    copyright: copyright ? stegaClean(copyright) : DEFAULT_FOOTER_COPYRIGHT,
+    googleDisclaimer: googleDisclaimer ? stegaClean(googleDisclaimer) : undefined,
+  };
 }
 
 const getFooterSettingsCached = cache(

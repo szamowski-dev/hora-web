@@ -10,7 +10,13 @@ import { DIRECT_DOWNLOAD_HREF } from "@/lib/direct/commerce-contract";
 const linkClassName =
   "inline-flex min-h-10 items-center text-sm text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:text-accent";
 
-export function Footer({ copyright }: { copyright: string }) {
+export function Footer({
+  copyright,
+  googleDisclaimer,
+}: {
+  copyright: string;
+  googleDisclaimer?: string;
+}) {
   return (
     <footer className="border-t border-line bg-panel-deep px-5 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-6xl">
@@ -23,6 +29,11 @@ export function Footer({ copyright }: { copyright: string }) {
             <p className="text-sm leading-6 text-muted">
               {copyright}
             </p>
+            {googleDisclaimer ? (
+              <p className="whitespace-pre-line text-sm leading-6 text-muted">
+                {googleDisclaimer}
+              </p>
+            ) : null}
             <div className="-ml-3 flex flex-wrap items-center gap-0">
               {site.footer.socials.map((social) => (
                 <FooterSocialLink

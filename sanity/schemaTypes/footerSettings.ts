@@ -17,6 +17,14 @@ export const footerSettings = defineType({
       type: "string",
       validation: (rule) => rule.required().min(2).max(180).custom(trimmed),
     }),
+    defineField({
+      name: "googleDisclaimer",
+      title: "Google disclaimer",
+      description:
+        "Optional trademark / App Review independence wording shown under the copyright in the global footer.",
+      type: "string",
+      validation: (rule) => rule.max(500).custom(trimmed),
+    }),
   ],
   validation: (rule) =>
     rule.custom((_document, context) =>

@@ -182,7 +182,10 @@ export default async function RootLayout({
         >
           {children}
         </main>
-        <Footer copyright={footerSettings.copyright} />
+        <Footer
+          copyright={footerSettings.copyright}
+          googleDisclaimer={footerSettings.googleDisclaimer}
+        />
         {modal}
 
         {isDraftMode ? <DraftModeTools /> : null}
