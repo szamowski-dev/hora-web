@@ -1,4 +1,5 @@
 import { MdCheck } from "react-icons/md";
+import { stegaClean } from "next-sanity";
 import { cn } from "@/lib/cn";
 import type { PricingPlan } from "@/lib/pricing-model";
 
@@ -20,7 +21,7 @@ export function PricingPlans({
   return (
     <section
       aria-label="Plans"
-      className={cn("mx-auto grid gap-5 md:grid-cols-2", visiblePlans.length > 2 ? "max-w-landing lg:grid-cols-3" : "max-w-[960px]", className)}
+      className={cn("mx-auto grid gap-5", visiblePlans.length > 2 ? "max-w-landing md:grid-cols-3" : "max-w-[960px] md:grid-cols-2", className)}
     >
       {visiblePlans.map((plan) => (
         <article
@@ -36,9 +37,9 @@ export function PricingPlans({
             </p>
             {plan.directOnly ? (
               <span className="rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-white">
-                {plan.featuredLabel || "Direct only"}
+                {stegaClean(plan.featuredLabel).trim() ? plan.featuredLabel : "Direct only"}
               </span>
-            ) : plan.savingsLabel ? (
+            ) : stegaClean(plan.savingsLabel).trim() ? (
               <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-success">
                 {plan.savingsLabel}
               </span>
@@ -48,13 +49,13 @@ export function PricingPlans({
             <p className="text-5xl font-semibold tracking-[-0.07em] text-text xl:text-6xl">
               {plan.price}
             </p>
-            {plan.suffix ? (
+            {stegaClean(plan.suffix).trim() ? (
               <span className="text-base font-medium tracking-normal text-muted">
                 {plan.suffix}
               </span>
             ) : null}
           </div>
-          {plan.priceDetail ? (
+          {stegaClean(plan.priceDetail).trim() ? (
             <p className="mt-2 text-lg font-semibold text-success">
               {plan.priceDetail}
             </p>

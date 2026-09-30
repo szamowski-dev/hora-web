@@ -76,6 +76,23 @@ test("shows Lifetime only when Direct download is available", () => {
   assert.doesNotMatch(appStore, /Lifetime|Direct only/);
 });
 
+test("hides empty plan labels even when Sanity preview metadata is present", () => {
+  const previewMetadata = "\u200b\u200c\u200d\ufeff";
+  for (const empty of ["", "   ", previewMetadata]) {
+    const markup = renderToStaticMarkup(createElement(PricingPlans, {
+      plans: [{ ...DIRECT_PRICING_PLANS[0], savingsLabel: empty, priceDetail: empty, suffix: empty }],
+      showDirectDownload: true,
+    }));
+    assert.doesNotMatch(markup, /rounded-full|mt-2 text-lg|text-base font-medium/);
+  }
+  const markup = renderToStaticMarkup(createElement(PricingPlans, {
+    plans: [{ ...DIRECT_PRICING_PLANS[1], savingsLabel: `SAVE 16%${previewMetadata}` }],
+    showDirectDownload: true,
+  }));
+  assert.match(markup, /rounded-full/);
+  assert.match(markup, /SAVE 16%/);
+});
+
 test("keeps the homepage copy and installation FAQ aligned across distributions", () => {
   assert.equal(
     defaultProductLanding.hero.primaryCtaLabel,
