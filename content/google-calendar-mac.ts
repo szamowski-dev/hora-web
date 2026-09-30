@@ -1,4 +1,5 @@
 import type { GoogleCalendarMacPageData } from "@/lib/site-page-model";
+import { DIRECT_TRIAL_PRICING_NOTE } from "@/lib/direct/commerce-contract";
 
 /**
  * Packaged copy for the /google-calendar-app-for-mac/ landing page.
@@ -23,7 +24,7 @@ export const defaultGoogleCalendarMacPage = {
       "Google never shipped one, so we did.\nhora is a fast, native macOS client that talks straight to the Google Calendar API, with no browser tab and no Electron.",
     primaryCtaLabel: "Download for Mac",
     macAppStoreLabel: "Download on the Mac App Store",
-    trialNote: "7-day free trial · then $2.99/month or $29.99/year",
+    trialNote: DIRECT_TRIAL_PRICING_NOTE,
     requirement: "macOS 15+ · Works with Google Calendar",
   },
   answer: {
@@ -111,9 +112,9 @@ export const defaultGoogleCalendarMacPage = {
     linkLabel: "Read the Trust Center",
   },
   pricing: {
-    title: "Free for 7 days, then $2.99 a month",
+    title: "Try free for 7 days. Choose how to pay.",
     description:
-      "The trial runs inside the app and needs no card. After that it is $2.99 monthly or $29.99 yearly. Direct purchases carry a 14-day refund window, and hora is also on the Mac App Store and Setapp.",
+      "The trial runs inside the app and needs no card. Direct offers $2.99 monthly, $29.99 yearly, or $59.99 Lifetime as a one-time purchase with all current and future Direct features and updates. Direct purchases carry a 14-day refund window. Mac App Store and Setapp access use their own subscription plans; Lifetime is Direct only.",
     linkLabel: "See full pricing",
   },
   faq: {
@@ -132,7 +133,7 @@ export const defaultGoogleCalendarMacPage = {
       {
         question: "Is hora free?",
         answer:
-          "hora includes a 7-day free trial inside the app, with no card required. After the trial it is $2.99 a month or $29.99 a year.",
+          "hora includes a 7-day free trial inside the app, with no card required. After the trial, Direct offers $2.99 a month, $29.99 a year, or $59.99 Lifetime as a one-time purchase. Lifetime is available only with Direct and includes all current and future Direct features and updates.",
       },
       {
         question: "Does hora sync with Google Calendar in real time?",

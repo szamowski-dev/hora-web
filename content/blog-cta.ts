@@ -1,10 +1,11 @@
 import type { BlogCtaContent } from "@/lib/blog-cta-model";
+import { DIRECT_TRIAL_PRICING_NOTE } from "@/lib/direct/commerce-contract";
 
 export const defaultBlogCta = {
   eyebrow: "Google Calendar for Mac",
   ctaLabel: "Download hora",
   macAppStoreLabel: "Download on the Mac App Store",
-  trialNote: "7-day free trial · then $2.99/month or $29.99/year",
+  trialNote: DIRECT_TRIAL_PRICING_NOTE,
   requirement: "Requires macOS 26 or newer.",
   showHomebrew: true,
   homebrewCommand: "brew install --cask hora",

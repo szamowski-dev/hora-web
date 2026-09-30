@@ -11,15 +11,15 @@ export const defaultPricingPage = {
   seo: {
     title: "Pricing",
     description:
-      "Choose a hora Calendar plan, download it directly, or get it through the Mac App Store and Setapp.",
+      "Compare Monthly, Annual, and Lifetime pricing for hora Calendar. Try it free for 7 days. Lifetime is a one-time purchase available only with Direct download.",
   },
   hero: DIRECT_PRICING_HERO,
   plans: DIRECT_PRICING_PLANS,
-  includedNote: "All hora Calendar features included · Cancel anytime",
+  includedNote: "Every plan includes every hora feature.",
   accountNote:
-    "Subscription is linked to the Google Account used to activate hora Calendar.",
+    "Your Direct purchase is linked to the Google Account used to activate hora Calendar.",
   currencyNote:
-    "Choose a plan in the app. Final currency and applicable taxes are confirmed in checkout.",
+    "Final currency and applicable taxes are confirmed at checkout.",
   direct: {
     showDownload: false,
     downloadLabel: DIRECT_DOWNLOAD_LABEL,

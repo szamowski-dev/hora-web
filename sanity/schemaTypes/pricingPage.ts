@@ -66,6 +66,7 @@ export const pricingPage = defineType({
             textField("ctaLabel", "Button label"),
             textField("ctaHelper", "Button helper text"),
             defineField({ name: "featured", title: "Featured", type: "boolean" }),
+            defineField({ name: "directOnly", title: "Available only with Direct download", type: "boolean", initialValue: false }),
           ],
           preview: { select: { title: "name", subtitle: "price" } },
         }),

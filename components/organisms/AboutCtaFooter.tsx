@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { MdArrowForward } from "react-icons/md";
-import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,9 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { site } from "@/content/site";
-import { analyticsAttrs } from "@/lib/analyticsAttrs";
-import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import type { AboutPageData } from "@/lib/site-page-model";
 
 export function AboutCtaFooter({
@@ -43,21 +39,13 @@ export function AboutCtaFooter({
           <CardContent className="px-0">
             <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button asChild size="lg" variant="accent">
-                <AppStoreLink
-                  href={site.cta.primary.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  {...analyticsAttrs("app_store_cta_click", {
-                    placement: ANALYTICS_PLACEMENTS.about,
-                    destination: "mac_app_store",
-                  })}
-                >
+                <Link href="/pricing/">
                   {content.primaryLabel}
                   <MdArrowForward
                     data-icon="inline-end"
                     aria-hidden="true"
                   />
-                </AppStoreLink>
+                </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
                 <Link href="/blog/">{content.secondaryLabel}</Link>

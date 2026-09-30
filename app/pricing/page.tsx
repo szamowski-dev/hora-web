@@ -5,15 +5,16 @@ import {
   MdHelpOutline,
   MdLanguage,
   MdOutlinePerson,
-  MdOutlineStarBorder,
+  MdDownloadForOffline,
 } from "react-icons/md";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { SetappBadge } from "@/components/atoms/SetappBadge";
 import { PricingPlans } from "@/components/organisms/PricingPlans";
-import { SitePageHero } from "@/components/templates/SitePageHero";
+import { Button } from "@/components/ui/button";
 import { site } from "@/content/site";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
-import { ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
+import { ANALYTICS_EVENTS, ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
+import { DIRECT_DOWNLOAD_HREF } from "@/lib/direct/commerce-contract";
 import { defaultOg } from "@/lib/og";
 import { getPricingPage } from "@/lib/pricing-repository";
 
@@ -36,6 +37,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PricingPage() {
   const content = await getPricingPage();
+  const visiblePlanCount = content.plans.filter(
+    (plan) => !plan.directOnly || content.direct.showDownload,
+  ).length;
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -48,21 +52,45 @@ export default async function PricingPage() {
 
   return (
     <>
-      <SitePageHero
-        align="center"
-        title={content.hero.title}
-        description={content.hero.description}
-        className="pb-14 pt-28 sm:pb-16 sm:pt-36"
-      />
-      <main className="px-5 pb-20 pt-10 sm:px-8 sm:pb-28 sm:pt-12">
-        <PricingPlans
-          plans={content.plans}
-          showDirectDownload={content.direct.showDownload}
-        />
+      <section className="px-5 pb-10 pt-32 text-center sm:px-8 sm:pb-12 sm:pt-48">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+          Pricing
+        </p>
+        <h1 className="mx-auto mt-4 max-w-5xl text-balance text-4xl font-semibold leading-[1.05] tracking-[-0.055em] text-text sm:text-6xl">
+          {content.hero.title}
+        </h1>
+        <p className="mx-auto mt-6 max-w-2xl whitespace-pre-line text-balance text-lg leading-7 text-muted sm:text-xl">
+          {content.hero.description}
+        </p>
+      </section>
+      <main className="px-5 pb-20 sm:px-8 sm:pb-28">
+        <div className={`mx-auto ${visiblePlanCount > 2 ? "max-w-landing" : "max-w-[960px]"}`}>
+          <PricingPlans
+            plans={content.plans}
+            showDirectDownload={content.direct.showDownload}
+          />
 
-        <div className="mx-auto mt-8 flex w-fit max-w-full items-center gap-3 rounded-full border border-line bg-panel/25 px-5 py-3 text-center text-sm text-text shadow-[0_14px_40px_-30px_var(--ui-shadow-neutral)] sm:px-6 sm:text-base">
-          <MdOutlineStarBorder className="size-6 shrink-0 text-muted" aria-hidden />
-          <span>{content.includedNote}</span>
+          <div className="mt-5 flex flex-col items-start justify-between gap-5 rounded-[28px] border border-line bg-panel/25 px-7 py-6 shadow-[0_14px_40px_-30px_var(--ui-shadow-neutral)] sm:flex-row sm:items-center">
+            <div>
+              <p className="text-lg font-semibold text-text">{content.includedNote}</p>
+              <p className="mt-1 text-sm text-muted">
+                Choose your plan in the app after the 7-day free trial.
+              </p>
+            </div>
+            <Button asChild size="lg" className="w-full rounded-xl sm:w-auto">
+              <a
+                href={content.direct.showDownload ? DIRECT_DOWNLOAD_HREF : site.cta.primary.href}
+                {...analyticsAttrs(content.direct.showDownload ? ANALYTICS_EVENTS.directDownloadClick : "app_store_cta_click", {
+                  placement: ANALYTICS_PLACEMENTS.pricing,
+                  destination: content.direct.showDownload ? "direct_download" : "mac_app_store",
+                })}
+                {...(!content.direct.showDownload ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              >
+                <MdDownloadForOffline data-icon="inline-start" aria-hidden />
+                {content.direct.showDownload ? content.direct.downloadLabel : "Download on the Mac App Store"}
+              </a>
+            </Button>
+          </div>
         </div>
 
         <div className="mx-auto mt-8 flex max-w-[960px] flex-col gap-3 border-t border-line pt-6 text-sm leading-6 text-muted sm:mt-9 sm:pt-7">

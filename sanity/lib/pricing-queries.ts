@@ -21,6 +21,7 @@ export type SanityPricingPageDocument = {
     ctaLabel?: string;
     ctaHelper?: string;
     featured?: boolean;
+    directOnly?: boolean;
   }>;
   includedNote?: string;
   accountNote?: string;
@@ -62,7 +63,7 @@ export const PRICING_PAGE_QUERY = defineQuery(`
   ] | order(_updatedAt desc)[0]{
     seo{title, description},
     hero{title, description},
-    plans[]{_key, name, price, suffix, priceDetail, billingLabel, savingsLabel, featuredLabel, description, features, ctaLabel, ctaHelper, featured},
+    plans[]{_key, name, price, suffix, priceDetail, billingLabel, savingsLabel, featuredLabel, description, features, ctaLabel, ctaHelper, featured, directOnly},
     includedNote,
     accountNote,
     currencyNote,

@@ -1,5 +1,5 @@
 import type { ProductLandingContent } from "@/lib/home-model";
-import { DIRECT_DOWNLOAD_LABEL } from "@/lib/direct/commerce-contract";
+import { DIRECT_DOWNLOAD_LABEL, DIRECT_TRIAL_PRICING_NOTE } from "@/lib/direct/commerce-contract";
 
 export const defaultProductLanding = {
   hero: {
@@ -8,7 +8,7 @@ export const defaultProductLanding = {
       "A fast, native calendar for people who live in Google Calendar.\nPlan, join, and protect focus time without opening another browser tab.",
     primaryCtaLabel: DIRECT_DOWNLOAD_LABEL,
     macAppStoreLabel: "Download on the Mac App Store",
-    trialNote: "7-day free trial · then $2.99/month or $29.99/year",
+    trialNote: DIRECT_TRIAL_PRICING_NOTE,
     watchVideoLabel: "Watch video",
     watchVideoUrl: "https://www.youtube.com/watch?v=ahVV5J25cYM",
     showPrimaryCta: true,

@@ -175,9 +175,9 @@ export default async function GoogleCalendarAppForMacPage() {
     offers: {
       "@type": "AggregateOffer",
       lowPrice: "2.99",
-      highPrice: "29.99",
+      highPrice: "59.99",
       priceCurrency: "USD",
-      offerCount: 2,
+      offerCount: 3,
     },
     publisher: {
       "@type": "Organization",

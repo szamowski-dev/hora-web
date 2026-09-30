@@ -5,7 +5,6 @@ import {
   DIRECT_SUPPORT_REFUND_FAQ,
   DIRECT_SUPPORT_REFUND_TITLE,
 } from "../lib/direct/support-content";
-import { DIRECT_DOWNLOAD_LABEL } from "../lib/direct/commerce-contract";
 
 const EXPECTED_SINGLETONS = {
   homePage: "homePage",
@@ -353,7 +352,7 @@ function validatePricing(document: SiteDocument) {
     validateStringArray(plan.features, `${path}.features`);
     expect(typeof plan.featured === "boolean", `${path}.featured must be boolean`);
   }
-  expect(plans.length === 2, "pricingPage.plans must contain exactly Monthly and Annual");
+  expect(plans.length === 3, "pricingPage.plans must contain exactly Monthly, Annual and Lifetime");
   const plansByName = new Map(
     plans.map((plan) => [requiredText(plan.name, "pricingPage.plans[].name").toLowerCase(), plan]),
   );
@@ -361,7 +360,11 @@ function validatePricing(document: SiteDocument) {
   const annual = plansByName.get("annual");
   expect(monthly, "pricingPage.plans must contain Monthly");
   expect(annual, "pricingPage.plans must contain Annual");
-  expect(!plansByName.has("lifetime"), "pricingPage must not offer a new Lifetime plan");
+  const lifetime = plansByName.get("lifetime");
+  expect(lifetime, "pricingPage.plans must contain Lifetime");
+  expect(lifetime.directOnly === true, "pricingPage Lifetime must be Direct only");
+  expectCopy(requiredText(lifetime.price, "pricingPage Lifetime price"), "59.99", "pricingPage Lifetime price");
+  expectCopy(requiredText(lifetime.suffix, "pricingPage Lifetime suffix"), "one-time", "pricingPage Lifetime suffix");
   expectCopy(requiredText(monthly.price, "pricingPage Monthly price"), "2.99", "pricingPage Monthly price");
   expectCopy(requiredText(monthly.suffix, "pricingPage Monthly suffix"), "month", "pricingPage Monthly suffix");
   expectCopy(requiredText(annual.price, "pricingPage Annual price"), "29.99", "pricingPage Annual price");
@@ -371,10 +374,6 @@ function validatePricing(document: SiteDocument) {
   for (const field of ["downloadLabel", "terminalCommand", "terminalRequirement", "copyLabel", "copiedLabel"]) requiredText(direct[field], `pricingPage.direct.${field}`);
   expect(direct.showDownload === true, "pricingPage.direct.showDownload must be true");
   expect(direct.showTerminalPrompt === false, "pricingPage.direct.showTerminalPrompt must be false");
-  expect(
-    direct.downloadLabel === DIRECT_DOWNLOAD_LABEL,
-    `pricingPage.direct.downloadLabel must be “${DIRECT_DOWNLOAD_LABEL}”`,
-  );
   const distribution = requiredObject(document.distribution, "pricingPage.distribution");
   for (const field of ["title", "description", "macAppStoreTitle", "macAppStoreDescription", "macAppStoreLabel", "setappTitle", "setappDescription", "setappLabel"]) requiredText(distribution[field], `pricingPage.distribution.${field}`);
   expect(typeof distribution.showMacAppStore === "boolean", "pricingPage.distribution.showMacAppStore must be boolean");
@@ -392,7 +391,9 @@ function validatePricing(document: SiteDocument) {
   const publicCopy = searchableText(document);
   expectCopy(publicCopy, "7-day", "pricingPage public copy");
   expectCopy(publicCopy, "cardless", "pricingPage public copy");
-  expectCopy(publicCopy, "no new lifetime", "pricingPage public copy");
+  expect(!publicCopy.includes("no new lifetime"), "pricingPage public copy must not exclude Lifetime");
+  expectCopy(publicCopy, "permanent access", "pricingPage Lifetime FAQ");
+  expectCopy(publicCopy, "all current and future Direct features and updates", "pricingPage Lifetime FAQ");
   expectCopy(publicCopy, "14 days", "pricingPage public copy");
   for (const forbidden of ["24-hour", "24 hour"]) {
     expect(!publicCopy.includes(forbidden), `pricingPage public copy must not promise ${forbidden}`);

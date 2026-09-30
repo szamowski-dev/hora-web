@@ -2,13 +2,15 @@ import type { PricingPageContent, PricingPlan } from "@/lib/pricing-model";
 
 export const DIRECT_DOWNLOAD_HREF = "/download/direct/";
 export const DIRECT_DOWNLOAD_LABEL = "Download";
+export const DIRECT_TRIAL_PRICING_NOTE =
+  "7-day free trial · $2.99/month, $29.99/year or $59.99 Lifetime (Direct only)";
 export const DIRECT_CHECKOUT_PRICE_NOTE =
   "Choose a plan in the app. Final currency and applicable taxes are confirmed in checkout.";
 
 export const DIRECT_PRICING_HERO = {
-  title: "Simple pricing. Everything included.",
+  title: "Choose how you want to pay.",
   description:
-    "Try hora Calendar free for 7 days. Choose monthly or annual billing after installing the app.",
+    "All plans unlock the same hora Calendar.\nTry it free for 7 days, then keep a subscription or pay once with Direct.",
 } satisfies PricingPageContent["hero"];
 
 export const DIRECT_PRICING_PLANS = [
@@ -17,13 +19,14 @@ export const DIRECT_PRICING_PLANS = [
     price: "$2.99",
     suffix: "/month",
     priceDetail: "",
-    billingLabel: "Billed monthly",
+    billingLabel: "The smallest upfront commitment.",
     savingsLabel: "",
     featuredLabel: "BEST VALUE",
-    description: "Billed monthly",
+    description: "The smallest upfront commitment.",
     features: [
       "7-day free trial",
-      "Cancel anytime",
+      "Billed monthly",
+      "Cancel any time",
     ],
     ctaLabel: DIRECT_DOWNLOAD_LABEL,
     ctaHelper: "Start your 7-day free trial",
@@ -34,17 +37,37 @@ export const DIRECT_PRICING_PLANS = [
     price: "$29.99",
     suffix: "/year",
     priceDetail: "$2.50/month",
-    billingLabel: "Billed annually",
+    billingLabel: "A lower price, renewed annually.",
     savingsLabel: "SAVE 16%",
     featuredLabel: "BEST VALUE",
-    description: "Billed annually",
+    description: "A lower price, renewed annually.",
     features: [
       "7-day free trial",
-      "Cancel renewal anytime",
+      "Billed annually",
+      "Cancel before renewal",
     ],
     ctaLabel: DIRECT_DOWNLOAD_LABEL,
     ctaHelper: "Start your 7-day free trial",
     featured: true,
+  },
+  {
+    name: "Lifetime",
+    price: "$59.99",
+    suffix: "one-time",
+    priceDetail: "",
+    billingLabel: "Pay once. No recurring subscription.",
+    savingsLabel: "",
+    featuredLabel: "Direct only",
+    description: "Pay once. No recurring subscription.",
+    features: [
+      "7-day free trial",
+      "One-time purchase",
+      "Available only with Direct download",
+    ],
+    ctaLabel: DIRECT_DOWNLOAD_LABEL,
+    ctaHelper: "Choose your plan in the app after the 7-day free trial.",
+    featured: false,
+    directOnly: true,
   },
 ] satisfies PricingPlan[];
 
@@ -57,11 +80,11 @@ export const DIRECT_PRICING_FAQ_ITEMS = [
   {
     question: "Is there a one-time purchase option?",
     answer:
-      "No new Lifetime plan is available. Direct currently offers Monthly and Annual subscriptions.",
+      "Yes. Lifetime is $59.99 as a one-time purchase, available only with the Direct download. It gives you permanent access to hora Direct, including all current and future Direct features and updates, with no recurring subscription.",
   },
   {
     question: "Can I buy on the App Store?",
-    answer: "Yes. hora is also available on the Mac App Store.",
+    answer: "Yes. hora is also available on the Mac App Store with subscription plans. Lifetime is available only with Direct.",
   },
   {
     question: "Can I share my license with my family?",
@@ -81,11 +104,11 @@ export const DIRECT_PRICING_FAQ_ITEMS = [
   {
     question: "What is your refund policy?",
     answer:
-      "You can cancel and get a full refund within 14 days of any Direct payment, without giving a reason. Later requests are reviewed case by case. A refund and cancellation of automatic renewal are separate actions, so tell support which outcome you need.",
+      "You can cancel and get a full refund within 14 days of any Direct payment, including Lifetime, without giving a reason. Later requests are reviewed case by case. For Monthly and Annual, a refund and cancellation of automatic renewal are separate actions, so tell support which outcome you need. Lifetime does not renew.",
   },
   {
     question: "What happens after my subscription expires?",
     answer:
-      "When a subscription ends, choose Monthly or Annual in the app to continue using Direct access.",
+      "When a subscription ends, choose Monthly, Annual, or Lifetime in the app to continue using Direct access. Lifetime is a one-time purchase and does not renew.",
   },
 ] satisfies PricingPageContent["faq"]["items"];

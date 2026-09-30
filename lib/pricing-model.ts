@@ -11,6 +11,7 @@ export type PricingPlan = {
   ctaLabel: string;
   ctaHelper: string;
   featured: boolean;
+  directOnly?: boolean;
 };
 
 export type PricingPageContent = {

@@ -73,6 +73,7 @@ function plans(
       ctaLabel: text(plan.ctaLabel, fallbackPlan.ctaLabel),
       ctaHelper: text(plan.ctaHelper, fallbackPlan.ctaHelper),
       featured: plan.featured ?? fallbackPlan.featured,
+      directOnly: plan.directOnly === true,
     };
   });
 }
