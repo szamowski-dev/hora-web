@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { draftMode } from "next/headers";
 import Script from "next/script";
 import localFont from "next/font/local";
-import { Geist, Newsreader } from "next/font/google";
+import { Google_Sans } from "next/font/google";
 import { Nav } from "@/components/organisms/Nav";
 import { Footer } from "@/components/organisms/Footer";
 import { AmbientGlow } from "@/components/organisms/AmbientGlow";
@@ -17,17 +17,10 @@ import { getPricingPage } from "@/lib/pricing-repository";
 import { getFooterSettings } from "@/lib/footer-settings-repository";
 import "./globals.css";
 
-const geist = Geist({
-  variable: "--font-geist",
-  subsets: ["latin"],
+const googleSans = Google_Sans({
+  variable: "--font-google-sans",
+  subsets: ["latin", "latin-ext"],
   display: "swap",
-});
-
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
-  subsets: ["latin"],
-  display: "swap",
-  preload: false,
 });
 
 const bumbbled = localFont({
@@ -120,7 +113,7 @@ export default async function RootLayout({
       lang="en"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${geist.variable} ${newsreader.variable} ${bumbbled.variable}`}
+      className={`${googleSans.variable} ${bumbbled.variable}`}
       style={{ overscrollBehaviorY: "none" }}
     >
       <head>

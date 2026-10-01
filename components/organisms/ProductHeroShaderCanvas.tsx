@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Circle,
-  FilmGrain,
-  FlowingGradient,
-  Shader,
-} from "shaders/react";
+import { FlowingGradient, Shader } from "shaders/react";
 
 export function ProductHeroShaderCanvas() {
   return (
@@ -14,30 +9,23 @@ export function ProductHeroShaderCanvas() {
       colorSpace="srgb"
       toneMapping="neutral"
       disableTelemetry
+      style={{
+        maskImage:
+          "radial-gradient(ellipse 30% 65% at 8% 76%, black, transparent 85%), radial-gradient(ellipse 30% 65% at 94% 80%, black, transparent 85%)",
+      }}
     >
-      <Circle
-        id="product-hero-mask"
-        center={{ x: 0.5, y: 0.42 }}
-        color="oklch(1 0 0)"
-        radius={1.35}
-        softness={1}
-        visible={false}
-      />
       <FlowingGradient
         id="product-hero-flow"
-        colorA="oklch(0.144273 0.014268 262.103)"
-        colorB="oklch(0.443226 0.153078 259.855)"
-        colorC="oklch(0.794642 0.116521 239.522)"
-        colorD="oklch(0.621492 0.104494 298.662)"
+        colorA="oklch(0.86 0.08 350)"
+        colorB="oklch(0.78 0.12 300)"
+        colorC="oklch(0.8 0.1 245)"
+        colorD="oklch(0.9 0.05 230)"
         colorSpace="oklab"
-        distortion={0.28}
-        maskSource="product-hero-mask"
-        maskType="alpha"
-        opacity={0.74}
+        distortion={0.16}
+        opacity={0.5}
         seed={31}
-        speed={0.32}
+        speed={0.12}
       />
-      <FilmGrain id="product-hero-grain" animated={false} strength={0.025} />
     </Shader>
   );
 }
