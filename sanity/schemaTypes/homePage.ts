@@ -70,6 +70,22 @@ export const homePage = defineType({
           title: "Opening",
           type: "object",
           fields: [
+            defineField({
+              name: "glow",
+              title: "Hero glow",
+              description: "Adjust each color independently: 0 turns it off, 50 is the default, and 100 makes it stronger.",
+              type: "object",
+              initialValue: { purple: 50, pink: 50, blue: 50 },
+              fields: ["purple", "pink", "blue"].map((name) =>
+                defineField({
+                  name,
+                  title: `${name[0].toUpperCase()}${name.slice(1)} intensity`,
+                  type: "number",
+                  initialValue: 50,
+                  validation: (rule) => rule.integer().min(0).max(100),
+                }),
+              ),
+            }),
             textField("title", "Headline"),
             textField("description", "Description", 3),
             textField("primaryCtaLabel", "Primary action"),

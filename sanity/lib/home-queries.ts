@@ -1,5 +1,6 @@
 import type { SanityImageCrop, SanityImageHotspot } from "@sanity/image-url";
 import { defineQuery } from "next-sanity";
+import type { HeroGlow } from "@/lib/hero-glow";
 import type { SanityImageAsset } from "@/sanity/lib/queries";
 
 export type SanitySiteImageValue = {
@@ -58,6 +59,7 @@ export type SanityHomePageDocument = {
   };
   productLanding?: {
     hero?: {
+      glow?: Partial<HeroGlow>;
       title?: string;
       description?: string;
       primaryCtaLabel?: string;
@@ -151,6 +153,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
     },
     productLanding{
       hero{
+        glow{purple, pink, blue},
         title,
         description,
         primaryCtaLabel,

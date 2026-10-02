@@ -3,6 +3,7 @@ import "server-only";
 import { cache } from "react";
 import { stegaClean } from "next-sanity";
 import { defaultProductLanding } from "@/content/home-landing";
+import { resolveHeroGlow } from "@/lib/hero-glow";
 import type {
   HomePageContent,
   ProductLandingContent,
@@ -244,6 +245,7 @@ function mapProductLanding(
   const fallback = defaultProductLanding;
   return {
     hero: {
+      glow: resolveHeroGlow(value?.hero?.glow),
       title: landingString(value?.hero?.title, fallback.hero.title),
       description: landingString(value?.hero?.description, fallback.hero.description),
       primaryCtaLabel: landingString(

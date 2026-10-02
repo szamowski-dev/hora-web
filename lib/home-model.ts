@@ -1,3 +1,5 @@
+import type { HeroGlow } from "@/lib/hero-glow";
+
 export type SiteImage = {
   src: string;
   alt: string;
@@ -80,6 +82,7 @@ export type ProductLandingDistributionOption = {
 
 export type ProductLandingContent = {
   hero: {
+    glow: HeroGlow;
     title: string;
     description: string;
     primaryCtaLabel: string;

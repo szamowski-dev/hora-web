@@ -1,12 +1,12 @@
 import { ProductHeroShaderMotion } from "@/components/organisms/ProductHeroShaderMotion";
+import { defaultHeroGlow, type HeroGlow } from "@/lib/hero-glow";
 
-const fallbackBackground = [
-  "radial-gradient(ellipse 34% 70% at 8% 80%, oklch(0.72 0.12 300 / 0.18), transparent 76%)",
-  "radial-gradient(ellipse 28% 52% at 12% 50%, oklch(0.82 0.1 350 / 0.12), transparent 78%)",
-  "radial-gradient(ellipse 36% 72% at 94% 84%, oklch(0.8 0.1 245 / 0.19), transparent 78%)",
-].join(", ");
-
-export function ProductHeroShader() {
+export function ProductHeroShader({ glow = defaultHeroGlow }: { glow?: HeroGlow }) {
+  const fallbackBackground = [
+    `radial-gradient(ellipse 34% 70% at 8% 80%, oklch(0.72 0.12 300 / ${0.24 * glow.purple / 50}), transparent 76%)`,
+    `radial-gradient(ellipse 28% 52% at 12% 50%, oklch(0.82 0.1 350 / ${0.16 * glow.pink / 50}), transparent 78%)`,
+    `radial-gradient(ellipse 36% 72% at 94% 84%, oklch(0.8 0.1 245 / ${0.25 * glow.blue / 50}), transparent 78%)`,
+  ].join(", ");
   return (
     <div
       aria-hidden="true"
@@ -17,7 +17,7 @@ export function ProductHeroShader() {
         className="absolute inset-y-0 -inset-x-[20%]"
         style={{ backgroundImage: fallbackBackground }}
       />
-      <ProductHeroShaderMotion />
+      <ProductHeroShaderMotion glow={glow} />
     </div>
   );
 }

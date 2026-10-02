@@ -6,8 +6,9 @@ import {
   useState,
   type ComponentType,
 } from "react";
+import type { HeroGlow } from "@/lib/hero-glow";
 
-type ShaderCanvasComponent = ComponentType;
+type ShaderCanvasComponent = ComponentType<{ glow: HeroGlow }>;
 
 function supportsWebGL2() {
   try {
@@ -17,7 +18,7 @@ function supportsWebGL2() {
   }
 }
 
-export function ProductHeroShaderMotion() {
+export function ProductHeroShaderMotion({ glow }: { glow: HeroGlow }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [Canvas, setCanvas] = useState<ShaderCanvasComponent | null>(null);
 
@@ -107,7 +108,7 @@ export function ProductHeroShaderMotion() {
       ref={hostRef}
       className="absolute inset-y-0 -inset-x-[20%] hidden opacity-30 md:block"
     >
-      {Canvas ? <Canvas /> : null}
+      {Canvas ? <Canvas glow={glow} /> : null}
     </div>
   );
 }

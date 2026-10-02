@@ -1,8 +1,10 @@
 import type { ProductLandingContent } from "@/lib/home-model";
+import { defaultHeroGlow } from "@/lib/hero-glow";
 import { DIRECT_DOWNLOAD_LABEL, DIRECT_TRIAL_PRICING_NOTE } from "@/lib/direct/commerce-contract";
 
 export const defaultProductLanding = {
   hero: {
+    glow: defaultHeroGlow,
     title: "The Mac Calendar Google never built.",
     description:
       "A fast, native calendar for people who live in Google Calendar.\nPlan, join, and protect focus time without opening another browser tab.",
