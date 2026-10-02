@@ -324,6 +324,27 @@ export const defaultProductLanding = {
         description:
           "View and manage your calendar without an internet connection.",
       },
+      {
+        icon: "tasks",
+        tone: "blue",
+        title: "Google Tasks",
+        description:
+          "Create, edit, and complete Google Tasks alongside your calendar, synced directly through the Google Tasks API.",
+      },
+      {
+        icon: "location",
+        tone: "green",
+        title: "Google Workspace Rooms",
+        description:
+          "Find and book your organization's meeting rooms while creating an event.",
+      },
+      {
+        icon: "availability",
+        tone: "purple",
+        title: "Find a Time",
+        description:
+          "Check guests' availability as you invite them and find a time that works for everyone.",
+      },
     ],
   },
   newsletter: {
