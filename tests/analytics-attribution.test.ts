@@ -10,7 +10,7 @@ test("captures ad click IDs with the consented first touch", () => {
   Object.defineProperty(globalThis, "window", {
     configurable: true,
     value: {
-      location: { href: "https://horacal.app/?fbclid=meta-click-id&twclid=x-click-id" },
+      location: { href: "https://horacal.app/?fbclid=meta-click-id&twclid=x-click-id&rdt_cid=reddit-click-id" },
       localStorage: {
         getItem: (key: string) => storage.get(key) ?? null,
         setItem: (key: string, value: string) => storage.set(key, value),
@@ -23,11 +23,14 @@ test("captures ad click IDs with the consented first touch", () => {
   });
 
   try {
+    captureFirstTouch();
+    assert.equal(storage.size, 0);
     captureFirstTouch(true);
     assert.deepEqual(getAttribution(), {
       fbclid: "meta-click-id",
       twclid: "x-click-id",
-      first_touch_landing_page: "/?fbclid=meta-click-id&twclid=x-click-id",
+      rdt_cid: "reddit-click-id",
+      first_touch_landing_page: "/?fbclid=meta-click-id&twclid=x-click-id&rdt_cid=reddit-click-id",
       first_touch_at: storage.has("hora_first_touch_v1")
         ? JSON.parse(storage.get("hora_first_touch_v1")!).at
         : "",
