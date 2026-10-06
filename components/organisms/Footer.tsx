@@ -54,6 +54,8 @@ export function Footer({
                   key={`${link.label}-${link.href}`}
                   href={link.href}
                   className={linkClassName}
+                  // The Direct route redirects to a DMG; prefetching it fails CORS.
+                  prefetch={link.href === DIRECT_DOWNLOAD_HREF ? false : undefined}
                   {...(link.href === DIRECT_DOWNLOAD_HREF
                     ? analyticsAttrs(ANALYTICS_EVENTS.directDownloadClick, {
                         placement: "footer",

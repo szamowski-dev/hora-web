@@ -91,6 +91,7 @@ export function LandingFeatureList({
   prominent = false,
   showDescriptions = true,
   titleOnly = false,
+  monochrome = false,
 }: {
   features: ProductLandingFeature[];
   className?: string;
@@ -98,6 +99,8 @@ export function LandingFeatureList({
   prominent?: boolean;
   showDescriptions?: boolean;
   titleOnly?: boolean;
+  /** Near-black icons instead of the per-feature Google label colours. */
+  monochrome?: boolean;
 }) {
   return (
     <div
@@ -140,7 +143,7 @@ export function LandingFeatureList({
                     : compact
                       ? "size-6"
                       : "size-7",
-                  toneClasses[feature.tone],
+                  monochrome ? "text-text" : toneClasses[feature.tone],
                 )}
               />
               <h3

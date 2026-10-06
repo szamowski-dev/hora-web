@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { draftMode } from "next/headers";
 import Script from "next/script";
 import localFont from "next/font/local";
-import { Google_Sans } from "next/font/google";
+import { Google_Sans, Kalam } from "next/font/google";
 import { Nav } from "@/components/organisms/Nav";
 import { Footer } from "@/components/organisms/Footer";
 import { AmbientGlow } from "@/components/organisms/AmbientGlow";
@@ -21,6 +21,16 @@ const googleSans = Google_Sans({
   variable: "--font-google-sans",
   subsets: ["latin", "latin-ext"],
   display: "swap",
+});
+
+// Handwritten annotation labels (decorative). Kalam covers Polish diacritics;
+// not preloaded so it never competes with the hero LCP.
+const kalam = Kalam({
+  variable: "--font-kalam",
+  weight: "700",
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  preload: false,
 });
 
 const bumbbled = localFont({
@@ -113,7 +123,7 @@ export default async function RootLayout({
       lang="en"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${googleSans.variable} ${bumbbled.variable}`}
+      className={`${googleSans.variable} ${bumbbled.variable} ${kalam.variable}`}
       style={{ overscrollBehaviorY: "none" }}
     >
       <head>

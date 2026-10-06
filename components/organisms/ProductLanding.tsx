@@ -13,6 +13,7 @@ import { ThemedProductImage } from "@/components/molecules/ThemedProductImage";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
 import { ProductHeroShader } from "@/components/organisms/ProductHeroShader";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
+import { Annotation, HandArrow, HandLabel } from "@/components/atoms/HandArrow";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,22 +23,37 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { HomePageContent } from "@/lib/home-model";
+import { splitHeadline, splitTail } from "@/lib/accent-text";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_EVENTS, ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { site } from "@/content/site";
 import { DIRECT_DOWNLOAD_HREF } from "@/lib/direct/commerce-contract";
 
+/** Renders `title` with its trailing phrase in the accent red (inline). */
+function AccentTail({ title }: { title: string }) {
+  const split = splitTail(title);
+  if (!split) return <>{title}</>;
+  return (
+    <>
+      {split.lead} <span className="text-accent">{split.accent}</span>
+    </>
+  );
+}
+
 function SectionHeading({
   title,
   description,
+  accent = false,
 }: {
   title: string;
   description: string;
+  /** Black + red bold-statement treatment for the trailing phrase. */
+  accent?: boolean;
 }) {
   return (
     <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
       <h2 className="text-balance text-4xl font-semibold tracking-[-0.045em] text-text sm:text-5xl md:text-6xl">
-        {title}
+        {accent ? <AccentTail title={title} /> : title}
       </h2>
       <p className="max-w-2xl text-balance text-base leading-7 text-muted sm:text-lg">
         {description}
@@ -68,6 +84,7 @@ export function ProductLanding({
     ...landing.googleCalendar.secondaryFeatures,
   ];
   const googleMainFeatures = googleFeatureCandidates.slice(0, 4);
+  const heroTitle = splitHeadline(landing.hero.title);
   const googleFeatures = [
     ...googleFeatureCandidates.slice(4),
     ...landing.featureGrid.features,
@@ -83,7 +100,14 @@ export function ProductLanding({
 
         <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
           <h1 className="w-full max-w-4xl text-balance text-5xl font-semibold tracking-[-0.055em] text-text sm:text-7xl md:text-[5.5rem] md:leading-[0.98]">
-            {landing.hero.title}
+            {heroTitle ? (
+              <>
+                {heroTitle.lead}{" "}
+                <span className="block text-accent">{heroTitle.accent}</span>
+              </>
+            ) : (
+              landing.hero.title
+            )}
           </h1>
           <p className="mt-7 max-w-2xl whitespace-pre-line text-balance text-lg leading-8 text-muted sm:text-xl">
             {landing.hero.description}
@@ -156,13 +180,21 @@ export function ProductLanding({
             {landing.hero.trialNote}
           </Link>
           {showDirectDownload && landing.hero.showTerminalPrompt ? (
-            <>
+            <div className="relative max-w-full">
               <HomebrewCommand
                 command={landing.hero.homebrewCommand}
                 copyLabel={landing.hero.copyLabel}
                 copiedLabel={landing.hero.copiedLabel}
               />
-            </>
+              <Annotation className="left-full top-[calc(50%+0.625rem)] ml-3 hidden -translate-y-1/2 items-center gap-1 lg:flex">
+                <HandArrow variant="swoop" className="mt-3 w-16" />
+                <HandLabel className="-rotate-3 text-left">
+                  or one line
+                  <br />
+                  in Terminal
+                </HandLabel>
+              </Annotation>
+            </div>
           ) : null}
           {showDirectDownload ? (
             <p className="mt-3 text-xs text-muted">
@@ -176,6 +208,14 @@ export function ProductLanding({
             aria-hidden="true"
             className="absolute inset-x-[12%] bottom-0 top-[25%] bg-[radial-gradient(ellipse_at_center,var(--ui-glow-accent-soft),transparent_68%)] blur-3xl"
           />
+          <Annotation className="-top-24 left-2 z-10 hidden items-start lg:flex xl:-left-4">
+            <HandLabel className="-rotate-[4deg] text-left">
+              one click,
+              <br />
+              no browser tab
+            </HandLabel>
+            <HandArrow variant="curve" className="ml-1 mt-8 w-36" />
+          </Annotation>
           <div className="relative">
             <ThemedProductImage
               lightSrc={landing.media.hero.light.src}
@@ -225,10 +265,21 @@ export function ProductLanding({
         <SectionHeading
           title={landing.googleCalendar.title}
           description={landing.googleCalendar.description}
+          accent
         />
         <div className="mx-auto mt-20 max-w-landing sm:mt-24">
           <LandingFeatureCards
             features={googleMainFeatures}
+            descriptionClassNames={["lg:max-w-md"]}
+            annotations={[
+              <Annotation
+                key="colors"
+                className="right-8 top-[5.75rem] z-10 hidden flex-col items-end lg:flex"
+              >
+                <HandLabel className="mr-6 rotate-[-5deg]">your colors, kept</HandLabel>
+                <HandArrow variant="loop" flip className="mt-2 w-40" />
+              </Annotation>,
+            ]}
             images={landing.media.googleCalendarCards.map((image) => ({
               lightSrc: image.light.src,
               darkSrc: image.dark.src,
@@ -239,7 +290,7 @@ export function ProductLanding({
           />
         </div>
         <div className="mx-auto mt-20 max-w-landing sm:mt-28">
-          <LandingFeatureList features={googleFeatures} prominent />
+          <LandingFeatureList features={googleFeatures} prominent monochrome />
         </div>
       </section>
 
@@ -249,12 +300,17 @@ export function ProductLanding({
         <SectionHeading
           title={landing.hora.title}
           description={landing.hora.description}
+          accent
         />
         <div className="mt-20 sm:mt-24">
           <HoraWorkflowVisual image={landing.media.workflow} />
         </div>
         <div className="mx-auto mt-20 max-w-landing sm:mt-28">
-          <LandingFeatureList features={landing.hora.features} prominent />
+          <LandingFeatureList
+            features={landing.hora.features}
+            prominent
+            monochrome
+          />
         </div>
       </section>
 
@@ -271,7 +327,7 @@ export function ProductLanding({
           <CardHeader className="w-full max-w-3xl justify-items-center gap-4 px-0">
             <MdOutlineSecurity
               aria-hidden="true"
-              className="size-14 text-label-blue"
+              className="size-14 text-white"
             />
             <CardTitle>
               <h2 className="text-3xl tracking-[-0.035em]">
@@ -294,12 +350,14 @@ export function ProductLanding({
         <SectionHeading
           title={landing.macos.title}
           description={landing.macos.description}
+          accent
         />
         <div className="mx-auto mt-20 max-w-landing sm:mt-28">
           <LandingFeatureList
             features={landing.macos.features}
             showDescriptions={false}
             titleOnly
+            monochrome
           />
         </div>
       </section>
