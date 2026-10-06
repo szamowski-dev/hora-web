@@ -1,7 +1,7 @@
 /**
- * Helpers for the black + red "bold statement" headline treatment used in the
- * App Store and deck materials. They only decide where the accent colour
- * starts; the text itself (often edited in Sanity) is never changed.
+ * Helper for the black + red "bold statement" hero headline used in the
+ * App Store and deck materials. It only decides where the accent colour
+ * starts; the text itself (edited in Sanity) is never changed.
  */
 
 export type AccentSplit = { lead: string; accent: string };
@@ -57,48 +57,5 @@ export function splitHeadline(text: string | undefined | null): AccentSplit | nu
   return {
     lead: parts.slice(0, bestIndex).join(" "),
     accent: parts.slice(bestIndex).join(" "),
-  };
-}
-
-/**
- * Accents the trailing noun phrase of a section heading, e.g.
- * "Built by hora Calendar" -> "Built by" + "hora Calendar".
- * Headings shorter than `tailWords + 1` words are left alone.
- */
-export function splitTail(
-  text: string | undefined | null,
-  tailWords = 2,
-): AccentSplit | null {
-  if (!text) return null;
-  const parts = words(text);
-  if (parts.length <= tailWords) return null;
-  return {
-    lead: parts.slice(0, -tailWords).join(" "),
-    accent: parts.slice(-tailWords).join(" "),
-  };
-}
-
-export type KeywordSplit = { before: string; keyword: string; after: string };
-
-/**
- * Finds the first matching key phrase (case-insensitive, whole words) in a
- * title. Unknown titles return null and render without an accent.
- */
-export function findKeyword(
-  title: string,
-  keywords: Record<string, string>,
-): KeywordSplit | null {
-  const phrase = keywords[title.trim().toLowerCase()];
-  if (!phrase) return null;
-
-  const escaped = phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const match = new RegExp(`(^|\\s)(${escaped})(?=$|[\\s.,!?])`, "i").exec(title);
-  if (!match) return null;
-
-  const start = match.index + match[1].length;
-  return {
-    before: title.slice(0, start),
-    keyword: title.slice(start, start + match[2].length),
-    after: title.slice(start + match[2].length),
   };
 }

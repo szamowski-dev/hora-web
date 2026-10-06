@@ -8,35 +8,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { ReactNode } from "react";
-import type { ProductLandingFeature } from "@/lib/home-model";
-import { findKeyword } from "@/lib/accent-text";
+import type {
+  ProductLandingFeature,
+  ProductLandingTone,
+} from "@/lib/home-model";
 import { cn } from "@/lib/cn";
 
-/**
- * One key word per card title rendered in the accent red. Keys are the
- * lower-cased titles (Sanity content and the local fallback); unknown titles
- * stay fully near-black.
- */
-const titleKeywords: Record<string, string> = {
-  "color-coded calendars": "calendars",
-  "event color labels": "color",
-  "every event type": "event type",
-  "meet and contacts": "meet",
-  "multiple google accounts": "accounts",
-  "multiple accounts": "accounts",
+const toneClasses: Record<ProductLandingTone, string> = {
+  red: "text-label-red",
+  blue: "text-label-blue",
+  green: "text-label-green",
+  yellow: "text-label-yellow",
+  purple: "text-label-purple",
+  cyan: "text-label-cyan",
 };
-
-function CardTitleText({ title }: { title: string }) {
-  const split = findKeyword(title, titleKeywords);
-  if (!split) return <>{title}</>;
-  return (
-    <>
-      {split.before}
-      <span className="text-accent">{split.keyword}</span>
-      {split.after}
-    </>
-  );
-}
 
 const cardSpanClasses = [
   "lg:col-span-2",
@@ -78,10 +63,13 @@ export function LandingFeatureCards({
           )}
         >
           <CardHeader className="!flex min-h-40 flex-col justify-start gap-4 px-7 pb-7 pt-8 sm:min-h-44 sm:px-8 sm:pt-9 lg:min-h-[12.5rem]">
-            <CardTitle className="text-2xl text-text sm:text-3xl">
-              <h3>
-                <CardTitleText title={feature.title} />
-              </h3>
+            <CardTitle
+              className={cn(
+                "text-2xl sm:text-3xl",
+                toneClasses[feature.tone],
+              )}
+            >
+              <h3>{feature.title}</h3>
             </CardTitle>
             <CardDescription
               className={cn(

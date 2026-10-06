@@ -23,37 +23,23 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { HomePageContent } from "@/lib/home-model";
-import { splitHeadline, splitTail } from "@/lib/accent-text";
+import { splitHeadline } from "@/lib/accent-text";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_EVENTS, ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { site } from "@/content/site";
 import { DIRECT_DOWNLOAD_HREF } from "@/lib/direct/commerce-contract";
 
-/** Renders `title` with its trailing phrase in the accent red (inline). */
-function AccentTail({ title }: { title: string }) {
-  const split = splitTail(title);
-  if (!split) return <>{title}</>;
-  return (
-    <>
-      {split.lead} <span className="text-accent">{split.accent}</span>
-    </>
-  );
-}
-
 function SectionHeading({
   title,
   description,
-  accent = false,
 }: {
   title: string;
   description: string;
-  /** Black + red bold-statement treatment for the trailing phrase. */
-  accent?: boolean;
 }) {
   return (
     <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
       <h2 className="text-balance text-4xl font-semibold tracking-[-0.045em] text-text sm:text-5xl md:text-6xl">
-        {accent ? <AccentTail title={title} /> : title}
+        {title}
       </h2>
       <p className="max-w-2xl text-balance text-base leading-7 text-muted sm:text-lg">
         {description}
@@ -265,7 +251,6 @@ export function ProductLanding({
         <SectionHeading
           title={landing.googleCalendar.title}
           description={landing.googleCalendar.description}
-          accent
         />
         <div className="mx-auto mt-20 max-w-landing sm:mt-24">
           <LandingFeatureCards
@@ -290,7 +275,7 @@ export function ProductLanding({
           />
         </div>
         <div className="mx-auto mt-20 max-w-landing sm:mt-28">
-          <LandingFeatureList features={googleFeatures} prominent monochrome />
+          <LandingFeatureList features={googleFeatures} prominent />
         </div>
       </section>
 
@@ -300,17 +285,12 @@ export function ProductLanding({
         <SectionHeading
           title={landing.hora.title}
           description={landing.hora.description}
-          accent
         />
         <div className="mt-20 sm:mt-24">
           <HoraWorkflowVisual image={landing.media.workflow} />
         </div>
         <div className="mx-auto mt-20 max-w-landing sm:mt-28">
-          <LandingFeatureList
-            features={landing.hora.features}
-            prominent
-            monochrome
-          />
+          <LandingFeatureList features={landing.hora.features} prominent />
         </div>
       </section>
 
@@ -327,7 +307,7 @@ export function ProductLanding({
           <CardHeader className="w-full max-w-3xl justify-items-center gap-4 px-0">
             <MdOutlineSecurity
               aria-hidden="true"
-              className="size-14 text-white"
+              className="size-14 text-label-blue"
             />
             <CardTitle>
               <h2 className="text-3xl tracking-[-0.035em]">
@@ -350,14 +330,12 @@ export function ProductLanding({
         <SectionHeading
           title={landing.macos.title}
           description={landing.macos.description}
-          accent
         />
         <div className="mx-auto mt-20 max-w-landing sm:mt-28">
           <LandingFeatureList
             features={landing.macos.features}
             showDescriptions={false}
             titleOnly
-            monochrome
           />
         </div>
       </section>
