@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { ReactNode } from "react";
 import type {
   ProductLandingFeature,
   ProductLandingTone,
@@ -41,9 +42,15 @@ type FeatureImage = {
 export function LandingFeatureCards({
   features,
   images,
+  annotations,
+  descriptionClassNames,
 }: {
   features: ProductLandingFeature[];
   images: FeatureImage[];
+  /** Optional decorative annotation per card (absolutely positioned). */
+  annotations?: Array<ReactNode | undefined>;
+  /** Optional extra classes for a card description, e.g. to make room for an annotation. */
+  descriptionClassNames?: Array<string | undefined>;
 }) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -51,7 +58,7 @@ export function LandingFeatureCards({
         <Card
           key={`${feature.icon}-${feature.title}`}
           className={cn(
-            "flex min-h-[23rem] flex-col overflow-hidden rounded-[20px] border-transparent bg-feature-panel !py-0 shadow-none backdrop-blur-none sm:min-h-[26rem] lg:h-[33rem]",
+            "relative flex min-h-[23rem] flex-col overflow-hidden rounded-[20px] border-transparent bg-feature-panel !py-0 shadow-none backdrop-blur-none sm:min-h-[26rem] lg:h-[33rem]",
             cardSpanClasses[index % cardSpanClasses.length],
           )}
         >
@@ -64,7 +71,12 @@ export function LandingFeatureCards({
             >
               <h3>{feature.title}</h3>
             </CardTitle>
-            <CardDescription className="max-w-2xl text-base sm:text-lg">
+            <CardDescription
+              className={cn(
+                "max-w-2xl text-base sm:text-lg",
+                descriptionClassNames?.[index],
+              )}
+            >
               {feature.description}
             </CardDescription>
           </CardHeader>
@@ -90,6 +102,7 @@ export function LandingFeatureCards({
               />
             ) : null}
           </CardContent>
+          {annotations?.[index]}
         </Card>
       ))}
     </div>

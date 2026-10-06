@@ -13,6 +13,7 @@ import { ThemedProductImage } from "@/components/molecules/ThemedProductImage";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
 import { ProductHeroShader } from "@/components/organisms/ProductHeroShader";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
+import { Annotation, HandArrow, HandLabel } from "@/components/atoms/HandArrow";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { HomePageContent } from "@/lib/home-model";
+import { splitHeadline } from "@/lib/accent-text";
 import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_EVENTS, ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { site } from "@/content/site";
@@ -68,6 +70,7 @@ export function ProductLanding({
     ...landing.googleCalendar.secondaryFeatures,
   ];
   const googleMainFeatures = googleFeatureCandidates.slice(0, 4);
+  const heroTitle = splitHeadline(landing.hero.title);
   const googleFeatures = [
     ...googleFeatureCandidates.slice(4),
     ...landing.featureGrid.features,
@@ -83,7 +86,14 @@ export function ProductLanding({
 
         <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
           <h1 className="w-full max-w-4xl text-balance text-5xl font-semibold tracking-[-0.055em] text-text sm:text-7xl md:text-[5.5rem] md:leading-[0.98]">
-            {landing.hero.title}
+            {heroTitle ? (
+              <>
+                {heroTitle.lead}{" "}
+                <span className="block text-accent">{heroTitle.accent}</span>
+              </>
+            ) : (
+              landing.hero.title
+            )}
           </h1>
           <p className="mt-7 max-w-2xl whitespace-pre-line text-balance text-lg leading-8 text-muted sm:text-xl">
             {landing.hero.description}
@@ -156,13 +166,21 @@ export function ProductLanding({
             {landing.hero.trialNote}
           </Link>
           {showDirectDownload && landing.hero.showTerminalPrompt ? (
-            <>
+            <div className="relative max-w-full">
               <HomebrewCommand
                 command={landing.hero.homebrewCommand}
                 copyLabel={landing.hero.copyLabel}
                 copiedLabel={landing.hero.copiedLabel}
               />
-            </>
+              <Annotation className="left-full top-[calc(50%+0.625rem)] ml-3 hidden -translate-y-1/2 items-center gap-1 lg:flex">
+                <HandArrow variant="swoop" className="mt-3 w-16" />
+                <HandLabel className="-rotate-3 text-left">
+                  or one line
+                  <br />
+                  in Terminal
+                </HandLabel>
+              </Annotation>
+            </div>
           ) : null}
           {showDirectDownload ? (
             <p className="mt-3 text-xs text-muted">
@@ -176,6 +194,14 @@ export function ProductLanding({
             aria-hidden="true"
             className="absolute inset-x-[12%] bottom-0 top-[25%] bg-[radial-gradient(ellipse_at_center,var(--ui-glow-accent-soft),transparent_68%)] blur-3xl"
           />
+          <Annotation className="-top-24 left-2 z-10 hidden items-start lg:flex xl:-left-4">
+            <HandLabel className="-rotate-[4deg] text-left">
+              one click,
+              <br />
+              no browser tab
+            </HandLabel>
+            <HandArrow variant="curve" className="ml-1 mt-8 w-36" />
+          </Annotation>
           <div className="relative">
             <ThemedProductImage
               lightSrc={landing.media.hero.light.src}
@@ -229,6 +255,16 @@ export function ProductLanding({
         <div className="mx-auto mt-20 max-w-landing sm:mt-24">
           <LandingFeatureCards
             features={googleMainFeatures}
+            descriptionClassNames={["lg:max-w-md"]}
+            annotations={[
+              <Annotation
+                key="colors"
+                className="right-8 top-[5.75rem] z-10 hidden flex-col items-end lg:flex"
+              >
+                <HandLabel className="mr-6 rotate-[-5deg]">your colors, kept</HandLabel>
+                <HandArrow variant="loop" flip className="mt-2 w-40" />
+              </Annotation>,
+            ]}
             images={landing.media.googleCalendarCards.map((image) => ({
               lightSrc: image.light.src,
               darkSrc: image.dark.src,

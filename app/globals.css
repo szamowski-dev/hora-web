@@ -38,6 +38,7 @@
 
   --font-sans: var(--font-google-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-brand: var(--font-bumbbled), var(--font-google-sans), sans-serif;
+  --font-hand: var(--font-kalam), "Noteworthy", "Bradley Hand", cursive;
   --font-editorial: var(--font-sans);
 
   --container-article: 900px;
@@ -56,7 +57,8 @@
   --color-feature-panel: oklch(0.93 0.024 255);
   --color-feature-visual: oklch(0.95 0.015 255);
   --color-border: oklch(0.82 0.012 260);
-  --color-text: oklch(0.22 0.012 260);
+  /* Near-black #101114 from the App Store / deck materials. */
+  --color-text: oklch(0.1779 0.0064 271.0);
   --color-muted: oklch(0.5 0.024 260);
   /* Darker semantic accents preserve WCAG AA contrast on light cards and CTA buttons. */
   --color-accent: oklch(0.55 0.2 25.7);
