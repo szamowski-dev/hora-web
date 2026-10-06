@@ -236,6 +236,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Page surfaces share the glow behind the content; cards keep their own fills. */
+#main-content :is(section, [data-nav-underlay="cover"]).bg-bg {
+  background-color: transparent;
+}
+
 ::selection {
   background: oklch(0.704 0.191 22.2 / 0.32);
   color: var(--color-text);

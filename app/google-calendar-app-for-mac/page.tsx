@@ -7,7 +7,6 @@ import { LandingFeatureList } from "@/components/landing/LandingFeatureList";
 import { ThemedProductImage } from "@/components/molecules/ThemedProductImage";
 import { BlogDownloadCta } from "@/components/organisms/BlogDownloadCta";
 import { PricingPlans } from "@/components/organisms/PricingPlans";
-import { ProductHeroShader } from "@/components/organisms/ProductHeroShader";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -210,8 +209,6 @@ export default async function GoogleCalendarAppForMacPage() {
         className="relative isolate overflow-hidden bg-bg"
       >
         <section className="relative px-5 pb-24 pt-28 sm:px-10 sm:pb-32 sm:pt-40 md:pt-48">
-          <ProductHeroShader />
-
           <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
             <h1 className="w-full max-w-4xl text-balance text-5xl font-semibold tracking-[-0.055em] text-text sm:text-7xl md:text-[5.5rem] md:leading-[0.98]">
               {content.hero.title}

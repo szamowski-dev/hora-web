@@ -12,7 +12,6 @@ import { HomebrewCommand } from "@/components/molecules/HomebrewCommand";
 import { NewsletterForm } from "@/components/molecules/NewsletterForm";
 import { ThemedProductImage } from "@/components/molecules/ThemedProductImage";
 import { FeaturedOn } from "@/components/organisms/FeaturedOn";
-import { ProductHeroShader } from "@/components/organisms/ProductHeroShader";
 import { AppStoreLink } from "@/components/atoms/AppStoreLink";
 import { Annotation, HandArrow, HandLabel } from "@/components/atoms/HandArrow";
 import { Button } from "@/components/ui/button";
@@ -84,8 +83,6 @@ export function ProductLanding({
       className="relative isolate overflow-hidden bg-bg"
     >
       <section className="relative px-5 pb-24 pt-28 sm:px-10 sm:pb-32 sm:pt-40 md:pt-48">
-        <ProductHeroShader glow={landing.hero.glow} />
-
         <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
           <h1
             data-sanity={createDataAttribute({

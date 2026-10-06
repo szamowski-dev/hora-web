@@ -6,6 +6,7 @@ import { Google_Sans, Kalam } from "next/font/google";
 import { Nav } from "@/components/organisms/Nav";
 import { Footer } from "@/components/organisms/Footer";
 import { AmbientGlow } from "@/components/organisms/AmbientGlow";
+import { ProductHeroShader } from "@/components/organisms/ProductHeroShader";
 import { LayoutEnhancements } from "@/components/molecules/LayoutEnhancements";
 import { DraftModeTools } from "@/components/sanity/DraftModeTools";
 import { CookieConsentGate } from "@/components/molecules/CookieConsentGate";
@@ -15,6 +16,7 @@ import { site } from "@/content/site";
 import { GOOGLE_ADS_ID } from "@/lib/analytics";
 import { getPricingPage } from "@/lib/pricing-repository";
 import { getFooterSettings } from "@/lib/footer-settings-repository";
+import { getHomePage } from "@/lib/home-repository";
 import "./globals.css";
 
 const googleSans = Google_Sans({
@@ -112,10 +114,11 @@ export default async function RootLayout({
   children,
   modal,
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
-  const [{ isEnabled: isDraftMode }, pricing, footerSettings] = await Promise.all([
+  const [{ isEnabled: isDraftMode }, pricing, footerSettings, home] = await Promise.all([
     draftMode(),
     getPricingPage(),
     getFooterSettings(),
+    getHomePage(),
   ]);
 
   return (
@@ -167,10 +170,13 @@ export default async function RootLayout({
         <link rel="me" href="https://mastodon.social/@szamsk1" />
       </head>
       <body
-        className="min-h-dvh flex flex-col text-text"
+        className="relative isolate min-h-dvh flex flex-col text-text"
         style={{ overscrollBehaviorY: "none" }}
       >
         <AmbientGlow />
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[42rem] overflow-hidden sm:h-[49rem]">
+          <ProductHeroShader glow={home.productLanding.hero.glow} />
+        </div>
         <LayoutEnhancements />
         <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
           <Nav
