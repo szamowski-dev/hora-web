@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { createDataAttribute, stegaClean } from "next-sanity";
 import {
   MdDownloadForOffline,
   MdOutlineSecurity,
@@ -28,6 +29,7 @@ import { analyticsAttrs } from "@/lib/analyticsAttrs";
 import { ANALYTICS_EVENTS, ANALYTICS_PLACEMENTS } from "@/lib/analyticsSchema";
 import { site } from "@/content/site";
 import { DIRECT_DOWNLOAD_HREF } from "@/lib/direct/commerce-contract";
+import { studioUrl } from "@/sanity/env";
 
 function SectionHeading({
   title,
@@ -85,14 +87,22 @@ export function ProductLanding({
         <ProductHeroShader glow={landing.hero.glow} />
 
         <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
-          <h1 className="w-full max-w-4xl text-balance text-5xl font-semibold tracking-[-0.055em] text-text sm:text-7xl md:text-[5.5rem] md:leading-[0.98]">
+          <h1
+            data-sanity={createDataAttribute({
+              id: "homePage",
+              type: "homePage",
+              path: "productLanding.hero.title",
+              baseUrl: studioUrl,
+            }).toString()}
+            className="w-full max-w-4xl text-balance text-5xl font-semibold tracking-[-0.055em] text-text sm:text-7xl md:text-[5.5rem] md:leading-[0.98]"
+          >
             {heroTitle ? (
               <>
                 {heroTitle.lead}{" "}
                 <span className="block text-accent">{heroTitle.accent}</span>
               </>
             ) : (
-              landing.hero.title
+              stegaClean(landing.hero.title)
             )}
           </h1>
           <p className="mt-7 max-w-2xl whitespace-pre-line text-balance text-lg leading-8 text-muted sm:text-xl">

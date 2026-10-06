@@ -20,6 +20,19 @@ test("splitHeadline prefers explicit line breaks and sentences", () => {
   });
 });
 
+test("splitHeadline ignores invisible Sanity preview metadata", () => {
+  const metadata = "\u200b\u200c\u200d\ufeff".repeat(250);
+  for (const headline of [
+    "The Mac Calendar Google never built.",
+    "Stop living\nin a browser tab.",
+    "Find a time. Skip the back-and-forth.",
+    "Native calendar",
+    "",
+  ]) {
+    assert.deepEqual(splitHeadline(headline + metadata), splitHeadline(headline));
+  }
+});
+
 test("splitHeadline leaves short or empty headlines alone", () => {
   assert.equal(splitHeadline("hora"), null);
   assert.equal(splitHeadline("Native calendar"), null);

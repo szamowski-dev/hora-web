@@ -1,3 +1,5 @@
+import { stegaClean } from "next-sanity";
+
 /**
  * Helper for the black + red "bold statement" hero headline used in the
  * App Store and deck materials. It only decides where the accent colour
@@ -24,7 +26,7 @@ function words(text: string) {
  */
 export function splitHeadline(text: string | undefined | null): AccentSplit | null {
   if (!text) return null;
-  const trimmed = text.trim();
+  const trimmed = stegaClean(text).trim();
 
   const lines = trimmed.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   if (lines.length > 1) {
