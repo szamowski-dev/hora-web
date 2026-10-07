@@ -33,7 +33,7 @@ export async function generateMetadata({
   if (!post) return {};
 
   const image = post.ogImage ?? post.heroImage;
-  const imageUrl = image?.src ?? "/assets/seo/default-og-image.png";
+  const imageUrl = image?.src ?? "/assets/seo/default-og-image-0710.png";
   const canonical = post.seo.canonicalUrl || `/blog/${slug}/`;
   const canonicalUrl = absoluteUrl(canonical);
 
@@ -84,7 +84,7 @@ export default async function BlogPostPage({
 
   const image = post.ogImage ?? post.heroImage;
   const imageUrl = absoluteUrl(
-    image?.src ?? "/assets/seo/default-og-image.png",
+    image?.src ?? "/assets/seo/default-og-image-0710.png",
   );
   const url = absoluteUrl(post.seo.canonicalUrl || `/blog/${slug}/`);
   const jsonLd = {

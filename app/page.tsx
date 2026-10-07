@@ -108,7 +108,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const socialTitle = content.seo.ogTitle ?? content.seo.title;
   const socialDescription =
     content.seo.ogDescription ?? content.seo.description;
-  const socialImage = ogImage?.src ?? "/assets/seo/default-og-image.png";
+  const socialImage = ogImage?.src ?? "/assets/seo/default-og-image-0710.png";
 
   return {
     title: { absolute: content.seo.title },

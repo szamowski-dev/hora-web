@@ -94,7 +94,7 @@ const legacyAssetRedirects = [
   ["/assets/redesign_raw/microsoft-teams-2018.svg", "/assets/integrations/microsoft-teams.svg"],
   ["/assets/redesign_raw/zoom.svg", "/assets/integrations/zoom.svg"],
   ["/assets/maciej_szamowski.jpg", "/assets/people/maciej-szamowski.jpg"],
-  ["/assets/og-image.png", "/assets/seo/default-og-image.png"],
+  ["/assets/og-image.png", "/assets/seo/default-og-image-0710.png"],
   ["/assets/ufind-badge.svg", sanitySiteAssetUrls.ufindBadge],
   ["/assets/keychain-access-2021-05-03.png.webp", "/assets/support/keychain-access.webp"],
 ] as const;

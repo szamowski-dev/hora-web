@@ -91,7 +91,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "hora Calendar",
     url: "https://horacal.app/",
-    images: [{ url: "/assets/seo/default-og-image.png", width: 1200, height: 630 }],
+    images: [{ url: "/assets/seo/default-og-image-0710.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
