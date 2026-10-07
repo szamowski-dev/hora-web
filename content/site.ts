@@ -82,7 +82,7 @@ export const site = {
     ],
     socials: [
       { label: "Discord", href: "https://discord.gg/8JFz4FfBGQ", icon: "discord" },
-      { label: "X / Twitter", href: "https://x.com/moto_szama", icon: "x" },
+      { label: "X / Twitter", href: "https://x.com/szamski", icon: "x" },
       { label: "Bluesky", href: "https://bsky.app/profile/szamski.bsky.social", icon: "bluesky" },
       { label: "Mastodon", href: "https://mastodon.social/@szamsk1", icon: "mastodon" },
     ],

@@ -95,8 +95,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@moto_szama",
-    creator: "@moto_szama",
+    site: "@szamski",
+    creator: "@szamski",
   },
   other: {
     llms: "/llms.txt",
@@ -241,7 +241,7 @@ export default async function RootLayout({
                   url: "https://horacal.app/",
                   logo: "https://horacal.app/assets/brand/hora-icon.png",
                   sameAs: [
-                    "https://x.com/moto_szama",
+                    "https://x.com/szamski",
                     "https://github.com/szamski",
                     "https://bsky.app/profile/szamski.bsky.social",
                     "https://discord.gg/8JFz4FfBGQ",

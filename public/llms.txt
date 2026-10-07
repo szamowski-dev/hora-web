@@ -37,7 +37,7 @@ hora Calendar is available on the [Mac App Store](https://apps.apple.com/app/app
 ## Author
 
 - [Maciej Szamowski](https://szamowski.dev) — indie macOS developer, building hora Calendar in public
-- X/Twitter: [@moto_szama](https://x.com/moto_szama)
+- X/Twitter: [@szamski](https://x.com/szamski)
 - Bluesky: [@szamski.bsky.social](https://bsky.app/profile/szamski.bsky.social)
 - GitHub: [@szamski](https://github.com/szamski)
 

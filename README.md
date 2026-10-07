@@ -33,7 +33,7 @@
   <a href="https://discord.gg/8JFz4FfBGQ">Discord</a> &nbsp;&middot;&nbsp;
   <a href="https://horacal.app/privacy">Privacy</a> &nbsp;&middot;&nbsp;
   <a href="https://horacal.app/terms">Terms</a> &nbsp;&middot;&nbsp;
-  <a href="https://x.com/moto_szama">@moto_szama</a> &nbsp;&middot;&nbsp;
+  <a href="https://x.com/szamski">@szamski</a> &nbsp;&middot;&nbsp;
   <a href="https://bsky.app/profile/szamski.bsky.social">Bluesky</a>
 </p>
 
@@ -174,7 +174,7 @@ Apple Intelligence — smart scheduling, focus time planning, meeting prep brief
 | Website | [horacal.app](https://horacal.app) |
 | Blog | [horacal.app/blog](https://horacal.app/blog) ([RSS](https://horacal.app/blog/feed.xml)) |
 | Community | [Discord](https://discord.gg/8JFz4FfBGQ) |
-| X / Twitter | [@moto_szama](https://x.com/moto_szama) |
+| X / Twitter | [@szamski](https://x.com/szamski) |
 | Bluesky | [@szamski.bsky.social](https://bsky.app/profile/szamski.bsky.social) |
 | Developer | [szamowski.dev](https://szamowski.dev) |
 

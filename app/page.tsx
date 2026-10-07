@@ -12,7 +12,7 @@ const personLd = {
   name: "Maciej Szamowski",
   url: "https://szamowski.dev",
   sameAs: [
-    "https://x.com/moto_szama",
+    "https://x.com/szamski",
     "https://bsky.app/profile/szamski.bsky.social",
     "https://github.com/szamski",
   ],
@@ -137,8 +137,8 @@ export async function generateMetadata(): Promise<Metadata> {
     }),
     twitter: {
       card: "summary_large_image",
-      site: "@moto_szama",
-      creator: "@moto_szama",
+      site: "@szamski",
+      creator: "@szamski",
       title: socialTitle,
       description: socialDescription,
       images: [socialImage],
