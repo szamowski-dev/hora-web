@@ -3,14 +3,14 @@ import type { PricingPageContent, PricingPlan } from "@/lib/pricing-model";
 export const DIRECT_DOWNLOAD_HREF = "/download/direct/";
 export const DIRECT_DOWNLOAD_LABEL = "Download";
 export const DIRECT_TRIAL_PRICING_NOTE =
-  "7-day free trial · $2.99/month, $29.99/year or $59.99 Lifetime (Direct only)";
+  "7-day free trial · $2.99/month, $29.99/year or $59.99 Lifetime";
 export const DIRECT_CHECKOUT_PRICE_NOTE =
   "Choose a plan in the app. Final currency and applicable taxes are confirmed in checkout.";
 
 export const DIRECT_PRICING_HERO = {
   title: "Choose how you want to pay.",
   description:
-    "All plans unlock the same hora Calendar.\nTry it free for 7 days, then keep a subscription or pay once with Direct.",
+    "All plans unlock the same hora Calendar.\nTry it free for 7 days, then keep a subscription or pay once.",
 } satisfies PricingPageContent["hero"];
 
 export const DIRECT_PRICING_PLANS = [
@@ -56,18 +56,18 @@ export const DIRECT_PRICING_PLANS = [
     suffix: "one-time",
     priceDetail: "",
     billingLabel: "Pay once. No recurring subscription.",
-    savingsLabel: "",
-    featuredLabel: "Direct only",
+    savingsLabel: "PAY ONCE",
+    featuredLabel: "",
     description: "Pay once. No recurring subscription.",
     features: [
       "7-day free trial",
       "One-time purchase",
-      "Available only with Direct download",
+      "Direct or Mac App Store",
     ],
     ctaLabel: DIRECT_DOWNLOAD_LABEL,
     ctaHelper: "Choose your plan in the app after the 7-day free trial.",
     featured: false,
-    directOnly: true,
+    directOnly: false,
   },
 ] satisfies PricingPlan[];
 
@@ -80,16 +80,16 @@ export const DIRECT_PRICING_FAQ_ITEMS = [
   {
     question: "Is there a one-time purchase option?",
     answer:
-      "Yes. Lifetime is $59.99 as a one-time purchase, available only with the Direct download. It gives you permanent access to hora Direct, including all current and future Direct features and updates, with no recurring subscription.",
+      "Yes. Lifetime is $59.99 as a one-time purchase, available with the Direct download and on the Mac App Store. It gives you permanent access to hora, including all current and future features and updates, with no recurring subscription. Lifetime unlocks hora in the edition where you buy it.",
   },
   {
     question: "Can I buy on the App Store?",
-    answer: "Yes. hora is also available on the Mac App Store with subscription plans. Lifetime is available only with Direct.",
+    answer: "Yes. hora is available on the Mac App Store with subscription plans and Lifetime. Apple handles billing, and Mac App Store purchases do not transfer to the Direct edition.",
   },
   {
     question: "Can I share my license with my family?",
     answer:
-      "Family Sharing is available for eligible purchases through the Mac App Store.",
+      "Family Sharing is available for eligible Mac App Store purchases, including Lifetime.",
   },
   {
     question: "How do I cancel my subscription?",
@@ -104,7 +104,7 @@ export const DIRECT_PRICING_FAQ_ITEMS = [
   {
     question: "What is your refund policy?",
     answer:
-      "You can cancel and get a full refund within 14 days of any Direct payment, including Lifetime, without giving a reason. Later requests are reviewed case by case. For Monthly and Annual, a refund and cancellation of automatic renewal are separate actions, so tell support which outcome you need. Lifetime does not renew.",
+      "You can cancel and get a full refund within 14 days of any Direct payment, including Lifetime, without giving a reason. Later requests are reviewed case by case. For Monthly and Annual, a refund and cancellation of automatic renewal are separate actions, so tell support which outcome you need. Lifetime does not renew. Mac App Store purchases, including Lifetime, are refunded by Apple under Apple's policy.",
   },
   {
     question: "What happens after my subscription expires?",
