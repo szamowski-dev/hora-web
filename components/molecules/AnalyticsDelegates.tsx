@@ -7,6 +7,7 @@ import { ANALYTICS_EVENTS } from "@/lib/analyticsSchema";
 import { trackMetaPixel } from "@/lib/meta-pixel";
 
 const DIRECT_HANDOFF_NAVIGATION_TIMEOUT_MS = 750;
+const DOWNLOAD_THANKS_PATH = "/download/thanks/";
 
 function parseProps(raw?: string): EventProps | undefined {
   if (!raw) return undefined;
@@ -110,7 +111,15 @@ export function AnalyticsDelegates() {
           shouldWaitForDirectHandoff(event, anchor)
         ) {
           event.preventDefault();
-          navigateAfterDirectHandoff(handoff, anchor.href);
+          // The thanks page starts the download itself (same download_id), so
+          // the visitor lands on install steps while the DMG downloads.
+          const onThanksPage = window.location.pathname.startsWith(
+            DOWNLOAD_THANKS_PATH,
+          );
+          navigateAfterDirectHandoff(
+            handoff,
+            onThanksPage ? anchor.href : `${DOWNLOAD_THANKS_PATH}${url.search}`,
+          );
           return;
         }
       }
