@@ -373,12 +373,13 @@ export function SupportForm() {
 
       <div className="relative mt-5 rounded-xl border border-line bg-overlay p-4 text-sm leading-6 text-muted">
         Please do not include passwords, API tokens, OAuth codes, or private calendar
-        event details. Your email is included so we can follow up. Processed through{" "}
+        event details. Your email is included so we can follow up. Delivered by Resend and handled in
+        Linear, see our{" "}
         <Link
           href="/privacy/"
           className="text-text underline decoration-line-strong underline-offset-4"
         >
-          PostHog Support
+          Privacy Policy
         </Link>
         .
       </div>

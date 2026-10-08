@@ -14,7 +14,7 @@ const input = supportRequestSchema.parse({
   details: "The calendar stays stale after I change an event in Google Calendar.",
 });
 
-test("submits the validated request to the server PostHog ticket adapter", async () => {
+test("submits the validated request to the server support route", async () => {
   let request: { url: string; init?: RequestInit } | undefined;
   const result = await submitSupportRequest(input, async (url, init) => {
     request = { url: String(url), init };
