@@ -6,12 +6,12 @@ test("server error logs contain only bounded operational metadata", () => {
   assert.deepEqual(
     serverErrorLogAttributes({
       route: "/api/support",
-      operation: "posthog_support_metadata_rejected",
+      operation: "support_intake_send",
       statusCode: 502,
     }),
     {
       "http.route": "/api/support",
-      "error.operation": "posthog_support_metadata_rejected",
+      "error.operation": "support_intake_send",
       "http.response.status_code": 502,
     },
   );

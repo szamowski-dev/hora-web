@@ -5,7 +5,7 @@ import {
   refundOutcomeLabels,
   supportFailedEventProperties,
   supportSubmittedEventProperties,
-  supportTicketMetadata,
+  supportIntakeByCategory,
   supportRequestSchema,
 } from "../lib/support-request";
 
@@ -101,15 +101,15 @@ test("formats every category and omits empty optional sections", () => {
   }
 });
 
-test("maps each support category to a PostHog tag and priority", () => {
-  assert.deepEqual(supportTicketMetadata, {
-    bug: { priority: "high", tags: ["bug"] },
-    account: { priority: "medium", tags: ["account"] },
-    sync: { priority: "high", tags: ["sync"] },
-    billing: { priority: "high", tags: ["billing"] },
-    refund: { priority: "high", tags: ["refund"] },
-    feature: { priority: "low", tags: ["feature"] },
-    other: { priority: "medium", tags: ["other"] },
+test("maps each support category to a Linear intake", () => {
+  assert.deepEqual(supportIntakeByCategory, {
+    bug: "bugs",
+    account: "questions",
+    sync: "bugs",
+    billing: "billing",
+    refund: "billing",
+    feature: "features",
+    other: "questions",
   });
 });
 

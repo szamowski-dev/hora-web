@@ -25,17 +25,17 @@ export const categoryLabels: Record<SupportCategory, string> = {
   other: "Other",
 };
 
-export const supportTicketMetadata: Record<
-  SupportCategory,
-  { priority: "low" | "medium" | "high"; tags: string[] }
-> = {
-  bug: { priority: "high", tags: ["bug"] },
-  account: { priority: "medium", tags: ["account"] },
-  sync: { priority: "high", tags: ["sync"] },
-  billing: { priority: "high", tags: ["billing"] },
-  refund: { priority: "high", tags: ["refund"] },
-  feature: { priority: "low", tags: ["feature"] },
-  other: { priority: "medium", tags: ["other"] },
+export type SupportIntake = "bugs" | "features" | "billing" | "questions";
+
+// Each intake is a Linear Asks email address whose template sets labels and Triage.
+export const supportIntakeByCategory: Record<SupportCategory, SupportIntake> = {
+  bug: "bugs",
+  account: "questions",
+  sync: "bugs",
+  billing: "billing",
+  refund: "billing",
+  feature: "features",
+  other: "questions",
 };
 
 export const refundOutcomeLabels: Record<RefundOutcome, string> = {
