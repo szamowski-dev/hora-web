@@ -42,13 +42,14 @@ test("keeps Direct new-sale pricing in code while Sanity controls download visib
       ["Lifetime", "$59.99", "one-time"],
     ],
   );
-  assert.equal(DIRECT_PRICING_PLANS[2].directOnly, true);
+  assert.equal(DIRECT_PRICING_PLANS[2].directOnly, false);
   assert.match(DIRECT_PRICING_HERO.description, /7 days/i);
   const publicCopy = JSON.stringify(DIRECT_PRICING_FAQ_ITEMS).toLowerCase();
   assert.match(publicCopy, /7-day cardless trial/);
-  assert.match(publicCopy, /one-time purchase, available only with the direct download/);
+  assert.match(publicCopy, /one-time purchase, available with the direct download and on the mac app store/);
   assert.match(publicCopy, /permanent access/);
-  assert.match(publicCopy, /all current and future direct features and updates/);
+  assert.match(publicCopy, /all current and future features and updates/);
+  assert.doesNotMatch(publicCopy, /direct only|only with the direct/);
   assert.doesNotMatch(publicCopy, /no new lifetime plan/);
   assert.match(publicCopy, /within 14 days of any direct payment/);
   assert.match(publicCopy, /reviewed case by case/);
@@ -60,7 +61,7 @@ test("keeps Direct new-sale pricing in code while Sanity controls download visib
   assert.equal(defaultPricingPage.direct.showDownload, false);
 });
 
-test("shows Lifetime only when Direct download is available", () => {
+test("shows Lifetime in both Direct and Mac App Store modes", () => {
   const render = (showDirectDownload: boolean) => renderToStaticMarkup(
     createElement(PricingPlans, { plans: DIRECT_PRICING_PLANS, showDirectDownload }),
   );
@@ -68,12 +69,14 @@ test("shows Lifetime only when Direct download is available", () => {
   assert.equal((direct.match(/<article/g) ?? []).length, 3);
   assert.match(direct, /Lifetime/);
   assert.match(direct, /\$59\.99/);
-  assert.match(direct, /Direct only/);
+  assert.doesNotMatch(direct, /Direct only/);
+  assert.match(direct, /PAY ONCE/);
   assert.match(direct, /One-time purchase/);
   assert.doesNotMatch(direct, /href=/);
   const appStore = render(false);
-  assert.equal((appStore.match(/<article/g) ?? []).length, 2);
-  assert.doesNotMatch(appStore, /Lifetime|Direct only/);
+  assert.equal((appStore.match(/<article/g) ?? []).length, 3);
+  assert.match(appStore, /Lifetime/);
+  assert.doesNotMatch(appStore, /Direct only/);
 });
 
 test("hides empty plan labels even when Sanity preview metadata is present", () => {
@@ -119,8 +122,10 @@ test("keeps the homepage copy and installation FAQ aligned across distributions"
   assert.match(HORA_INSTALLATION_FAQ, /Setapp/);
   assert.match(HORA_INSTALLATION_FAQ, /7-day cardless trial/);
   assert.match(HORA_INSTALLATION_FAQ, /Monthly, Annual, or Lifetime/);
-  assert.match(HORA_INSTALLATION_FAQ, /not available on the Mac App Store or through Setapp/);
-  assert.match(DIRECT_TRIAL_PRICING_NOTE, /\$59\.99 Lifetime \(Direct only\)/);
+  assert.match(HORA_INSTALLATION_FAQ, /not available through Setapp/);
+  assert.match(HORA_INSTALLATION_FAQ, /Mac App Store/);
+  assert.equal(DIRECT_TRIAL_PRICING_NOTE, "7-day free trial · $2.99/month, $29.99/year or $59.99 Lifetime");
+  assert.doesNotMatch(JSON.stringify(defaultPricingPage) + DIRECT_TRIAL_PRICING_NOTE + JSON.stringify(defaultGoogleCalendarMacPage), /direct only|only with the direct/i);
   for (const note of [
     defaultProductLanding.hero.trialNote,
     defaultBlogCta.trialNote,

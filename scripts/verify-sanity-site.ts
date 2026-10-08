@@ -362,7 +362,7 @@ function validatePricing(document: SiteDocument) {
   expect(annual, "pricingPage.plans must contain Annual");
   const lifetime = plansByName.get("lifetime");
   expect(lifetime, "pricingPage.plans must contain Lifetime");
-  expect(lifetime.directOnly === true, "pricingPage Lifetime must be Direct only");
+  expect(lifetime.directOnly !== true, "pricingPage Lifetime must be available beyond Direct");
   expectCopy(requiredText(lifetime.price, "pricingPage Lifetime price"), "59.99", "pricingPage Lifetime price");
   expectCopy(requiredText(lifetime.suffix, "pricingPage Lifetime suffix"), "one-time", "pricingPage Lifetime suffix");
   expectCopy(requiredText(monthly.price, "pricingPage Monthly price"), "2.99", "pricingPage Monthly price");
@@ -393,7 +393,10 @@ function validatePricing(document: SiteDocument) {
   expectCopy(publicCopy, "cardless", "pricingPage public copy");
   expect(!publicCopy.includes("no new lifetime"), "pricingPage public copy must not exclude Lifetime");
   expectCopy(publicCopy, "permanent access", "pricingPage Lifetime FAQ");
-  expectCopy(publicCopy, "all current and future Direct features and updates", "pricingPage Lifetime FAQ");
+  expectCopy(publicCopy, "all current and future features and updates", "pricingPage Lifetime FAQ");
+  for (const forbidden of ["only with direct", "direct only"]) {
+    expect(!publicCopy.includes(forbidden), `pricingPage public copy must not say “${forbidden}”`);
+  }
   expectCopy(publicCopy, "14 days", "pricingPage public copy");
   for (const forbidden of ["24-hour", "24 hour"]) {
     expect(!publicCopy.includes(forbidden), `pricingPage public copy must not promise ${forbidden}`);

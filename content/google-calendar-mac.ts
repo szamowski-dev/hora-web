@@ -114,7 +114,7 @@ export const defaultGoogleCalendarMacPage = {
   pricing: {
     title: "Try free for 7 days. Choose how to pay.",
     description:
-      "The trial runs inside the app and needs no card. Direct offers $2.99 monthly, $29.99 yearly, or $59.99 Lifetime as a one-time purchase with all current and future Direct features and updates. Direct purchases carry a 14-day refund window. Mac App Store and Setapp access use their own subscription plans; Lifetime is Direct only.",
+      "The trial runs inside the app and needs no card. Choose $2.99 monthly, $29.99 yearly, or $59.99 Lifetime as a one-time purchase with all current and future features and updates. Lifetime is available with Direct and on the Mac App Store; Setapp access is included in a Setapp subscription. Direct purchases carry a 14-day refund window.",
     linkLabel: "See full pricing",
   },
   faq: {
@@ -133,7 +133,7 @@ export const defaultGoogleCalendarMacPage = {
       {
         question: "Is hora free?",
         answer:
-          "hora includes a 7-day free trial inside the app, with no card required. After the trial, Direct offers $2.99 a month, $29.99 a year, or $59.99 Lifetime as a one-time purchase. Lifetime is available only with Direct and includes all current and future Direct features and updates.",
+          "hora includes a 7-day free trial inside the app, with no card required. After the trial, choose $2.99 a month, $29.99 a year, or $59.99 Lifetime as a one-time purchase. Lifetime is available with Direct and on the Mac App Store and includes all current and future features and updates.",
       },
       {
         question: "Does hora sync with Google Calendar in real time?",

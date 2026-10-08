@@ -11,7 +11,7 @@ export const defaultPricingPage = {
   seo: {
     title: "Pricing",
     description:
-      "Compare Monthly, Annual, and Lifetime pricing for hora Calendar. Try it free for 7 days. Lifetime is a one-time purchase available only with Direct download.",
+      "Compare Monthly, Annual, and Lifetime pricing for hora Calendar. Try it free for 7 days. Lifetime is a one-time purchase with Direct or on the Mac App Store.",
   },
   hero: DIRECT_PRICING_HERO,
   plans: DIRECT_PRICING_PLANS,
