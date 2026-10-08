@@ -1,20 +1,25 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { Resend } from "resend";
 import { checkRateLimit } from "@/lib/rate-limit";
 import {
   categoryLabels,
   formatSupportMessage,
+  supportIntakeByCategory,
   supportRequestSchema,
-  supportTicketMetadata,
   type SupportFailureType,
 } from "@/lib/support-request";
 import { logServerError } from "@/lib/server-logger";
 
 export const runtime = "nodejs";
 
-const POSTHOG_API_HOST = (process.env.POSTHOG_API_HOST ?? "https://us.posthog.com").replace(
-  /\/+$/,
-  "",
-);
+const SUPPORT_FROM = "hora Support <support@horacal.app>";
+
+const INTAKE_ENV = {
+  bugs: "LINEAR_INTAKE_BUGS",
+  features: "LINEAR_INTAKE_FEATURES",
+  billing: "LINEAR_INTAKE_BILLING",
+  questions: "LINEAR_INTAKE_QUESTIONS",
+} as const;
 
 const ALLOWED_ORIGINS = new Set([
   "https://horacal.app",
@@ -106,13 +111,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const posthogApiKey = process.env.POSTHOG_PERSONAL_API_KEY;
-  const projectId = process.env.POSTHOG_PROJECT_ID;
-  const emailConfigId = process.env.POSTHOG_SUPPORT_EMAIL_CONFIG_ID;
-  if (!posthogApiKey || !projectId || !emailConfigId) {
+  const input = parsed.data;
+  const apiKey = process.env.RESEND_API_KEY;
+  const intake = process.env[INTAKE_ENV[supportIntakeByCategory[input.category]]];
+  if (!apiKey || !intake) {
     logServerError({
       route: "/api/support",
-      operation: "posthog_support_configuration",
+      operation: "support_intake_configuration",
     });
     return errorResponse(
       origin,
@@ -122,125 +127,38 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const input = parsed.data;
-  const subject = `[${categoryLabels[input.category]}] ${headerValue(input.summary)}`;
-  let result: Response;
-  try {
-    result = await fetch(
-      `${POSTHOG_API_HOST}/api/projects/${encodeURIComponent(projectId)}/conversations/tickets/compose/`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${posthogApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          recipient_email: input.email.trim(),
-          email_subject: subject,
-          email_config_id: emailConfigId,
-          message: formatSupportMessage(input),
-        }),
-      },
-    );
-  } catch (error) {
-    logServerError({
-      route: "/api/support",
-      operation: "posthog_support_ticket_creation",
-    });
-    return errorResponse(
-      origin,
-      isRateLimitedError(error) ? 429 : 502,
-      isRateLimitedError(error) ? "rate_limited" : "network_or_server",
-      "Could not create the support ticket. Please try again later.",
-    );
-  }
+  const name = headerValue(input.name);
+  const email = input.email.trim();
+  // Linear Asks replies to Reply-To, so the customer gets answers from the synced thread.
+  const { data, error } = await new Resend(apiKey).emails
+    .send({
+      from: SUPPORT_FROM,
+      to: intake,
+      replyTo: email,
+      subject: `[${categoryLabels[input.category]}] ${headerValue(input.summary)}`,
+      text: `${formatSupportMessage(input)}\n\nRequester\n- ${name} <${email}>`,
+    })
+    .catch((cause: unknown) => ({
+      data: null,
+      error: { name: "network_error", message: String(cause) },
+    }));
 
-  const payload = (await result.json().catch(() => null)) as
-    | { id?: unknown; ticket_id?: unknown; detail?: unknown; error?: unknown }
-    | null;
-  if (!result.ok) {
+  if (error || !data?.id) {
+    const rateLimited = error?.name === "rate_limit_exceeded" || isRateLimitedError(error?.message);
     logServerError({
       route: "/api/support",
-      operation: "posthog_support_ticket_rejected",
-      statusCode: result.status,
+      operation: "support_intake_send",
     });
-    const rateLimited = result.status === 429 || isRateLimitedError(payload?.detail);
-    const unavailable = [401, 403, 404].includes(result.status);
     return errorResponse(
       origin,
       rateLimited ? 429 : 502,
-      rateLimited
-        ? "rate_limited"
-        : unavailable
-          ? "conversations_unavailable"
-          : "network_or_server",
+      rateLimited ? "rate_limited" : error ? "network_or_server" : "invalid_response",
       "Could not create the support ticket. Please try again later.",
-    );
-  }
-
-  const ticketId =
-    typeof payload?.id === "string" && payload.id.trim()
-      ? payload.id.trim()
-      : typeof payload?.ticket_id === "string" && payload.ticket_id.trim()
-        ? payload.ticket_id.trim()
-        : null;
-  if (!ticketId) {
-    logServerError({
-      route: "/api/support",
-      operation: "posthog_support_ticket_invalid_response",
-    });
-    return errorResponse(
-      origin,
-      502,
-      "invalid_response",
-      "Could not create the support ticket. Please try again later.",
-    );
-  }
-
-  const metadata = supportTicketMetadata[input.category];
-  let metadataResult: Response;
-  try {
-    metadataResult = await fetch(
-      `${POSTHOG_API_HOST}/api/projects/${encodeURIComponent(projectId)}/conversations/tickets/${encodeURIComponent(ticketId)}/`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${posthogApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(metadata),
-      },
-    );
-  } catch (error) {
-    logServerError({
-      route: "/api/support",
-      operation: "posthog_support_metadata_update",
-    });
-    return errorResponse(
-      origin,
-      isRateLimitedError(error) ? 429 : 502,
-      isRateLimitedError(error) ? "rate_limited" : "network_or_server",
-      "Could not finish setting up the support ticket. Please try again later.",
-    );
-  }
-
-  if (!metadataResult.ok) {
-    logServerError({
-      route: "/api/support",
-      operation: "posthog_support_metadata_rejected",
-      statusCode: metadataResult.status,
-    });
-    const rateLimited = metadataResult.status === 429;
-    return errorResponse(
-      origin,
-      rateLimited ? 429 : 502,
-      rateLimited ? "rate_limited" : "network_or_server",
-      "Could not finish setting up the support ticket. Please try again later.",
     );
   }
 
   return NextResponse.json(
-    { success: true, ticket_id: ticketId },
+    { success: true, ticket_id: data.id },
     { status: 201, headers: jsonHeaders(origin) },
   );
 }
