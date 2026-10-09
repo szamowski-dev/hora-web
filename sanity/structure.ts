@@ -53,7 +53,11 @@ export const structure: StructureResolver = (S) =>
           S.documentList()
             .title("Unpublished changes")
             .apiVersion(apiVersion)
-            .filter(`_id in path("drafts.**") && _type in $types`)
+            // Lists query through the drafts perspective, where a draft keeps the
+            // published _id and its real id lives in _originalId.
+            .filter(
+              `(_originalId in path("drafts.**") || _id in path("drafts.**")) && _type in $types`,
+            )
             .params({ types: [...managedDocumentTypes] })
             .defaultOrdering([{ field: "_updatedAt", direction: "desc" }]),
         ),
