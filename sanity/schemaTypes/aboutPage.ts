@@ -7,7 +7,7 @@ const trimmed = (value: string | undefined) =>
     : "Remove whitespace from the beginning or end.";
 
 type AboutContact = {
-  kind?: "email" | "website" | "x" | "bluesky" | "mastodon" | "github";
+  kind?: "email" | "website" | "x" | "bluesky" | "mastodon" | "github" | "discord";
   href?: string;
 };
 
@@ -71,12 +71,17 @@ export const aboutPage = defineType({
       type: "object",
       fields: [
         defineField({
-          name: "author",
-          title: "Author",
-          type: "reference",
-          to: [{ type: "author" }],
-          options: { disableNew: true },
-          validation: (rule) => rule.required(),
+          name: "founders",
+          title: "Founders",
+          type: "array",
+          of: [
+            defineArrayMember({
+              type: "reference",
+              to: [{ type: "author" }],
+              options: { disableNew: true },
+            }),
+          ],
+          validation: (rule) => rule.required().min(1).max(4).unique(),
         }),
         defineField({
           name: "summary",
@@ -183,6 +188,7 @@ export const aboutPage = defineType({
                   { title: "Bluesky", value: "bluesky" },
                   { title: "Mastodon", value: "mastodon" },
                   { title: "GitHub", value: "github" },
+                  { title: "Discord", value: "discord" },
                 ],
               },
               validation: (rule) => rule.required(),

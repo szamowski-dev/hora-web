@@ -595,45 +595,28 @@ function isAboutContactKind(value: string): value is AboutContactKind {
 }
 
 function mapAuthor(
-  document: SanityAboutPageDocument,
+  author: NonNullable<
+    NonNullable<SanityAboutPageDocument["profile"]>["founders"]
+  >[number],
+  path: string,
   kind: DocumentKind,
+  documentId: string | undefined,
 ): SitePageAuthor {
-  const author = document.profile?.author;
   if (!author) {
-    invalidPage(kind, document._id, "profile.author reference is unresolved");
+    invalidPage(kind, documentId, `${path} reference is unresolved`);
   }
-  const name = requiredString(
-    author.name,
-    "profile.author.name",
-    kind,
-    document._id,
-  );
+  const name = requiredString(author.name, `${path}.name`, kind, documentId);
 
   return {
     name,
-    role: requiredString(
-      author.role,
-      "profile.author.role",
-      kind,
-      document._id,
-    ),
-    bio: requiredString(
-      author.bio,
-      "profile.author.bio",
-      kind,
-      document._id,
-    ),
-    href: requiredMachineString(
-      author.href,
-      "profile.author.href",
-      kind,
-      document._id,
-    ),
+    role: requiredString(author.role, `${path}.role`, kind, documentId),
+    bio: requiredString(author.bio, `${path}.bio`, kind, documentId),
+    href: requiredMachineString(author.href, `${path}.href`, kind, documentId),
     portrait: mapImage(
       author.portrait,
-      "profile.author.portrait",
+      `${path}.portrait`,
       kind,
-      document._id,
+      documentId,
       name,
     ),
   };
@@ -642,7 +625,14 @@ function mapAuthor(
 function mapAboutPage(document: SanityAboutPageDocument | null): AboutPageData {
   if (!document) invalidPage("about", undefined, "document is missing");
   const id = assertDocumentId(document._id, "aboutPage", "about");
-  const author = mapAuthor(document, "about");
+  const founders = requiredArray(
+    document.profile?.founders,
+    "profile.founders",
+    "about",
+    document._id,
+  ).map((founder, index) =>
+    mapAuthor(founder, `profile.founders[${index}]`, "about", document._id),
+  );
 
   return {
     id,
@@ -673,7 +663,7 @@ function mapAboutPage(document: SanityAboutPageDocument | null): AboutPageData {
       ),
     },
     profile: {
-      author,
+      founders,
       summary: requiredString(
         document.profile?.summary,
         "profile.summary",

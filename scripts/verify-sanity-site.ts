@@ -75,6 +75,7 @@ const ABOUT_CONTACT_KINDS = new Set([
   "bluesky",
   "mastodon",
   "github",
+  "discord",
 ]);
 
 type UnknownRecord = Record<string, unknown>;
@@ -661,7 +662,9 @@ function validateAbout(document: SiteDocument) {
   requiredText(hero.titleAccent, "aboutPage.hero.titleAccent");
   requiredText(hero.subtitle, "aboutPage.hero.subtitle");
   const profile = requiredObject(document.profile, "aboutPage.profile");
-  reference(profile.author, "aboutPage.profile.author");
+  for (const [index, founder] of requiredArray(profile.founders, "aboutPage.profile.founders", 1, 4).entries()) {
+    reference(founder, `aboutPage.profile.founders[${index}]`);
+  }
   requiredText(profile.summary, "aboutPage.profile.summary");
   for (const [index, stat] of keyedObjects(document.stats, "aboutPage.stats", 1, 8).entries()) {
     for (const field of ["value", "label", "detail"]) requiredText(stat[field], `aboutPage.stats[${index}].${field}`);
@@ -759,12 +762,6 @@ function collectReferences(value: unknown, output = new Set<string>()) {
   if (value._type === "reference" && typeof value._ref === "string") output.add(value._ref);
   for (const child of Object.values(value)) collectReferences(child, output);
   return output;
-}
-
-function nestedReference(document: SiteDocument, path: string[]): Reference {
-  let value: unknown = document;
-  for (const field of path) value = requiredObject(value, path.join("."))[field];
-  return reference(value, `${document._id}.${path.join(".")}`);
 }
 
 async function anonymousDocuments() {
@@ -875,9 +872,12 @@ async function main() {
     if (id.startsWith("file-")) expect(document._type === "sanity.fileAsset", `${id} is not a file asset`);
   }
 
-  const typedReferences: Array<[Reference, string, string]> = [
-    [nestedReference(about, ["profile", "author"]), "author", "aboutPage.profile.author"],
-  ];
+  const founders = requiredObject(about.profile, "aboutPage.profile").founders as unknown[];
+  const typedReferences: Array<[Reference, string, string]> = founders.map((founder, index) => [
+    reference(founder, `aboutPage.profile.founders[${index}]`),
+    "author",
+    `aboutPage.profile.founders[${index}]`,
+  ]);
   for (const [ref, expectedType, path] of typedReferences) {
     const resolved = resolvedById.get(ref._ref ?? "");
     expect(resolved?._type === expectedType, `${path} must resolve to ${expectedType}`);

@@ -74,6 +74,7 @@ export const ABOUT_CONTACT_KINDS = [
   "bluesky",
   "mastodon",
   "github",
+  "discord",
 ] as const;
 
 export type AboutContactKind = (typeof ABOUT_CONTACT_KINDS)[number];
@@ -93,7 +94,7 @@ export type AboutPageData = {
     subtitle: string;
   };
   profile: {
-    author: SitePageAuthor;
+    founders: SitePageAuthor[];
     summary: string;
   };
   stats: Array<{

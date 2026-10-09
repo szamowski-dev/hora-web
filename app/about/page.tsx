@@ -14,7 +14,7 @@ import { getAboutPage } from "@/lib/site-page-repository";
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = await getAboutPage();
   return {
-    title: seo.metaTitle,
+    title: { absolute: seo.metaTitle },
     description: seo.metaDescription,
     alternates: { canonical: "/about/" },
     ...(seo.noIndex ? { robots: { index: false, follow: true } } : {}),
@@ -45,6 +45,7 @@ const contactIcons: Record<AboutContactKind, IconName> = {
   bluesky: "bluesky",
   mastodon: "mastodon",
   github: "github",
+  discord: "discord",
 };
 
 const statTones = [
@@ -56,21 +57,19 @@ const statTones = [
 
 export default async function AboutPage() {
   const about = await getAboutPage();
-  const { author } = about.profile;
+  const { founders } = about.profile;
 
-  const personJsonLd = {
+  const personJsonLd = founders.map((founder) => ({
     "@context": "https://schema.org",
     "@type": "Person",
-    name: author.name,
+    name: founder.name,
     url: "https://horacal.app/about/",
-    image: author.portrait.src,
-    jobTitle: author.role,
+    image: founder.portrait.src,
+    jobTitle: founder.role,
     worksFor: { "@id": "https://horacal.app/#organization" },
     nationality: "Polish",
-    sameAs: about.contacts
-      .map((contact) => contact.href)
-      .filter((href) => /^https?:\/\//.test(href)),
-  };
+    ...(founder.href.startsWith("https://") ? { sameAs: [founder.href] } : {}),
+  }));
 
   return (
     <>
@@ -90,23 +89,28 @@ export default async function AboutPage() {
             </div>
 
             <Card className="gap-0 px-0 py-0">
-              <CardHeader className="px-6 pb-5 pt-6 sm:px-7 sm:pt-7">
-                <div className="flex items-center gap-4">
-                <Image
-                  src={author.portrait.src}
-                  alt={author.portrait.alt}
-                  width={author.portrait.width}
-                  height={author.portrait.height}
-                  placeholder={author.portrait.blurDataUrl ? "blur" : undefined}
-                  blurDataURL={author.portrait.blurDataUrl}
-                    className="size-18 rounded-full border border-line-strong object-cover"
-                  priority
-                />
-                <div className="min-w-0">
-                  <p className="text-lg font-semibold text-text">{author.name}</p>
-                  <p className="mt-1 text-sm leading-6 text-muted">{author.role}</p>
-                </div>
-              </div>
+              <CardHeader className="gap-0 divide-y divide-line px-0 pb-0 pt-0">
+                {founders.map((founder) => (
+                  <div
+                    key={founder.name}
+                    className="flex items-center gap-4 px-6 py-5 sm:px-7"
+                  >
+                    <Image
+                      src={founder.portrait.src}
+                      alt={founder.portrait.alt}
+                      width={founder.portrait.width}
+                      height={founder.portrait.height}
+                      placeholder={founder.portrait.blurDataUrl ? "blur" : undefined}
+                      blurDataURL={founder.portrait.blurDataUrl}
+                      className="size-18 shrink-0 rounded-full border border-line-strong object-cover"
+                      priority
+                    />
+                    <div className="min-w-0">
+                      <p className="text-lg font-semibold text-text">{founder.name}</p>
+                      <p className="mt-1 text-sm leading-6 text-muted">{founder.role}</p>
+                    </div>
+                  </div>
+                ))}
               </CardHeader>
               <CardContent className="border-t border-line px-6 py-5 sm:px-7 sm:py-6">
                 <p className="text-sm leading-6 text-muted">

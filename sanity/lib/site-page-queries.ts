@@ -66,13 +66,13 @@ export type SanityAboutPageDocument = {
     subtitle?: string;
   };
   profile?: {
-    author?: {
+    founders?: Array<{
       name?: string;
       role?: string;
       bio?: string;
       href?: string;
       portrait?: SanitySiteImageValue;
-    };
+    } | null>;
     summary?: string;
   };
   stats?: Array<{
@@ -183,7 +183,8 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
       subtitle
     },
     profile{
-      "author": author->{
+      // Legacy single-author fallback until the founders field is published.
+      "founders": coalesce(founders, [author])[]->{
         name,
         role,
         bio,
