@@ -7,16 +7,27 @@ jobs:
   submit:
     if: github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production'
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - uses: actions/cache@v4
-        with:
-          path: .indexnow
-          key: indexnow-sitemap-${{ github.run_id }}
-          restore-keys: indexnow-sitemap-
+      # actions/cache can't save on deployment_status (no ref), so the snapshot
+      # travels as an artifact of the previous successful run.
+      - name: Restore previous sitemap snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prev=$(gh run list --workflow indexnow.yml --status success --limit 1 --json databaseId -q '.[0].databaseId')
+          if [ -n "$prev" ]; then gh run download "$prev" --name indexnow-snapshot --dir .indexnow || true; fi
       - run: node scripts/indexnow.mjs
         env:
           INDEXNOW_SNAPSHOT: .indexnow/sitemap-snapshot.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: indexnow-snapshot
+          path: .indexnow/sitemap-snapshot.json
+          retention-days: 90
