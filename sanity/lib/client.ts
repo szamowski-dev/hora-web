@@ -6,5 +6,7 @@ export const client = createClient({
   dataset,
   apiVersion,
   perspective: "published",
-  useCdn: true,
+  // Publish webhooks revalidate immediately; the API CDN can still serve the
+  // pre-publish document then, which Next would cache again for 10 minutes.
+  useCdn: false,
 });
