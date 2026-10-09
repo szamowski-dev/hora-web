@@ -1,6 +1,8 @@
 import { revalidatePath, revalidateTag } from "next/cache";
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { parseBody } from "next-sanity/webhook";
+import { site } from "@/content/site";
+import { pagePathsToUrls, submitToIndexNow } from "@/lib/indexnow";
 
 type SanityWebhookBody = {
   _id?: string;
@@ -160,6 +162,11 @@ export async function POST(request: NextRequest) {
   }
   for (const path of paths) {
     revalidatePath(path);
+  }
+
+  if (process.env.VERCEL_ENV === "production") {
+    const urls = pagePathsToUrls(paths, site.url);
+    after(() => submitToIndexNow(urls));
   }
 
   return NextResponse.json({

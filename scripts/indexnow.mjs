@@ -1,6 +1,10 @@
 #!/usr/bin/env node
-// Submits all URLs from the sitemap to IndexNow.
+// Submits new/changed sitemap URLs to IndexNow (diff vs. the last snapshot).
 // Run after a production deploy: `pnpm indexnow`.
+
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname } from "node:path";
+import { changedUrls, parseSitemap } from "./indexnow-diff.mjs";
 
 const HOST = "horacal.app";
 const KEY = "3857bebade48c515e65bbdf3fea1dedb";
@@ -9,6 +13,8 @@ const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;
 const ENDPOINT = "https://api.indexnow.org/IndexNow";
 const MAX_ATTEMPTS = 5;
 const REQUEST_TIMEOUT_MS = 45_000;
+const SNAPSHOT_PATH =
+  process.env.INDEXNOW_SNAPSHOT ?? ".indexnow/sitemap-snapshot.json";
 
 async function fetchSitemap() {
   const res = await fetch(SITEMAP_URL, {
@@ -18,8 +24,17 @@ async function fetchSitemap() {
   return res.text();
 }
 
-function parseUrls(xml) {
-  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+async function readSnapshot() {
+  try {
+    return JSON.parse(await readFile(SNAPSHOT_PATH, "utf8"));
+  } catch {
+    return null; // first run or unreadable snapshot: submit everything
+  }
+}
+
+async function writeSnapshot(entries) {
+  await mkdir(dirname(SNAPSHOT_PATH), { recursive: true });
+  await writeFile(SNAPSHOT_PATH, JSON.stringify(entries, null, 2));
 }
 
 function sleep(ms) {
@@ -89,12 +104,18 @@ async function submit(urls) {
   }
 }
 
-const xml = await fetchSitemap();
-const urls = parseUrls(xml);
-if (urls.length === 0) {
+const current = parseSitemap(await fetchSitemap());
+if (Object.keys(current).length === 0) {
   console.error("No URLs found in sitemap");
   process.exit(1);
 }
-console.log(`Submitting ${urls.length} URLs to IndexNow…`);
+const urls = changedUrls(current, await readSnapshot());
+if (urls.length === 0) {
+  console.log("No sitemap changes since last snapshot; nothing to submit.");
+  await writeSnapshot(current);
+  process.exit(0);
+}
+console.log(`Submitting ${urls.length} changed URLs to IndexNow…`);
 const result = await submit(urls);
 if (result.status < 200 || result.status >= 300) process.exit(1);
+await writeSnapshot(current);

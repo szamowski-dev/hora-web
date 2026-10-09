@@ -13,6 +13,7 @@
 # testing
 /coverage
 /.tmp/
+/.indexnow/
 
 # next.js
 /.next/

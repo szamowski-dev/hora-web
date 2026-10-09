@@ -123,7 +123,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
     {
       url: `${base}/support/`,
-      lastModified: today,
+      lastModified: "2026-10-09",
       changeFrequency: "monthly",
       priority: 0.6,
     },

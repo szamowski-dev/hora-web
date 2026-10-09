@@ -62,10 +62,6 @@ export const metadata: Metadata = {
     appId: "6761409895",
     appArgument: "https://horacal.app",
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
   icons: {
     icon: [
       {
@@ -79,7 +75,6 @@ export const metadata: Metadata = {
     ],
   },
   alternates: {
-    canonical: "/",
     types: {
       "application/rss+xml": [
         { url: "/blog/feed.xml", title: "hora Calendar Blog" },
