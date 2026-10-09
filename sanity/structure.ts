@@ -44,6 +44,19 @@ export const structure: StructureResolver = (S) =>
       ),
     )
     .items([
+      // Structure lists can only order by fields, not by draft status, so
+      // unpublished changes get their own list above "Recently edited".
+      S.listItem()
+        .id("unpublishedChanges")
+        .title("Unpublished changes")
+        .child(
+          S.documentList()
+            .title("Unpublished changes")
+            .apiVersion(apiVersion)
+            .filter(`_id in path("drafts.**") && _type in $types`)
+            .params({ types: [...managedDocumentTypes] })
+            .defaultOrdering([{ field: "_updatedAt", direction: "desc" }]),
+        ),
       S.listItem()
         .id("recentlyEdited")
         .title("Recently edited")
